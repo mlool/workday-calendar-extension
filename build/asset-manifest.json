@@ -7,8 +7,7 @@
     "index.html": "/index.html",
     "main.js.map": "/static/js/main.js.map",
     "main.063cbcf3.css.map": "/static/css/main.063cbcf3.css.map",
-    "background.js.map": "/static/js/background.js.map",
-    "content.js.map": "/static/js/content.js.map"
+    "background.js.map": "/static/js/background.js.map"
   },
   "entrypoints": [
     "static/js/main.js",
