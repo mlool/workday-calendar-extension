@@ -1,23 +1,18 @@
 import { useEffect, useState } from 'react'
 
 const Form = () => {
-  const [value, setValue] = useState(0)
-
-  useEffect(() => {
-    chrome.storage.sync.get(['clickCount'], (result) => {
-      if (result.clickCount !== undefined) {
-        setValue(result.clickCount)
-      }
-    })
-  }, [])
-
-  useEffect(() => {
-    chrome.storage.sync.set({ clickCount: value })
-  }, [value])
+  const [title, setTitle] = useState("")
+  const [details, setDetails] = useState("")
 
   return (
     <div>
-      Add Course
+        <form>
+            <label>Title:</label>
+            <input type='text'/>
+            <br />
+            <label>Section Detail:</label>
+            <input type='text'/>
+        </form>
     </div>
   )
 }
