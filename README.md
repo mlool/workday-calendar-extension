@@ -2,6 +2,9 @@
 
 This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system
 
+## Feature Request
+Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
+
 ## Set up
 
 1. Download the `build` folder
