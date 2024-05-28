@@ -26,7 +26,7 @@
   
   .time-markers {
     display: grid;
-    grid-auto-rows:15px;
+    grid-auto-rows:18px;
   }
   
   .time-marker {
@@ -38,7 +38,7 @@
   
   .body-column {
     display: grid;
-    grid-auto-rows:15px;
+    grid-auto-rows:18px;
   }
   
   .body-cell {

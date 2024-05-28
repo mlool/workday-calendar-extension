@@ -84,18 +84,18 @@ const Form = ({newSection, sections, setNewSection, setSections}: IProps) => {
     setNewSection(baseSection)
   }
 
-  return (
-    <div>
-        <form>
-            <label>Title:</label>
-            <input type='text' value={newSection.title} onChange={e => getFromTitle(e.target.value)}/>
-            <br />
-            <label>Section Detail:</label>
-            <input type='text' value={newSection.details} onChange={e => getFromDetail(e.target.value)}/>
-        </form>
-        <button title="Add Section" type="button" onClick={onAdd}>Add Section</button>
-    </div>
-  )
+//   return (
+//     <div>
+//         <form>
+//             <label>Title:</label>
+//             <input type='text' value={newSection.title} onChange={e => getFromTitle(e.target.value)}/>
+//             <br />
+//             <label>Section Detail:</label>
+//             <input type='text' value={newSection.details} onChange={e => getFromDetail(e.target.value)}/>
+//         </form>
+//         <button title="Add Section" type="button" onClick={onAdd}>Add Section</button>
+//     </div>
+//   )
 }
 
 export default Form

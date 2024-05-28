@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "description": "Calendar for the new UBC Work day course selection.",
   "icons": {
-    "16": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "background": {
     "service_worker": "./static/js/background.js"
