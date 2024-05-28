@@ -5,6 +5,9 @@ This program is made to counter the highly unintuitive and frustrating experienc
 ## Feature Request
 Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
 
+## Collabroators
+Join the discord channel: https://discord.gg/cx93fAJUJf
+
 ## Set up
 
 1. Download the `build` folder
