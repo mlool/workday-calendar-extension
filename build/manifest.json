@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "My Extension",
+  "name": "UBC Workday Side by Side Calendar",
   "version": "1.0.0",
-  "description": "A simple Chrome extension.",
+  "description": "Calendar for the new UBC Work day course selection.",
   "icons": {
     "16": "logo192.png",
     "48": "logo192.png",
@@ -20,5 +20,5 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["storage", "tabs", "activeTab"]
+  "permissions": ["storage"]
 }
