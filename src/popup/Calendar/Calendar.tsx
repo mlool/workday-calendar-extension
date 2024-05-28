@@ -5,6 +5,7 @@ import './Calendar.css'
 
 interface IProps {
   sections: ISectionData[],
+  newSection: ISectionData,
   setSections: (data: ISectionData[]) => void
 }
 
@@ -16,7 +17,7 @@ for (let hour = 7; hour <= 20; hour++) {
     times.push(`${hour}:30`);
 }
 
-const Calendar = ({sections, setSections}:IProps) => {
+const Calendar = ({sections, newSection, setSections}:IProps) => {
   return (
     <div className="calendar">
       <div className="header">
@@ -33,7 +34,7 @@ const Calendar = ({sections, setSections}:IProps) => {
         </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
-            {convertToMatrix(sections)[day]?.map((cell, index) => (
+            {convertToMatrix(sections, newSection)[day]?.map((cell, index) => (
               <div key={index} className="body-cell" style={{backgroundColor: cell.color}}>
                 {cell.name}
               </div>

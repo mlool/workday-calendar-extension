@@ -5,7 +5,7 @@ export interface CellFormat {
     color: string
 }
 
-export const convertToMatrix = (sections: ISectionData[]) => {
+export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData) => {
     let matrixDict: {[id: string]: CellFormat[]} = {
         "Mon": [],
         "Tue": [],
@@ -50,6 +50,23 @@ export const convertToMatrix = (sections: ISectionData[]) => {
                     color: "white"
                 })
                 i += 1
+            }
+        }
+    }
+    if (newSection.startTime && newSection.endTime && newSection.days) {
+        for (let day of newSection.days) {
+            let [hourStr, minutesStr] = newSection.startTime.split(":")
+            let hourNum = +hourStr
+            let i = (hourNum - 7) * 2 + (minutesStr === "30"? 1 : 0)
+            matrixDict[day][i].color = "orange"
+
+            let hour = 7 + Math.floor(i / 2)
+            let minute = i % 2 === 0? "00": "30"
+            while (i < 28 && `${hour}:${minute}` !== newSection.endTime) {
+                matrixDict[day][i].color = "orange"
+                i += 1
+                hour = 7 + Math.floor(i / 2)
+                minute = i % 2 === 0? "00": "30"
             }
         }
     }
