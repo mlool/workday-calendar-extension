@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ISectionData } from '../App/App.types'
-import { CellFormat, convertToMatrix, mock } from './utils'
+import { CellFormat, convertToMatrix } from './utils'
 import './Calendar.css'
 
 interface IProps {
@@ -17,13 +17,6 @@ for (let hour = 7; hour <= 20; hour++) {
 }
 
 const Calendar = ({sections, setSections}:IProps) => {
-  const [timeMatrix, setTimeMatrix] = useState<{[id: string]: CellFormat[]}>(convertToMatrix([]))
-
-  useEffect(() => {
-    console.log(sections)
-    setTimeMatrix(convertToMatrix(sections))
-  }, [sections])
-
   return (
     <div className="calendar">
       <div className="header">
@@ -40,7 +33,7 @@ const Calendar = ({sections, setSections}:IProps) => {
         </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
-            {timeMatrix[day]?.map((cell, index) => (
+            {convertToMatrix(sections)[day]?.map((cell, index) => (
               <div key={index} className="body-cell" style={{backgroundColor: cell.color}}>
                 {cell.name}
               </div>

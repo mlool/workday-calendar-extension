@@ -18,7 +18,6 @@ function App() {
   }, [])
 
   useEffect(() => {
-    console.log(sections)
     chrome.storage.sync.set({ sections: sections })
   }, [sections])
 
