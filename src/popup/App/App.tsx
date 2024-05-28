@@ -24,7 +24,7 @@ function App() {
   return (
     <div className="App">
       <Calendar sections={sections} setSections={setSections} newSection={newSection}/>
-      <Form newSection={newSection} sections={sections} setNewSection={setNewSection} setSections={setSections}/>
+      {/* <Form newSection={newSection} sections={sections} setNewSection={setNewSection} setSections={setSections}/> */}
       <button type='button' onClick={() => setSections([])}>Clear</button>
     </div>
   )
