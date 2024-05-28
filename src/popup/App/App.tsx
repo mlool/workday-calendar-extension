@@ -7,14 +7,26 @@ import { ISectionData, baseSection } from './App.types'
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection)
-  const [sections, setSections] = useState<ISectionData[]>()
+  const [sections, setSections] = useState<ISectionData[]>([])
 
-  useEffect(() => {console.log(newSection)}, [newSection])
+  useEffect(() => {
+    chrome.storage.sync.get(['sections'], (result) => {
+      if (result.sections !== undefined) {
+        setSections(result.sections)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    console.log(sections)
+    chrome.storage.sync.set({ sections: sections })
+  }, [sections])
 
   return (
     <div className="App">
-      <Calendar />
-      <Form newSection={newSection} setNewSection={setNewSection} setSections={setSections}/>
+      <Calendar sections={sections} setSections={setSections}/>
+      <Form newSection={newSection} sections={sections} setNewSection={setNewSection} setSections={setSections}/>
+      <button type='button' onClick={() => setSections([])}>Clear</button>
     </div>
   )
 }
