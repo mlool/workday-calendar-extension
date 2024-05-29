@@ -25,30 +25,6 @@ export const baseSection: ISection = {
   endTime: "",
   term: Term.winterOne,
 }
-
-// Function to convert time from 12-hour to 24-hour format
-export function convertTo24(time: string): string {
-    const regex = /^(\d{1,2}):(\d{2})?(\s*(a\.m\.|p\.m\.)?)$/i;
-    const match = time.match(regex);
-  
-    if (!match) {
-      throw new Error('Invalid time format');
-    }
-  
-    let [_, hours, minutes, period] = match;
-    let hoursNumber = parseInt(hours, 10);
-  
-    if (period.toLowerCase() === 'p.m.' && hoursNumber !== 12) {
-      hoursNumber += 12;
-    } else if (period.toLowerCase() === 'a.m.' && hoursNumber === 12) {
-      hoursNumber = 0;
-    }
-  
-    const formattedHours = hoursNumber.toString().padStart(2, '0');
-    const formattedMinutes = minutes.padStart(2, '0');
-  
-    return `${formattedHours}:${formattedMinutes}`;
-  }
   
 export function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll('.gwt-Label.WKIP.WDHP');
@@ -88,6 +64,26 @@ export function extractSection(element: Element) {
   const days = daysString.split(' ');
   const [startTime, endTime] = timeRange.split(' - ');
 
+  // Convert times from 12-hour format to 24-hour format
+  const convertTo24HourFormat = (time: string): string => {
+    const [timePart, period] = time.split(' ');
+    let [hours, minutes] = timePart.split(':').map(Number);
+
+    console.log("timePart: " + timePart);
+    console.log("period: " + period);
+    
+    if (period.toLowerCase() === 'p.m.' && hours !== 12) {
+      hours += 12;
+    } else if (period.toLowerCase() === 'a.m.' && hours === 12) {
+      hours = 0;
+    }
+
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+
+  const convertedStartTime = convertTo24HourFormat(startTime);
+  const convertedEndTime = convertTo24HourFormat(endTime);
+
   // Determining the term based on the date range
   const term = dateRange === '2024-09-03 - 2024-12-05' ? Term.winterOne : Term.winterTwo;
 
@@ -97,10 +93,11 @@ export function extractSection(element: Element) {
     name,
     location,
     days,
-    startTime: convertTo24(startTime),
-    endTime: convertTo24(endTime),
+    startTime: convertedStartTime,
+    endTime: convertedEndTime,
     term,
   };
 
-  return newSection
+  return newSection;
 }
+

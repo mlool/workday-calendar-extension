@@ -63,11 +63,13 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
             let hour = 7 + Math.floor(i / 2)
             let minute = i % 2 === 0? "00": "30"
             while (i < 28 && `${hour}:${minute}` !== newSection.endTime) {
-                if (matrixDict[day][i].color === "white") {
-                    matrixDict[day][i].color = "orange"
-                } else {
-                    matrixDict[day][i].color = "red"
-                    hasInvalidSection = true
+                if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
+                    if (matrixDict[day][i].color === "white") {
+                        matrixDict[day][i].color = "orange"
+                    } else {
+                        matrixDict[day][i].color = "red"
+                        hasInvalidSection = true
+                    }
                 }
                 i += 1
                 hour = 7 + Math.floor(i / 2)
