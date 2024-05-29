@@ -2,7 +2,8 @@ import { ISectionData } from "../App/App.types"
 
 export interface CellFormat {
     name: string,
-    color: string
+    color: string,
+    sectionContent: ISectionData | null,
 }
 
 export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData, setInvalidSection: (state: boolean) => void) => {
@@ -25,11 +26,13 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 let [code, number] = foundSection.code.split(" ")
                 value.push({
                     name: code,
-                    color: "#eaffd1"
+                    color: "#eaffd1",
+                    sectionContent: foundSection
                 })
                 value.push({
                     name: number,
-                    color: "#eaffd1"
+                    color: "#eaffd1",
+                    sectionContent: foundSection
                 })
                 i += 2
                 hour = 7 + Math.floor(i / 2)
@@ -37,7 +40,8 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 while (i < 28 && `${hour}:${minute}` !== foundSection.endTime) {
                     value.push({
                         name: "",
-                        color: "#eaffd1"
+                        color: "#eaffd1",
+                        sectionContent: foundSection
                     })
                     i += 1
                     hour = 7 + Math.floor(i / 2)
@@ -46,7 +50,8 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
             } else {
                 value.push({
                     name: "",
-                    color: "white"
+                    color: "white",
+                    sectionContent: null
                 })
                 i += 1
             }
@@ -66,6 +71,7 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
                     if (matrixDict[day][i].color === "white") {
                         matrixDict[day][i].color = "orange"
+                        matrixDict[day][i].sectionContent = null
                     } else {
                         matrixDict[day][i].color = "red"
                         hasInvalidSection = true
