@@ -5,7 +5,7 @@ export interface CellFormat {
     color: string
 }
 
-export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData) => {
+export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData, setInvalidSection: (state: boolean) => void) => {
     let matrixDict: {[id: string]: CellFormat[]} = {
         "Mon": [],
         "Tue": [],
@@ -52,22 +52,29 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
             }
         }
     }
+    let hasInvalidSection = true
     if (newSection.startTime && newSection.endTime && newSection.days) {
+        hasInvalidSection = false
         for (let day of newSection.days) {
             let [hourStr, minutesStr] = newSection.startTime.split(":")
             let hourNum = +hourStr
             let i = (hourNum - 7) * 2 + (minutesStr === "30"? 1 : 0)
-            matrixDict[day][i].color = "orange"
 
             let hour = 7 + Math.floor(i / 2)
             let minute = i % 2 === 0? "00": "30"
             while (i < 28 && `${hour}:${minute}` !== newSection.endTime) {
-                matrixDict[day][i].color = "orange"
+                if (matrixDict[day][i].color === "white") {
+                    matrixDict[day][i].color = "orange"
+                } else {
+                    matrixDict[day][i].color = "red"
+                    hasInvalidSection = true
+                }
                 i += 1
                 hour = 7 + Math.floor(i / 2)
                 minute = i % 2 === 0? "00": "30"
             }
         }
     }
+    setInvalidSection(hasInvalidSection)
     return matrixDict
 }

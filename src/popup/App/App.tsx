@@ -9,6 +9,7 @@ import Form from '../Form/Form'
 function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection)
   const [sections, setSections] = useState<ISectionData[]>([])
+  const [invalidSection, setInvalidSection] = useState<boolean>(false)
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -44,10 +45,14 @@ function App() {
     chrome.storage.sync.set({ sections: sections })
   }, [sections])
 
+  useEffect(() => {
+    chrome.storage.sync.set({ newSection: newSection })
+  }, [newSection])
+
   return (
     <div className="App">
-      <Calendar sections={sections} setSections={setSections} newSection={newSection}/>
-      <Form newSection={newSection} sections={sections} setNewSection={setNewSection} setSections={setSections}/>
+      <Calendar sections={sections} setSections={setSections} newSection={newSection} setInvalidSection={setInvalidSection}/>
+      <Form newSection={newSection} sections={sections} invalidSection={invalidSection} setNewSection={setNewSection} setSections={setSections}/>
       <button type='button' onClick={() => setSections([])}>Clear</button>
     </div>
   )

@@ -8,7 +8,7 @@ body {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  min-height: 100vh; /* Ensure the app takes the full height of the viewport */
+  height: 100vh; /* Ensure the app takes the full height of the viewport */
   position: relative; /* Set relative positioning */
   padding-bottom: 60px; /* Add padding to avoid overlapping with the fixed button */
 }
