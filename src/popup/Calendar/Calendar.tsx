@@ -24,7 +24,7 @@ const Calendar = ({sections, newSection, setSections, setInvalidSection}:IProps)
 
   return (
     <div className="calendar">
-      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} />}
+      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection}/>}
       <div className="header">
         <div className="time-marker"></div>
         {daysOfWeek.map((day, index) => (
@@ -40,7 +40,12 @@ const Calendar = ({sections, newSection, setSections, setInvalidSection}:IProps)
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
             {convertToMatrix(sections, newSection, setInvalidSection)[day]?.map((cell, index) => (
-              <div key={index} className="body-cell" style={{backgroundColor: cell.color}}>
+              <div 
+                key={index} 
+                className="body-cell" 
+                style={{backgroundColor: cell.color}}
+                onClick={() => {setSelectedSection(cell.sectionContent)}}
+              >
                 {cell.name}
               </div>
             ))}
