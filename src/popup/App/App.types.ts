@@ -22,6 +22,7 @@ export interface ISectionData {
     startTime: string,
     endTime: string,
     term: Term,
+    worklistNumber: number,
     // details: string,
     // title: string,
 }
@@ -35,4 +36,5 @@ export const baseSection:ISectionData = {
     startTime: "",
     endTime: "",
     term: Term.winterOne,
+    worklistNumber: 0
 }

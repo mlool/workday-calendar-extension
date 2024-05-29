@@ -4,14 +4,19 @@ interface IProps {
     newSection: ISectionData,
     sections: ISectionData[],
     invalidSection: boolean,
+    currentWorklistNumber: number,
     setNewSection: (data: ISectionData) => void,
     setSections: (data: ISectionData[]) => void
 }
 
-const Form = ({newSection, sections, invalidSection, setNewSection, setSections}: IProps) => {
+const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections}: IProps) => {
   const onAdd = () => {
+    let updatedNewSection: ISectionData = {...newSection}
+    updatedNewSection.worklistNumber = currentWorklistNumber
+    
     let newSections = [...sections]
-    newSections.push(newSection)
+    
+    newSections.push(updatedNewSection)
     setSections(newSections)
     setNewSection(baseSection)
   }
