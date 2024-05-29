@@ -1,0 +1,20 @@
+.CalendarContainer {
+}
+
+.WorklistContainer {
+    display: flex;
+    padding: 3px;
+}
+
+.WorklistButton {
+    margin-right: 3px;
+    cursor: pointer;
+    background-color: #f2fcff;
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 3px 5px
+}
+
+.WorklistButton:hover {
+    background-color: #9ce8ff;
+}

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 // import Form from '../Form/Form'
-import Calendar from '../Calendar/Calendar'
+import CalendarContainer from '../CalendarContainer/CalendarContainer'
 import { ISectionData, baseSection } from './App.types'
 import Form from '../Form/Form'
 
@@ -10,6 +10,7 @@ function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection)
   const [sections, setSections] = useState<ISectionData[]>([])
   const [invalidSection, setInvalidSection] = useState<boolean>(false)
+  const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -28,6 +29,7 @@ function App() {
   useEffect(() => {
     chrome.storage.sync.get(['newSection'], (result) => {
       if (result.newSection !== undefined) {
+        console.log(result.newSection)
         setNewSection(result.newSection)
       }
     })
@@ -42,6 +44,14 @@ function App() {
   }, [])
 
   useEffect(() => {
+    chrome.storage.sync.get(['currentWorklistNumber'], (result) => {
+      if (result.currentWorklistNumber !== undefined) {
+        setCurrentWorklistNumber(result.currentWorklistNumber)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
     chrome.storage.sync.set({ sections: sections })
   }, [sections])
 
@@ -49,11 +59,29 @@ function App() {
     chrome.storage.sync.set({ newSection: newSection })
   }, [newSection])
 
+  useEffect(() => {
+    chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
+  }, [currentWorklistNumber])
+
   return (
     <div className="App">
-      <Calendar sections={sections} setSections={setSections} newSection={newSection} setInvalidSection={setInvalidSection}/>
-      <Form newSection={newSection} sections={sections} invalidSection={invalidSection} setNewSection={setNewSection} setSections={setSections}/>
-      <button type='button' onClick={() => setSections([])}>Clear</button>
+      <CalendarContainer 
+        sections={sections} 
+        setSections={setSections} 
+        newSection={newSection} 
+        setInvalidSection={setInvalidSection}
+        currentWorklistNumber={currentWorklistNumber}
+        setCurrentWorklistNumber={setCurrentWorklistNumber}
+      />
+
+      <Form 
+        currentWorklistNumber={currentWorklistNumber}
+        newSection={newSection} 
+        sections={sections} 
+        invalidSection={invalidSection} 
+        setNewSection={setNewSection} 
+        setSections={setSections}
+      />
     </div>
   )
 }
