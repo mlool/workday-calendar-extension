@@ -2,7 +2,7 @@
 
 This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system
 
-# Downloads
+# Download
 Check out the discord channel `#download-verions`
 Discord is linked below, feel free to join!
 
