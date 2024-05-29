@@ -13,7 +13,6 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
         "Thu": [],
         "Fri": []
     }
-    console.log(sections.find((section) => section.days.includes("Fri")))
     for (const [key, value] of Object.entries(matrixDict)) {
         let i = 0
         while (i < 28) {

@@ -26,19 +26,19 @@
   
   .time-markers {
     display: grid;
-    grid-auto-rows:18px;
+    grid-auto-rows:15px;
   }
   
   .time-marker {
     border: 1px solid #ddd;
     padding: 5px;
     text-align: center;
-    font-size: 10px;
+    font-size: 9px;
   }
   
   .body-column {
     display: grid;
-    grid-auto-rows:18px;
+    grid-auto-rows:15px;
   }
   
   .body-cell {

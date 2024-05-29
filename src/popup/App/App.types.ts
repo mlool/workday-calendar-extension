@@ -22,8 +22,8 @@ export interface ISectionData {
     startTime: string,
     endTime: string,
     term: Term,
-    details: string,
-    title: string,
+    // details: string,
+    // title: string,
 }
 
 export const baseSection:ISectionData = {
@@ -35,6 +35,4 @@ export const baseSection:ISectionData = {
     startTime: "",
     endTime: "",
     term: Term.winterOne,
-    details: "",
-    title: "",
 }
