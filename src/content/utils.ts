@@ -28,7 +28,7 @@ export const baseSection: ISection = {
 
 // Function to convert time from 12-hour to 24-hour format
 export function convertTo24(time: string): string {
-    const regex = /^(\d{1,2}):(\d{2})\s*(a\.m\.|p\.m\.)$/i;
+    const regex = /^(\d{1,2}):(\d{2})?(\s*(a\.m\.|p\.m\.)?)$/i;
     const match = time.match(regex);
   
     if (!match) {

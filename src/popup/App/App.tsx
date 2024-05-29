@@ -16,9 +16,7 @@ function App() {
     const handleStorageChange = () => {
       chrome.storage.sync.get(['newSection'], (result) => {
         if (result.newSection !== undefined) {
-          let newSection: ISectionData = result.newSection
-          newSection.worklistNumber = currentWorklistNumber
-          setNewSection(newSection)
+          setNewSection(result.newSection)
         }
       })
     };
@@ -31,7 +29,8 @@ function App() {
   useEffect(() => {
     chrome.storage.sync.get(['newSection'], (result) => {
       if (result.newSection !== undefined) {
-        setNewSection(newSection)
+        console.log(result.newSection)
+        setNewSection(result.newSection)
       }
     })
   }, [])
@@ -57,15 +56,10 @@ function App() {
   }, [sections])
 
   useEffect(() => {
-    let updatedNewSection: ISectionData = {...newSection}
-    updatedNewSection.worklistNumber = currentWorklistNumber
-    chrome.storage.sync.set({ newSection: updatedNewSection })
+    chrome.storage.sync.set({ newSection: newSection })
   }, [newSection])
 
   useEffect(() => {
-    const updateNewSection = {...newSection}
-    updateNewSection.worklistNumber = currentWorklistNumber
-    setNewSection(updateNewSection)
     chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
   }, [currentWorklistNumber])
 
@@ -88,8 +82,6 @@ function App() {
         setNewSection={setNewSection} 
         setSections={setSections}
       />
-
-      <button type='button' onClick={() => setSections([])}>Clear</button>
     </div>
   )
 }
