@@ -46,6 +46,7 @@
     padding: 5px;
     position: relative;
     font-size: 9px;
+    cursor: pointer;
   }
   
   .event {
