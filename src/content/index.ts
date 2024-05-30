@@ -23,6 +23,14 @@ function addButtonToElement(element: Element): void {
   button.style.transition = 'all 120ms ease-in';
   button.style.border = 'none';
   button.style.outline = 'none';
+  button.style.textAlign = 'center'; // Center the text horizontally
+
+  // Adding display flex and align-items center to the button's parent
+  const parentElement = element.parentElement;
+  if (parentElement) {
+    parentElement.style.display = 'flex';
+    parentElement.style.alignItems = 'center';
+  }
 
   // Adding event listeners for mouse enter and leave to change button style
   button.addEventListener('mouseenter', () => {
@@ -42,7 +50,7 @@ function addButtonToElement(element: Element): void {
 
 // Function to handle button click event
 function handleButtonClick(element: Element): void {
-  const selectedSection = extractSection(element)
+  const selectedSection = extractSection(element);
   if (!selectedSection) return;
   // Getting existing sections from Chrome storage and adding the new section
   chrome.storage.sync.set({ newSection: selectedSection });
@@ -66,11 +74,18 @@ function observeDOMAndAddButtons(): void {
             // Finding matching elements within the added node
             const matchingElements = node.querySelectorAll('.WD5F.WB5F');
             // Adding buttons to matching elements
-            if (matchingElements.length > 0) {
-              matchingElements.forEach((matchingElement) => {
+            matchingElements.forEach((matchingElement) => {
+              // Check if the element already has a button as a previous sibling
+              const previousSibling = matchingElement.previousElementSibling;
+              const isButtonAlreadyPresent =
+                previousSibling &&
+                previousSibling.tagName === 'BUTTON' &&
+                previousSibling.textContent === '+';
+
+              if (!isButtonAlreadyPresent) {
                 addButtonToElement(matchingElement);
-              });
-            }
+              }
+            });
           }
         });
       }
