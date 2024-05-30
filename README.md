@@ -1,9 +1,13 @@
-# Workday Calendar Tool
+<p align="center">
+  <img src="/public/logo128.png" width="128px" height="128px" alt="LectureSurfers logo">
+</p>
+<h1 align="center">Workday Calendar Tool</h1>
 
-This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system
+This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system!
 
 # Download
 Check out the discord channel `#download-versions`
+
 Discord is linked below, feel free to join!
 
 ## Feature Request

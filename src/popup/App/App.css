@@ -8,9 +8,9 @@ body {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: 100vh; /* Ensure the app takes the full height of the viewport */
-  position: relative; /* Set relative positioning */
-  padding-bottom: 60px; /* Add padding to avoid overlapping with the fixed button */
+  height: 100vh; 
+  position: relative;
+  padding-bottom: 60px;
 }
 
 button {
@@ -42,7 +42,7 @@ button:active {
   bottom: 0;
   padding: 10px;
   background-color: #f5f5f5;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Add a slight shadow for better separation */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .App-logo {

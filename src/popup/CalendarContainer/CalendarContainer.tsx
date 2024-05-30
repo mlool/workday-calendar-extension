@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { ISectionData, Term_String_Map, Term } from '../App/App.types'
 import Calendar from '../Calendar/Calendar';
 import './CalendarContainer.css'
