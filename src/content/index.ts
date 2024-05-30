@@ -95,3 +95,54 @@ function setupObserver(): void {
 
 // Setting up the observer when the script is executed
 setupObserver();
+
+
+// Additional code to "fix" profile pictures
+// Script in an IIFE to minimize possible conflicts
+(function() {
+    'use strict';
+
+    // Function to modify image attributes and apply styles
+    function modifyImages() {
+        const images = document.querySelectorAll('img.wdappchrome-aax, img.wdappchrome-aaam');
+        images.forEach(img => {
+            img.src = img.src.replace(/scaleWidth=\d+/, 'scaleWidth=192').replace(/scaleHeight=\d+/, 'scaleHeight=250');
+            // Calculate new width based on original width
+            const originalWidth = img.width; // Capture the current width
+            // Don't ask why the following line is the way that it is
+            let scale = originalWidth > 40 ? 0.768 : 0.97; // Larger images reduced to 76.8%, others to 97%
+            img.width = originalWidth * scale;
+            img.className = 'highrespfp';
+        });
+
+        // Apply additional CSS to center the image in the 'wdappchrome-aaal' span
+        const spans = document.querySelectorAll('span.wdappchrome-aaal');
+        spans.forEach(span => {
+            span.style.display = 'flex';
+            span.style.justifyContent = 'center';
+            span.style.alignItems = 'center';
+        });
+        const alsoSpans = document.querySelectorAll('span.wdappchrome-aaw');
+        alsoSpans.forEach(span => {
+            span.style.display = 'flex';
+            span.style.justifyContent = 'center';
+            span.style.alignItems = 'center';
+        });
+    }
+
+    // Observer to watch for changes in the document
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+                // Run modifyImages to check for new images and apply styles
+                modifyImages();
+            }
+        });
+    });
+
+    // Start observing the body for added nodes
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Initial modification call
+    modifyImages();
+})();
