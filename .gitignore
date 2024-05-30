@@ -1,2 +1,42 @@
-node_modules
+# Node.js dependencies
+node_modules/
+
+# Yarn files
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Build directories and files
 build/
+dist/
+build.crx
+build.pem
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Prettier
+.prettierrc
+
+# Miscellaneous
+*.log
+*.tmp
