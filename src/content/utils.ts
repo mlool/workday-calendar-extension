@@ -68,7 +68,7 @@ export function extractSection(element: Element) {
   const convertTo24HourFormat = (time: string): string => {
     const [timePart, period] = time.split(' ');
     let [hours, minutes] = timePart.split(':').map(Number);
-
+    
     console.log("timePart: " + timePart);
     console.log("period: " + period);
     
