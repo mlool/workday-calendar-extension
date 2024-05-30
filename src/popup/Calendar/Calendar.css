@@ -31,9 +31,9 @@
   
   .time-marker {
     border: 1px solid #ddd;
-    padding: 5px;
     text-align: center;
-    font-size: 9px;
+    font-weight: bold;
+    z-index: 99;
   }
   
   .body-column {

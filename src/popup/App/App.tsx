@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 // import Form from '../Form/Form'
 import CalendarContainer from '../CalendarContainer/CalendarContainer'
-import { ISectionData, baseSection } from './App.types'
+import { ISectionData, Term, baseSection } from './App.types'
 import Form from '../Form/Form'
 
 function App() {
@@ -11,11 +11,12 @@ function App() {
   const [sections, setSections] = useState<ISectionData[]>([])
   const [invalidSection, setInvalidSection] = useState<boolean>(false)
   const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
+  const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne)
 
   useEffect(() => {
     const handleStorageChange = () => {
-      chrome.storage.sync.get(['newSection'], (result) => {
-        if (result.newSection !== undefined) {
+      chrome.storage.sync.get(['newSection', 'currentTerm'], (result) => {
+        if (result.newSection !== undefined && newSection.code !== result.newSection.code) {
           setNewSection(result.newSection)
         }
       })
@@ -24,8 +25,31 @@ function App() {
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
     };
-  }, []);
+  }, [chrome.storage.sync.get(['newSection'])]);
 
+  //I think we prob want to move the setters which are dependent on the react state above the 
+  //getters or else we can overwrite an updated state
+  useEffect(() => {
+    chrome.storage.sync.set({ sections: sections })
+  }, [sections])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ newSection: newSection })
+    if (newSection.code !== baseSection.code)
+      {
+        setCurrentTerm(newSection.term)
+      }
+  }, [newSection])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
+  }, [currentWorklistNumber])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ currentTerm: currentTerm })
+  }, [currentTerm])
+
+  // Is this code needed, is it not just doing the same thing as above?
   useEffect(() => {
     chrome.storage.sync.get(['newSection'], (result) => {
       if (result.newSection !== undefined) {
@@ -52,16 +76,14 @@ function App() {
   }, [])
 
   useEffect(() => {
-    chrome.storage.sync.set({ sections: sections })
-  }, [sections])
+    chrome.storage.sync.get(['currentTerm'], (result) => {
+      if (result.currentTerm !== undefined) {
+        setCurrentTerm(result.currentTerm)
+      }
+    })
+  }, [])
 
-  useEffect(() => {
-    chrome.storage.sync.set({ newSection: newSection })
-  }, [newSection])
-
-  useEffect(() => {
-    chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
-  }, [currentWorklistNumber])
+  
 
   return (
     <div className="App">
@@ -72,6 +94,8 @@ function App() {
         setInvalidSection={setInvalidSection}
         currentWorklistNumber={currentWorklistNumber}
         setCurrentWorklistNumber={setCurrentWorklistNumber}
+        currentTerm={currentTerm}
+        setCurrentTerm={setCurrentTerm}
       />
 
       <Form 
@@ -81,6 +105,7 @@ function App() {
         invalidSection={invalidSection} 
         setNewSection={setNewSection} 
         setSections={setSections}
+        currentTerm={currentTerm}
       />
     </div>
   )

@@ -1,12 +1,12 @@
 .CalendarContainer {
 }
 
-.WorklistContainer {
+.HeaderSectionContainer {
     display: flex;
     padding: 3px;
 }
 
-.WorklistButton {
+.HeaderButton {
     margin-right: 3px;
     cursor: pointer;
     background-color: #f2fcff;
@@ -15,6 +15,6 @@
     padding: 3px 5px
 }
 
-.WorklistButton:hover {
+.HeaderButton:hover {
     background-color: #9ce8ff;
 }

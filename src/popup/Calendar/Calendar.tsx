@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ISectionData } from '../App/App.types'
+import { ISectionData, Term} from '../App/App.types'
 import { CellFormat, convertToMatrix } from './utils'
 import SectionPopup from '../SectionPopup/SectionPopup'
 import './Calendar.css'

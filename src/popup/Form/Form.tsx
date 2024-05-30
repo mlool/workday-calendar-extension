@@ -1,16 +1,17 @@
 import { useEffect } from 'react'
-import { ISectionData, baseSection } from '../App/App.types'
+import { ISectionData, Term, baseSection } from '../App/App.types'
 
 interface IProps {
     newSection: ISectionData,
     sections: ISectionData[],
     invalidSection: boolean,
     currentWorklistNumber: number,
+    currentTerm: Term;
     setNewSection: (data: ISectionData) => void,
     setSections: (data: ISectionData[]) => void
 }
 
-const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections}: IProps) => {
+const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, currentTerm}: IProps) => {
   const onAdd = () => {
     if (invalidSection) return;
     let updatedNewSection: ISectionData = {...newSection}
@@ -26,7 +27,7 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
   const onClear = () => {
     let newSections:ISectionData[] = []
     sections.forEach((section) => {
-      if (section.worklistNumber !== currentWorklistNumber) {
+      if (section.worklistNumber !== currentWorklistNumber || section.term !== currentTerm) {
         newSections.push({...section})
       }
     })

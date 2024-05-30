@@ -85,7 +85,8 @@ export function extractSection(element: Element) {
   const convertedEndTime = convertTo24HourFormat(endTime);
 
   // Determining the term based on the date range
-  const term = dateRange === '2024-09-03 - 2024-12-05' ? Term.winterOne : Term.winterTwo;
+  //Note this only works for W1 and W2, can do more complex later on for S1 S2 W and S
+  const term = dateRange.includes('2024') ? Term.winterOne : Term.winterTwo;
 
   // Creating a new section object
   const newSection: ISection = {
