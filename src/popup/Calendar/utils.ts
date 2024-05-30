@@ -35,17 +35,17 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                     sectionContent: foundSection
                 })
                 i += 2
-                hour = 7 + Math.floor(i / 2)
-                minute = i % 2 === 0? "00": "30"
-                while (i < 28 && `${hour}:${minute}` !== foundSection.endTime) {
+                while (i < 28) {
+                    hour = 7 + Math.floor(i / 2)
+                    minute = i % 2 === 0 ? "00" : "30"
+                    let formattedTime = `${hour.toString().padStart(2, '0')}:${minute}`
+                    if (formattedTime === foundSection.endTime) break
                     value.push({
                         name: "",
                         color: "#eaffd1",
                         sectionContent: foundSection
                     })
                     i += 1
-                    hour = 7 + Math.floor(i / 2)
-                    minute = i % 2 === 0? "00": "30"
                 }
             } else {
                 value.push({
@@ -66,14 +66,11 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
       let hourNum = +hourStr;
       let i = (hourNum - 7) * 2 + (minutesStr === "30" ? 1 : 0);
 
-      //console.log('starttime: ' + newSection.startTime);
-      //console.log('endtime: ' + newSection.endTime);
-
       while (i < 28) {
         let hour = 7 + Math.floor(i / 2);
         let minute = i % 2 === 0 ? "00" : "30";
-        //console.log('hour/minute: ' + `${hour.toString().padStart(2, '0')}:${minute}`);
-        if (`${hour.toString().padStart(2, '0')}:${minute}` === newSection.endTime) break;
+        let formattedTime = `${hour.toString().padStart(2, '0')}:${minute}`
+        if (formattedTime === newSection.endTime) break;
         if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
           if (matrixDict[day][i].color === "white") {
             matrixDict[day][i].color = "orange";
