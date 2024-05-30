@@ -104,7 +104,7 @@ setupObserver();
 
     // Function to modify image attributes and apply styles
     function modifyImages() {
-        const images = document.querySelectorAll('img.wdappchrome-aax, img.wdappchrome-aaam');
+        const images = document.querySelectorAll<HTMLImageElement>('img.wdappchrome-aax, img.wdappchrome-aaam');
         images.forEach(img => {
             img.src = img.src.replace(/scaleWidth=\d+/, 'scaleWidth=192').replace(/scaleHeight=\d+/, 'scaleHeight=250');
             // Calculate new width based on original width
@@ -116,13 +116,13 @@ setupObserver();
         });
 
         // Apply additional CSS to center the image in the 'wdappchrome-aaal' span
-        const spans = document.querySelectorAll('span.wdappchrome-aaal');
+        const spans = document.querySelectorAll<HTMLSpanElement>('span.wdappchrome-aaal');
         spans.forEach(span => {
             span.style.display = 'flex';
             span.style.justifyContent = 'center';
             span.style.alignItems = 'center';
         });
-        const alsoSpans = document.querySelectorAll('span.wdappchrome-aaw');
+        const alsoSpans = document.querySelectorAll<HTMLSpanElement>('span.wdappchrome-aaw');
         alsoSpans.forEach(span => {
             span.style.display = 'flex';
             span.style.justifyContent = 'center';
