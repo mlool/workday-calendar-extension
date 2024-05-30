@@ -25,7 +25,7 @@ export interface ISectionData {
     endTime: string,
     term: Term,
     worklistNumber: number,
-    color: string,
+    color: string
     // details: string,
     // title: string,
 }

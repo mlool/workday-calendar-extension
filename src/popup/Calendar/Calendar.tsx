@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
 import { ISectionData } from '../App/App.types'
 import { CellFormat, convertToMatrix } from './utils'
+import SectionPopup from '../SectionPopup/SectionPopup'
 import './Calendar.css'
+import { useState } from 'react'
 
 interface IProps {
   sections: ISectionData[],
@@ -19,8 +20,11 @@ for (let hour = 7; hour <= 20; hour++) {
 }
 
 const Calendar = ({sections, newSection, setSections, setInvalidSection}:IProps) => {
+  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
+
   return (
     <div className="calendar">
+      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection}/>}
       <div className="header">
         <div className="time-marker"></div>
         {daysOfWeek.map((day, index) => (
@@ -36,7 +40,12 @@ const Calendar = ({sections, newSection, setSections, setInvalidSection}:IProps)
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
             {convertToMatrix(sections, newSection, setInvalidSection)[day]?.map((cell, index) => (
-              <div key={index} className="body-cell" style={{backgroundColor: cell.color}}>
+              <div 
+                key={index} 
+                className="body-cell" 
+                style={{backgroundColor: cell.color}}
+                onClick={() => {setSelectedSection(cell.sectionContent)}}
+              >
                 {cell.name}
               </div>
             ))}

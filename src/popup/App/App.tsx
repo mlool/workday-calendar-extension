@@ -1,7 +1,5 @@
-// import React from 'react'
 import { useEffect, useState } from 'react'
 import './App.css'
-// import Form from '../Form/Form'
 import CalendarContainer from '../CalendarContainer/CalendarContainer'
 import { ISectionData, baseSection } from './App.types'
 import Form from '../Form/Form'

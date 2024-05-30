@@ -1,6 +1,14 @@
-# Workday Calendar Tool
+<p align="center">
+  <img src="/public/logo128.png" width="128px" height="128px" alt="LectureSurfers logo">
+</p>
+<h1 align="center">Workday Calendar Tool</h1>
 
-This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system
+This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system!
+
+# Download
+Check out the discord channel `#download-versions`
+
+Discord is linked below, feel free to join!
 
 ## Feature Request
 Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
@@ -10,12 +18,13 @@ Join the discord channel: https://discord.gg/cx93fAJUJf
 
 ## Set up
 
-1. Download the `build` folder
-2. Go to `chrome://extensions/`
-3. Change to Developer mode on the top right
-4. Click `load unpacked` to the top left
-5. Select the downloaded `build` folder
-6. The tool should now appear in your extension menu in chrome
+1. Clone the repo
+2. Run `yarn install` and then `yarn run build` in the root directory
+3. Go to `chrome://extensions/`
+4. Change to Developer mode on the top right
+5. Click `load unpacked` to the top left
+6. Select the downloaded `build` folder
+7. The tool should now appear in your extension menu in chrome
 
 ## How to use
 
