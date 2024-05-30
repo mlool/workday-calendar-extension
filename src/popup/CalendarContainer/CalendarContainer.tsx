@@ -15,7 +15,7 @@ interface IProps {
 
 const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, setCurrentWorklistNumber, currentTerm, setCurrentTerm}:IProps) => {
   const WORKLISTCOUNT = [0, 1, 2, 3]
-  const TERMS = [Term.winterOne, Term.winterTwo, Term.summerOne, Term.summerTwo]
+  const TERMS = [Term.winterOne, Term.winterTwo]
   
 
   return (
