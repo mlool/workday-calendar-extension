@@ -68,10 +68,7 @@ export function extractSection(element: Element) {
   const convertTo24HourFormat = (time: string): string => {
     const [timePart, period] = time.split(' ');
     let [hours, minutes] = timePart.split(':').map(Number);
-    
-    console.log("timePart: " + timePart);
-    console.log("period: " + period);
-    
+
     if (period.toLowerCase() === 'p.m.' && hours !== 12) {
       hours += 12;
     } else if (period.toLowerCase() === 'a.m.' && hours === 12) {

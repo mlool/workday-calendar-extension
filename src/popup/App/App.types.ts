@@ -23,8 +23,6 @@ export interface ISectionData {
     endTime: string,
     term: Term,
     worklistNumber: number,
-    // details: string,
-    // title: string,
 }
 
 export const baseSection:ISectionData = {

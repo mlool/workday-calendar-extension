@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
 import { ISectionData } from '../App/App.types'
-import { CellFormat, convertToMatrix } from './utils'
+import { convertToMatrix } from './utils'
 import './Calendar.css'
 
 interface IProps {
