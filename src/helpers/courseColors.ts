@@ -20,11 +20,10 @@ export const colorPalettes = new Map<string, string[]>([
 
 
 export const assignColors = (sectionsList: ISectionData[], theme: ColorTheme): ISectionData[] => {
-    console.log(sectionsList)
     let newSectionsList: ISectionData[] = []
     
     sectionsList.forEach((section) => {
-        section.color = getNewSectionColor(newSectionsList, section, theme)
+        section.color = getNewSectionColor(newSectionsList.filter(sec => sec.worklistNumber == section.worklistNumber), section, theme)
         newSectionsList.push(section)
     })
       
@@ -33,8 +32,6 @@ export const assignColors = (sectionsList: ISectionData[], theme: ColorTheme): I
 
 export const getNewSectionColor = (sectionsList: ISectionData[], addedSection: ISectionData, theme: ColorTheme): string => {
     let colorList = colorPalettes.get(theme) ?? defaultColorList
-    console.log(theme)
-    console.log(colorList)
 
     let newCourseCode = getCourseCode(addedSection.code)
     

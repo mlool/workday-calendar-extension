@@ -101,8 +101,8 @@ function App() {
         setNewSection={setNewSection} 
         setSections={setSections}
         colorTheme={colorTheme}
+        setColorTheme={setColorTheme}
       />
-      <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme}/>
     </div>
   )
 }

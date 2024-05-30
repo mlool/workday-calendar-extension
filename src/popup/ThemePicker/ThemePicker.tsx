@@ -8,7 +8,7 @@ interface IThemePickerProps {
 const ThemePicker = ({colorTheme, setColorTheme}: IThemePickerProps) => {
 
 return (
-    <div style={{width: '50%', display: "flex", margin: '0 auto', marginBottom: '5px'}}>
+    <div style={{}}>
         <span style={{marginRight: '5px'}}>Theme: </span>
         <select value={colorTheme} onChange={(event) => {
             setColorTheme(event.target.value as unknown as ColorTheme)

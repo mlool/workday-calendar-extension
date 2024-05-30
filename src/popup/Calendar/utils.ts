@@ -40,8 +40,8 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 while (i < 28 && `${hour}:${minute}` !== foundSection.endTime) {
                     value.push({
                         name: "",
-                        color: "#eaffd1",
-                        sectionContent: foundSection.color
+                        color: foundSection.color,
+                        sectionContent: foundSection
                     })
                     i += 1
                     hour = 7 + Math.floor(i / 2)
@@ -58,31 +58,32 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
         }
     }
     
-  let hasInvalidSection = true;
-  if (newSection.startTime && newSection.endTime && newSection.days) {
-    hasInvalidSection = false;
-    for (let day of newSection.days) {
-      let [hourStr, minutesStr] = newSection.startTime.split(":");
-      let hourNum = +hourStr;
-      let i = (hourNum - 7) * 2 + (minutesStr === "30" ? 1 : 0);
-      //console.log('starttime: ' + newSection.startTime);
-      //console.log('endtime: ' + newSection.endTime);
+    let hasInvalidSection = true;
+    if (newSection.startTime && newSection.endTime && newSection.days) {
+        hasInvalidSection = false;
+        for (let day of newSection.days) {
+        let [hourStr, minutesStr] = newSection.startTime.split(":");
+        let hourNum = +hourStr;
+        let i = (hourNum - 7) * 2 + (minutesStr === "30" ? 1 : 0);
+        //console.log('starttime: ' + newSection.startTime);
+        //console.log('endtime: ' + newSection.endTime);
 
-      while (i < 28) {
-        let hour = 7 + Math.floor(i / 2);
-        let minute = i % 2 === 0 ? "00" : "30";
-        //console.log('hour/minute: ' + `${hour.toString().padStart(2, '0')}:${minute}`);
-        if (`${hour.toString().padStart(2, '0')}:${minute}` === newSection.endTime) break;
-        if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
-          if (matrixDict[day][i].color === "white") {
-            matrixDict[day][i].color = "orange";
-          } else {
-            matrixDict[day][i].color = "red";
-            hasInvalidSection = true;
-          }
+        while (i < 28) {
+            let hour = 7 + Math.floor(i / 2);
+            let minute = i % 2 === 0 ? "00" : "30";
+            //console.log('hour/minute: ' + `${hour.toString().padStart(2, '0')}:${minute}`);
+            if (`${hour.toString().padStart(2, '0')}:${minute}` === newSection.endTime) break;
+            if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
+            if (matrixDict[day][i].color === "white") {
+                matrixDict[day][i].color = "orange";
+                } else {
+                    matrixDict[day][i].color = "red";
+                    hasInvalidSection = true;
+                }   
+            }
+                i += 1;
+            }
         }
-        i += 1;
-      }
     }
     setInvalidSection(hasInvalidSection)
     return matrixDict
