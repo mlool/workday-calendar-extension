@@ -5,12 +5,15 @@ import './App.css'
 import CalendarContainer from '../CalendarContainer/CalendarContainer'
 import { ISectionData, baseSection } from './App.types'
 import Form from '../Form/Form'
+import { assignColors, ColorTheme } from '../../helpers/courseColors'
+import ThemePicker from '../ThemePicker/ThemePicker'
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection)
   const [sections, setSections] = useState<ISectionData[]>([])
   const [invalidSection, setInvalidSection] = useState<boolean>(false)
   const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -26,19 +29,21 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    chrome.storage.sync.get(['newSection'], (result) => {
-      if (result.newSection !== undefined) {
-        console.log(result.newSection)
-        setNewSection(result.newSection)
-      }
-    })
-  }, [])
 
   useEffect(() => {
-    chrome.storage.sync.get(['sections'], (result) => {
+      let theme = colorTheme
+      chrome.storage.sync.get(['colorTheme'], (result) => {
+        if(result.colorTheme !== undefined){
+          theme = result.colorTheme
+          setColorTheme(theme)
+        }
+      })
+
+      chrome.storage.sync.get(['sections'], (result) => {
       if (result.sections !== undefined) {
-        setSections(result.sections)
+        // assign a color
+        let sections: ISectionData[] = assignColors(result.sections, theme)
+        setSections(sections)
       }
     })
   }, [])
@@ -52,6 +57,15 @@ function App() {
   }, [])
 
   useEffect(() => {
+    chrome.storage.sync.get(['currentWorklistNumber'], (result) => {
+      if (result.currentWorklistNumber !== undefined) {
+        setCurrentWorklistNumber(result.currentWorklistNumber)
+      }
+    })
+  }, [])
+
+
+  useEffect(() => {
     chrome.storage.sync.set({ sections: sections })
   }, [sections])
 
@@ -62,6 +76,13 @@ function App() {
   useEffect(() => {
     chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
   }, [currentWorklistNumber])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ colorTheme: colorTheme })
+
+    let newSections: ISectionData[] = assignColors(sections, colorTheme)
+    setSections(newSections)
+  }, [colorTheme])
 
   return (
     <div className="App">
@@ -81,7 +102,9 @@ function App() {
         invalidSection={invalidSection} 
         setNewSection={setNewSection} 
         setSections={setSections}
+        colorTheme={colorTheme}
       />
+      <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme}/>
     </div>
   )
 }

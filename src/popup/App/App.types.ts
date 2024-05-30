@@ -1,3 +1,5 @@
+import { defaultColorList } from "../../helpers/courseColors";
+
 export enum SectionType {
     lecture,
     tutorial,
@@ -23,6 +25,7 @@ export interface ISectionData {
     endTime: string,
     term: Term,
     worklistNumber: number,
+    color: string,
     // details: string,
     // title: string,
 }
@@ -36,5 +39,6 @@ export const baseSection:ISectionData = {
     startTime: "",
     endTime: "",
     term: Term.winterOne,
-    worklistNumber: 0
+    worklistNumber: 0,
+    color: defaultColorList[0]
 }

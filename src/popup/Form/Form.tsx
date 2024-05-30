@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { ISectionData, baseSection } from '../App/App.types'
+import { ColorTheme, getNewSectionColor } from '../../helpers/courseColors'
 
 interface IProps {
     newSection: ISectionData,
@@ -7,13 +8,14 @@ interface IProps {
     invalidSection: boolean,
     currentWorklistNumber: number,
     setNewSection: (data: ISectionData) => void,
-    setSections: (data: ISectionData[]) => void
+    setSections: (data: ISectionData[]) => void,
+    colorTheme: ColorTheme,
 }
 
-const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections}: IProps) => {
+const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, colorTheme}: IProps) => {
   const onAdd = () => {
     if (invalidSection) return;
-    let updatedNewSection: ISectionData = {...newSection}
+    let updatedNewSection: ISectionData = {...newSection, color: getNewSectionColor(sections.filter((sec) => sec.worklistNumber == currentWorklistNumber), newSection, colorTheme)}
     updatedNewSection.worklistNumber = currentWorklistNumber
     
     let newSections = [...sections]

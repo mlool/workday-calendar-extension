@@ -25,11 +25,11 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 let [code, number] = foundSection.code.split(" ")
                 value.push({
                     name: code,
-                    color: "#eaffd1"
+                    color: foundSection.color
                 })
                 value.push({
                     name: number,
-                    color: "#eaffd1"
+                    color: foundSection.color
                 })
                 i += 2
                 hour = 7 + Math.floor(i / 2)
@@ -37,7 +37,7 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 while (i < 28 && `${hour}:${minute}` !== foundSection.endTime) {
                     value.push({
                         name: "",
-                        color: "#eaffd1"
+                        color: foundSection.color
                     })
                     i += 1
                     hour = 7 + Math.floor(i / 2)
@@ -63,7 +63,7 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
             let hour = 7 + Math.floor(i / 2)
             let minute = i % 2 === 0? "00": "30"
             while (i < 28 && `${hour}:${minute}` !== newSection.endTime) {
-                if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
+                if (i < matrixDict[day]?.length && matrixDict[day][i]) { // Ensure i is within bounds
                     if (matrixDict[day][i].color === "white") {
                         matrixDict[day][i].color = "orange"
                     } else {
@@ -79,4 +79,8 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
     }
     setInvalidSection(hasInvalidSection)
     return matrixDict
+}
+
+export const getCourseCode = (courseName: string): string => {
+    return courseName.split('-')[0]
 }
