@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { ISectionData, baseSection } from '../App/App.types'
 
 interface IProps {
@@ -23,6 +22,10 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
     setNewSection(baseSection)
   }
 
+  const onCancel = () => {
+    setNewSection(baseSection)
+  };
+
   const onClear = () => {
     let newSections:ISectionData[] = []
     sections.forEach((section) => {
@@ -38,6 +41,7 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
         <div>{newSection.code}</div>
         <div>{newSection.name}</div>
         <button title="Add Section" type="button" onClick={onAdd} style={{backgroundColor: invalidSection? "grey": ""}}>Add Section</button>
+        <button title="Cancel" type="button" onClick={onCancel} style={{backgroundColor: (invalidSection && (!newSection.code && !newSection.name)) ? "grey" : "" }}>Cancel</button>
         <button title="Clear Worklist" type="button" onClick={onClear}>Clear</button>
     </div>
   )
