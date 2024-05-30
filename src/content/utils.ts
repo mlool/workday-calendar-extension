@@ -25,7 +25,7 @@ export const baseSection: ISection = {
   endTime: "",
   term: Term.winterOne,
 }
-  
+
 export function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll('.gwt-Label.WKIP.WDHP');
   // Checking if course labels exist and there are at least two of them
@@ -51,16 +51,28 @@ export function extractSection(element: Element) {
   const detailsParts = sectionDetails.split(' | ');
 
   // Checking if title and section details have the expected format
-  if (titleParts.length !== 2 || detailsParts.length !== 4) {
+  if (titleParts.length !== 2 || (detailsParts.length !== 3 && detailsParts.length !== 4)) {
     alert(JSON.stringify(titleParts));
     alert(JSON.stringify(detailsParts));
     alert('Invalid title or section details format');
     return;
   }
 
+  let location = "";
+  let daysString = "";
+  let timeRange = "";
+  let dateRange = "";
+
+  if (detailsParts.length === 3) {
+    // Without location
+    [daysString, timeRange, dateRange] = detailsParts;
+  } else {
+    // With location
+    [location, daysString, timeRange, dateRange] = detailsParts;
+  }
+
   // Extracting individual parts from title and section details
   const [code, name] = titleParts;
-  const [location, daysString, timeRange, dateRange] = detailsParts;
   const days = daysString.split(' ');
   const [startTime, endTime] = timeRange.split(' - ');
 
@@ -97,4 +109,3 @@ export function extractSection(element: Element) {
 
   return newSection;
 }
-
