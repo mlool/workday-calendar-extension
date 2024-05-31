@@ -5,7 +5,7 @@ import './CalendarContainer.css'
 interface IProps {
   sections: ISectionData[],
   newSection: ISectionData,
-  currentWorklistNumber: Number,
+  currentWorklistNumber: number,
   currentTerm: Term,
   setCurrentWorklistNumber: (num: number) => void,
   setSections: (data: ISectionData[]) => void,
@@ -43,6 +43,7 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
         
       <Calendar 
         sections={sections.filter((section) => section.worklistNumber === currentWorklistNumber && section.term == currentTerm)} 
+        currentWorklistNumber={currentWorklistNumber}
         newSection={newSection} 
         setSections={setSections} 
         setInvalidSection={setInvalidSection} 

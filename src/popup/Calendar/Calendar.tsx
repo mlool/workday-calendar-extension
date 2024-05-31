@@ -7,6 +7,7 @@ import { useState } from 'react'
 interface IProps {
   sections: ISectionData[],
   newSection: ISectionData,
+  currentWorklistNumber: number,
   setSections: (data: ISectionData[]) => void,
   setInvalidSection: (state: boolean) => void;
 }
@@ -19,7 +20,7 @@ for (let hour = 7; hour <= 20; hour++) {
     times.push(`${hour}:30`);
 }
 
-const Calendar = ({sections, newSection, setSections, setInvalidSection}:IProps) => {
+const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection}:IProps) => {
   const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
 
   return (
@@ -39,7 +40,7 @@ const Calendar = ({sections, newSection, setSections, setInvalidSection}:IProps)
         </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
-            {convertToMatrix(sections, newSection, setInvalidSection)[day]?.map((cell, index) => (
+            {convertToMatrix(sections.filter((section) => section.worklistNumber === currentWorklistNumber), newSection, setInvalidSection)[day]?.map((cell, index) => (
               <div 
                 key={index} 
                 className="body-cell" 
