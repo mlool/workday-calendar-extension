@@ -81,9 +81,9 @@ export function extractSection(element: Element) {
     const [timePart, period] = time.split(' ');
     let [hours, minutes] = timePart.split(':').map(Number);
 
-    if (period.toLowerCase() === 'p.m.' && hours !== 12) {
+    if (period && period.toLowerCase() === 'p.m.' && hours !== 12) {
       hours += 12;
-    } else if (period.toLowerCase() === 'a.m.' && hours === 12) {
+    } else if (period && period.toLowerCase() === 'a.m.' && hours === 12) {
       hours = 0;
     }
 
