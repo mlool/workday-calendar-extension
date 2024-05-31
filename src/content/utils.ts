@@ -1,4 +1,4 @@
-import { Term } from "../popup/App/App.types";
+import { Term } from "./App/App.types";
 
 // Interface representing a section of a course
 export interface ISection {
