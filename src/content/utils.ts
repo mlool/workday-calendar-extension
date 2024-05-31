@@ -73,8 +73,22 @@ export function extractSection(element: Element) {
 
   // Extracting individual parts from title and section details
   const [code, name] = titleParts;
-  const days = daysString.split(' ');
+  let  days = daysString.split(' ');
   const [startTime, endTime] = timeRange.split(' - ');
+
+  //Handle the "Fri (Alternate Weeks)" case, or any text that isn't a day
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+
+  days = days.reduce<string[]>((acc, str) => {
+    const firstThreeChars = str.substring(0, 3)
+    
+    if (daysOfWeek.includes(firstThreeChars))
+      {
+        acc.push(firstThreeChars)
+      }
+    
+    return acc
+  }, []);
 
   // Convert times from 12-hour format to 24-hour format
   const convertTo24HourFormat = (time: string): string => {
