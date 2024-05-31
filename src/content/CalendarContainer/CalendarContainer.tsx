@@ -16,6 +16,16 @@ interface IProps {
 const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, setCurrentWorklistNumber, currentTerm, setCurrentTerm}:IProps) => {
   const WORKLISTCOUNT = [0, 1, 2, 3]
   const TERMS = [Term.winterOne, Term.winterTwo]
+
+  const getBackgroundColour = (term: Term): string => {
+    if(currentTerm == term){
+      return "#9ce8ff";
+    } else if (newSection.code !== baseSection.code){
+      return "#ababab" //Gray out if section selected & not correct term
+    } else {
+      return ""
+    }
+  }
   
 
   return (
@@ -35,18 +45,19 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
               className='HeaderButton'
               id={`term_${Term_String_Map[term]}`}
               onClick={() => newSection.code === baseSection.code ? setCurrentTerm(term) : null} 
-              style={{backgroundColor: term === currentTerm ? "#9ce8ff" : ""}}>{Term_String_Map[term]}
+              style={{backgroundColor: getBackgroundColour(term)}}>{Term_String_Map[term]}
             </div>
           ))
         }
       </div>
         
       <Calendar 
-        sections={sections.filter((section) => section.worklistNumber === currentWorklistNumber && section.term == currentTerm)} 
+        sections={sections} 
         currentWorklistNumber={currentWorklistNumber}
         newSection={newSection} 
         setSections={setSections} 
         setInvalidSection={setInvalidSection} 
+        currentTerm={currentTerm}
       />
     </div>
   );
