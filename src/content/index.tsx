@@ -1,4 +1,9 @@
 import { extractSection } from './utils';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import '../index.css';
+import App from './App/App';
+// Define the type of App as a React component
 
 // Function to add a button to a given HTML element
 function addButtonToElement(element: Element): void {
@@ -53,6 +58,9 @@ function handleButtonClick(element: Element): void {
   if (!selectedSection) return;
   // Getting existing sections from Chrome storage and adding the new section
   chrome.storage.sync.set({ newSection: selectedSection });
+
+  // Ensure the drawer opens when a button is clicked
+  toggleContainer(true);
 }
 
 // Function to observe DOM changes and add buttons to matching elements
@@ -103,10 +111,102 @@ function setupObserver(): void {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', observeDOMAndAddButtons);
   } else {
-    // Otherwise, directly observe DOM changes
+    const containerWrapper = document.createElement('div');
+    containerWrapper.style.position = 'fixed';
+    containerWrapper.style.top = '50%'; // Center vertically
+    containerWrapper.style.transform = 'translateY(-50%)';
+    containerWrapper.style.right = '0px'; // Start offscreen except for the icon tab
+    containerWrapper.style.zIndex = '1000';
+    containerWrapper.style.transition = 'right 0.3s';
+
+    const icon = document.createElement('div');
+    icon.id = 'toggle-icon';
+    icon.textContent = '▶'; // Initially showing the right arrow
+    icon.style.position = 'absolute';
+    icon.style.top = '50%'; // Vertically center on the tab
+    icon.style.transform = 'translateY(-50%)';
+    icon.style.transform = 'translateX(-100%)';
+
+    icon.style.width = '30px';
+    icon.style.height = '30px';
+    icon.style.backgroundColor = '#FFF';
+    icon.style.color = '#333';
+    icon.style.textAlign = 'center';
+    icon.style.lineHeight = '30px';
+    icon.style.borderRadius = '5px 0px 0px 5px';
+    icon.style.border = '1px solid #CCC';
+    icon.style.cursor = 'pointer';
+    icon.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+
+    const container = document.createElement('div');
+    container.id = 'react-container';
+    container.style.width = '300px';
+    container.style.height = '650px';
+    container.style.border = '1px solid #CCC';
+    container.style.backgroundColor = '#FFF';
+    container.style.overflow = 'auto';
+    container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+    container.style.borderRadius = '8px';
+
+    containerWrapper.appendChild(icon);
+    containerWrapper.appendChild(container);
+    document.body.appendChild(containerWrapper);
+
+    icon.addEventListener('click', () => toggleContainer());
+
+    // Read the initial state from storage and adjust UI accordingly
+    chrome.storage.local.get('drawerOpen', function (data) {
+      if (!data.drawerOpen) {
+        toggleContainer(false);
+      }
+    });
+
+    ReactDOM.render(<App />, container);
+
+    // Directly observe DOM changes
     observeDOMAndAddButtons();
   }
 }
 
-// Setting up the observer when the script is executed
+function toggleContainer(forceOpen = false) {
+  const reactContainer = document.querySelector('#react-container');
+  if (!reactContainer) return;
+  const containerWrapper = reactContainer.parentElement;
+  const icon = document.getElementById('toggle-icon');
+  if (containerWrapper && icon) {
+    const isOpen = containerWrapper.style.right === '0px';
+
+    if (forceOpen || !isOpen) {
+      containerWrapper.style.right = '0px';
+      icon.textContent = '▶'; // Show left arrow when container is open
+    } else {
+      containerWrapper.style.right = '-305px';
+      icon.textContent = '◀'; // Show right arrow when container is closed
+    }
+    // Save the new state to local storage
+    chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
+      console.log('Drawer state saved:', !isOpen);
+    });
+  }
+}
+
+// Listen for messages from background script
+// to know when user clicks extension
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.toggleContainer) {
+    const reactContainer = document.querySelector('#react-container');
+    if (!reactContainer) return;
+    const containerWrapper = reactContainer.parentElement;
+    if (containerWrapper) {
+      const isOpen = containerWrapper.style.right === '0px';
+      toggleContainer(!isOpen);
+
+      // Save the new state to local storage
+      chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
+        console.log('Drawer state saved:', !isOpen);
+      });
+    }
+  }
+});
+
 setupObserver();

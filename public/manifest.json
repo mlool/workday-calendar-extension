@@ -10,16 +10,21 @@
     "128": "logo128.png"
   },
   "background": {
-    "service_worker": "./static/js/background.js"
+    "service_worker": "static/js/background.js"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["./static/js/content.js"]
+      "matches": ["*://*.myworkday.com/*"],
+      "js": ["static/js/content.js"],
+      "css": ["static/css/content.css"]
     }
   ],
-  "action": {
-    "default_popup": "index.html"
-  },
+  "web_accessible_resources": [
+    {
+      "resources": ["static/css/content.css"],
+      "matches": ["*://*.myworkday.com/*"]
+    }
+  ],
+  "action": {},
   "permissions": ["storage", "tabs", "activeTab"]
 }
