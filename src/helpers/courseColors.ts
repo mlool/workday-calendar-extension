@@ -1,5 +1,5 @@
-import { ISectionData } from "../popup/App/App.types"
-import { getCourseCode } from "../popup/Calendar/utils"
+import { ISectionData } from "../content/App/App.types";
+import { getCourseCode } from "../content/Calendar/utils";
 
 
 export enum ColorTheme {
@@ -23,7 +23,7 @@ export const assignColors = (sectionsList: ISectionData[], theme: ColorTheme): I
     let newSectionsList: ISectionData[] = []
     
     sectionsList.forEach((section) => {
-        section.color = getNewSectionColor(newSectionsList.filter(sec => sec.worklistNumber == section.worklistNumber), section, theme)
+        section.color = getNewSectionColor(newSectionsList, section, theme)
         newSectionsList.push(section)
     })
       
@@ -32,15 +32,16 @@ export const assignColors = (sectionsList: ISectionData[], theme: ColorTheme): I
 
 export const getNewSectionColor = (sectionsList: ISectionData[], addedSection: ISectionData, theme: ColorTheme): string => {
     let colorList = colorPalettes.get(theme) ?? defaultColorList
+    let releventSectionsList = sectionsList.filter(sec => sec.worklistNumber === addedSection.worklistNumber && sec.term === addedSection.term)
 
     let newCourseCode = getCourseCode(addedSection.code)
     
-    let existingSection = sectionsList.find((x) => x.code.includes(newCourseCode) && x.color)
+    let existingSection = releventSectionsList.find((x) => x.code.includes(newCourseCode) && x.color)
     if(existingSection) {
         return existingSection.color
     }
 
-    let assignedColors = Array.from(new Set(sectionsList.filter((x => x.color != null)).map((section) => section.color)))
+    let assignedColors = Array.from(new Set(releventSectionsList.filter((x => x.color != null)).map((section) => section.color)))
     let availableColors = colorList.filter(color => !assignedColors.includes(color))
         
     return availableColors.length >= 1 ? availableColors[0] : '#666666'
