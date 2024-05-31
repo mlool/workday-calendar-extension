@@ -141,7 +141,7 @@ function setupObserver(): void {
     const container = document.createElement('div');
     container.id = 'react-container';
     container.style.width = '300px';
-    container.style.height = '600px';
+    container.style.height = '650px';
     container.style.border = '1px solid #CCC';
     container.style.backgroundColor = '#FFF';
     container.style.overflow = 'auto';
@@ -180,7 +180,7 @@ function toggleContainer(forceOpen = false) {
       containerWrapper.style.right = '0px';
       icon.textContent = '▶'; // Show left arrow when container is open
     } else {
-      containerWrapper.style.right = '-300px';
+      containerWrapper.style.right = '-305px';
       icon.textContent = '◀'; // Show right arrow when container is closed
     }
     // Save the new state to local storage
