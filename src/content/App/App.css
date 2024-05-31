@@ -8,9 +8,9 @@ body {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: 100vh; 
+  height: 100%; 
   position: relative;
-  padding-bottom: 60px;
+  /* padding-bottom: 60px; */
 }
 
 button {
