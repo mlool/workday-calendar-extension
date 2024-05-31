@@ -21,7 +21,17 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
     if(currentTerm == term){
       return "#9ce8ff";
     } else if (newSection.code !== baseSection.code){
-      return "#ababab" //Gray out if section selected & not correct term
+      return "#f7faff" //Gray out if section selected & not correct term
+    } else {
+      return ""
+    }
+  }
+
+  const getFontColor = (term: Term): string => {
+    if(currentTerm == term){
+      return "black";
+    } else if (newSection.code !== baseSection.code){
+      return "#d4d4d4" //Gray out if section selected & not correct term
     } else {
       return ""
     }
@@ -45,7 +55,7 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
               className='HeaderButton'
               id={`term_${Term_String_Map[term]}`}
               onClick={() => newSection.code === baseSection.code ? setCurrentTerm(term) : null} 
-              style={{backgroundColor: getBackgroundColour(term)}}>{Term_String_Map[term]}
+              style={{backgroundColor: getBackgroundColour(term), color: getFontColor(term)}}>{Term_String_Map[term]}
             </div>
           ))
         }

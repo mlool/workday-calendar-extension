@@ -4,6 +4,7 @@ import CalendarContainer from '../CalendarContainer/CalendarContainer'
 import { ISectionData, Term, Views, baseSection } from './App.types'
 import Form from '../Form/Form'
 import TopBar from '../TopBar/TopBar'
+import Settings from '../Settings/Settings'
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection)
@@ -86,8 +87,8 @@ function App() {
 
   return (
     <div className="App">
-       {/* <TopBar currentView={currentView} setCurrentView={setCurrentView}/> */}
-       {/* {currentView === Views.calendar ?  */}
+       <TopBar currentView={currentView} setCurrentView={setCurrentView}/>
+       {currentView === Views.calendar ? 
         <div className='CalendarViewContainer'>
           <CalendarContainer 
             sections={sections} 
@@ -109,7 +110,8 @@ function App() {
             setSections={setSections}
             currentTerm={currentTerm}
           />
-        </div>
+        </div>:
+        <Settings />}
     </div>
   )
 }

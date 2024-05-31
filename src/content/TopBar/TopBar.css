@@ -1,3 +1,10 @@
 .TopBar {
-    height: 5vh;
+    display: flex;
+    justify-content: right;
+    margin: 3px 0px;
+}
+
+.IconContainer {
+    cursor: pointer;
+    margin-right: 5px;
 }
