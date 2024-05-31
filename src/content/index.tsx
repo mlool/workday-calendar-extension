@@ -48,6 +48,7 @@ function addButtonToElement(element: Element): void {
     button.style.boxShadow = '0 0 0 1px #CED3D9';
   });
 
+
   // Inserting the button before the given element
   element.parentNode?.insertBefore(button, element);
 }
