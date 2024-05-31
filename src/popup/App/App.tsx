@@ -25,27 +25,7 @@ function App() {
     };
   }, [chrome.storage.sync.get(['newSection'])]);
 
-  //I think we prob want to move the setters which are dependent on the react state above the 
-  //getters or else we can overwrite an updated state
-  useEffect(() => {
-    chrome.storage.sync.set({ sections: sections })
-  }, [sections])
-
-  useEffect(() => {
-    chrome.storage.sync.set({ newSection: newSection })
-    if (newSection.code !== baseSection.code)
-      {
-        setCurrentTerm(newSection.term)
-      }
-  }, [newSection])
-
-  useEffect(() => {
-    chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
-  }, [currentWorklistNumber])
-
-  useEffect(() => {
-    chrome.storage.sync.set({ currentTerm: currentTerm })
-  }, [currentTerm])
+  
 
   // Is this code needed, is it not just doing the same thing as above?
   useEffect(() => {
@@ -81,6 +61,27 @@ function App() {
     })
   }, [])
 
+  //I think we prob want to move the setters which are dependent on the react state above the 
+  //getters or else we can overwrite an updated state
+  useEffect(() => {
+    chrome.storage.sync.set({ sections: sections })
+  }, [sections])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ newSection: newSection })
+    if (newSection.code !== baseSection.code)
+      {
+        setCurrentTerm(newSection.term)
+      }
+  }, [newSection])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ currentWorklistNumber: currentWorklistNumber })
+  }, [currentWorklistNumber])
+
+  useEffect(() => {
+    chrome.storage.sync.set({ currentTerm: currentTerm })
+  }, [currentTerm])
   
 
   return (

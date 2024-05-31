@@ -1,4 +1,4 @@
-import { ISectionData, Term_String_Map, Term } from '../App/App.types'
+import { ISectionData, Term_String_Map, Term, baseSection } from '../App/App.types'
 import Calendar from '../Calendar/Calendar';
 import './CalendarContainer.css'
 
@@ -34,7 +34,7 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
             <div
               className='HeaderButton'
               id={`term_${Term_String_Map[term]}`}
-              onClick={() => setCurrentTerm(term)} 
+              onClick={() => newSection.code === baseSection.code ? setCurrentTerm(term) : null} 
               style={{backgroundColor: term === currentTerm ? "#9ce8ff" : ""}}>{Term_String_Map[term]}
             </div>
           ))
