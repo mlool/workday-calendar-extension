@@ -1,8 +1,3 @@
-body {
-  width: 300px;
-  height: 600px;
-}
-
 .App {
   text-align: center;
   display: flex;
@@ -13,7 +8,7 @@ body {
   /* padding-bottom: 60px; */
 }
 
-button {
+.App button {
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;
@@ -25,16 +20,16 @@ button {
   margin: 10px;
 }
 
-button:hover {
+.App button:hover {
   background-color: #0056b3;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-button:active {
+.App button:active {
   background-color: #003f7f;
 }
 
-.button-container {
+.App .button-container {
   display: flex;
   justify-content: center;
   width: 100%;
