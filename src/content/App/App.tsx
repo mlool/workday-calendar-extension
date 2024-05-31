@@ -85,10 +85,10 @@ function App() {
   
 
   return (
-    // <div className="App">
-    //   {/* <TopBar currentView={currentView} setCurrentView={setCurrentView}/> */}
-    //   {/* {currentView === Views.calendar ?  */}
-        <div className="CalendarviewContainer">
+    <div className="App">
+       {/* <TopBar currentView={currentView} setCurrentView={setCurrentView}/> */}
+       {/* {currentView === Views.calendar ?  */}
+        <div className='CalendarViewContainer'>
           <CalendarContainer 
             sections={sections} 
             setSections={setSections} 
@@ -110,12 +110,7 @@ function App() {
             currentTerm={currentTerm}
           />
         </div>
-    //      {/* :
-    //     <div>
-    //       Settings Page
-    //     </div>
-    //   } */}
-    // </div>
+    </div>
   )
 }
 
