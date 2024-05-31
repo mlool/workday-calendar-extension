@@ -86,7 +86,7 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
 
     setInvalidSection(hasInvalidSection);
     return matrixDict;
-    };
+};
 
 export const getCourseCode = (courseName: string): string => {
     return courseName.split('-')[0]
