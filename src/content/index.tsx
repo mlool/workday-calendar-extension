@@ -111,58 +111,6 @@ function setupObserver(): void {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', observeDOMAndAddButtons);
   } else {
-    const containerWrapper = document.createElement('div');
-    containerWrapper.style.position = 'fixed';
-    containerWrapper.style.top = '50%'; // Center vertically
-    containerWrapper.style.transform = 'translateY(-50%)';
-    containerWrapper.style.right = '0px'; // Start offscreen except for the icon tab
-    containerWrapper.style.zIndex = '1000';
-    containerWrapper.style.transition = 'right 0.3s';
-
-    const icon = document.createElement('div');
-    icon.id = 'toggle-icon';
-    icon.textContent = '▶'; // Initially showing the right arrow
-    icon.style.position = 'absolute';
-    icon.style.top = '50%'; // Vertically center on the tab
-    icon.style.transform = 'translateY(-50%)';
-    icon.style.transform = 'translateX(-100%)';
-
-    icon.style.width = '30px';
-    icon.style.height = '30px';
-    icon.style.backgroundColor = '#FFF';
-    icon.style.color = '#333';
-    icon.style.textAlign = 'center';
-    icon.style.lineHeight = '30px';
-    icon.style.borderRadius = '5px 0px 0px 5px';
-    icon.style.border = '1px solid #CCC';
-    icon.style.cursor = 'pointer';
-    icon.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-
-    const container = document.createElement('div');
-    container.id = 'react-container';
-    container.style.width = '300px';
-    container.style.height = '650px';
-    container.style.border = '1px solid #CCC';
-    container.style.backgroundColor = '#FFF';
-    container.style.overflow = 'auto';
-    container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-    container.style.borderRadius = '8px';
-
-    containerWrapper.appendChild(icon);
-    containerWrapper.appendChild(container);
-    document.body.appendChild(containerWrapper);
-
-    icon.addEventListener('click', () => toggleContainer());
-
-    // Read the initial state from storage and adjust UI accordingly
-    chrome.storage.local.get('drawerOpen', function (data) {
-      if (!data.drawerOpen) {
-        toggleContainer(false);
-      }
-    });
-
-    ReactDOM.render(<App />, container);
-
     // Directly observe DOM changes
     observeDOMAndAddButtons();
   }
@@ -210,3 +158,56 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 setupObserver();
+
+// document.addEventListener('DOMContentLoaded', function () {
+// Read the initial state from storage and adjust UI accordingly
+chrome.storage.local.get('drawerOpen', function (data) {
+  // if (!data.drawerOpen) {
+  //   toggleContainer(false);
+  // }
+  const containerWrapper = document.createElement('div');
+  containerWrapper.style.position = 'fixed';
+  containerWrapper.style.top = '50%'; // Center vertically
+  containerWrapper.style.transform = 'translateY(-50%)';
+  containerWrapper.style.right = data.drawerOpen ? '0px' : '-305px'; // Start onscreen or offscreen depending on storage (except for the icon tab)
+  containerWrapper.style.zIndex = '1000';
+  containerWrapper.style.transition = 'right 0.3s';
+
+  const icon = document.createElement('div');
+  icon.id = 'toggle-icon';
+  icon.textContent = data.drawerOpen ? '▶' : '◀'; // Initially showing the right arrow
+  icon.style.position = 'absolute';
+  icon.style.top = '50%'; // Vertically center on the tab
+  icon.style.transform = 'translateY(-50%)';
+  icon.style.transform = 'translateX(-100%)';
+
+  icon.style.width = '30px';
+  icon.style.height = '30px';
+  icon.style.backgroundColor = '#FFF';
+  icon.style.color = '#333';
+  icon.style.textAlign = 'center';
+  icon.style.lineHeight = '30px';
+  icon.style.borderRadius = '5px 0px 0px 5px';
+  icon.style.border = '1px solid #CCC';
+  icon.style.cursor = 'pointer';
+  icon.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+
+  const container = document.createElement('div');
+  container.id = 'react-container';
+  container.style.width = '300px';
+  container.style.height = '650px';
+  container.style.border = '1px solid #CCC';
+  container.style.backgroundColor = '#FFF';
+  container.style.overflow = 'auto';
+  container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+  container.style.borderRadius = '8px';
+
+  containerWrapper.appendChild(icon);
+  containerWrapper.appendChild(container);
+  document.body.appendChild(containerWrapper);
+
+  icon.addEventListener('click', () => toggleContainer());
+
+  ReactDOM.render(<App />, container);
+});
+// });

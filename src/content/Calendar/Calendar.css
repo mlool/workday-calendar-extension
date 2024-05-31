@@ -5,43 +5,43 @@
     font-family: Arial, sans-serif;
   }
   
-  .header {
+  .calendar  .header {
     display: grid;
     grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
     background-color: #f0f0f0;
     text-align: center;
   }
   
-  .header-cell {
+  .calendar  .header-cell {
     padding: 10px;
     font-weight: bold;
     border: 1px solid #ddd;
   }
   
-  .body {
+  .calendar  .body {
     display: grid;
     grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
     grid-auto-rows:15px;
   }
   
-  .time-markers {
+  .calendar  .time-markers {
     display: grid;
     grid-auto-rows:15px;
   }
   
-  .time-marker {
+  .calendar  .time-marker {
     border: 1px solid #ddd;
     padding: 5px;
     text-align: center;
     font-size: 9px;
   }
   
-  .body-column {
+  .calendar  .body-column {
     display: grid;
     grid-auto-rows:15px;
   }
   
-  .body-cell {
+  .calendar  .body-cell {
     border: 1px solid #ddd;
     padding: 5px;
     position: relative;
@@ -49,7 +49,7 @@
     cursor: pointer;
   }
   
-  .event {
+  .calendar  .event {
     background-color: #add8e6;
     padding: 5px;
     margin: 2px 0;
