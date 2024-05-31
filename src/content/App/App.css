@@ -1,43 +1,14 @@
 .App {
   text-align: center;
+  position: relative;
+  height: 60vh; 
+}
+
+.CalendarViewContainer {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: 100%; 
-  position: relative;
-  /* padding-bottom: 60px; */
-}
-
-.App button {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  margin: 10px;
-}
-
-.App button:hover {
-  background-color: #0056b3;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.App button:active {
-  background-color: #003f7f;
-}
-
-.App .button-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  padding: 10px;
-  background-color: #f5f5f5;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  height: 55vh; 
 }
 
 .App-logo {

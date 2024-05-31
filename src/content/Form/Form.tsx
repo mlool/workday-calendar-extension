@@ -1,4 +1,6 @@
 import { ISectionData, Term, baseSection } from '../App/App.types'
+import './Form.css'
+
 
 interface IProps {
     newSection: ISectionData,
@@ -38,12 +40,16 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
   }
 
   return (
-    <div>
+    <div className='NewSectionForm'>
+      <div className="NewSectionInfo">
         <div>{newSection.code}</div>
         <div>{newSection.name}</div>
-        <button title="Add Section" type="button" onClick={onAdd} style={{backgroundColor: invalidSection? "grey": ""}}>Add Section</button>
-        <button title="Cancel" type="button" onClick={onCancel} style={{backgroundColor: (invalidSection && (!newSection.code && !newSection.name)) ? "grey" : "" }}>Cancel</button>
-        <button title="Clear Worklist" type="button" onClick={onClear}>Clear</button>
+      </div>
+      <div className='NewSectionButtonContainer'>
+        <div className="NewSectionButton" title="Add Section" onClick={onAdd} style={{backgroundColor: invalidSection? "grey": ""}}>Add Section</div>
+        <div className="NewSectionButton" title="Cancel"onClick={onCancel} style={{backgroundColor: (invalidSection && (!newSection.code && !newSection.name)) ? "grey" : "" }}>Cancel</div>
+      </div>
+      <div className="ClearWorklistButton" title="Clear Worklist" onClick={onClear}>Clear Worklist</div>
     </div>
   )
 }

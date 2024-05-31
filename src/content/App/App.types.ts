@@ -13,6 +13,12 @@ export enum Term {
     winterFull,
 }
 
+export enum Views {
+    calendar,
+    settings
+}
+
+
 export const Term_String_Map: { [key in Term]: string} = {
     [Term.summerOne]: 'S1',
     [Term.summerTwo]: 'S2',
