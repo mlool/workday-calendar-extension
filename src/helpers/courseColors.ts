@@ -17,7 +17,7 @@ export const colorPalettes = new Map<string, string[]>([
 [ColorTheme.Green, ['#EAFFD1', '#ADD9A4', '#DBF6C6', '#8FC68D', '#CCECBB', '#80BC82', '#70B276', '#6AA76F']],
 [ColorTheme.Blue, ['#A5CEF0', '#83A3EE', '#9DC4F0', '#7B99EE', '#94B9EF', '#728EED', '#6A83EC', '#667EEC']],
 [ColorTheme.MultiColor, ['#FF8DEA', '#FCF59F','#A5CEF0', '#D1B0FF', '#CAFF89', '#7A90FE', '#AAFFCA','#FFE19F']],
-[ColorTheme.Basic, ['#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1', '#EAFFD1']]
+[ColorTheme.Basic, ['#EAFFD1']]
 ]);
 
 
@@ -34,6 +34,11 @@ export const assignColors = (sectionsList: ISectionData[], theme: ColorTheme): I
 
 export const getNewSectionColor = (sectionsList: ISectionData[], addedSection: ISectionData, theme: ColorTheme): string => {
     let colorList = colorPalettes.get(theme) ?? defaultColorList
+    
+    // Case for single colored themes
+    if (colorList.length === 1) {
+        return colorList[0] 
+    }
     let releventSectionsList = sectionsList.filter(sec => (sec.worklistNumber === addedSection.worklistNumber) && (sec.term === addedSection.term))
 
     let newCourseCode = getCourseCode(addedSection.code)
