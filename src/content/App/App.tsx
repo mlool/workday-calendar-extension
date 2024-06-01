@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import CalendarContainer from '../CalendarContainer/CalendarContainer';
 import { ISectionData, Term, Views, baseSection } from './App.types';
@@ -15,8 +15,8 @@ function App() {
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
   const [currentView, setCurrentView] = useState<Views>(Views.calendar);
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green);
-  const prevColorTheme = useRef(colorTheme);
-  const prevSections = useRef(sections);
+  // const prevColorTheme = useRef(colorTheme);
+  // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = async () => {
@@ -84,6 +84,7 @@ function App() {
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
     chrome.storage.sync.set({ sections });
+    // alert(JSON.stringify(sections, null, 2))
   }, [sections]);
 
   useEffect(() => {
@@ -104,20 +105,20 @@ function App() {
   useEffect(() => {
     chrome.storage.sync.set({ colorTheme });
   }, [colorTheme]);
-  
+
   useEffect(() => {
     // Check if there is a real change to trigger the update
-    if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
-      const newSections = assignColors(sections, colorTheme);
+    // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
+    const newSections = assignColors(sections, colorTheme);
 
-      if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
-        setSections(newSections);
-      }
-
-      // Update refs
-      prevColorTheme.current = colorTheme;
-      prevSections.current = sections;
+    if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
+      setSections(newSections);
     }
+
+    // Update refs
+    // prevColorTheme.current = colorTheme;
+    // prevSections.current = sections;
+    // }
   }, [colorTheme, sections]); // React only if these values change
 
   return (
