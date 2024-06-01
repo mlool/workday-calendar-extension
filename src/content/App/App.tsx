@@ -109,7 +109,7 @@ function App() {
 
   return (
     <div className="App">
-      <TopBar setCurrentView={setCurrentView} sections={sections} />
+      <TopBar currentView={currentView} setCurrentView={setCurrentView} />
       {currentView === Views.calendar ? (
         <div className="CalendarViewContainer">
           <CalendarContainer
@@ -136,7 +136,11 @@ function App() {
           />
         </div>
       ) : (
-        <Settings colorTheme={colorTheme} setColorTheme={setColorTheme} />
+        <Settings 
+          colorTheme={colorTheme} 
+          sections={sections}
+          setColorTheme={setColorTheme} 
+        />
       )}
     </div>
   );
