@@ -11,6 +11,8 @@ function addButtonToElement(element: Element): void {
   const button: HTMLButtonElement = document.createElement('button');
   // Setting the button text content to '+'
   button.textContent = '+';
+  // Add custom button id
+  button.id = 'add-section-button';
   // Adding an event listener for when the button is clicked
   button.addEventListener('click', () => {
     handleButtonClick(element);
@@ -48,7 +50,6 @@ function addButtonToElement(element: Element): void {
     button.style.boxShadow = '0 0 0 1px #CED3D9';
   });
 
-
   // Inserting the button before the given element
   element.parentNode?.insertBefore(button, element);
 }
@@ -80,15 +81,15 @@ function observeDOMAndAddButtons(): void {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
             // Finding matching elements within the added node
-            const matchingElements = node.querySelectorAll('[data-automation-id="compositeContainer"] > *'); // last time buttons gone, this selector broke
+            const matchingElements = node.querySelectorAll(
+              '[data-automation-id="compositeContainer"] > div'
+            ); // last time buttons gone, this selector broke
             // Adding buttons to matching elements
             matchingElements.forEach((matchingElement) => {
               // Check if the element already has a button as a previous sibling
               const previousSibling = matchingElement.previousElementSibling;
               const isButtonAlreadyPresent =
-                previousSibling &&
-                previousSibling.tagName === 'BUTTON' &&
-                previousSibling.textContent === '+';
+                previousSibling && previousSibling.id === 'add-section-button';
 
               if (!isButtonAlreadyPresent) {
                 addButtonToElement(matchingElement);
