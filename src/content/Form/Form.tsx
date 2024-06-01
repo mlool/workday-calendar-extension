@@ -18,9 +18,10 @@ interface IProps {
 const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, currentTerm, colorTheme, setColorTheme}: IProps) => {
   const onAdd = () => {
     if (invalidSection) return;
-    let updatedNewSection: ISectionData = {...newSection, color: getNewSectionColor(sections, newSection, colorTheme)}
+    let updatedNewSection = newSection;
     updatedNewSection.worklistNumber = currentWorklistNumber
-    
+    updatedNewSection.color = getNewSectionColor(sections, updatedNewSection, colorTheme)
+
     let newSections = [...sections]
     
     newSections.push(updatedNewSection)

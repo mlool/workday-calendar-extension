@@ -32,7 +32,7 @@ export const assignColors = (sectionsList: ISectionData[], theme: ColorTheme): I
 
 export const getNewSectionColor = (sectionsList: ISectionData[], addedSection: ISectionData, theme: ColorTheme): string => {
     let colorList = colorPalettes.get(theme) ?? defaultColorList
-    let releventSectionsList = sectionsList.filter(sec => sec.worklistNumber === addedSection.worklistNumber && sec.term === addedSection.term)
+    let releventSectionsList = sectionsList.filter(sec => (sec.worklistNumber === addedSection.worklistNumber) && (sec.term === addedSection.term))
 
     let newCourseCode = getCourseCode(addedSection.code)
     
