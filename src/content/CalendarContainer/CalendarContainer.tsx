@@ -41,24 +41,28 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
   return (
     <div className="CalendarContainer">
       <div className='HeaderSectionContainer'>
-        <div style={{padding: '3px 5px'}}>Worklists: </div>
-        {WORKLISTCOUNT.map((num) => 
-          (<div 
-            className='HeaderButton' 
-            id={`work${num}`} 
-            onClick={() => setCurrentWorklistNumber(num)} 
-            style={{backgroundColor: num === currentWorklistNumber? "#9ce8ff":""}}>{num}</div>)
-        )}
-        <div style={{padding: '3px 5px'}}>Terms: </div>
-        {TERMS.map((term) => (
-            <div
-              className='HeaderButton'
-              id={`term_${Term_String_Map[term]}`}
-              onClick={() => newSection.code === baseSection.code ? setCurrentTerm(term) : null} 
-              style={{backgroundColor: getBackgroundColour(term), color: getFontColor(term)}}>{Term_String_Map[term]}
-            </div>
-          ))
-        }
+        <div className='HeaderItemContainer'>
+          <div style={{padding: '3px 5px'}}>Worklists: </div>
+          {WORKLISTCOUNT.map((num) => 
+            (<div 
+              className='HeaderButton' 
+              id={`work${num}`} 
+              onClick={() => setCurrentWorklistNumber(num)} 
+              style={{backgroundColor: num === currentWorklistNumber? "#9ce8ff":""}}>{num}</div>)
+          )}
+        </div>
+        <div className='HeaderItemContainer'>
+          <div style={{padding: '3px 5px'}}>Terms: </div>
+          {TERMS.map((term) => (
+              <div
+                className='HeaderButton'
+                id={`term_${Term_String_Map[term]}`}
+                onClick={() => newSection.code === baseSection.code ? setCurrentTerm(term) : null} 
+                style={{backgroundColor: getBackgroundColour(term), color: getFontColor(term)}}>{Term_String_Map[term]}
+              </div>
+            ))
+          }
+        </div>
       </div>
         
       <Calendar 

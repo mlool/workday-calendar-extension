@@ -7,7 +7,12 @@
 
 .HeaderSectionContainer {
     display: flex;
+    justify-content: space-between;
     padding: 3px;
+}
+
+.HeaderItemContainer {
+    display: flex;
 }
 
 .HeaderButton {
