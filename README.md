@@ -13,7 +13,7 @@ Discord is linked below, feel free to join!
 ## Feature Request
 Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
 
-## Collabroators
+## Collaborators
 Join the discord channel: https://discord.gg/cx93fAJUJf
 
 ## Set up

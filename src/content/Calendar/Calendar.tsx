@@ -24,7 +24,7 @@ for (let hour = 7; hour <= 20; hour++) {
 const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, currentTerm}:IProps) => {
   const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
 
-  const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && section.term == currentTerm)
+  const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && section.term === currentTerm)
 
   return (
     <div className="calendar">
