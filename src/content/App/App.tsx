@@ -123,7 +123,7 @@ function App() {
 
   return (
     <div className="App">
-      <TopBar currentView={currentView} setCurrentView={setCurrentView} />
+      <TopBar setCurrentView={setCurrentView} sections={sections} />
       {currentView === Views.calendar ? (
         <div className="CalendarViewContainer">
           <CalendarContainer
