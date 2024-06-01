@@ -5,6 +5,9 @@ import { ISectionData, Term, Views, baseSection } from './App.types'
 import Form from '../Form/Form'
 import TopBar from '../TopBar/TopBar'
 import Settings from '../Settings/Settings'
+import { assignColors, ColorTheme } from '../../helpers/courseColors'
+import ThemePicker from '../Settings/ThemePicker'
+
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection)
@@ -13,6 +16,7 @@ function App() {
   const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne)
   const [currentView, setCurrentView] = useState<Views>(Views.calendar)
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -39,9 +43,18 @@ function App() {
   }, [])
 
   useEffect(() => {
+    let theme = colorTheme
+    chrome.storage.sync.get(['colorTheme'], (result) => {
+      if(result.colorTheme !== undefined){
+        theme = result.colorTheme
+        setColorTheme(theme)
+      }
+    })
+
     chrome.storage.sync.get(['sections'], (result) => {
       if (result.sections !== undefined) {
-        setSections(result.sections)
+        let sections: ISectionData[] = assignColors(result.sections, theme)
+        setSections(sections)
       }
     })
   }, [])
@@ -84,6 +97,12 @@ function App() {
     chrome.storage.sync.set({ currentTerm: currentTerm })
   }, [currentTerm])
   
+  useEffect(() => {
+    chrome.storage.sync.set({ colorTheme: colorTheme })
+
+    let newSections: ISectionData[] = assignColors(sections, colorTheme)
+    setSections(newSections)
+  }, [colorTheme])
 
   return (
     <div className="App">
@@ -109,9 +128,11 @@ function App() {
             setNewSection={setNewSection} 
             setSections={setSections}
             currentTerm={currentTerm}
+            colorTheme={colorTheme}
+            setColorTheme={setColorTheme}
           />
         </div>:
-        <Settings />}
+        <Settings colorTheme={colorTheme} setColorTheme={setColorTheme} />}
     </div>
   )
 }

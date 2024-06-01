@@ -1,7 +1,7 @@
 .calendar {
     display: grid;
     grid-template-rows: auto 1fr;
-    height: 40vh;
+    height: 100%;
     font-family: Arial, sans-serif;
   }
   

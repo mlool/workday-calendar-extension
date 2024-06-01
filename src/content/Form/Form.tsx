@@ -1,3 +1,4 @@
+import { ColorTheme, getNewSectionColor } from '../../helpers/courseColors'
 import { ISectionData, Term, baseSection } from '../App/App.types'
 import './Form.css'
 
@@ -7,17 +8,20 @@ interface IProps {
     sections: ISectionData[],
     invalidSection: boolean,
     currentWorklistNumber: number,
-    currentTerm: Term;
     setNewSection: (data: ISectionData) => void,
-    setSections: (data: ISectionData[]) => void
+    setSections: (data: ISectionData[]) => void,
+    currentTerm: Term;
+    colorTheme: ColorTheme,
+    setColorTheme: (theme: ColorTheme) => void
 }
 
-const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, currentTerm}: IProps) => {
+const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, currentTerm, colorTheme, setColorTheme}: IProps) => {
   const onAdd = () => {
     if (invalidSection) return;
-    let updatedNewSection: ISectionData = {...newSection}
+    let updatedNewSection = newSection;
     updatedNewSection.worklistNumber = currentWorklistNumber
-    
+    updatedNewSection.color = getNewSectionColor(sections, updatedNewSection, colorTheme)
+
     let newSections = [...sections]
     
     newSections.push(updatedNewSection)

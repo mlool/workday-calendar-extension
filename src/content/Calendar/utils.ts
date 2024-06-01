@@ -26,12 +26,12 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                 let [code, number] = foundSection.code.split(" ")
                 value.push({
                     name: code,
-                    color: "#eaffd1",
+                    color: foundSection.color,
                     sectionContent: foundSection
                 })
                 value.push({
                     name: number,
-                    color: "#eaffd1",
+                    color: foundSection.color,
                     sectionContent: foundSection
                 })
                 i += 2
@@ -42,7 +42,7 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                     if (formattedTime === foundSection.endTime) break
                     value.push({
                         name: "",
-                        color: "#eaffd1",
+                        color: foundSection.color,
                         sectionContent: foundSection
                     })
                     i += 1
@@ -58,32 +58,36 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
         }
     }
     
-  let hasInvalidSection = true;
-  if (newSection.startTime && newSection.endTime && newSection.days) {
-    hasInvalidSection = false;
-    for (let day of newSection.days) {
-      let [hourStr, minutesStr] = newSection.startTime.split(":");
-      let hourNum = +hourStr;
-      let i = (hourNum - 7) * 2 + (minutesStr === "30" ? 1 : 0);
+    let hasInvalidSection = true;
+    if (newSection.startTime && newSection.endTime && newSection.days) {
+        hasInvalidSection = false;
+        for (let day of newSection.days) {
+        let [hourStr, minutesStr] = newSection.startTime.split(":");
+        let hourNum = +hourStr;
+        let i = (hourNum - 7) * 2 + (minutesStr === "30" ? 1 : 0);
 
-      while (i < 28) {
-        let hour = 7 + Math.floor(i / 2);
-        let minute = i % 2 === 0 ? "00" : "30";
-        let formattedTime = `${hour.toString().padStart(2, '0')}:${minute}`
-        if (formattedTime === newSection.endTime) break;
-        if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
-          if (matrixDict[day][i].color === "white") {
-            matrixDict[day][i].color = "orange";
-          } else {
-            matrixDict[day][i].color = "red";
-            hasInvalidSection = true;
-          }
+        while (i < 28) {
+            let hour = 7 + Math.floor(i / 2);
+            let minute = i % 2 === 0 ? "00" : "30";
+            let formattedTime = `${hour.toString().padStart(2, '0')}:${minute}`
+            if (formattedTime === newSection.endTime) break;
+            if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
+            if (matrixDict[day][i].color === "white") {
+                matrixDict[day][i].color = "orange";
+            } else {
+                matrixDict[day][i].color = "red";
+                hasInvalidSection = true;
+            }
+            }
+            i += 1;
         }
-        i += 1;
-      }
+        }
     }
-  }
 
-  setInvalidSection(hasInvalidSection);
-  return matrixDict;
+    setInvalidSection(hasInvalidSection);
+    return matrixDict;
 };
+
+export const getCourseCode = (courseName: string): string => {
+    return courseName.split('-')[0]
+}

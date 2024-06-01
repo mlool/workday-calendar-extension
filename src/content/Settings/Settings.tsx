@@ -1,7 +1,15 @@
-const Settings = () => {
+import { ColorTheme } from "../../helpers/courseColors"
+import ThemePicker from "./ThemePicker"
+
+interface ISettingsProps {
+  colorTheme: ColorTheme,
+  setColorTheme: (theme: ColorTheme) => void
+}
+
+const Settings = ({colorTheme, setColorTheme}: ISettingsProps) => {
   return (
     <div>
-        Settings Page
+        <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme}/>
     </div>
   )
 }

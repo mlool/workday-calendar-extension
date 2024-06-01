@@ -1,4 +1,6 @@
 .CalendarContainer {
+    height: 75%;
+    overflow: hidden;
 }
 
 .HeaderSectionContainer {
