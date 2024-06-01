@@ -27,7 +27,7 @@ export const baseSection: ISection = {
 }
 
 export function extractSection(element: Element) {
-  const courseLabels = element.parentElement?.querySelectorAll('.gwt-Label.WKIP.WDHP');
+  const courseLabels = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]'); // The div with the raw text of the course section data.
   // Checking if course labels exist and there are at least two of them
   if (!courseLabels || courseLabels.length < 2) {
     alert('Title or section details not found');

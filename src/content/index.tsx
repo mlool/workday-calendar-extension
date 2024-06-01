@@ -80,7 +80,7 @@ function observeDOMAndAddButtons(): void {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
             // Finding matching elements within the added node
-            const matchingElements = node.querySelectorAll('.WD5F.WB5F');
+            const matchingElements = node.querySelectorAll('[data-automation-id="compositeContainer"] > *'); // last time buttons gone, this selector broke
             // Adding buttons to matching elements
             matchingElements.forEach((matchingElement) => {
               // Check if the element already has a button as a previous sibling
