@@ -18,7 +18,7 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
   const TERMS = [Term.winterOne, Term.winterTwo]
 
   const getBackgroundColour = (term: Term): string => {
-    if(currentTerm == term){
+    if(currentTerm === term){
       return "#9ce8ff";
     } else if (newSection.code !== baseSection.code){
       return "#f7faff" //Gray out if section selected & not correct term
@@ -28,7 +28,7 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
   }
 
   const getFontColor = (term: Term): string => {
-    if(currentTerm == term){
+    if(currentTerm === term){
       return "black";
     } else if (newSection.code !== baseSection.code){
       return "#d4d4d4" //Gray out if section selected & not correct term

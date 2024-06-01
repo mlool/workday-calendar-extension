@@ -1,13 +1,16 @@
 .App {
   text-align: center;
-  position: relative;
-  height: 100%; 
+  /* position: relative; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .CalendarViewContainer {
   display: flex;
   flex-direction: column;
-  height: 100%; 
+  flex-grow: 1;
+  /* height: 100%; */
 }
 
 .App-logo {
