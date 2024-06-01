@@ -1,14 +1,28 @@
 import {Views} from '../App/App.types'
 import SettingsIcon from '../Icons/SettingsIcon';
 import CalendarIcon from '../Icons/CalendarIcon';
+import ExportIcon from '../Icons/ExportIcon';
 import './TopBar.css'
+import { ISectionData } from '../App/App.types';
 
 interface IProps {
-    currentView: Views,
     setCurrentView: (view: Views) => void;
+    sections: ISectionData[];
 }
 
-const TopBar = ({currentView, setCurrentView}:IProps) => {
+const TopBar = ({setCurrentView, sections }:IProps) => {
+
+  const handleExport = () => {
+    const json = JSON.stringify(sections, null, 2);
+    const blob = new Blob([json], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'schedule.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="TopBar">
       <div className='TopBarTextContainer'>
@@ -21,6 +35,9 @@ const TopBar = ({currentView, setCurrentView}:IProps) => {
         <div className="IconContainer" onClick={() => setCurrentView(Views.settings)}>
           <SettingsIcon size={24} color={'white'} />
         </div>
+      </div>
+      <div className="IconContainer" onClick={handleExport}>
+        <ExportIcon size={24} color={'black'} />
       </div>
     </div>
   );
