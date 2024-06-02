@@ -126,6 +126,10 @@ function toggleContainer(forceOpen = false) {
   if (containerWrapper && icon) {
     const isOpen = containerWrapper.style.right === '0px';
 
+    if (isOpen && forceOpen) {
+      return
+    }
+
     if (forceOpen || !isOpen) {
       containerWrapper.style.right = '0px';
       icon.textContent = '▶'; // Show left arrow when container is open
