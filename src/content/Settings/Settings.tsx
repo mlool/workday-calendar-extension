@@ -33,6 +33,8 @@ const Settings = ({colorTheme, sections, setColorTheme}: ISettingsProps) => {
       <div className="SettingsHeader">Export/Import</div>
       <hr />
       <div className="SettingsButton" onClick={handleExport}>Export Calendar</div>
+      <div className="SettingsHeader">Contact Us</div>
+      <hr />
     </div>
   )
 }
