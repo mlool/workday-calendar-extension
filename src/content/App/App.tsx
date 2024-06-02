@@ -19,67 +19,53 @@ function App() {
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
-    const syncInitialState = async () => {
-      const result = await chrome.storage.sync.get([
+    const syncInitialState = () => {
+      chrome.storage.sync.get([
         'newSection',
         'currentTerm',
         'colorTheme',
         'sections',
         'currentWorklistNumber',
-      ]);
-
-      if (result.newSection !== undefined) {
-        setNewSection(result.newSection);
-      }
-      if (result.currentTerm !== undefined) {
-        setCurrentTerm(result.currentTerm);
-      }
-      if (result.colorTheme !== undefined) {
-        setColorTheme(result.colorTheme);
-      }
-      if (result.sections !== undefined) {
-        setSections(
-          assignColors(result.sections, result.colorTheme || ColorTheme.Green)
-        );
-      }
-      if (result.currentWorklistNumber !== undefined) {
-        setCurrentWorklistNumber(result.currentWorklistNumber);
-      }
+      ], (result) => {
+        if (result.newSection !== undefined) {
+          setNewSection(result.newSection);
+        }
+        if (result.currentTerm !== undefined) {
+          setCurrentTerm(result.currentTerm);
+        }
+        if (result.colorTheme !== undefined) {
+          setColorTheme(result.colorTheme);
+        }
+        if (result.sections !== undefined) {
+          setSections(
+            assignColors(result.sections, result.colorTheme || ColorTheme.Green)
+          );
+        }
+        if (result.currentWorklistNumber !== undefined) {
+          setCurrentWorklistNumber(result.currentWorklistNumber);
+        }
+      });
     };
 
-    syncInitialState();
-  }, []); // Run only once on mount
-
-  // Listen for changes in chrome storage
-  useEffect(() => {
     const handleStorageChange = (
       changes: { [key: string]: chrome.storage.StorageChange },
       areaName: string
     ) => {
       if (areaName === 'sync') {
-        if (changes.newSection) {
+        if (changes.newSection && JSON.stringify(changes.newSection.newValue) !== JSON.stringify(newSection)) {
           setNewSection(changes.newSection.newValue);
-        }
-        if (changes.currentTerm) {
-          setCurrentTerm(changes.currentTerm.newValue);
-        }
-        if (changes.colorTheme) {
-          setColorTheme(changes.colorTheme.newValue);
-        }
-        if (changes.sections) {
-          setSections(assignColors(changes.sections.newValue, colorTheme));
-        }
-        if (changes.currentWorklistNumber) {
-          setCurrentWorklistNumber(changes.currentWorklistNumber.newValue);
         }
       }
     };
 
+    syncInitialState();
     chrome.storage.onChanged.addListener(handleStorageChange);
+
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
     };
-  }, [colorTheme]); // Dependency on colorTheme to handle section color assignment
+
+  }, []); // Run only once on mount
 
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
@@ -123,7 +109,7 @@ function App() {
 
   return (
     <div className="App">
-      <TopBar setCurrentView={setCurrentView} sections={sections} />
+      <TopBar currentView={currentView} setCurrentView={setCurrentView} />
       {currentView === Views.calendar ? (
         <div className="CalendarViewContainer">
           <CalendarContainer
@@ -150,7 +136,11 @@ function App() {
           />
         </div>
       ) : (
-        <Settings colorTheme={colorTheme} setColorTheme={setColorTheme} />
+        <Settings 
+          colorTheme={colorTheme} 
+          sections={sections}
+          setColorTheme={setColorTheme} 
+        />
       )}
     </div>
   );

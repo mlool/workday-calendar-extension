@@ -13,7 +13,7 @@
   }
   
   .calendar  .header-cell {
-    padding: 10px;
+    padding: 5px;
     font-weight: bold;
     border: 1px solid #ddd;
   }
@@ -43,16 +43,8 @@
   
   .calendar  .body-cell {
     border: 1px solid #ddd;
-    padding: 5px;
-    position: relative;
+    /* position: relative; */
     font-size: 9px;
+    text-align: center;
     cursor: pointer;
-  }
-  
-  .calendar  .event {
-    background-color: #add8e6;
-    padding: 5px;
-    margin: 2px 0;
-    border-radius: 4px;
-    font-size: 9px;
   }
