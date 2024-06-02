@@ -23,35 +23,27 @@ const Settings = ({ colorTheme, sections, setColorTheme }: ISettingsProps) => {
   };
 
   return (
-    <div>
+    <div className="Settings">
       <div className="SettingsHeader">Theme</div>
-      <hr />
-      <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme} />
+      <hr className='Divider' />
+      <div className="SettingsItems">
+        <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme} />
+      </div>
       <div className="SettingsHeader">Tools</div>
-      <hr />
-      <div>Coming soon ......</div>
+      <hr className='Divider' />
+      <div className="SettingsItems">
+        <div>Coming soon ......</div>
+      </div>
       <div className="SettingsHeader">Export/Import</div>
-      <hr />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <hr className='Divider' />
+      <div className="SettingsItems">
         <div className="SettingsButton" onClick={handleExport}>
           Export Calendar
         </div>
       </div>
       <div className="SettingsHeader">Contact Us</div>
-      <hr />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <hr className='Divider' />
+      <div className="SettingsItems">
         <DiscordButton />
       </div>
     </div>
