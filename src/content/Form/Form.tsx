@@ -36,7 +36,7 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
   const onClear = () => {
     let newSections:ISectionData[] = []
     sections.forEach((section) => {
-      if (section.worklistNumber !== currentWorklistNumber || section.term !== currentTerm) {
+      if (section.worklistNumber !== currentWorklistNumber) {
         newSections.push({...section})
       }
     })

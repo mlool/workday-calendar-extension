@@ -1,4 +1,4 @@
-import { ISectionData } from '../App/App.types'
+import { ISectionData, Term } from '../App/App.types'
 import './SectionPopup.css'
 
 interface IProps {
@@ -6,9 +6,10 @@ interface IProps {
   sections: ISectionData[],
   setSections: (data: ISectionData[]) => void,
   setSelectedSection: (state: ISectionData | null) => void,
+  curentTerm: Term
 }
 
-const SectionPopup = ({selectedSection, sections, setSections, setSelectedSection}:IProps) => {
+const SectionPopup = ({selectedSection, sections, setSections, setSelectedSection, curentTerm}:IProps) => {
 
     const removeSection = () => {
         let updatedSections = [...sections]
@@ -23,7 +24,13 @@ const SectionPopup = ({selectedSection, sections, setSections, setSelectedSectio
                 <div className='SectionPopupTitle'>{selectedSection?.code}</div>
                 <hr />
                 <div className='SectionPopupDetails'>{selectedSection?.name}</div>
-                <div className='SectionPopupDetails'>{selectedSection?.location}</div>
+                {/* {
+                    selectedSection?.sectionDetails.map((detail) => {
+                        return detail.term !== curentTerm ? <div className='SectionPopupDetails'>
+                            {`${detail.location} | ${detail.days.join(' ')} | ${detail.startTime} - ${detail.endTime}`}
+                            </div> : null
+                    })
+                } */}
             </div>
             <div className='SectionPopupButtonContainer'>
                 <button className='SectionPopupButton' onClick={removeSection}>Remove Section</button>
