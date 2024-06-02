@@ -1,5 +1,5 @@
 .ConfirmationModalBackground {
-    background-color: rgba(99, 99, 99, 0.5);
+    background-color: rgba(99, 99, 99, 0.6);
     position: fixed;
     top: 0;
     height: 650px;
@@ -22,12 +22,13 @@
 
 .ConfirmationModalHeader {
     height: 15%;
-    background-color: #6EC4E8;
+    background-color: #00A7E1;
+    color: white;
     font-size: 15px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -39,11 +40,12 @@
     height: 85%;
     flex-direction: column;
     justify-content: space-between;
-    padding: 5px;
+    padding: 3px 3px 6px 3px;
 }
 
 .ConfiramtionModalBodyContent {
     text-align: left;
+    padding: 10px;
 }
 
 .ConfirmationModalButton {

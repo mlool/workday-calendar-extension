@@ -50,8 +50,8 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
     <div className='NewSectionForm'>
       {showConfirmation && 
         <ConfirmationModal 
-          title='Confirm Delete Worklist' 
-          message={`Clearing worklist will remove all sections from both term 1 and term 2 under worklist ${currentWorklistNumber}. Are you sure you want to continue?` }
+          title='Confirm Clear Worklist' 
+          message={`Clearing the worklist will remove all sections from both terms under worklist ${currentWorklistNumber}. Are you sure you want to continue?` }
           onCancel={() => setShowConfirmation(false)} 
           onConfirm={() => {
                       onClear()
@@ -64,8 +64,8 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
         <div>{newSection.name}</div>
       </div>
       <div className='NewSectionButtonContainer'>
-        <div className="NewSectionButton" title="Add Section" onClick={onAdd} style={{backgroundColor: invalidSection? "grey": ""}}>Add Section</div>
-        <div className="NewSectionButton" title="Cancel"onClick={onCancel} style={{backgroundColor: (invalidSection && (!newSection.code && !newSection.name)) ? "grey" : "" }}>Cancel</div>
+        <div className="NewSectionButton" title="Cancel"onClick={onCancel} style={{backgroundColor: (invalidSection && (!newSection.code && !newSection.name)) ? "#c4c4c4" : "" }}>Cancel</div>
+        <div className="NewSectionButton" title="Add Section" onClick={onAdd} style={{backgroundColor: invalidSection? "#c4c4c4": ""}}>Add Section</div>
       </div>
       <div className="ClearWorklistButton" title="Clear Worklist" onClick={() => setShowConfirmation(true)}>Clear Worklist</div>
     </div>
