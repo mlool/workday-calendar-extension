@@ -1,0 +1,25 @@
+.GradesComponentContainer {
+  margin-top: 10px;
+}
+
+.GradesContainer {
+}
+
+.GradesInformationTitle {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.GradesContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  align-items: baseline;
+}
+
+.GradesContainer td {
+  border: none;
+}
+
+.GradesLink {
+  text-align: center;
+}
