@@ -6,7 +6,7 @@ interface DiscordButtonProps {}
 const DiscordButton: React.FC<DiscordButtonProps> = () => {
   return (
     <div id="discord-button">
-      <a href="https://discord.gg/sjRX9BCCZ5" target="_blank" rel="noreferrer">
+      <a href="https://discord.gg/CQQdZTc4xZ" target="_blank" rel="noreferrer">
         <div className="icon">
           <DiscordIcon />
         </div>
