@@ -74,7 +74,7 @@ function App() {
   }, [sections]);
 
   useEffect(() => {
-    console.log(newSection)
+    // console.log(newSection)
     if (newSection.code !== baseSection.code) {
       if (newSection.term != Term.winterFull) {
         //Don't set the term to WF, just keep the term to what is selected
