@@ -136,18 +136,48 @@ export async function extractSection(element: Element) {
   
   const [code, name] = titleParts;
 
-  //We need 
+  // ~~~ Start of stupidly hacky code ~~~
+
+  // This may or may not have been gpt'd
+  // Create a promise that resolves when the DOM is updated
+  const waitForDOMUpdate = (targetNode: Node): Promise<void> => {
+    return new Promise((resolve) => {
+        const observer = new MutationObserver((mutations, obs) => {
+            resolve();
+            obs.disconnect();
+        });
+
+        observer.observe(targetNode, {
+            childList: true,
+            subtree: true,
+        });
+    });
+  }
+
   let button = element.querySelector('div[role="button"][data-automation-id="compositeToggleIcon"]') as HTMLDivElement
   //Click expand to load the SectionDetails info. If not expanded before, data is not in the HTML document, cant get
-  if (button.getAttribute('aria-expanded') === "false") {
+  if (button && button.getAttribute('aria-expanded') === "false") {
     button.click()
   }
 
-  //Not sure if  this is necessary, but i think we may need to wait until the document is updated before moving on
-  await setTimeout(() => null, 250)
-  
+  //Some how, this button can get into dom without waiting for dom update, but the data doesn't with this one unless we wait
+  let moreButton = element.querySelector('div[role="button"][data-automation-id="wd-MoreLink"]') as HTMLDivElement
+  if (moreButton && moreButton.getAttribute('aria-expanded') === "false") {
+    moreButton.click()
+    moreButton.click()
+    //double click to close since it can be very long
+  }
+
+  let sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
+  //If there are not more loaded then we need to wait for the dom to update before querying the sectionDetails
+  if (moreButton && sectionDetailsElements.length <= 6) {
+    await waitForDOMUpdate(element)
+  }
+
+  // ~~~ End of stupidly hacky code ~~~
+
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
-  const sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
+  sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
   //can slice first element because it should be duplicate. The first elem is from non-expand sectionDetails
   const sectionDetailsTextArr = Array.from(sectionDetailsElements).map(element => element.textContent?.trim() || '').slice(1) 
   const sectionDetailsTextString = sectionDetailsTextArr.join(', ')

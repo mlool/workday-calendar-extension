@@ -29,11 +29,12 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
     
     newSections.push(updatedNewSection)
     setSections(newSections)
-    setNewSection(baseSection)
+    chrome.storage.sync.set({ newSection: baseSection });
   }
 
   const onCancel = () => {
-    setNewSection(baseSection)
+    // setNewSection(baseSection)
+    chrome.storage.sync.set({ newSection: baseSection });
   };
 
   const onClear = () => {
