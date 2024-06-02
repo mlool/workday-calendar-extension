@@ -56,7 +56,7 @@ const CalendarContainer = ({sections, newSection, currentWorklistNumber, setSect
 
   return (
     <div className="CalendarContainer">
-      <div className='HeaderSectionContainer'>
+      <div className='HeaderItemContainer'>
         <div style={{padding: '3px 5px'}}>Worklists: </div>
         {WORKLISTCOUNT.map((num) => 
           (<div 

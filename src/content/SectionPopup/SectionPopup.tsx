@@ -33,8 +33,8 @@ const SectionPopup = ({selectedSection, sections, setSections, setSelectedSectio
                 } */}
             </div>
             <div className='SectionPopupButtonContainer'>
-                <button className='SectionPopupButton' onClick={removeSection}>Remove Section</button>
-                <button className='SectionPopupButton' onClick={() => setSelectedSection(null)}>Close</button>
+                <button className='SectionPopupCancelButton' onClick={() => setSelectedSection(null)}>Close</button>
+                <button className='SectionPopupButton' onClick={removeSection}>Remove</button>
             </div>
         </div>
   );

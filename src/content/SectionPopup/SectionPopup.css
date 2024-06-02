@@ -4,7 +4,7 @@
     padding: 10px;
     background-color: #fff;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
     /* Position the popup in the middle of the screen */
@@ -31,11 +31,44 @@
     font-size: 12px;
 }
 
-.SectionPopupButtonContainer {
-    display: flex;
-    justify-content: space-around;
+.SectionPopupButton {
+    width: 50%;
+    padding: 7px 20px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #007bff;;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 10px 10px 2px 10px;
 }
 
-.SectionPopupDetails {
+.SectionPopupButton:hover {
+    background-color: #0068d6;;
+}
+
+.SectionPopupButtonContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.SectionPopupCancelButton {
+    width: 50%;
+    padding: 7px 20px;
     font-size: 12px;
+    color: #626262;
+    border: #626262;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 10px 10px 2px 10px;
+}
+
+.SectionPopupCancelButton:hover {
+    background-color: #d8d8d8;;;
 }
