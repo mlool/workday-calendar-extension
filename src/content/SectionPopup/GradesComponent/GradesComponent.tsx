@@ -43,11 +43,19 @@ const GradesComponent = ({ selectedSection }: IProps) => {
             <table>
               <tr>
                 <td>Average (All Time)</td>
-                <td>{gradesData?.average.toFixed(2)}</td>
+                <td>
+                  {gradesData?.average
+                    ? gradesData?.average.toFixed(2)
+                    : "unavailable"}
+                </td>
               </tr>
               <tr>
                 <td>Average (5 Years)</td>
-                <td>{gradesData?.averageFiveYears.toFixed(2)}</td>
+                <td>
+                  {gradesData?.averageFiveYears
+                    ? gradesData?.averageFiveYears.toFixed(2)
+                    : "unavailable"}
+                </td>
               </tr>
             </table>
           </div>
