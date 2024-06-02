@@ -91,3 +91,13 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
 export const getCourseCode = (courseName: string): string => {
     return courseName.split('-')[0]
 }
+
+export const getGradesUrl = (section: ISectionData): string => {
+    const isVancouver = section.code.includes("_V")
+    const campus = isVancouver ? 'UBCV' : 'UBCO'
+    const courseCode = section.code.split("_")[0]
+    const courseNum = section.code.split(" ")[1].split('-')[0]
+    
+    let url = `https://ubcgrades.com/statistics-by-course#${campus}-${courseCode}-${courseNum}`
+    return url
+}
