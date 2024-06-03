@@ -1,4 +1,4 @@
-import { ISectionData } from "../App/App.types";
+import { ISectionData, Term } from "../App/App.types";
 
 export interface CellFormat {
     name: string,
@@ -6,7 +6,7 @@ export interface CellFormat {
     sectionContent: ISectionData | null,
 }
 
-export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData, setInvalidSection: (state: boolean) => void) => {
+export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData, setInvalidSection: (state: boolean) => void, currentTerm: Term) => {
     let matrixDict: {[id: string]: CellFormat[]} = {
         "Mon": [],
         "Tue": [],
@@ -14,78 +14,91 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
         "Thu": [],
         "Fri": []
     }
-    for (const [key, value] of Object.entries(matrixDict)) {
-        let i = 0
-        while (i < 28) {
-            let hour = 7 + Math.floor(i / 2)
-            let stringHour = hour < 10? `0${hour}`:`${hour}`
-            let minute = i % 2 === 0? "00": "30"
-            let checkedTime = `${stringHour}:${minute}`
-            let foundSection = sections.find((section) => section.days.includes(key) && section.startTime === checkedTime)
-            if (foundSection) {
-                let [code, number] = foundSection.code.split(" ")
-                value.push({
+
+    const getEmptyCellArray = (): CellFormat[] => {
+        const arr = []
+        for(let i = 0; i < 28; i++) {
+            arr.push({
+                name: "",
+                color: "white",
+                sectionContent: null
+            })
+        }
+        return arr
+    }
+
+    let keys = Object.keys(matrixDict);
+    keys.forEach((key) => {
+        matrixDict[key] = getEmptyCellArray()
+    })
+
+    sections.forEach((section) => {
+        section.sectionDetails.forEach((details) => {
+            if(details.term !== currentTerm) {
+                return;
+            }
+            let [code, number] = section.code.split(" ")
+
+            const [startHour, startMinute] = details.startTime.split(":").map((x) => +x)
+            const [endHour, endMinute] = details.endTime.split(":").map((x) => +x)
+
+            let startIndex = (startHour - 7) * 2 + startMinute / 30
+            //Need to subtract 1 here or else we will fill in an extra cell. The diff between start index and end index needs to be # of blocks occupied - 1
+            let endIndex = (endHour - 7) * 2 + endMinute / 30 - 1 
+
+            details.days.forEach((day) => {
+                //populate cells with Code and Number
+                matrixDict[day][startIndex] = {
                     name: code,
-                    color: foundSection.color,
-                    sectionContent: foundSection
-                })
-                value.push({
-                    name: number,
-                    color: foundSection.color,
-                    sectionContent: foundSection
-                })
-                i += 2
-                while (i < 28) {
-                    hour = 7 + Math.floor(i / 2)
-                    minute = i % 2 === 0 ? "00" : "30"
-                    let formattedTime = `${hour.toString().padStart(2, '0')}:${minute}`
-                    if (formattedTime === foundSection.endTime) break
-                    value.push({
-                        name: "",
-                        color: foundSection.color,
-                        sectionContent: foundSection
-                    })
-                    i += 1
+                    color: section.color,
+                    sectionContent: section
                 }
-            } else {
-                value.push({
-                    name: "",
-                    color: "white",
-                    sectionContent: null
-                })
-                i += 1
-            }
-        }
-    }
-    
-    let hasInvalidSection = true;
-    if (newSection.startTime && newSection.endTime && newSection.days) {
-        hasInvalidSection = false;
-        for (let day of newSection.days) {
-        let [hourStr, minutesStr] = newSection.startTime.split(":");
-        let hourNum = +hourStr;
-        let i = (hourNum - 7) * 2 + (minutesStr === "30" ? 1 : 0);
+                matrixDict[day][startIndex + 1] = {
+                    name: number,
+                    color: section.color,
+                    sectionContent: section
+                }
+                
+                //populate rest of cells
+                for(let i = startIndex + 2; i <= endIndex; i++) {
+                    matrixDict[day][i] = {
+                        name: "",
+                        color: section.color,
+                        sectionContent: section
+                    }
+                }
+            })
+        })
+    })
 
-        while (i < 28) {
-            let hour = 7 + Math.floor(i / 2);
-            let minute = i % 2 === 0 ? "00" : "30";
-            let formattedTime = `${hour.toString().padStart(2, '0')}:${minute}`
-            if (formattedTime === newSection.endTime) break;
-            if (i < matrixDict[day].length && matrixDict[day][i]) { // Ensure i is within bounds
-            if (matrixDict[day][i].color === "white") {
-                matrixDict[day][i].color = "orange";
-            } else {
-                matrixDict[day][i].color = "red";
-                hasInvalidSection = true;
-            }
-            }
-            i += 1;
+    //Deal with newSection
+    let hasInvalidSection = !(newSection.sectionDetails.length > 0)
+    newSection.sectionDetails.forEach((details) => {
+        if(details.term !== currentTerm) {
+            return;
         }
-        }
-    }
+        const [startHour, startMinute] = details.startTime.split(":").map((x) => +x)
+        const [endHour, endMinute] = details.endTime.split(":").map((x) => +x)
 
-    setInvalidSection(hasInvalidSection);
-    return matrixDict;
+        let startIndex = (startHour - 7) * 2 + startMinute / 30
+        //Need to subtract 1 here or else we will fill in an extra cell. The diff between start index and end index needs to be # of blocks occupied - 1
+        let endIndex = (endHour - 7) * 2 + endMinute / 30 - 1 
+
+        //for each day, and each cell within the start and entime, if section already in cell, color = red & set invalidSection true, else color = orange
+        details.days.forEach((day) => {
+            for(let i = startIndex; i <= endIndex; i++) {
+                if(matrixDict[day][i].sectionContent) {
+                    matrixDict[day][i].color = "red"
+                    hasInvalidSection = true
+                } else {
+                    matrixDict[day][i].color = "orange"
+                }
+            }
+        })
+    })
+
+    setInvalidSection(hasInvalidSection)
+    return matrixDict
 };
 
 export const getCourseCode = (courseName: string): string => {

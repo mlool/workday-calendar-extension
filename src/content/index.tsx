@@ -55,8 +55,8 @@ function addButtonToElement(element: Element): void {
 }
 
 // Function to handle button click event
-function handleButtonClick(element: Element): void {
-  const selectedSection = extractSection(element);
+async function handleButtonClick(element: Element): Promise<void> {
+  const selectedSection = await extractSection(element);
   if (!selectedSection) return;
   // Getting existing sections from Chrome storage and adding the new section
   chrome.storage.sync.set({ newSection: selectedSection });

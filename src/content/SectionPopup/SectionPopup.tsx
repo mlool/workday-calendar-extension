@@ -30,7 +30,7 @@ const SectionPopup = ({
         <div className="SectionPopupTitle">{selectedSection?.code}</div>
         <hr />
         <div className="SectionPopupDetails">{selectedSection?.name}</div>
-        <div className="SectionPopupDetails">{selectedSection?.location}</div>
+        {/* <div className="SectionPopupDetails">{selectedSection?.location}</div> */}
         <GradesComponent selectedSection={selectedSection} />
       </div>
       <div className="SectionPopupButtonContainer">

@@ -30,14 +30,19 @@ export const Term_String_Map: { [key in Term]: string} = {
     [Term.winterFull]: 'W',
 }
 
+export type SectionDetail = {
+    term: Term,
+    days: string[]
+    startTime: string,
+    endTime: string,
+    location?: string
+}
+
 export interface ISectionData {
     code: string,
     name: string,
     type: SectionType,
-    location: string,
-    days: string[],
-    startTime: string,
-    endTime: string,
+    sectionDetails: SectionDetail[]
     term: Term,
     worklistNumber: number,
     color: string
@@ -49,10 +54,7 @@ export const baseSection:ISectionData = {
     code: "",
     name: "",
     type: SectionType.lecture,
-    location: "",
-    days: [],
-    startTime: "",
-    endTime: "",
+    sectionDetails: [],
     term: Term.winterOne,
     worklistNumber: 0,
     color: defaultColorList[0]

@@ -24,11 +24,11 @@ for (let hour = 7; hour <= 20; hour++) {
 const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, currentTerm}:IProps) => {
   const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
 
-  const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && section.term === currentTerm)
+  const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
 
   return (
     <div className="calendar">
-      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection}/>}
+      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection} />}
       <div className="header">
         <div className="time-marker"></div>
         {daysOfWeek.map((day, index) => (
@@ -43,7 +43,7 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
         </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
-            {convertToMatrix(calendarSections, newSection, setInvalidSection)[day]?.map((cell, index) => (
+            {convertToMatrix(calendarSections, newSection, setInvalidSection, currentTerm)[day]?.map((cell, index) => (
               <div 
                 key={index} 
                 className="body-cell" 
