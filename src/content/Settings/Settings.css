@@ -1,6 +1,6 @@
 .Settings {
   text-align: left;
-  margin: 10px
+  margin: 10px;
 }
 
 .SettingsHeader {
@@ -23,6 +23,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s;
+  text-align: center;
 }
 
 .SettingsButton:hover {
