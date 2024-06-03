@@ -108,7 +108,7 @@ let isAutofillEnabled = false;
 let isAutofillTemporarilyDisabled = false;
 
 window.onload = function() {
-  console.log('Window loaded');
+  //console.log('Window loaded');
   
   isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 
@@ -124,35 +124,32 @@ window.onload = function() {
     observePopup();
   }
 
-  function tryAttachSpecialButtonListener(attempts = 100, delay = 3000) {
-    const attempt = () => {
-      // Add event listener to disable autofill when the specific button is clicked
-      const specialButton = document.querySelector('div[class="WDTK WCTK WOJT"]');
-      if (specialButton) {
-        console.log('Special button found, adding event listener.');
-        specialButton.addEventListener('click', function() {
-          console.log('Special button clicked, disabling autofill.');
-          disableAutofillTemporarily();
-        });
-      } else {
-        if (attempts > 1) {
-          setTimeout(attempt, delay);
-        }
-      }
-    };
-    attempt();
+  function tryAttachSpecialButtonListener() {
+    // Add event listener to disable autofill when the specific button is clicked
+    const specialButton = document.querySelector('div[class="WDTK WCTK WOJT"]');
+    if (specialButton) {
+      specialButton.addEventListener('click', function() {
+        console.log('Special button clicked, disabling autofill.');
+        disableAutofillTemporarily();
+      });
+    } else {
+      console.log('Special button not found');
+    }
   }
 
-  tryAttachSpecialButtonListener();
+  // Try attaching the listener every 12 seconds
+  setInterval(() => {
+    tryAttachSpecialButtonListener();
+  }, 12000);
 
   function disableAutofillTemporarily() {
     isAutofillTemporarilyDisabled = true;
-    console.log('Autofill temporarily disabled.');
+    //console.log('Autofill temporarily disabled.');
   
     // Re-enable autofill after some time or condition
     setTimeout(() => {
       isAutofillTemporarilyDisabled = false;
-      console.log('Autofill re-enabled.');
+      //console.log('Autofill re-enabled.');
     }, 30000); // Adjust the timeout as necessary
   }
 
@@ -300,7 +297,7 @@ function toggleContainer(forceOpen = false) {
     }
     // Save the new state to local storage
     chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
-      console.log('Drawer state saved:', !isOpen);
+      //console.log('Drawer state saved:', !isOpen);
     });
   }
 }
@@ -318,7 +315,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       // Save the new state to local storage
       chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
-        console.log('Drawer state saved:', !isOpen);
+        //console.log('Drawer state saved:', !isOpen);
       });
     }
   }
