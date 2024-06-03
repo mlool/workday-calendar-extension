@@ -28,7 +28,7 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
 
   return (
     <div className="calendar">
-      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection} curentTerm={currentTerm}/>}
+      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection} />}
       <div className="header">
         <div className="time-marker"></div>
         {daysOfWeek.map((day, index) => (

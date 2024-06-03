@@ -1,74 +1,76 @@
 .SectionPopup {
-    width: 200px; /* Adjust the width as needed */
-    height: 200px; /* Adjust the height as needed */
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 200px; /* Adjust the width as needed */
+  height: 200px; /* Adjust the height as needed */
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
-    /* Position the popup in the middle of the screen */
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 20;
+  /* Position the popup in the middle of the screen */
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
 
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  text-align: left;
 }
 
 .SectionPopupTitle {
-    font-size: 18px;
-    font-weight: bold;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .SectionPopupButton {
-    height: 30px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 12px;
+  height: 30px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
 }
 
 .SectionPopupButton {
-    width: 50%;
-    padding: 7px 20px;
-    font-size: 12px;
-    color: #fff;
-    background-color: #007bff;;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin: 10px 10px 2px 10px;
+  width: 50%;
+  padding: 7px 20px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin: 10px 10px 2px 10px;
 }
 
 .SectionPopupButton:hover {
-    background-color: #0068d6;;
+  background-color: #0068d6;
 }
 
 .SectionPopupButtonContainer {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .SectionPopupCancelButton {
-    width: 50%;
-    padding: 7px 20px;
-    font-size: 12px;
-    color: #626262;
-    border: #626262;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: white;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin: 10px 10px 2px 10px;
+  width: 50%;
+  padding: 7px 20px;
+  font-size: 12px;
+  color: #626262;
+  border: #626262;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: white;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin: 10px 10px 2px 10px;
 }
 
 .SectionPopupCancelButton:hover {
-    background-color: #d8d8d8;;;
+  background-color: #d8d8d8;
 }
