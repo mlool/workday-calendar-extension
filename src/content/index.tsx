@@ -5,12 +5,12 @@ import App from './App/App';
 
 //Function to select the query for you! 
 function selectQuery(query: string) {
-  console.log('Attempting to select dropdown/button!')
+  //console.log('Attempting to select dropdown/button!')
 
   let dropdown = document.querySelector(query) as HTMLInputElement;
 
   if (dropdown) {
-    console.log('Dropdown found, clicking to open');
+    //console.log('Dropdown found, clicking to open');
     dropdown.click(); // Open the dropdown
   } else {
     console.log('Dropdown/button not found');
@@ -25,7 +25,7 @@ function selectQueryList(querylist: string, index: number) {
   const options = document.querySelectorAll(querylist);
 
   if (options.length > 0) {
-    console.log('Options found! Clicking the option ' + index);
+    //console.log('Options found! Clicking the option ' + index);
     (options[index] as HTMLElement).click();
 
   } else {
@@ -35,7 +35,6 @@ function selectQueryList(querylist: string, index: number) {
 
 // Define the type of App as a React component
 function startAutoFill() {
-  console.log('Window loaded');
 
   // Function to select the "Start Date within" dropdown
   function startAutoFill() {
@@ -88,9 +87,8 @@ function observePopup() {
   const observer = new MutationObserver((mutationsList, observer) => {
     for (let mutation of mutationsList) {
       if (mutation.type === 'childList') {
-        const popup = document.querySelector('div[data-automation-widget="wd-popup"][class="WCU wd-popup WIUS WBFH WGGH WF2F WMFH"]');
-        if (popup) {
-          console.log('Popup found');
+        const popup = document.querySelector('div[data-uxi-editview-taskid="1422$5132"]');
+        if (popup && isAutofillEnabled && !isAutofillTemporarilyDisabled) {
           startAutoFill();
           observer.disconnect(); // Stop observing after the popup is found and autofill is triggered
           setTimeout(() => {
@@ -106,25 +104,64 @@ function observePopup() {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// Initialize the observer on window load
+let isAutofillEnabled = false;
+let isAutofillTemporarilyDisabled = false;
+
 window.onload = function() {
   console.log('Window loaded');
   
-  // Check the stored state from localStorage
-  const autofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
+  isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 
-  // Listen for the custom event
-  window.addEventListener('autofillToggle', function(event: Event) {
+  window.addEventListener('autofillToggle', function(event) {
     const customEvent = event as CustomEvent<{ enabled: boolean }>;
-    const autofillEnabled = customEvent.detail.enabled;
-    if (autofillEnabled) {
+    isAutofillEnabled = customEvent.detail.enabled;
+    if (isAutofillEnabled) {
       observePopup();
     }
   });
 
-  // If autofill is enabled, call observePopup
-  if (autofillEnabled) {
+  if (isAutofillEnabled) {
     observePopup();
+  }
+
+  function tryAttachSpecialButtonListener(attempts = 100, delay = 3000) {
+    const attempt = () => {
+      // Add event listener to disable autofill when the specific button is clicked
+      const specialButton = document.querySelector('div[class="WDTK WCTK WOJT"]');
+      if (specialButton) {
+        console.log('Special button found, adding event listener.');
+        specialButton.addEventListener('click', function() {
+          console.log('Special button clicked, disabling autofill.');
+          disableAutofillTemporarily();
+        });
+      } else {
+        if (attempts > 1) {
+          setTimeout(attempt, delay);
+        }
+      }
+    };
+    attempt();
+  }
+
+  tryAttachSpecialButtonListener();
+
+  function disableAutofillTemporarily() {
+    isAutofillTemporarilyDisabled = true;
+    console.log('Autofill temporarily disabled.');
+  
+    // Re-enable autofill after some time or condition
+    setTimeout(() => {
+      isAutofillTemporarilyDisabled = false;
+      console.log('Autofill re-enabled.');
+    }, 30000); // Adjust the timeout as necessary
+  }
+
+  function handleAutofillEvent(event: Event) {
+    const customEvent = event as CustomEvent<{ enabled: boolean }>;
+    isAutofillEnabled = customEvent.detail.enabled;
+    if (isAutofillEnabled) {
+      observePopup();
+    }
   }
 };
 
