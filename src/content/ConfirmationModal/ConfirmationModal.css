@@ -1,0 +1,90 @@
+.ConfirmationModalBackground {
+    background-color: rgba(99, 99, 99, 0.6);
+    position: fixed;
+    top: 0;
+    height: 650px;
+    width: 300px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    z-index: 100;
+}
+
+.ConfirmationModal {
+    background-color: white;
+    width: 90%;
+    height: 30%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ConfirmationModalHeader {
+    height: 15%;
+    background-color: #00A7E1;
+    color: white;
+    font-size: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: bold;
+    text-align: left;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.ConfirmationModalBody {
+    margin-top: 5px;
+    display: flex;
+    height: 85%;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3px 3px 6px 3px;
+}
+
+.ConfiramtionModalBodyContent {
+    text-align: left;
+    padding: 10px;
+}
+
+.ConfirmationModalButton {
+    width: 50%;
+    padding: 7px 20px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #007bff;;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 10px 10px 2px 10px;
+}
+
+.ConfirmationModalButton:hover {
+    background-color: #0068d6;;
+}
+
+.ConfirmationModalButtonContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.ConfirmationModalCancelButton {
+    width: 50%;
+    padding: 7px 20px;
+    font-size: 12px;
+    color: #626262;
+    border: #626262;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 10px 10px 2px 10px;
+}
+
+.ConfirmationModalCancelButton:hover {
+    background-color: #d8d8d8;
+}

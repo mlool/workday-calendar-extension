@@ -1,0 +1,26 @@
+.TopBar {
+    display: flex;
+    padding: 3px;
+    margin-bottom: 3px;
+    background-color: #00A7E1;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.IconContainer {
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.TopBarButtonContainer {
+    display: flex;
+    justify-content: right;
+}
+
+.TopBarTextContainer {
+    color: white;
+    margin-left: 5px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
