@@ -74,9 +74,12 @@ function App() {
   }, [sections]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ newSection });
+    // console.log(newSection)
     if (newSection.code !== baseSection.code) {
-      setCurrentTerm(newSection.term);
+      if (newSection.term != Term.winterFull) {
+        //Don't set the term to WF, just keep the term to what is selected
+        setCurrentTerm(newSection.term);
+      }
     }
   }, [newSection]);
 
