@@ -117,6 +117,17 @@ export async function extractSection(element: Element) {
   const title = titleElement.textContent;
   const sectionDetails = sectionDetailsElement.textContent;
   
+  // Extracting instructor details from the labels
+  // Annoyingly, instructor details are either in courseLabels[3] or courseLabels[4] if courseLabels[3] == courseLabels[4]
+  let instructorElement = null;
+
+  if(courseLabels.length == 4 && courseLabels[2].textContent != courseLabels[3].textContent) {
+    instructorElement = courseLabels[3];
+  } else if (courseLabels.length == 5 && courseLabels[2].textContent != courseLabels[3].textContent) {
+    instructorElement = courseLabels[4];
+  }
+  
+  const instructor: string = instructorElement?.textContent ?? "";
 
   // Checking if title or section details are missing
   if (!title || !sectionDetails) {
@@ -190,6 +201,7 @@ export async function extractSection(element: Element) {
   const newSection: ISectionData = {
     code: code,
     name: name,
+    instructor: instructor,
     type: SectionType.lecture,
     term: term,
     sectionDetails: sectionDetailsArr,

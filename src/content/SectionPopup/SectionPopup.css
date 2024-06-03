@@ -26,6 +26,11 @@
   text-align: center;
 }
 
+.SectionPopupInstructor {
+  font-size: 12px;
+  font-weight: bold;
+}
+
 .SectionPopupButton {
   height: 30px;
   padding: 5px 10px;
