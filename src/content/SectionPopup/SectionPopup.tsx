@@ -31,7 +31,7 @@ const SectionPopup = ({
         <hr />
         <div className="SectionPopupDetails">{selectedSection?.name}</div>
         <div className="SectionPopupInstructor">Instructor: </div>
-        <div>{selectedSection?.instructor || "No Instructor Information"}</div>
+        <div>{selectedSection?.instructor || "Unavailable"}</div>
         {/* <div className="SectionPopupDetails">{selectedSection?.location}</div> */}
         <GradesComponent selectedSection={selectedSection} />
       </div>
