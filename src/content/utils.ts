@@ -116,7 +116,6 @@ export async function extractSection(element: Element) {
   const sectionDetailsElement = courseLabels[1];
   const title = titleElement.textContent;
   const sectionDetails = sectionDetailsElement.textContent;
-  
 
   // Checking if title or section details are missing
   if (!title || !sectionDetails) {
@@ -126,6 +125,16 @@ export async function extractSection(element: Element) {
 
   // Splitting title and section details into parts
   const titleParts = title.split(' - ');
+
+  // Concatenate section details back together if it got split 
+  if (titleParts.length > 2) {
+    let temp = "";
+    for (let i = 1; i < titleParts.length; i++) {
+      temp += titleParts[i] + ' - ';
+    }
+    titleParts.length = 1;
+    titleParts.push(temp.slice(0, -2)); 
+  }
 
   // Checking if title and section details have the expected format
   if (titleParts.length !== 2) {
@@ -176,6 +185,18 @@ export async function extractSection(element: Element) {
 
   // ~~~ End of stupidly hacky code ~~~
 
+  // Extracting instructor details from the labels
+  const instructorLabels = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
+  let instructors = [];
+  
+  if (instructorLabels) {
+    for (let i = 2; i < instructorLabels.length; i++) {
+      if (!instructorLabels[i].textContent?.includes("|")) {
+        instructors.push(instructorLabels[i]?.textContent || "")
+      }
+    }
+  }
+
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
   //can slice first element because it should be duplicate. The first elem is from non-expand sectionDetails
@@ -190,6 +211,7 @@ export async function extractSection(element: Element) {
   const newSection: ISectionData = {
     code: code,
     name: name,
+    instructors: instructors,
     type: SectionType.lecture,
     term: term,
     sectionDetails: sectionDetailsArr,
