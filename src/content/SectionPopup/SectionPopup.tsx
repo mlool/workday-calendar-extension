@@ -30,8 +30,18 @@ const SectionPopup = ({
         <div className="SectionPopupTitle">{selectedSection?.code}</div>
         <hr />
         <div className="SectionPopupDetails">{selectedSection?.name}</div>
-        <div className="SectionPopupInstructor">Instructor: </div>
-        <div>{selectedSection?.instructor || "Unavailable"}</div>
+        <div className="SectionPopupInstructor">Instructors:</div>
+        <div>
+          {selectedSection?.instructors?.length > 0 ? (
+            <ul>
+              {selectedSection.instructors.map((instructor, index) => (
+              <li key={index}>{instructor}</li>
+            ))}
+            </ul>
+          ) : (
+          <div>Unavailable</div>
+          )}
+        </div>
         {/* <div className="SectionPopupDetails">{selectedSection?.location}</div> */}
         <GradesComponent selectedSection={selectedSection} />
       </div>

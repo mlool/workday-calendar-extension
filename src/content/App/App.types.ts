@@ -42,7 +42,7 @@ export interface ISectionData {
     code: string,
     name: string,
     type: SectionType,
-    instructor: string,
+    instructors: string[],
     sectionDetails: SectionDetail[]
     term: Term,
     worklistNumber: number,
@@ -54,7 +54,7 @@ export interface ISectionData {
 export const baseSection:ISectionData = {
     code: "",
     name: "",
-    instructor: "",
+    instructors: [],
     type: SectionType.lecture,
     sectionDetails: [],
     term: Term.winterOne,
