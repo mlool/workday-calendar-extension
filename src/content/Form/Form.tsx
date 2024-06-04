@@ -61,7 +61,7 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
         />
       }
       <div className="NewSectionInfo">
-        <div>{newSection.code}</div>
+        <div className="NewSectionCode">{newSection.code}</div>
         <div>{newSection.name}</div>
       </div>
       <div className='NewSectionButtonContainer'>
