@@ -77,6 +77,9 @@ function observeDOMAndAddButtons(): void {
   // Callback function for the mutation observer
   const callback: MutationCallback = (mutationsList, observer) => {
     mutationsList.forEach((mutation) => {
+      if (document.title !== "Find Course Sections - Workday") {
+        return;
+      }
       if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
