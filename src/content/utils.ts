@@ -176,6 +176,18 @@ export async function extractSection(element: Element) {
 
   // ~~~ End of stupidly hacky code ~~~
 
+  // Extracting instructor details from the labels
+  const instructorLabels = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
+  let instructors = [];
+
+  if (instructorLabels) {
+    for (let i = 2; i < instructorLabels.length; i++) {
+      if (!instructorLabels[i].textContent?.includes("|")) {
+        instructors.push(instructorLabels[i]?.textContent || "")
+      }
+    }
+  }
+
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
   //can slice first element because it should be duplicate. The first elem is from non-expand sectionDetails
@@ -190,6 +202,7 @@ export async function extractSection(element: Element) {
   const newSection: ISectionData = {
     code: code,
     name: name,
+    instructors: instructors,
     type: SectionType.lecture,
     term: term,
     sectionDetails: sectionDetailsArr,
