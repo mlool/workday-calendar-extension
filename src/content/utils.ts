@@ -116,16 +116,6 @@ export async function extractSection(element: Element) {
   const sectionDetailsElement = courseLabels[1];
   const title = titleElement.textContent;
   const sectionDetails = sectionDetailsElement.textContent;
-  
-  // Extracting instructor details from the labels
-  let instructors = [];
-  
-  for (let i = 2; i < courseLabels.length; i++) {
-     if (!courseLabels[i].textContent?.includes("|")) {
-       instructors.push(courseLabels[i]?.textContent || "")
-     }
-  }
-
 
   // Checking if title or section details are missing
   if (!title || !sectionDetails) {
@@ -184,6 +174,18 @@ export async function extractSection(element: Element) {
   }
 
   // ~~~ End of stupidly hacky code ~~~
+
+  // Extracting instructor details from the labels
+  const instructorLabels = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
+  let instructors = [];
+  
+  if (instructorLabels) {
+    for (let i = 2; i < instructorLabels.length; i++) {
+      if (!instructorLabels[i].textContent?.includes("|")) {
+        instructors.push(instructorLabels[i]?.textContent || "")
+      }
+    }
+  }
 
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
