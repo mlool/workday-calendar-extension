@@ -126,7 +126,7 @@ export async function extractSection(element: Element) {
 
   const code = title.slice(0, title.indexOf(" - "));
 
-  const name = title.slice(title.indexOf(" - ") + 1).substring(2);
+  const name = title.slice(title.indexOf(" - ") + 3);
 
   // ~~~ Start of stupidly hacky code ~~~
 
