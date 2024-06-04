@@ -18,12 +18,20 @@
   justify-content: space-between;
   flex-direction: column;
   text-align: left;
+
+  /* Make popup scrollable*/
+  overflow-y: auto;
 }
 
 .SectionPopupTitle {
   font-size: 18px;
   font-weight: bold;
   text-align: center;
+}
+
+.SectionPopupInstructor {
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .SectionPopupButton {
