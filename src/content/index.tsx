@@ -26,6 +26,10 @@ function addButtonToElement(element: Element): void {
   button.style.boxShadow = '0 0 0 1px #CED3D9';
   button.style.cursor = 'pointer';
   button.style.marginRight = '10px';
+  if (element.previousElementSibling && 
+      element.previousElementSibling.getAttribute('data-automation-id') === 'checkbox') {
+    button.style.marginLeft = '20px';
+  }
   button.style.borderRadius = '5px';
   button.style.transition = 'all 120ms ease-in';
   button.style.border = 'none';
@@ -77,9 +81,6 @@ function observeDOMAndAddButtons(): void {
   // Callback function for the mutation observer
   const callback: MutationCallback = (mutationsList, observer) => {
     mutationsList.forEach((mutation) => {
-      if (document.title !== "Find Course Sections - Workday") {
-        return;
-      }
       if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
@@ -93,8 +94,9 @@ function observeDOMAndAddButtons(): void {
               const previousSibling = matchingElement.previousElementSibling;
               const isButtonAlreadyPresent =
                 previousSibling && previousSibling.id === 'add-section-button';
+              const isCourseInfo = matchingElement.getAttribute('class') === 'WMUF WKUF';
 
-              if (!isButtonAlreadyPresent) {
+              if (!isButtonAlreadyPresent && isCourseInfo) {
                 addButtonToElement(matchingElement);
               }
             });
