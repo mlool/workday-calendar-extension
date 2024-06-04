@@ -124,27 +124,9 @@ export async function extractSection(element: Element) {
     return;
   }
 
-  // Splitting title and section details into parts
-  const titleParts = title.split(' - ');
+  const code = title.slice(0, title.indexOf(" - "));
 
-  // Concatenate section details back together if it got split 
-  if (titleParts.length > 2) {
-    let temp = "";
-    for (let i = 1; i < titleParts.length; i++) {
-      temp += titleParts[i] + ' - ';
-    }
-    titleParts.length = 1;
-    titleParts.push(temp.slice(0, -2)); 
-  }
-
-  // Checking if title and section details have the expected format
-  if (titleParts.length !== 2) {
-    alert(JSON.stringify(titleParts));
-    alert('Invalid title format');
-    return;
-  }
-  
-  const [code, name] = titleParts;
+  const name = title.slice(title.indexOf(" - ") + 1).substring(2);
 
   // ~~~ Start of stupidly hacky code ~~~
 
