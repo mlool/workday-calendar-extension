@@ -28,7 +28,7 @@ function addButtonToElement(element: Element): void {
   button.style.marginRight = '10px';
   if (element.previousElementSibling && 
       element.previousElementSibling.getAttribute('data-automation-id') === 'checkbox') {
-    button.style.marginLeft = '20px';
+    button.style.marginLeft = '24px';
   }
   button.style.borderRadius = '5px';
   button.style.transition = 'all 120ms ease-in';
