@@ -1,12 +1,8 @@
 import { ISectionData } from "../../App/App.types";
-import GradesComponent from "../GradesComponent/GradesComponent";
 import "./InstructorComponent.css";
 
 interface IProps {
   selectedSection: ISectionData;
-  sections: ISectionData[];
-  setSections: (data: ISectionData[]) => void;
-  setSelectedSection: (state: ISectionData | null) => void;
 }
 
 const InstructorComponent = ({
@@ -14,7 +10,7 @@ const InstructorComponent = ({
 }: IProps) => {
     return (
         <div>
-            <div className="SectionPopupInstructor">Instructors:</div>
+            <div className="InstructorContainerTitle">Instructors:</div>
             <div>
                 {selectedSection?.instructors?.length > 0 ? (
                     <ul>

@@ -30,6 +30,21 @@ const GradesComponent = ({ selectedSection }: IProps) => {
 
   const gradesURL = getGradesUrl(selectedSection);
 
+  const getClassName = (average: number | null) => {
+    if (!average) return "AverageContainer unavailable"
+    if (average < 60) {
+      return "AverageContainer VeryLowAverage";
+    } else if (average < 70) {
+      return "AverageContainer LowAverage";
+    } else if (average < 80) {
+      return "AverageContainer MidAverage";
+    } else if (average < 90) {
+      return "AverageContainer HighAverage";
+    } else {
+      return "AverageContainer VeryHighAverage";
+    }
+  }
+
   return (
     <div className="GradesComponentContainer">
       <div className="GradesInformationTitle">Grade Information: </div>
@@ -41,14 +56,14 @@ const GradesComponent = ({ selectedSection }: IProps) => {
         <>
           <div className="GradesContainer">
             <table>
-              <tr>
+              {/* <tr>
                 <td>Average (All Time)</td>
                 <td>
                   {gradesData?.average
                     ? gradesData?.average.toFixed(2)
                     : "unavailable"}
                 </td>
-              </tr>
+              </tr> */}
               <tr>
                 <td>Average (5 Years)</td>
                 <td>
