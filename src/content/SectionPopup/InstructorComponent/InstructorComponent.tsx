@@ -9,7 +9,7 @@ const InstructorComponent = ({
   selectedSection,
 }: IProps) => {
     return (
-        <div>
+        <div className="InstructorComponentContainer">
             <div className="InstructorContainerTitle">Instructors:</div>
             <div>
                 {selectedSection?.instructors?.length > 0 ? (
