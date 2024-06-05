@@ -53,12 +53,14 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
                     color: section.color,
                     sectionContent: section
                 }
+                //Add the if condition since courses can be 30 minute, and only need 1 timeslot
+                if(startIndex !== endIndex) {
                 matrixDict[day][startIndex + 1] = {
                     name: number,
                     color: section.color,
                     sectionContent: section
                 }
-                
+            }
                 //populate rest of cells
                 for(let i = startIndex + 2; i <= endIndex; i++) {
                     matrixDict[day][i] = {
