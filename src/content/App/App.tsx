@@ -143,6 +143,7 @@ function App() {
           colorTheme={colorTheme} 
           sections={sections}
           setColorTheme={setColorTheme} 
+          onImport={(data: ISectionData[]) => { setSections(data) }}
         />
       )}
     </div>
