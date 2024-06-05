@@ -26,6 +26,7 @@
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s;
   text-align: center;
+  margin-top: 10px;
 }
 
 .SettingsButton:hover {

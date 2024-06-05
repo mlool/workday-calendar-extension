@@ -4,6 +4,7 @@ import './Settings.css';
 import { ISectionData } from '../App/App.types';
 import DiscordButton from '../DiscordButton/DiscordButton';
 import React, { useState, useEffect } from 'react';
+import { handleExternalCalendarExport } from './ExternalCalendarExport';
 
 interface ISettingsProps {
   colorTheme: ColorTheme;
@@ -97,6 +98,9 @@ const Settings = ({ colorTheme, sections, setColorTheme, onImport }: ISettingsPr
         <label className="SettingsButton" htmlFor="import-file">
           Import Calendar
         </label>
+        <div className="SettingsButton" onClick={() => handleExternalCalendarExport(sections)}>
+          Export to External Calendar
+        </div>
       </div>
       <div className="SettingsHeader">Contact Us</div>
       <hr className='Divider' />
