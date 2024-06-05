@@ -20,7 +20,6 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
 
   const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
   const sectionsToRender = convertToMatrix(calendarSections, newSection, setInvalidSection, currentTerm)
-  console.log(sectionsToRender)
 
   let times: string[] = [];
   for (let hour = 7; hour <= getEndHour(sectionsToRender); hour++) {
