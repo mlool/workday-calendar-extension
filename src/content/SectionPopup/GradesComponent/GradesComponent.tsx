@@ -30,7 +30,7 @@ const GradesComponent = ({ selectedSection }: IProps) => {
 
   const gradesURL = getGradesUrl(selectedSection);
 
-  const getClassName = (average: number | null) => {
+  const getClassName = (average: number | undefined) => {
     if (!average) return "AverageContainer unavailable"
     if (average < 60) {
       return "AverageContainer VeryLowAverage";
@@ -55,15 +55,19 @@ const GradesComponent = ({ selectedSection }: IProps) => {
       ) : (
         <>
           <div className="GradesContainer">
-            <table>
-              {/* <tr>
+            <div>Average (5 Years):</div>
+            <div className={getClassName(gradesData?.averageFiveYears)} onClick={() => window.open(gradesURL, "_blank")}>
+                {gradesData?.average? gradesData?.average.toFixed(2): "unavailable"}
+            </div>
+            {/* <table>
+              <tr>
                 <td>Average (All Time)</td>
                 <td>
                   {gradesData?.average
                     ? gradesData?.average.toFixed(2)
                     : "unavailable"}
                 </td>
-              </tr> */}
+              </tr>
               <tr>
                 <td>Average (5 Years)</td>
                 <td>
@@ -72,16 +76,16 @@ const GradesComponent = ({ selectedSection }: IProps) => {
                     : "unavailable"}
                 </td>
               </tr>
-            </table>
+            </table> */}
           </div>
-          <a
+          {/* <a
             className="GradesLink"
             href={gradesURL}
             target="_blank"
             rel="noopener noreferrer"
           >
             View on UBC-Grades
-          </a>
+          </a> */}
         </>
       )}
     </div>
