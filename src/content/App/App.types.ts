@@ -35,7 +35,8 @@ export type SectionDetail = {
     days: string[]
     startTime: string,
     endTime: string,
-    location?: string
+    location?: string,
+    dateRange: string
 }
 
 export interface ISectionData {

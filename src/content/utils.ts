@@ -84,7 +84,8 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
       days: days,
       startTime: startTime,
       endTime: endTime,
-      location: location
+      location: location,
+      dateRange: dateRange
     })
   })
 

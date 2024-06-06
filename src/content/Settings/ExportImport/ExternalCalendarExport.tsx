@@ -26,6 +26,7 @@ export const handleExternalCalendarExport = (sections: ISectionData[]) => {
     const startTime = sections[i].sectionDetails[0].startTime;
     const endTime = sections[i].sectionDetails[0].endTime;
     const worklist = sections[i].worklistNumber;
+    const dateRange = sections[i].sectionDetails[0].dateRange;
 
     // Dictionary of required format
     const dayMap = { Mon: "MO", Tue: "TU", Wed: "WE", Thu: "TH", Fri: "FR" };
@@ -33,33 +34,18 @@ export const handleExternalCalendarExport = (sections: ISectionData[]) => {
     // Map to new format
     const formattedDays = days.map(day => dayMap[day as keyof typeof dayMap]).join(",");
 
-    // Define base start and end dates based on term. Weird hardcode solution. Will need more robust solution for future
-    const baseStartDates = {
-        0: [2025, 5, 12], // Week of May 12, 2025
-        1: [2025, 7, 2], // Week of June 2, 2025
-        2: [2025, 5, 12], // Week of May 12, 2025
-        3: [2024, 9, 3], // Week of Sep 3, 2024
-        4: [2025, 1, 6], // Week of Jan 6, 2025
-        5: [2024, 9, 3], // Week of Sep 3, 2024
-    };
+    const dateRangesArray = dateRange.split(" - ");
 
-    const baseEndDates = {
-      0: [2025, 7, 19, 23, 59], // Week of June 19, 2025
-      1: [2025, 8, 8, 23, 59], // Week of Aug 8, 2025
-      2: [2025, 8, 8, 23, 59], // Week of Aug 8, 2025
-      3: [2024, 12, 6, 23, 59], // Week of Dec 6, 2024
-      4: [2025, 4, 8, 23, 59], // Week of Apr 8, 2025
-      5: [2025, 4, 8, 23, 59], // Week of Apr 8, 2025
-    } ;
+    const startDate = dateRangesArray[0];
+    const endDate = dateRangesArray[dateRangesArray.length - 1]; // Sometimes for multi term classes you have more than two dates
+    
+    const startDateParts = startDate.split("-");
+    const baseYear = parseInt(startDateParts[0]);
+    const baseMonth = parseInt(startDateParts[1]);
+    let baseDay = parseInt(startDateParts[2]);
 
-    // Handle invalid terms
-    if (!baseStartDates.hasOwnProperty(term)) {
-      throw new Error("Invalid term value: " + term);
-    }
-
-    const baseYear = baseStartDates[term][0];
-    const baseMonth = baseStartDates[term][1];
-    let baseDay = baseStartDates[term][2];
+    const endDateParts = endDate.split("-");
+    let endDateArr = [parseInt(endDateParts[0]), parseInt(endDateParts[1]), parseInt(endDateParts[2]), 23, 59];
 
     // ------------------------------------------------------------------------------------------ //
     // Need to offset if class has a meeting starting a different day
@@ -96,7 +82,7 @@ export const handleExternalCalendarExport = (sections: ISectionData[]) => {
         title: sections[i].code,
         description: sections[i].name,
         location: sections[i].sectionDetails[0].location,
-        recurrenceRule: "FREQ=WEEKLY;BYDAY=" + formattedDays + ";INTERVAL=1;UNTIL=" + formatDateArray(baseEndDates[term]),
+        recurrenceRule: "FREQ=WEEKLY;BYDAY=" + formattedDays + ";INTERVAL=1;UNTIL=" + formatDateArray(endDateArr),
         start: [baseYear, baseMonth, baseDay, startHour, startMinute],
         end: [baseYear, baseMonth, baseDay, endHour, endMinute],
     };
@@ -114,6 +100,8 @@ export const handleExternalCalendarExport = (sections: ISectionData[]) => {
 
     // Generate ICS string for this worklist's events
     const calendarString = generateICal(eventsForWorklist); 
+
+    console.log(calendarString)
 
     // Convert string to downloadable blob
     const blob = new Blob([calendarString], { type: 'text/calendar;charset=utf-8' });
