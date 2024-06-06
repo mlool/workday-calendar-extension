@@ -11,6 +11,14 @@
 
 .SettingsItems {
   margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ToolsItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .SettingsButton {

@@ -4,6 +4,8 @@ import './Settings.css';
 import { ISectionData } from '../App/App.types';
 import DiscordButton from '../DiscordButton/DiscordButton';
 import React, { useState, useEffect } from 'react';
+import InfoModal from '../InfoModal/InfoModal';
+import QuestionIcon from '../Icons/QuestionIcon';
 
 interface ISettingsProps {
   colorTheme: ColorTheme;
@@ -13,6 +15,7 @@ interface ISettingsProps {
 }
 
 const Settings = ({ colorTheme, sections, setColorTheme, onImport }: ISettingsProps) => {
+  const [infoPopupMessage, setInfoPopupMessage] = useState<string>("")
 
   const handleExport = () => {
     const json = JSON.stringify(sections, null, 2);
@@ -60,48 +63,57 @@ const Settings = ({ colorTheme, sections, setColorTheme, onImport }: ISettingsPr
   };
 
   return (
-    <div className="Settings">
-      <div className="SettingsHeader">Theme</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme} />
-      </div>
-      <div className="SettingsHeader">Tools</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <div>Coming soon ......</div>
-          <div>
-            <label>
-              <input 
-                type="checkbox" 
-                checked={autofillEnabled} 
-                onChange={handleAutofillChange} 
-              />
-              Enable Autofill
+    <div>
+      {infoPopupMessage !== "" && <InfoModal message='Here are some information' onCancel={() => setInfoPopupMessage("")}/>}
+      <div className="Settings">
+        <div className="SettingsHeader">Theme</div>
+        <hr className='Divider' />
+        <div className="SettingsItems">
+          <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme} />
+        </div>
+        <div className="SettingsHeader">Tools</div>
+        <hr className='Divider' />
+        <div className="SettingsItems">
+            <div className='ToolsItem'>
+              <div>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={autofillEnabled} 
+                    onChange={handleAutofillChange} 
+                  />
+                  Enable Autofill
+                </label>
+              </div>
+              <div onClick={() => setInfoPopupMessage("Autofills Find Course Sections")}>
+                <QuestionIcon size={16} color='black' />
+              </div>
+            </div>
+        </div>
+        <div className="SettingsHeader">Export/Import</div>
+        <hr className='Divider' />
+        <div className="SettingsItems">
+          <div className="SettingsButton" onClick={handleExport}>
+            Export Calendar
+          </div>
+          <div className="SettingsButton" onClick={handleExport}>
+            <input
+              type="file"
+              accept="application/json"
+              onChange={handleImport}
+              style={{ display: 'none' }}
+              id="import-file"
+            />
+            <label htmlFor="import-file">
+              Import Calendar
             </label>
           </div>
-      </div>
-      <div className="SettingsHeader">Export/Import</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <div className="SettingsButton" onClick={handleExport}>
-          Export Calendar
         </div>
-        <input
-          type="file"
-          accept="application/json"
-          onChange={handleImport}
-          style={{ display: 'none' }}
-          id="import-file"
-        />
-        <label className="SettingsButton" htmlFor="import-file">
-          Import Calendar
-        </label>
-      </div>
-      <div className="SettingsHeader">Contact Us</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <DiscordButton />
+        <div className="SettingsHeader">Contact Us</div>
+        <hr className='Divider' />
+        <div className="SettingsItems">
+          <DiscordButton />
+        </div>
       </div>
     </div>
   );
