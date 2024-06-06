@@ -1,4 +1,4 @@
-import { ISectionData } from '../App/App.types';
+import { ISectionData } from "../../App/App.types";
 import { formatDateArray, generateICal } from './ExternalCalendarExportHelper';
 
 // Interface for formatting section details into calendar event

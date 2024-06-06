@@ -2,6 +2,7 @@
 import { ISectionData } from '../../App/App.types';
 import '../Settings.css';
 import './ExportImport.css'
+import { handleExternalCalendarExport } from './ExternalCalendarExport';
 
 interface IProps {
   sections: ISectionData[];
@@ -56,6 +57,9 @@ const ExportImport = ({ sections, onImport }: IProps) => {
             <label htmlFor="import-file">
                 Import Calendar
             </label>
+            </div>
+            <div className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections)}>
+            Export To External Calendar
             </div>
         </div>
     </div>
