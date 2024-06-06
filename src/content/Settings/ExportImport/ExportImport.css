@@ -7,8 +7,9 @@
 
 .ExportImportRow {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
 .ExportImportButton {
@@ -25,9 +26,28 @@
     transition: background-color 0.3s, box-shadow 0.3s;
     align-items: center;
     justify-content: center;
+    margin: 5px;
 }
-  
-.ExportImportButton:hover {
-    background-color: #0068d6;
+
+.ExportImportButton {
+    padding: 10px 15px;
+    font-weight: bold;
+    padding: 7px 20px;
+    display: flex;
+    font-size: 12px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
 }
-  
+
+.ExportImportButtonGroup {
+    display: flex; 
+    margin: 0; 
+    padding: 5px;
+}
