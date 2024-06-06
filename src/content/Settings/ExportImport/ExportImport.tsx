@@ -2,7 +2,7 @@
 import { ISectionData } from '../../App/App.types';
 import '../Settings.css';
 import './ExportImport.css'
-import { handleExternalCalendarExport } from './ExternalCalendarExport';
+import ExternalCalendarExport from './ExternalCalendarExport';
 
 interface IProps {
   sections: ISectionData[];
@@ -43,7 +43,8 @@ const ExportImport = ({ sections, onImport }: IProps) => {
         <div className="SettingsHeader">Export/Import</div>
         <hr className='Divider' />
         <div className="ExportImportButtonContainer">
-          <div className="ExportImportRow">  <div className="ExportImportButton" onClick={handleExport}>
+          <div className="ExportImportRow">  
+            <div className="ExportImportButton" onClick={handleExport}>
               Export Calendar
             </div>
             <div className="ExportImportButton" onClick={() => handleImport}>
@@ -59,11 +60,9 @@ const ExportImport = ({ sections, onImport }: IProps) => {
               </label>
             </div>
           </div>
-          <div className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections)}>
-            Export To External Calendar
-          </div>
+          <ExternalCalendarExport sections={sections}/>
         </div>
-    </div>
+      </div>
   );
 };
 
