@@ -21,7 +21,7 @@ const Settings = ({ colorTheme, sections, setColorTheme, onImport }: ISettingsPr
   const [infoPopupMessage, setInfoPopupMessage] = useState<string>("")
   return (
     <div>
-      {infoPopupMessage !== "" && <InfoModal message='Here are some information' onCancel={() => setInfoPopupMessage("")}/>}
+      {infoPopupMessage !== "" && <InfoModal message={infoPopupMessage} onCancel={() => setInfoPopupMessage("")}/>}
       <div className="Settings">
         <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
         <Tools setInfoPopupMessage={setInfoPopupMessage} />
