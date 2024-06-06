@@ -1,8 +1,15 @@
 .ExportImportButtonContainer {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     margin-bottom: 40px;
 }
+
+.ExportImportRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
 
 .ExportImportButton {
     padding: 10px 15px;
@@ -16,7 +23,8 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
   
 .ExportImportButton:hover {
