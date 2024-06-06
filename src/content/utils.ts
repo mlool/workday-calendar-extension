@@ -124,17 +124,9 @@ export async function extractSection(element: Element) {
     return;
   }
 
-  // Splitting title and section details into parts
-  const titleParts = title.split(' - ');
+  const code = title.slice(0, title.indexOf(" - "));
 
-  // Checking if title and section details have the expected format
-  if (titleParts.length !== 2) {
-    alert(JSON.stringify(titleParts));
-    alert('Invalid title format');
-    return;
-  }
-  
-  const [code, name] = titleParts;
+  const name = title.slice(title.indexOf(" - ") + 3);
 
   // ~~~ Start of stupidly hacky code ~~~
 
@@ -176,6 +168,14 @@ export async function extractSection(element: Element) {
 
   // ~~~ End of stupidly hacky code ~~~
 
+  // Extracting instructors. Query all the "promptOption" that are not links. If it has role as link, it is a Section Detail div, otherwise it is an Instructor div
+  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]:not([role="link"])');
+  let instructors: string[] = [];
+  
+  instructorElements?.forEach((elm) => {
+    instructors.push(elm?.textContent || "")
+  })
+
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
   //can slice first element because it should be duplicate. The first elem is from non-expand sectionDetails
@@ -190,6 +190,7 @@ export async function extractSection(element: Element) {
   const newSection: ISectionData = {
     code: code,
     name: name,
+    instructors: instructors,
     type: SectionType.lecture,
     term: term,
     sectionDetails: sectionDetailsArr,

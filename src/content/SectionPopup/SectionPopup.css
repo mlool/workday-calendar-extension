@@ -1,5 +1,5 @@
 .SectionPopup {
-  width: 200px; /* Adjust the width as needed */
+  width: 250px; /* Adjust the width as needed */
   height: 200px; /* Adjust the height as needed */
   padding: 10px;
   background-color: #fff;
@@ -18,6 +18,9 @@
   justify-content: space-between;
   flex-direction: column;
   text-align: left;
+
+  /* Make popup scrollable*/
+  overflow-y: auto;
 }
 
 .SectionPopupTitle {
