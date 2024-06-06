@@ -2,6 +2,7 @@
 import { ISectionData } from '../../App/App.types';
 import '../Settings.css';
 import './ExportImport.css'
+import { handleExternalCalendarExport } from './ExternalCalendarExport';
 
 interface IProps {
   sections: ISectionData[];
@@ -42,21 +43,25 @@ const ExportImport = ({ sections, onImport }: IProps) => {
         <div className="SettingsHeader">Export/Import</div>
         <hr className='Divider' />
         <div className="ExportImportButtonContainer">
-            <div className="ExportImportButton" onClick={handleExport}>
-            Export Calendar
+          <div className="ExportImportRow">  <div className="ExportImportButton" onClick={handleExport}>
+              Export Calendar
             </div>
-            <div className="ExportImportButton" onClick={handleExport}>
-            <input
+            <div className="ExportImportButton" onClick={() => handleImport}>
+              <input
                 type="file"
                 accept="application/json"
                 onChange={handleImport}
                 style={{ display: 'none' }}
                 id="import-file"
-            />
-            <label htmlFor="import-file">
+              />
+              <label htmlFor="import-file">
                 Import Calendar
-            </label>
+              </label>
             </div>
+          </div>
+          <div className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections)}>
+            Export To External Calendar
+          </div>
         </div>
     </div>
   );
