@@ -50,7 +50,7 @@ export const handleExternalCalendarExport = (sections: ISectionData[]) => {
       3: [2024, 12, 6, 23, 59], // Week of Dec 6, 2024
       4: [2025, 4, 8, 23, 59], // Week of Apr 8, 2025
       5: [2025, 4, 8, 23, 59], // Week of Apr 8, 2025
-  };
+    } ;
 
     // Handle invalid terms
     if (!baseStartDates.hasOwnProperty(term)) {
@@ -59,61 +59,53 @@ export const handleExternalCalendarExport = (sections: ISectionData[]) => {
 
     const baseYear = baseStartDates[term][0];
     const baseMonth = baseStartDates[term][1];
-    const baseDay = baseStartDates[term][2];
+    let baseDay = baseStartDates[term][2];
 
-    const baseDateObject = new Date(baseYear, baseMonth - 1, baseDay);  // Adjust for zero-based month indexing
-    
-    // Find the earliest day in the week of days array
-    const earliestDay = days.find(day => day === "Mon" || day === "Tue" || day === "Wed" || day === "Thu" || day === "Fri");
+    // ------------------------------------------------------------------------------------------ //
+    // Need to offset if class has a meeting starting a different day
+    // Since winter terms start on Tuesdays, if class meets only on mondays, class starts on week 2
+    // Will need to find different solution when summer term support is added
+    const offsets = { Mon: 6, Tue: 0, Wed: 1, Thu: 2, Fri: 3 };
 
-    // Map that to a number
-    const earliestDayNumber = earliestDay ? {  
-        Mon: 1,
-        Tue: 2,
-        Wed: 3,
-        Thu: 4,
-        Fri: 5,
-    }[earliestDay] : undefined;
-        
-    if (earliestDayNumber === undefined) {
-      console.error("No matching weekday found in 'days' array");
+    const firstDay = days[0];
+
+    if(firstDay != "Mon"){
+      baseDay += offsets[firstDay as keyof typeof offsets];
     } else {
-
-      // Calculate offset from base
-      let offsetDays = (earliestDayNumber - baseDateObject.getDay() + 7) % 7;
-
-      // Get start date using base + offset
-      const startDateObject = new Date(baseDateObject.getTime() + offsetDays * 24 * 60 * 60 * 1000);
-      const startDate = startDateObject.getDate();
-      
-      // Split start and endtimes into useable format
-      const [startHourString, startMinuteString] = startTime.split(":");
-
-      const startHour = parseInt(startHourString);
-      const startMinute = parseInt(startMinuteString);
-
-      const [endHourString, endMinuteString] = endTime.split(":");
-
-      const endHour = parseInt(endHourString);
-      const endMinute = parseInt(endMinuteString);
-
-      // Create event
-      const event: Event = {
-          title: sections[i].code,
-          description: sections[i].name,
-          location: sections[i].sectionDetails[0].location,
-          recurrenceRule: "FREQ=WEEKLY;BYDAY=" + formattedDays + ";INTERVAL=1;UNTIL=" + formatDateArray(baseEndDates[term]),
-          start: [baseYear, baseMonth, startDate, startHour, startMinute],
-          end: [baseYear, baseMonth, startDate, endHour, endMinute],
-      };
-
-      // Add event to the corresponding worklist group
-      if (!formattedEventsByWorklist.hasOwnProperty(worklist)) {
-        formattedEventsByWorklist[worklist] = [];
+      if (days.length == 1) {
+        baseDay += offsets["Mon"];
+      } else {
+        baseDay += offsets[days[1] as keyof typeof offsets];
       }
-      formattedEventsByWorklist[worklist].push(event);
     }
-      
+    // ------------------------------------------------------------------------------------------ //
+
+    // Split start and endtimes into useable format
+    const [startHourString, startMinuteString] = startTime.split(":");
+
+    const startHour = parseInt(startHourString);
+    const startMinute = parseInt(startMinuteString);
+
+    const [endHourString, endMinuteString] = endTime.split(":");
+
+    const endHour = parseInt(endHourString);
+    const endMinute = parseInt(endMinuteString);
+
+    // Create event
+    const event: Event = {
+        title: sections[i].code,
+        description: sections[i].name,
+        location: sections[i].sectionDetails[0].location,
+        recurrenceRule: "FREQ=WEEKLY;BYDAY=" + formattedDays + ";INTERVAL=1;UNTIL=" + formatDateArray(baseEndDates[term]),
+        start: [baseYear, baseMonth, baseDay, startHour, startMinute],
+        end: [baseYear, baseMonth, baseDay, endHour, endMinute],
+    };
+
+    // Add event to the corresponding worklist group
+    if (!formattedEventsByWorklist.hasOwnProperty(worklist)) {
+      formattedEventsByWorklist[worklist] = [];
+    }
+    formattedEventsByWorklist[worklist].push(event);
   }
 
   // Loop through formatted events grouped by worklist
