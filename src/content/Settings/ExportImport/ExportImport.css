@@ -13,10 +13,10 @@
   }
 
 .ExportImportButton {
-    padding: 10px 15px;
+    min-width: 45%;
+    height: 30px;
     font-weight: bold;
-    padding: 7px 20px;
-    display: inline-flex;
+    display: flex;
     font-size: 12px;
     color: #fff;
     background-color: #007bff;
@@ -29,21 +29,8 @@
     margin: 5px;
 }
 
-.ExportImportButton {
-    padding: 10px 15px;
-    font-weight: bold;
-    padding: 7px 20px;
-    display: flex;
-    font-size: 12px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    align-items: center;
-    justify-content: center;
-    margin: 5px;
+.ExportImportButton:hover {
+    background-color: #0068d6;;
 }
 
 .ExportImportButtonGroup {

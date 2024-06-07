@@ -1,7 +1,8 @@
-import { ISectionData } from "../../App/App.types";
 import { formatDateArray, generateICal } from './ExternalCalendarExportHelper';
-import './ExportImport.css'
+import '../ExportImport.css'
 import { useState } from 'react';
+import { ISectionData } from '../../../App/App.types';
+import ExportCalendarPopup from '../ExportCalendarPopup/ExportCalendarPopup';
 
 // Interface for formatting section details into calendar event
 export interface Event {
@@ -18,7 +19,7 @@ interface IProps {
 }
 
 const ExternalCalendarExport = ({ sections }: IProps) => {
-  const [showWorklistButtons, setShowWorklistButtons] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   // Formats section details into an event and generates download link
   const handleExternalCalendarExport = (sections: ISectionData[], worklistNumber: number) => {
@@ -110,12 +111,8 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
     // Loop through formatted events grouped by worklist
     for (const worklist in formattedEventsByWorklist) {
       const eventsForWorklist = formattedEventsByWorklist[worklist];
-
       // Generate ICS string for this worklist's events
       const calendarString = generateICal(eventsForWorklist); 
-
-      console.log(calendarString)
-
       // Convert string to downloadable blob
       const blob = new Blob([calendarString], { type: 'text/calendar;charset=utf-8' });
       const url = URL.createObjectURL(blob);
@@ -133,42 +130,17 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
   };
 
   const toggleWorklistButtons = () => {
-    setShowWorklistButtons(!showWorklistButtons);
+    setShowPopup(!showPopup);
   };
 
   return(
     <div>
-      {showWorklistButtons && ( 
-        <div>
-          <div>
-            Please Select Which Worklist To Export:
-          </div>
-          <div className="ExportImportRow">
-            <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 0)}>
-              Worklist 0
-            </button>
-            <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 1)}>
-              Worklist 1
-            </button>
-            <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 2)}>
-              Worklist 2
-            </button>
-            <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 3)}>
-              Worklist 3
-            </button>
-          </div>
-        </div>
-      )}
-      {!showWorklistButtons && (
-        <div className="ExportImportButton" onClick={toggleWorklistButtons}>
-          Export To External Calendar
-        </div>
-      )}
+      {showPopup && <ExportCalendarPopup onCancel={() => setShowPopup(false)} sections={sections} exportFunction={handleExternalCalendarExport}/>}
+      <div className="ExportImportButton" onClick={(toggleWorklistButtons)}>
+        Export To External Calendar
+      </div>
     </div>
   );
 }
 
 export default ExternalCalendarExport;
-
-
-  

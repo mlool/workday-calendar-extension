@@ -2,14 +2,15 @@
 import { ISectionData } from '../../App/App.types';
 import '../Settings.css';
 import './ExportImport.css'
-import ExternalCalendarExport from './ExternalCalendarExport';
+import ExternalCalendarExport from './ExternalCalendarExport/ExternalCalendarExport';
+import ExportImportIndividual from './ExportImportIndividual/ExportImportIndividual';
 
 interface IProps {
   sections: ISectionData[];
-  onImport: (data: ISectionData[]) => void;
+  setSections: (data: ISectionData[]) => void;
 }
 
-const ExportImport = ({ sections, onImport }: IProps) => {
+const ExportImport = ({ sections, setSections }: IProps) => {
 
   const handleExport = () => {
     const json = JSON.stringify(sections, null, 2);
@@ -30,7 +31,7 @@ const ExportImport = ({ sections, onImport }: IProps) => {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target?.result as string);
-        onImport(data);
+        setSections(data);
       } catch (error) {
         console.error('Failed to parse JSON file', error);
       }
@@ -42,10 +43,11 @@ const ExportImport = ({ sections, onImport }: IProps) => {
     <div>
         <div className="SettingsHeader">Export/Import</div>
         <hr className='Divider' />
+        <ExportImportIndividual sections={sections} setSections={setSections}/>
         <div className="ExportImportButtonContainer">
           <div className="ExportImportRow">  
             <div className="ExportImportButton" onClick={handleExport}>
-              Export Calendar
+              Export All Worklists
             </div>
             <div className="ExportImportButton" onClick={() => handleImport}>
               <input
@@ -56,7 +58,7 @@ const ExportImport = ({ sections, onImport }: IProps) => {
                 id="import-file"
               />
               <label htmlFor="import-file">
-                Import Calendar
+                Import All Worklists
               </label>
             </div>
           </div>
