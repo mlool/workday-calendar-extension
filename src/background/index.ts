@@ -26,4 +26,19 @@ chrome.action.onClicked.addListener((tab) => {
   }
 });
 
+// Add context menu item
+chrome.contextMenus.create({
+  id: 'workdayCalendar',
+  title: 'Workday Calendar',
+  contexts: ['all'],
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'workdayCalendar' && tab?.id !== undefined) {
+    chrome.tabs.sendMessage(tab.id, { toggleContainer: true });
+  } else {
+    console.error('Tab ID is undefined or context menu item ID does not match.');
+  }
+});
+
 export {};
