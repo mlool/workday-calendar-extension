@@ -21,42 +21,12 @@ function waitForElm(selector: string) {
       subtree: true
     });
   });
- }
+}
  
- function waitAndClick(selector: string): void {
+function waitAndClick(selector: string): void {
   waitForElm(selector).then((element) => {
     (element as HTMLElement).click();
   });
- }
-
-//Function to select the query for you! 
-function selectQuery(query: string) {
-  //console.log('Attempting to select dropdown/button!')
-
-  let dropdown = document.querySelector(query) as HTMLInputElement;
-
-  if (dropdown) {
-    //console.log('Dropdown found, clicking to open');
-    dropdown.click(); // Open the dropdown
-  } else {
-    console.log('Dropdown/button not found');
-  }
-}
-
-//Function to select the list of query for you!
-
-//the query is the querylist you want to select
-//the index is the option you want to select from top to bottom
-function selectQueryList(querylist: string, index: number) {
-  const options = document.querySelectorAll(querylist);
-
-  if (options.length > 0) {
-    //console.log('Options found! Clicking the option ' + index);
-    (options[index] as HTMLElement).click();
-
-  } else {
-    console.log('Options not found');
-  }
 }
 
 // Define the type of App as a React component
@@ -73,16 +43,6 @@ function startAutoFill() {
     waitAndClick('[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'); // select Winter Term 2
     (dropDowns[1] as HTMLElement).click(); // open level dropdown
     waitAndClick('[data-automation-label="Undergraduate"]'); // select Undergraduate
-    
-
-    shouldAutoFill = false;
-
-    /* Other options to select
-    'div[data-automation-label="Undergraduate"]' -> Undergraduate
-    'div[data-automation-label="Graduate"]' -> Graduate
-    'data-automation-label="Academic Level Not Applicable"' -> Academic Level Not Applicable
-    */
-
   }
   // Call the functions to autofill the fields
   setTimeout(() => {
@@ -99,6 +59,9 @@ function observePopup() {
         if (popup && isAutofillEnabled && !isAutofillTemporarilyDisabled) {
           startAutoFill();
           observer.disconnect(); // Stop observing after the popup is found and autofill is triggered
+          setTimeout(() => {
+            observePopup(); // Reconnect the observer after a delay
+          }, 5000); // Adjust delay as needed
           break;
         }
       }
@@ -111,62 +74,27 @@ function observePopup() {
 
 let isAutofillEnabled = false;
 let isAutofillTemporarilyDisabled = false;
-let shouldAutoFill = false;
+//let shouldAutoFill = false;
 
 window.onload = function() {
   //console.log('Window loaded');
 
-  shouldAutoFill = true;
+  //shouldAutoFill = true;
   
   isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 
   window.addEventListener('autofillToggle', function(event) {
     const customEvent = event as CustomEvent<{ enabled: boolean }>;
     isAutofillEnabled = customEvent.detail.enabled;
-    if (isAutofillEnabled && shouldAutoFill) {
+    if (isAutofillEnabled //&& shouldAutoFill
+      ) {
       observePopup();
     }
   });
 
-  if (isAutofillEnabled && shouldAutoFill) {
+  if (isAutofillEnabled //&& shouldAutoFill
+    ) {
     observePopup();
-  }
-
-  function tryAttachSpecialButtonListener() {
-    // Add event listener to disable autofill when the specific button is clicked
-    const specialButton = document.querySelector('div[class="WDTK WCTK WOJT"]');
-    if (specialButton) {
-      specialButton.addEventListener('click', function() {
-        console.log('Special button clicked, disabling autofill.');
-        disableAutofillTemporarily();
-      });
-    } else {
-      console.log('Special button not found');
-    }
-  }
-
-  // Try attaching the listener every 12 seconds
-  setInterval(() => {
-    tryAttachSpecialButtonListener();
-  }, 12000);
-
-  function disableAutofillTemporarily() {
-    isAutofillTemporarilyDisabled = true;
-    //console.log('Autofill temporarily disabled.');
-  
-    // Re-enable autofill after some time or condition
-    setTimeout(() => {
-      isAutofillTemporarilyDisabled = false;
-      //console.log('Autofill re-enabled.');
-    }, 30000); // Adjust the timeout as necessary
-  }
-
-  function handleAutofillEvent(event: Event) {
-    const customEvent = event as CustomEvent<{ enabled: boolean }>;
-    isAutofillEnabled = customEvent.detail.enabled;
-    if (isAutofillEnabled) {
-      observePopup();
-    }
   }
 };
 
