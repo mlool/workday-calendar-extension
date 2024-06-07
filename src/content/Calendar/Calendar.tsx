@@ -23,8 +23,6 @@ for (let hour = 7; hour <= 20; hour++) {
 }
 
 const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, currentTerm, selectedSection, setSelectedSection}:IProps) => {
-  // const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
-
   const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
 
   return (
