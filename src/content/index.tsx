@@ -3,6 +3,32 @@ import ReactDOM from 'react-dom';
 import '../index.css';
 import App from './App/App';
 
+function waitForElm(selector: string) {
+  return new Promise(resolve => {
+    if (document.querySelector(selector)) {
+      return resolve(document.querySelector(selector));
+    }
+ 
+    const observer = new MutationObserver(mutations => {
+      if (document.querySelector(selector)) {
+        observer.disconnect();
+        resolve(document.querySelector(selector));
+      }
+    });
+ 
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+ }
+ 
+ function waitAndClick(selector: string): void {
+  waitForElm(selector).then((element) => {
+    (element as HTMLElement).click();
+  });
+ }
+
 //Function to select the query for you! 
 function selectQuery(query: string) {
   //console.log('Attempting to select dropdown/button!')
@@ -38,33 +64,18 @@ function startAutoFill() {
 
   // Function to select the "Start Date within" dropdown
   function startAutoFill() {
-    setTimeout(() => {
-      selectQueryList('div[data-automation-id="multiselectInputContainer"][width="280"][dir="ltr"]', 0); //select the dropdown "Start Date within"
-    }, 100);
+    const dropDowns = document.querySelectorAll('[data-automation-id="multiselectInputContainer"]');
     
-    setTimeout(() => {
-      selectQueryList('div[data-automation-id="promptLeafNode"][data-automation-checked="Not Checked"][height="32px"][data-uxi-widget-type="multiselectlistitem"]', 0); //select the "Future Periods" option
-    }, 600);
+    (dropDowns[0] as HTMLElement).click(); // open time dropdown
+    waitAndClick('[data-automation-id="promptOption"][data-automation-label="Future Periods"]');
+    waitAndClick('[data-automation-label="2024-25 UBC-V Academic Year"]'); // select UBC V
+    waitAndClick('[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]'); // select Winter Term 1
+    waitAndClick('[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'); // select Winter Term 2
+    (dropDowns[1] as HTMLElement).click(); // open level dropdown
+    waitAndClick('[data-automation-label="Undergraduate"]'); // select Undergraduate
+    
 
-    setTimeout(() => {
-      selectQueryList('div[data-uxi-widget-type="multiselectlistitem"][data-automation-id="promptLeafNode"][data-automation-checked="Not Checked"][height="32px"][data-uxi-multiselectlistitem-type="2"]', 1); //select the "2024-25 UBC-V Academic Year" option
-    }, 1100);
-
-    setTimeout(() => {
-      selectQuery('div[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]'); //select the "2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)" option
-    }, 1600);
-
-    setTimeout(() => {
-      selectQuery('div[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'); //select the "2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)" option
-    }, 2100);
-
-    setTimeout(() => {
-      selectQueryList('div[data-automation-id="multiselectInputContainer"][width="280"][dir="ltr"]', 1); //select the dropdown "Academic Level"
-    }, 2600);
-
-    setTimeout(() => {
-      selectQuery('div[data-automation-label="Undergraduate"]'); //select the "Undergraduate" option
-    }, 3100);
+    shouldAutoFill = false;
 
     /* Other options to select
     'div[data-automation-label="Undergraduate"]' -> Undergraduate
@@ -72,9 +83,6 @@ function startAutoFill() {
     'data-automation-label="Academic Level Not Applicable"' -> Academic Level Not Applicable
     */
 
-    setTimeout(() => {
-      selectQuery('button[data-automation-id="wd-CommandButton_uic_okButton"]'); //select the "OK" button
-    }, 3600);
   }
   // Call the functions to autofill the fields
   setTimeout(() => {
@@ -91,9 +99,6 @@ function observePopup() {
         if (popup && isAutofillEnabled && !isAutofillTemporarilyDisabled) {
           startAutoFill();
           observer.disconnect(); // Stop observing after the popup is found and autofill is triggered
-          setTimeout(() => {
-            observePopup(); // Reconnect the observer after a delay
-          }, 5000); // Adjust delay as needed
           break;
         }
       }
@@ -106,21 +111,24 @@ function observePopup() {
 
 let isAutofillEnabled = false;
 let isAutofillTemporarilyDisabled = false;
+let shouldAutoFill = false;
 
 window.onload = function() {
   //console.log('Window loaded');
+
+  shouldAutoFill = true;
   
   isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 
   window.addEventListener('autofillToggle', function(event) {
     const customEvent = event as CustomEvent<{ enabled: boolean }>;
     isAutofillEnabled = customEvent.detail.enabled;
-    if (isAutofillEnabled) {
+    if (isAutofillEnabled && shouldAutoFill) {
       observePopup();
     }
   });
 
-  if (isAutofillEnabled) {
+  if (isAutofillEnabled && shouldAutoFill) {
     observePopup();
   }
 
