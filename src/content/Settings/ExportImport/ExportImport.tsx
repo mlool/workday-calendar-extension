@@ -2,7 +2,7 @@
 import { ISectionData } from '../../App/App.types';
 import '../Settings.css';
 import './ExportImport.css'
-import ExternalCalendarExport from './ExternalCalendarExport';
+import ExternalCalendarExport from './ExternalCalendarExport/ExternalCalendarExport';
 
 interface IProps {
   sections: ISectionData[];
