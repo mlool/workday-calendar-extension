@@ -45,7 +45,7 @@ const ExportImport = ({ sections, onImport }: IProps) => {
         <div className="ExportImportButtonContainer">
           <div className="ExportImportRow">  
             <div className="ExportImportButton" onClick={handleExport}>
-              Export Calendar
+              Export All Worklists
             </div>
             <div className="ExportImportButton" onClick={() => handleImport}>
               <input
@@ -56,7 +56,7 @@ const ExportImport = ({ sections, onImport }: IProps) => {
                 id="import-file"
               />
               <label htmlFor="import-file">
-                Import Calendar
+                Import All Worklists
               </label>
             </div>
           </div>
