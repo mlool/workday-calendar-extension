@@ -49,7 +49,7 @@ const ImportCalendarPopup = ({onCancel, sections, handleImport}:IProps) => {
                         id="import-file"
                         />
                         <label htmlFor="import-file">
-                        Import Worklists
+                        Confirm
                         </label>
                     </div>
                 </div>

@@ -50,7 +50,7 @@ const ExportImportIndividual = ({ sections, setSections }: IProps) => {
         {showImportPopup && <ImportCalendarPopup onCancel={() => setShowImportPopup(false)} sections={sections} handleImport={handleImport}/>}
         <div className='ExportImportRow'>
           <div className="ExportImportButton" onClick={() => setShowExportPopup(true)}>
-              Export Worklists
+              Export Worklist
           </div>
           <div className="ExportImportButton" onClick={() => setShowImportPopup(true)}>
               Import Worklist

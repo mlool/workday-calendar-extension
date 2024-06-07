@@ -13,11 +13,11 @@
   }
 
 .ExportImportButton {
-    padding: 10px 15px;
+    min-width: 45%;
+    height: 30px;
     font-weight: bold;
-    padding: 7px 20px;
     display: flex;
-    font-size: 11px;
+    font-size: 12px;
     color: #fff;
     background-color: #007bff;
     border: none;
