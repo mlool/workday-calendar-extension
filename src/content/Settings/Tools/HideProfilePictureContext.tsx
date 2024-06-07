@@ -23,14 +23,16 @@ export const HideProfilePictureProvider = ({ children }: HideProfilePictureProvi
     const [hideProfilePicture, setHideProfilePicture] = useState(false);
 
     const applyVisibility = (hide: boolean) => {
-        const profilePictures = document.querySelectorAll('img.wdappchrome-aax') as NodeListOf<HTMLImageElement>;
+        const selectors = [
+            'img.wdappchrome-aax',
+            'img.wdappchrome-aaam',
+            'img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW'
+        ];
+
+        const profilePictures = document.querySelectorAll(selectors.join(', ')) as NodeListOf<HTMLImageElement>;
         profilePictures.forEach((img) => {
             img.style.visibility = hide ? 'hidden' : 'visible';
         });
-    };
-
-    const hidePfp = () => {
-        applyVisibility(hideProfilePicture);
     };
 
     useEffect(() => {
@@ -40,11 +42,11 @@ export const HideProfilePictureProvider = ({ children }: HideProfilePictureProvi
 
     useEffect(() => {
         localStorage.setItem('hideProfilePicture', hideProfilePicture.toString());
-        hidePfp();
+        applyVisibility(hideProfilePicture)
     }, [hideProfilePicture]);
 
     useEffect(() => {
-        const observer = new MutationObserver(hidePfp);
+        const observer = new MutationObserver(() => applyVisibility(hideProfilePicture));
         observer.observe(document.body, { childList: true, subtree: true });
 
         return () => observer.disconnect();
