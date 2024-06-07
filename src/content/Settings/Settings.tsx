@@ -14,10 +14,10 @@ interface ISettingsProps {
   colorTheme: ColorTheme;
   sections: ISectionData[];
   setColorTheme: (theme: ColorTheme) => void;
-  onImport: (data: ISectionData[]) => void;
+  setSections: (data: ISectionData[]) => void;
 }
 
-const Settings = ({ colorTheme, sections, setColorTheme, onImport }: ISettingsProps) => {
+const Settings = ({ colorTheme, sections, setColorTheme, setSections }: ISettingsProps) => {
   const [infoPopupMessage, setInfoPopupMessage] = useState<string>("")
   return (
     <div>
@@ -25,7 +25,7 @@ const Settings = ({ colorTheme, sections, setColorTheme, onImport }: ISettingsPr
       <div className="Settings">
         <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
         <Tools setInfoPopupMessage={setInfoPopupMessage} />
-        <ExportImport sections={sections} onImport={onImport} />
+        <ExportImport sections={sections} setSections={setSections} />
         <Contact />
       </div>
     </div>

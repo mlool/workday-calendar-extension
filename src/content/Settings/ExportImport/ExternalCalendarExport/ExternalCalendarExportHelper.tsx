@@ -76,4 +76,4 @@ export const formatDateArray = (dateArray: number[]): string => {
     const minuteStr = String(minute).padStart(2, '0');
   
     return `${year}${monthStr}${dayStr}T${hourStr}${minuteStr}00`;
-  }
+}
