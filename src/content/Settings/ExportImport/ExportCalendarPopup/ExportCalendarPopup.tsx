@@ -21,6 +21,7 @@ const ExportCalendarPopup = ({onCancel, sections, exportFunction}:IProps) => {
                     </div>
                 </div>
                 <div className='ExportCalendarPopupBody'>
+                    Choose the worklist to export from: 
                     <div className='ExportCalendarPopupButtonContainer'>
                         <div>Worklist: </div>
                         {[0, 1, 2, 3].map((worklist) => 

@@ -142,8 +142,8 @@ function App() {
         <Settings 
           colorTheme={colorTheme} 
           sections={sections}
-          setColorTheme={setColorTheme} 
-          onImport={(data: ISectionData[]) => { setSections(data) }}
+          setColorTheme={setColorTheme}
+          setSections={setSections}
         />
       )}
     </div>

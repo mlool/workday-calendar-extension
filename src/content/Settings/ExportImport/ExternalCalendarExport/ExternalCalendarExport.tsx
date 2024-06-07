@@ -19,7 +19,7 @@ interface IProps {
 }
 
 const ExternalCalendarExport = ({ sections }: IProps) => {
-  const [showPopup, setShowPopup] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
 
   // Formats section details into an event and generates download link
   const handleExternalCalendarExport = (sections: ISectionData[], worklistNumber: number) => {
