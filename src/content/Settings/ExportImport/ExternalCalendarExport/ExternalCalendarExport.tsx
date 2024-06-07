@@ -144,27 +144,3 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
 }
 
 export default ExternalCalendarExport;
-
-
-  
-// {showWorklistButtons && ( 
-//   <div>
-//     <div>
-//       Please Select Which Worklist To Export:
-//     </div>
-//     <div className="ExportImportRow">
-//       <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 0)}>
-//         Worklist 0
-//       </button>
-//       <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 1)}>
-//         Worklist 1
-//       </button>
-//       <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 2)}>
-//         Worklist 2
-//       </button>
-//       <button className="ExportImportButton" onClick={() => handleExternalCalendarExport(sections, 3)}>
-//         Worklist 3
-//       </button>
-//     </div>
-//   </div>
-// )}
