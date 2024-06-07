@@ -38,3 +38,7 @@
     cursor: pointer;
     margin-right: 5px;
 }
+
+.ExportCalendarPopupBody {
+    height: 80%;
+}
