@@ -135,7 +135,7 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
 
   return(
     <div>
-      {showPopup && <ExportCalendarPopup onCancel={() => setShowPopup(false)} exportFunction={handleExternalCalendarExport}/>}
+      {showPopup && <ExportCalendarPopup onCancel={() => setShowPopup(false)} sections={sections} exportFunction={handleExternalCalendarExport}/>}
       <div className="ExportImportButton" onClick={(toggleWorklistButtons)}>
         Export To External Calendar
       </div>
