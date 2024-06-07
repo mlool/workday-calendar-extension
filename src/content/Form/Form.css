@@ -38,6 +38,15 @@
     margin: 10px 10px 2px 10px;
 }
 
+.NewSectionInfo {
+    margin-bottom: 5px;
+    color: black;
+}
+
+.NewSectionCode {
+    font-weight: 500;
+}
+
 .NewSectionButton:hover {
     background-color: #0068d6;;
 }

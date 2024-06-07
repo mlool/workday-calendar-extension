@@ -142,7 +142,8 @@ function App() {
         <Settings 
           colorTheme={colorTheme} 
           sections={sections}
-          setColorTheme={setColorTheme} 
+          setColorTheme={setColorTheme}
+          setSections={setSections}
         />
       )}
     </div>

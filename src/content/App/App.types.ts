@@ -35,13 +35,15 @@ export type SectionDetail = {
     days: string[]
     startTime: string,
     endTime: string,
-    location?: string
+    location?: string,
+    dateRange: string
 }
 
 export interface ISectionData {
     code: string,
     name: string,
     type: SectionType,
+    instructors: string[],
     sectionDetails: SectionDetail[]
     term: Term,
     worklistNumber: number,
@@ -53,6 +55,7 @@ export interface ISectionData {
 export const baseSection:ISectionData = {
     code: "",
     name: "",
+    instructors: [],
     type: SectionType.lecture,
     sectionDetails: [],
     term: Term.winterOne,

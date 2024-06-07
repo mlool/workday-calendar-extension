@@ -1,0 +1,40 @@
+.InfoModalBackground {
+    background-color: rgba(99, 99, 99, 0.6);
+    position: fixed;
+    top: 0;
+    height: 650px;
+    width: 300px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    z-index: 100;
+}
+
+.InfoModal {
+    background-color: white;
+    width: 90%;
+    height: 30%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.InfoModalHeader {
+    height: 15%;
+    background-color: #00A7E1;
+    color: white;
+    font-size: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: bold;
+    text-align: left;
+    align-items: center;
+    display: flex;
+    justify-content: right;
+}
+
+.InfoModalCloseButton {
+    cursor: pointer;
+    margin-right: 5px;
+}

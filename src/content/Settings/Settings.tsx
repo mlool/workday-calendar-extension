@@ -4,26 +4,22 @@ import './Settings.css';
 import { ISectionData } from '../App/App.types';
 import DiscordButton from '../DiscordButton/DiscordButton';
 import React, { useState, useEffect } from 'react';
+import InfoModal from '../InfoModal/InfoModal';
+import Tools from './Tools/Tools';
+import Theme from './Theme/Theme';
+import ExportImport from './ExportImport/ExportImport';
+import Contact from './Contact/Contact';
 
 interface ISettingsProps {
   colorTheme: ColorTheme;
   sections: ISectionData[];
   setColorTheme: (theme: ColorTheme) => void;
+  setSections: (data: ISectionData[]) => void;
 }
 
-const Settings = ({ colorTheme, sections, setColorTheme }: ISettingsProps) => {
+const Settings = ({ colorTheme, sections, setColorTheme, setSections }: ISettingsProps) => {
 
-  const handleExport = () => {
-    const json = JSON.stringify(sections, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'schedule.json';
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
+  const [infoPopupMessage, setInfoPopupMessage] = useState<string>("")
   const [autofillEnabled, setAutofillEnabled] = useState(false);
 
   useEffect(() => {
@@ -43,17 +39,13 @@ const Settings = ({ colorTheme, sections, setColorTheme }: ISettingsProps) => {
   };
 
   return (
-    <div className="Settings">
-      <div className="SettingsHeader">Theme</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <ThemePicker colorTheme={colorTheme} setColorTheme={setColorTheme} />
-      </div>
-      <div className="SettingsHeader">Tools</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <div>Coming soon ......</div>
-          <div>
+    <div>
+      {infoPopupMessage !== "" && <InfoModal message={infoPopupMessage} onCancel={() => setInfoPopupMessage("")}/>}
+      <div className="Settings">
+        <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
+        <Tools setInfoPopupMessage={setInfoPopupMessage} />
+        <ExportImport sections={sections} setSections={setSections} />
+        <div>
             <label>
               <input 
                 type="checkbox" 
@@ -63,18 +55,7 @@ const Settings = ({ colorTheme, sections, setColorTheme }: ISettingsProps) => {
               Enable Autofill
             </label>
           </div>
-      </div>
-      <div className="SettingsHeader">Export/Import</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <div className="SettingsButton" onClick={handleExport}>
-          Export Calendar
-        </div>
-      </div>
-      <div className="SettingsHeader">Contact Us</div>
-      <hr className='Divider' />
-      <div className="SettingsItems">
-        <DiscordButton />
+        <Contact />
       </div>
     </div>
   );
