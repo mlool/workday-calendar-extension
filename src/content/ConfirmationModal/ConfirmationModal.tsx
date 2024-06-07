@@ -1,4 +1,5 @@
 import './ConfirmationModal.css'
+import parse from 'html-react-parser';
 
 interface IProps {
     title: string,
@@ -16,7 +17,7 @@ const ConfirmationModal = ({title, message, onCancel, onConfirm}:IProps) => {
             </div>
             <div className='ConfirmationModalBody'>
                 <div className='ConfiramtionModalBodyContent'>
-                    {message}
+                    {parse(message)}
                 </div>
                 <div className='ConfirmationModalButtonContainer'>
                     <div className='ConfirmationModalCancelButton' onClick={onCancel}>Cancel</div>
