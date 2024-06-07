@@ -32,9 +32,18 @@ const ExportImportIndividual = ({ sections, setSections }: IProps) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const data = JSON.parse(e.target?.result as string);
+        let data:ISectionData[] = JSON.parse(e.target?.result as string);
         let newSections = [...sections]
         newSections = newSections.filter((section) => section.worklistNumber !== worklistNumber)
+        data = data.map((section) => ({code: section.code, 
+                                       color: section.color,
+                                       name: section.name,
+                                       instructors: section.instructors,
+                                       sectionDetails: section.sectionDetails,
+                                       worklistNumber: worklistNumber,
+                                       type: section.type,
+                                       term: section.term
+                                      }))
         newSections = newSections.concat(data)
         setSections(newSections);
       } catch (error) {
