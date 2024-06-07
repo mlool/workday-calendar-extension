@@ -45,16 +45,6 @@ const Settings = ({ colorTheme, sections, setColorTheme, setSections }: ISetting
         <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
         <Tools setInfoPopupMessage={setInfoPopupMessage} />
         <ExportImport sections={sections} setSections={setSections} />
-        <div>
-            <label>
-              <input 
-                type="checkbox" 
-                checked={autofillEnabled} 
-                onChange={handleAutofillChange} 
-              />
-              Enable Autofill
-            </label>
-          </div>
         <Contact />
       </div>
     </div>
