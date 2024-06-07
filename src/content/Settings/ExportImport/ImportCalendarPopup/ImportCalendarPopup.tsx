@@ -41,7 +41,10 @@ const ImportCalendarPopup = ({onCancel, sections, handleImport}:IProps) => {
                         <input
                         type="file"
                         accept="application/json"
-                        onChange={(e) => handleImport(e, selectedWorklist)}
+                        onChange={(e) => {
+                            handleImport(e, selectedWorklist)
+                            onCancel()
+                        }}
                         style={{ display: 'none' }}
                         id="import-file"
                         />
