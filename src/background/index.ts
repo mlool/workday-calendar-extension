@@ -29,7 +29,7 @@ chrome.action.onClicked.addListener((tab) => {
 // Add context menu item
 chrome.contextMenus.create({
   id: 'workdayCalendar',
-  title: 'Workday Calendar',
+  title: 'View Workday Calendar',
   contexts: ['all'],
 });
 
