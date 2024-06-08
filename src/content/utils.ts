@@ -175,7 +175,8 @@ export async function extractSection(element: Element) {
   
   if(instructorElements) {
     for(let i = 2; i < instructorElements.length; i++) {
-      if(!instructorElements[i].textContent?.includes("|")) {
+      //if no "|" and no "_", aka formatted like a human name, then instructor -- bandaid fix for now since registration really soon
+      if(!instructorElements[i].textContent?.includes("|") && !instructorElements[i].textContent?.includes("_")) {
         instructors.push(instructorElements[i]?.textContent || "");
       }
     }

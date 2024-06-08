@@ -45,6 +45,7 @@ const Tools = ({ setInfoPopupMessage }: IProps) => {
             <hr className='Divider' />
             <div className="ToolsBodyContainer">
                 <div className='ToolItem'>
+                    {/*Coming soon!
                     <div className="ToolContainer">
                         <div><input type="checkbox" checked={autofillEnabled} onChange={handleAutofillChange} /></div>
                         <div>Enable Autofill</div>
@@ -52,7 +53,7 @@ const Tools = ({ setInfoPopupMessage }: IProps) => {
                     <div className='ToolItemInfoButton'
                          onClick={() => setInfoPopupMessage("Autofills Find Course Sections")}>
                         <QuestionIcon size={16} color='black' />
-                    </div>
+                    </div>*/}
                     <div className="ToolContainer">
                         <div><input type="checkbox" checked={hideProfilePicture} onChange={handleHidePfpChange} /></div>
                         <div>Hide Profile Picture</div>
