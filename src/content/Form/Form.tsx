@@ -13,10 +13,11 @@ interface IProps {
     setSections: (data: ISectionData[]) => void,
     currentTerm: Term;
     colorTheme: ColorTheme,
-    setColorTheme: (theme: ColorTheme) => void
+    setColorTheme: (theme: ColorTheme) => void,
+    setSelectedSection: (section: ISectionData | null) => void;
 }
 
-const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, currentTerm, colorTheme, setColorTheme}: IProps) => {
+const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setNewSection, setSections, currentTerm, colorTheme, setColorTheme, setSelectedSection}: IProps) => {
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
   
   const onAdd = () => {
@@ -57,6 +58,7 @@ const Form = ({newSection, sections, invalidSection, currentWorklistNumber, setN
           onConfirm={() => {
                       onClear()
                       setShowConfirmation(false)
+                      setSelectedSection(null)
                     }}
         />
       }
