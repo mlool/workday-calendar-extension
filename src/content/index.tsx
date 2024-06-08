@@ -3,71 +3,99 @@ import ReactDOM from 'react-dom';
 import '../index.css';
 import App from './App/App';
 
-function waitForElm(selector: string) {
-  return new Promise(resolve => {
+function waitForElm(selector: string): Promise<Element | null> {
+  return new Promise((resolve) => {
     if (document.querySelector(selector)) {
       return resolve(document.querySelector(selector));
     }
- 
-    const observer = new MutationObserver(mutations => {
+
+    const observer = new MutationObserver((mutations) => {
       if (document.querySelector(selector)) {
         observer.disconnect();
         resolve(document.querySelector(selector));
       }
     });
- 
+
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   });
 }
- 
-function waitAndClick(selector: string): void {
-  waitForElm(selector).then((element) => {
-    (element as HTMLElement).click();
+
+function waitForElms(
+  selector: string,
+  numEls: number
+): Promise<NodeListOf<Element> | null> {
+  return new Promise((resolve) => {
+    const existingElements = document.querySelectorAll(selector);
+    if (existingElements.length >= numEls) {
+      resolve(existingElements);
+      return;
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      const newElements = document.querySelectorAll(selector);
+      if (newElements.length >= numEls) {
+        observer.disconnect();
+        resolve(newElements);
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   });
 }
 
-// Define the type of App as a React component
-function startAutoFill() {
+async function waitAndClick(selector: string) {
+  let element = await waitForElm(selector);
+  (element as HTMLElement).click();
+}
 
-  // Function to select the "Start Date within" dropdown
-  function startAutoFill() {
-    const dropDowns = document.querySelectorAll('[data-automation-id="multiselectInputContainer"]');
-    
+// Function to select the "Start Date within" dropdown
+async function startAutoFill() {
+  const dropDowns = await waitForElms(
+    '[data-automation-id="multiselectInputContainer"] input',
+    2
+  );
+  if (dropDowns) {
     (dropDowns[0] as HTMLElement).click(); // open time dropdown
-    waitAndClick('[data-automation-id="promptOption"][data-automation-label="Future Periods"]');
-    waitAndClick('[data-automation-label="2024-25 UBC-V Academic Year"]'); // select UBC V
-    waitAndClick('[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]'); // select Winter Term 1
-    waitAndClick('[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'); // select Winter Term 2
+    await waitAndClick(
+      '[data-automation-id="promptOption"][data-automation-label="Future Periods"]'
+    );
+    await waitAndClick('[data-automation-label="2024-25 UBC-V Academic Year"]'); // select UBC V
+    await waitAndClick(
+      '[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]'
+    ); // select Winter Term 1
+    await waitAndClick(
+      '[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'
+    ); // select Winter Term 2
     (dropDowns[1] as HTMLElement).click(); // open level dropdown
-    waitAndClick('[data-automation-label="Undergraduate"]'); // select Undergraduate
+    await waitAndClick('[data-automation-label="Undergraduate"]'); // select Undergraduate
   }
-  // Call the functions to autofill the fields
-  setTimeout(() => {
-    startAutoFill();
-  }, 100);
-};
+}
 
 // Observe the DOM for the popup appearance
 function observePopup() {
   const observer = new MutationObserver((mutationsList, observer) => {
-    for (let mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-        const popup = document.querySelector('div[data-uxi-editview-taskid="1422$5132"]');
-        if (popup && isAutofillEnabled && !isAutofillTemporarilyDisabled) {
-          startAutoFill();
-          observer.disconnect(); // Stop observing after the popup is found and autofill is triggered
-          setTimeout(() => {
-            observePopup(); // Reconnect the observer after a delay
-          }, 5000); // Adjust delay as needed
-          break;
-        }
+    mutationsList.forEach((mutation) => {
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            const popup = node.querySelector(
+              '[data-automation-id="editPopup"] [data-automation-id="pageHeaderTitleText"]'
+            );
+            if (popup && isAutofillEnabled && !isAutofillTemporarilyDisabled) {
+              startAutoFill();
+              observer.disconnect(); // Stop observing after the popup is found and autofill is triggered
+            }
+          }
+        });
       }
-    }
+    });
   });
-
   // Start observing the entire document for changes
   observer.observe(document.body, { childList: true, subtree: true });
 }
@@ -76,28 +104,29 @@ let isAutofillEnabled = false;
 let isAutofillTemporarilyDisabled = false;
 //let shouldAutoFill = false;
 
-window.onload = function() {
+window.onload = function () {
   //console.log('Window loaded');
 
   //shouldAutoFill = true;
-  
+
   isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 
-  window.addEventListener('autofillToggle', function(event) {
+  window.addEventListener('autofillToggle', function (event) {
     const customEvent = event as CustomEvent<{ enabled: boolean }>;
     isAutofillEnabled = customEvent.detail.enabled;
-    if (isAutofillEnabled //&& shouldAutoFill
-      ) {
+    if (
+      isAutofillEnabled //&& shouldAutoFill
+    ) {
       observePopup();
     }
   });
 
-  if (isAutofillEnabled //&& shouldAutoFill
-    ) {
+  if (
+    isAutofillEnabled //&& shouldAutoFill
+  ) {
     observePopup();
   }
 };
-
 
 // Function to add a button to a given HTML element
 function addButtonToElement(element: Element): void {
@@ -221,7 +250,7 @@ function toggleContainer(forceOpen = false) {
     const isOpen = containerWrapper.style.right === '0px';
 
     if (isOpen && forceOpen) {
-      return
+      return;
     }
 
     if (forceOpen || !isOpen) {
@@ -278,7 +307,8 @@ chrome.storage.local.get('drawerOpen', function (data) {
   icon.textContent = data.drawerOpen ? '▶' : '◀'; // Initially showing the right arrow
   icon.style.position = 'absolute';
   icon.style.top = '50%'; // Vertically center on the tab
-  icon.style.transform = 'translateY(calc(-50% - 50px)) translateX(-100%)';
+  icon.style.transform = 'translateY(-50%)';
+  icon.style.transform = 'translateX(-100%)';
 
   icon.style.width = '30px';
   icon.style.height = '30px';
@@ -294,8 +324,7 @@ chrome.storage.local.get('drawerOpen', function (data) {
   const container = document.createElement('div');
   container.id = 'react-container';
   container.style.width = '300px';
-  container.style.height = '700px';
-  container.style.transform = 'translateY(-50px)';
+  container.style.height = '650px';
   container.style.border = '1px solid #CCC';
   container.style.backgroundColor = '#FFF';
   container.style.overflow = 'auto';
