@@ -144,7 +144,6 @@ function toggleContainer(forceOpen = false) {
     }
     // Save the new state to local storage
     chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
-      console.log('Drawer state saved:', !isOpen);
     });
   }
 }
@@ -162,7 +161,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       // Save the new state to local storage
       chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
-        console.log('Drawer state saved:', !isOpen);
       });
     }
   }
@@ -189,8 +187,7 @@ chrome.storage.local.get('drawerOpen', function (data) {
   icon.textContent = data.drawerOpen ? '▶' : '◀'; // Initially showing the right arrow
   icon.style.position = 'absolute';
   icon.style.top = '50%'; // Vertically center on the tab
-  icon.style.transform = 'translateY(-50%)';
-  icon.style.transform = 'translateX(-100%)';
+  icon.style.transform = 'translateY(calc(-50% - 50px)) translateX(-100%)';
 
   icon.style.width = '30px';
   icon.style.height = '30px';
@@ -206,7 +203,8 @@ chrome.storage.local.get('drawerOpen', function (data) {
   const container = document.createElement('div');
   container.id = 'react-container';
   container.style.width = '300px';
-  container.style.height = '650px';
+  container.style.height = '700px';
+  container.style.transform = 'translateY(-50px)';
   container.style.border = '1px solid #CCC';
   container.style.backgroundColor = '#FFF';
   container.style.overflow = 'auto';
