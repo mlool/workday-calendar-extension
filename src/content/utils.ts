@@ -84,7 +84,8 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
       days: days,
       startTime: startTime,
       endTime: endTime,
-      location: location
+      location: location,
+      dateRange: dateRange
     })
   })
 
@@ -168,13 +169,17 @@ export async function extractSection(element: Element) {
 
   // ~~~ End of stupidly hacky code ~~~
 
-  // Extracting instructors. Query all the "promptOption" that are not links. If it has role as link, it is a Section Detail div, otherwise it is an Instructor div
-  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]:not([role="link"])');
+  // Extracting instructors details from labels
+  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
   let instructors: string[] = [];
   
-  instructorElements?.forEach((elm) => {
-    instructors.push(elm?.textContent || "")
-  })
+  if(instructorElements) {
+    for(let i = 2; i < instructorElements.length; i++) {
+      if(!instructorElements[i].textContent?.includes("|")) {
+        instructors.push(instructorElements[i]?.textContent || "");
+      }
+    }
+  }
 
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')

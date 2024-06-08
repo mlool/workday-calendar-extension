@@ -15,6 +15,7 @@ function App() {
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
   const [currentView, setCurrentView] = useState<Views>(Views.calendar);
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green);
+  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
@@ -123,6 +124,8 @@ function App() {
             setCurrentWorklistNumber={setCurrentWorklistNumber}
             currentTerm={currentTerm}
             setCurrentTerm={setCurrentTerm}
+            selectedSection={selectedSection}
+            setSelectedSection={setSelectedSection}
           />
 
           <Form
@@ -135,14 +138,15 @@ function App() {
             currentTerm={currentTerm}
             colorTheme={colorTheme}
             setColorTheme={setColorTheme}
+            setSelectedSection={setSelectedSection}
           />
         </div>
       ) : (
         <Settings 
           colorTheme={colorTheme} 
           sections={sections}
-          setColorTheme={setColorTheme} 
-          onImport={(data: ISectionData[]) => { setSections(data) }}
+          setColorTheme={setColorTheme}
+          setSections={setSections}
         />
       )}
     </div>

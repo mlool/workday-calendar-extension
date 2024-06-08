@@ -1,0 +1,21 @@
+.ToolsBodyContainer {
+    margin-bottom: 40px;
+    margin-left: 10px;
+}
+
+.ToolItem {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ToolContainer {
+    display: flex;
+    align-items: center;
+}
+
+.ToolItemInfoButton {
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}

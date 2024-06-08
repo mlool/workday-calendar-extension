@@ -7,7 +7,7 @@
   font-weight: bold;
 }
 
-.GradesContainer table {
+/* .GradesContainer table {
   width: 100%;
   border-collapse: collapse;
   align-items: baseline;
@@ -15,8 +15,63 @@
 
 .GradesContainer td {
   border: none;
+} */
+
+.GradesContainer {
+  display: flex;
+  justify-content: space-between;
 }
 
 .GradesLink {
   text-align: center;
+}
+
+.AverageContainer {
+  padding: 2px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.unavailable {
+  background-color: rgb(226, 226, 226);
+}
+
+.VeryLowAverage {
+  background-color: rgb(255, 142, 142);
+}
+
+.VeryLowAverage:hover {
+  background-color: rgb(255, 116, 116);
+}
+
+.LowAverage {
+  background-color: rgb(255, 187, 142);
+}
+
+.LowAverage:hover {
+  background-color: rgb(255, 176, 123);
+}
+
+.MidAverage {
+  background-color: rgb(255, 247, 142);
+}
+
+.MidAverage:hover {
+  background-color: rgb(255, 245, 112);
+}
+
+.HighAverage {
+  background-color: rgb(208, 255, 142);
+}
+
+.HighAverage:hover {
+  background-color: rgb(195, 255, 111);
+}
+
+.VeryHighAverage {
+  background-color: rgb(142, 255, 163);
+}
+
+.VeryHighAverage:hover {
+  background-color: rgb(106, 255, 133);
 }

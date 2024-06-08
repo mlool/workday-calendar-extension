@@ -2,15 +2,17 @@ import { ISectionData, Term} from '../App/App.types'
 import { convertToMatrix, getEndHour } from './utils'
 import SectionPopup from '../SectionPopup/SectionPopup'
 import './Calendar.css'
-import { useState } from 'react'
+import { useState } from 'react';
 
 interface IProps {
   sections: ISectionData[],
   newSection: ISectionData,
   currentWorklistNumber: number,
-  currentTerm: Term;
+  currentTerm: Term,
+  selectedSection: ISectionData | null;
   setSections: (data: ISectionData[]) => void,
-  setInvalidSection: (state: boolean) => void;
+  setInvalidSection: (state: boolean) => void,
+  setSelectedSection: (section: ISectionData | null) => void;
 }
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
