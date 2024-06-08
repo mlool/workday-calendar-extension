@@ -144,7 +144,6 @@ function toggleContainer(forceOpen = false) {
     }
     // Save the new state to local storage
     chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
-      // console.log('Drawer state saved:', !isOpen);
     });
   }
 }
@@ -162,7 +161,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       // Save the new state to local storage
       chrome.storage.local.set({ drawerOpen: !isOpen }, () => {
-        // console.log('Drawer state saved:', !isOpen);
       });
     }
   }
