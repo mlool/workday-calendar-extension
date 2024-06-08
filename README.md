@@ -8,6 +8,8 @@ Welcome to the Workday Calendar Tool! This program is designed to improve your e
 ## Download
 To download the latest version, check out our Discord channel `#download-versions`. Join our Discord community using the link below!
 
+Or download the latest version from the Chrome Web Store [here](https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh).
+
 ## Feature Requests
 We value your input! If you have any feature requests, please create an issue. Before doing so, kindly check to ensure there are no duplicates.
 
