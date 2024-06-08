@@ -3,7 +3,63 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import '../index.css';
 import App from './App/App';
-// Define the type of App as a React component
+
+// Function to apply visibility based on stored settings
+function applyVisibility(hide: boolean): void {
+  //console.log('hide? ', hide);
+
+  const selectors = [
+    'img.wdappchrome-aax',
+    'img.wdappchrome-aaam',
+    'img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW'
+  ];
+
+  const profilePictures = document.querySelectorAll(selectors.join(', '));
+  profilePictures.forEach((img) => {
+    (img as HTMLImageElement).style.visibility = hide ? 'hidden' : 'visible';
+  });
+}
+
+// Function to set up a MutationObserver
+function observeMutations(hide: boolean): void {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const element = node as HTMLElement;
+          if (element.matches('img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW')) {
+            (element as HTMLImageElement).style.visibility = hide ? 'hidden' : 'visible';
+          }
+          const nestedImages = element.querySelectorAll('img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW');
+          nestedImages.forEach((img) => {
+            (img as HTMLImageElement).style.visibility = hide ? 'hidden' : 'visible';
+          });
+        }
+      });
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Function to initialize and set up event listeners
+function initializePfpVisibility() {
+  // Run applyVisibility on initialization
+  const hideProfilePicture = localStorage.getItem('hideProfilePicture') === 'true';
+  applyVisibility(hideProfilePicture);
+
+  // Set up a custom event listener for changes in local storage
+  window.addEventListener('hideProfilePictureToggle', (event: any) => {
+    const hide = event.detail.enabled;
+    applyVisibility(hide);
+  });
+
+  // Set up MutationObserver
+  observeMutations(hideProfilePicture);
+}
+
+// Call the initialize function when the content script is loaded
+initializePfpVisibility();
 
 // Function to add a button to a given HTML element
 function addButtonToElement(element: Element): void {
@@ -26,7 +82,7 @@ function addButtonToElement(element: Element): void {
   button.style.boxShadow = '0 0 0 1px #CED3D9';
   button.style.cursor = 'pointer';
   button.style.marginRight = '10px';
-  if (element.previousElementSibling && 
+  if (element.previousElementSibling &&
       element.previousElementSibling.getAttribute('data-automation-id') === 'checkbox') {
     button.style.marginLeft = '24px';
   }
@@ -86,14 +142,14 @@ function observeDOMAndAddButtons(): void {
           if (node instanceof Element) {
             // Finding matching elements within the added node
             const matchingElements = node.querySelectorAll(
-              '[data-automation-id="compositeContainer"] > div'
+                '[data-automation-id="compositeContainer"] > div'
             ); // last time buttons gone, this selector broke
             // Adding buttons to matching elements
             matchingElements.forEach((matchingElement) => {
               // Check if the element already has a button as a previous sibling
               const previousSibling = matchingElement.previousElementSibling;
               const isButtonAlreadyPresent =
-                previousSibling && previousSibling.id === 'add-section-button';
+                  previousSibling && previousSibling.id === 'add-section-button';
               const isCourseInfo = matchingElement.getAttribute('class') === 'WMUF WKUF';
 
               if (!isButtonAlreadyPresent && isCourseInfo) {
@@ -168,12 +224,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 setupObserver();
 
-// document.addEventListener('DOMContentLoaded', function () {
 // Read the initial state from storage and adjust UI accordingly
 chrome.storage.local.get('drawerOpen', function (data) {
-  // if (!data.drawerOpen) {
-  //   toggleContainer(false);
-  // }
   const containerWrapper = document.createElement('div');
   containerWrapper.style.position = 'fixed';
   containerWrapper.style.top = '50%'; // Center vertically
@@ -219,4 +271,3 @@ chrome.storage.local.get('drawerOpen', function (data) {
 
   ReactDOM.render(<App />, container);
 });
-// });

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './Tools.css';
 import '../Settings.css';
 import QuestionIcon from '../../Icons/QuestionIcon';
-import { useHideProfilePicture } from './HideProfilePictureContext';
 
 interface IProps {
     setInfoPopupMessage: (message: string) => void;
@@ -10,12 +9,14 @@ interface IProps {
 
 const Tools = ({ setInfoPopupMessage }: IProps) => {
     const [autofillEnabled, setAutofillEnabled] = useState(false);
-    const { hideProfilePicture, setHideProfilePicture } = useHideProfilePicture();
+    const [hideProfilePicture, setHideProfilePicture] = useState(false);
 
     useEffect(() => {
         // Retrieve the stored state from localStorage
         const storedAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
         setAutofillEnabled(storedAutofillEnabled);
+        const storedHideProfilePicture = localStorage.getItem('hideProfilePicture') === 'true';
+        setHideProfilePicture(storedHideProfilePicture);
     }, []);
 
     const handleAutofillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,11 @@ const Tools = ({ setInfoPopupMessage }: IProps) => {
     const handleHidePfpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const isEnabled = e.target.checked;
         setHideProfilePicture(isEnabled);
+        localStorage.setItem('hideProfilePicture', isEnabled.toString());
+
+        // Dispatch a custom event to notify about the change
+        const event = new CustomEvent('hideProfilePictureToggle', { detail: { enabled: isEnabled } });
+        window.dispatchEvent(event);
     };
 
     return (
