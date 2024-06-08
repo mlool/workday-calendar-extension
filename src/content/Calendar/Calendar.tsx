@@ -1,7 +1,8 @@
 import { ISectionData, Term} from '../App/App.types'
-import { convertToMatrix } from './utils'
+import { convertToMatrix, getEndHour } from './utils'
 import SectionPopup from '../SectionPopup/SectionPopup'
 import './Calendar.css'
+import { useState } from 'react';
 
 interface IProps {
   sections: ISectionData[],
@@ -16,14 +17,17 @@ interface IProps {
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
-const times: string[] = [];
-for (let hour = 7; hour <= 20; hour++) {
+const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, currentTerm}:IProps) => {
+  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
+
+  const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
+  const sectionsToRender = convertToMatrix(calendarSections, newSection, setInvalidSection, currentTerm)
+
+  let times: string[] = [];
+  for (let hour = 7; hour <= getEndHour(sectionsToRender); hour++) {
     times.push(`${hour}:00`);
     times.push(`${hour}:30`);
-}
-
-const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setInvalidSection, currentTerm, selectedSection, setSelectedSection}:IProps) => {
-  const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
+  }
 
   return (
     <div className="calendar">
@@ -42,7 +46,7 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
         </div>
         {daysOfWeek.map((day, index) => (
           <div key={index} className="body-column">
-            {convertToMatrix(calendarSections, newSection, setInvalidSection, currentTerm)[day]?.map((cell, index) => (
+            {sectionsToRender[day]?.map((cell, index) => (
               <div 
                 key={index} 
                 className="body-cell" 
