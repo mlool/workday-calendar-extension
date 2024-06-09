@@ -201,7 +201,7 @@ export async function extractSection(element: Element) {
     term: term,
     sectionDetails: sectionDetailsArr,
     worklistNumber: 0,
-    color: defaultColorList[0]
+    color: defaultColorList[0],
   };
 
   return newSection;

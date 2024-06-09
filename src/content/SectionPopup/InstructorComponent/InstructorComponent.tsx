@@ -1,16 +1,14 @@
 import { ISectionData } from "../../App/App.types";
-import "./InstructorComponent.css";
+import "../SectionComponent.css";
 
 interface IProps {
   selectedSection: ISectionData;
 }
 
-const InstructorComponent = ({
-  selectedSection,
-}: IProps) => {
+const InstructorComponent = ({ selectedSection }: IProps) => {
     return (
-        <div className="InstructorComponentContainer">
-            <div className="InstructorContainerTitle">Instructors:</div>
+        <div className="ComponentContainer">
+            <div className="ComponentTitle">Instructors:</div>
             <div>
                 {selectedSection?.instructors?.length > 0 ? (
                     <ul>

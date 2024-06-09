@@ -2,6 +2,7 @@ import { ISectionData } from "../App/App.types";
 import "./SectionPopup.css";
 import GradesComponent from "./GradesComponent/GradesComponent";
 import InstructorComponent from "./InstructorComponent/InstructorComponent";
+import LocationComponenent from "./LocationsComponent/LocationComponent";
 
 interface IProps {
   selectedSection: ISectionData;
@@ -32,7 +33,7 @@ const SectionPopup = ({
         <hr />
         <div className="SectionPopupDetails">{selectedSection?.name}</div>
         <InstructorComponent selectedSection={selectedSection} />
-        {/* <div className="SectionPopupDetails">{selectedSection?.location}</div> */}
+        <LocationComponenent selectedSection={selectedSection}/>
         <GradesComponent selectedSection={selectedSection} />
       </div>
       <div className="SectionPopupButtonContainer">

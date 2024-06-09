@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IGradesAPIData, getGradesData, getGradesUrl } from "./GradesHelper";
 import { ISectionData } from "../../App/App.types";
 import "./GradesComponent.css";
+import "../SectionComponent.css";
 
 interface IProps {
   selectedSection: ISectionData;
@@ -46,8 +47,8 @@ const GradesComponent = ({ selectedSection }: IProps) => {
   }
 
   return (
-    <div className="GradesComponentContainer">
-      <div className="GradesInformationTitle">Grade Information: </div>
+    <div className="ComponentContainer">
+      <div className="ComponentTitle">Grade Information: </div>
       {isError ? (
         <div>Error loading grades.</div>
       ) : isLoading ? (

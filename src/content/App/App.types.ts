@@ -36,7 +36,7 @@ export type SectionDetail = {
     startTime: string,
     endTime: string,
     location?: string,
-    dateRange: string
+    dateRange: string   
 }
 
 export interface ISectionData {
