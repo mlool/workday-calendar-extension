@@ -55,3 +55,5 @@ We recommend downloading a pre-built Firefox release from `#download-versions`. 
 2. Select `This Firefox` in the top left
 3. Select `Load Temporary Add-on`
 4. Upload `build/manifest.json`
+
+See this [Firefox installation demo](./public/firefox-demo-v1.3.gif)
