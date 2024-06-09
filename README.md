@@ -31,7 +31,8 @@ We have channels for feature requests, bug reports, announcements, and more!
 You may also submit feature requests or bug reports by opening a GitHub issue, as long as there are no duplicates. 
 
 ## Feature Requests
-Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
+Feel free to create issues for any feature requests or bug reports, 
+as long as there are no duplicate issues.
 
 ## Building manually for Chrome
 
