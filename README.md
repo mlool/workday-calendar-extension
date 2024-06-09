@@ -10,7 +10,11 @@ Our extension is available on the Chrome Web Store:
 
 https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh?pli=1
 
-Check out the latest releases on the discord channel `#download-versions`.
+It's also released on Firefox: 
+
+https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar/versions/
+
+You can get the latest releases from the discord channel `#download-versions`.
 
 Our Discord server is linked below. Please join!
 
