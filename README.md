@@ -10,7 +10,7 @@ Check out available on the Chrome Web Store:
 
 https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh?pli=1
 
-Check out the latest releases on the discord channel `#download-versions`
+Check out the latest releases on the discord channel `#download-versions`.
 
 Our Discord server is linked below. Please join!
 
@@ -30,7 +30,7 @@ We have channels for feature requests, bug reports, announcements, and more!
 
 You may also submit feature requests or bug reports by opening a GitHub issue, as long as there are no duplicates. 
 
-## Feature Request
+## Feature Requests
 Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
 
 ## Building manually for Chrome
@@ -44,11 +44,14 @@ Feel free to create issues for any feature request you want to see, just make su
 7. The tool should now appear in your extension menu in chrome
 
 ## Building manually for Firefox
+We recommend downloading a pre-built Firefox release from `#download-versions`. But you can follow the steps below to create a build yourself.
 
-1. Clone the repo
+1. Clone the repo 
 2. Run `yarn install` and then `yarn run build` in the root directory
 3. Replace `manifest.json` with the Firefox-compatible version: `cp firefox-manifest.json build/manifest.json`
-4. Open Firefox and go to `about:debugging`
-5. Select `This Firefox` in the top left
-6. Select `Load Temporary Add-on`
-7. Upload `build/manifest.json`
+
+## Installing on Firefox
+1. Open Firefox and go to `about:debugging`
+2. Select `This Firefox` in the top left
+3. Select `Load Temporary Add-on`
+4. Upload `build/manifest.json`
