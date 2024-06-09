@@ -6,7 +6,7 @@
 This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system!
 
 ## Getting the extension
-Check out available on the Chrome Web Store: 
+Our extension is available on the Chrome Web Store: 
 
 https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh?pli=1
 
