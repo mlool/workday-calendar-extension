@@ -5,26 +5,14 @@
 
 This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system!
 
-# Download
-Check out the discord channel `#download-versions`
+## Getting the extension
+Check out available on the Chrome Web Store: 
 
-Discord is linked below, feel free to join!
+https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh?pli=1
 
-## Feature Request
-Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
+Check out the latest releases on the discord channel `#download-versions`
 
-## Collaborators
-Join the discord channel: https://discord.gg/cx93fAJUJf
-
-## Set up
-
-1. Clone the repo
-2. Run `yarn install` and then `yarn run build` in the root directory
-3. Go to `chrome://extensions/`
-4. Change to Developer mode on the top right
-5. Click `load unpacked` to the top left
-6. Select the downloaded `build` folder
-7. The tool should now appear in your extension menu in chrome
+Our Discord server is linked below. Please join!
 
 ## How to use
 
@@ -34,3 +22,33 @@ Join the discord channel: https://discord.gg/cx93fAJUJf
 4. The orange mark is the newly added section, verify for conflicts
 5. Click add section to add it to the table
 6. Click clear to clear calendar completely
+
+## Collaborators
+Join the discord channel: https://discord.gg/cx93fAJUJf
+
+We have channels for feature requests, bug reports, announcements, and more!
+
+You may also submit feature requests or bug reports by opening a GitHub issue, as long as there are no duplicates. 
+
+## Feature Request
+Feel free to create issues for any feature request you want to see, just make sure there's no duplicates
+
+## Building manually for Chrome
+
+1. Clone the repo
+2. Run `yarn install` and then `yarn run build` in the root directory
+3. Go to `chrome://extensions/`
+4. Change Chrome to Developer mode on the top right
+5. Click `load unpacked` to the top left
+6. Select the downloaded `build` folder
+7. The tool should now appear in your extension menu in chrome
+
+## Building manually for Firefox
+
+1. Clone the repo
+2. Run `yarn install` and then `yarn run build` in the root directory
+3. Replace `manifest.json` with the Firefox-compatible version: `cp firefox-manifest.json build/manifest.json`
+4. Open Firefox and go to `about:debugging`
+5. Select `This Firefox` in the top left
+6. Select `Load Temporary Add-on`
+7. Upload `build/manifest.json`
