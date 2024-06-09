@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IGradesAPIData, getGradesData, getGradesUrl } from "./GradesHelper";
 import { ISectionData } from "../../App/App.types";
 import "./GradesComponent.css";
-import "../SectionComponent.css";
+import "../PopupComponent.css";
 
 interface IProps {
   selectedSection: ISectionData;

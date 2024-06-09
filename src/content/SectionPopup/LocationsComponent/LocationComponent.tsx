@@ -1,5 +1,5 @@
 import { ISectionData } from "../../App/App.types";
-import "../SectionComponent.css";
+import "../PopupComponent.css";
 
 interface IProps {
     selectedSection: ISectionData

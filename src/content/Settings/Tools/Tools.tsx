@@ -33,6 +33,7 @@ const Tools = ({setInfoPopupMessage}:IProps) => {
       <hr className='Divider' />
       <div className="ToolsBodyContainer">
             <div className='ToolItem'>
+              Coming Soon!
                 {/* <div className="ToolContainer">
                   <div><input type="checkbox" checked={autofillEnabled} onChange={handleAutofillChange} /></div>                
                   <div>Enable Autofill</div>
