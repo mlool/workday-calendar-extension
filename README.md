@@ -12,7 +12,7 @@ https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjc
 
 It's also released on Firefox: 
 
-https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar/versions/
+https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar
 
 You can get the latest releases from the discord channel `#download-versions`.
 
