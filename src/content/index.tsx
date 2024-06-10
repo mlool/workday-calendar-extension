@@ -47,7 +47,7 @@ async function startAutoFill() {
   .then(() => console.log('Autofilling academic level complete'));
 }
 
-let isAutofillEnabled = false;
+let isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 let hasAlreadyAutofilled = false;
 
 // Observe the DOM for the popup appearance
@@ -76,16 +76,6 @@ function observePopup() {
 }
 
 window.onload = function () {
-  isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
-
-  window.addEventListener('autofillToggle', function (event) {
-    const customEvent = event as CustomEvent<{ enabled: boolean }>;
-    isAutofillEnabled = customEvent.detail.enabled;
-    if (isAutofillEnabled) {
-      observePopup();
-    }
-  });
-
   if (isAutofillEnabled) {
     observePopup();
   }
