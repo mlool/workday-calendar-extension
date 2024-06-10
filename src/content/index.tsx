@@ -29,7 +29,7 @@ function waitAndClick(selector: string, index: number = 0): Promise<void> {
   });
 }
 
-// Function to select the "Start Date within" dropdown
+// Function to autofill the menus in "Find Course Sections"
 async function startAutoFill() {
   console.log('Starting autofill...');
 
@@ -50,7 +50,7 @@ async function startAutoFill() {
 let isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 let hasAlreadyAutofilled = false;
 
-// Observe the DOM for the popup appearance
+// Observe the DOM for the "Find Course Sections" popup
 function observePopup() {
   const observer = new MutationObserver((mutationsList, observer) => {
     mutationsList.forEach((mutation) => {
@@ -292,4 +292,3 @@ chrome.storage.local.get('drawerOpen', function (data) {
 
   ReactDOM.render(<App />, container);
 });
-// });
