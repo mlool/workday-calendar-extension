@@ -1,8 +1,8 @@
 import { ISectionData } from '../../../App/App.types';
 import '../ExportImport.css'
 import { useState } from 'react';
-import ExportCalendarPopup from '../ExportCalendarPopup/ExportCalendarPopup';
-import ImportCalendarPopup from '../ImportCalendarPopup/ImportCalendarPopup';
+import ExportCalendarPopup from '../ExportImportPopups/ExportCalendarPopup';
+import ImportCalendarPopup from '../ExportImportPopups/ImportCalendarPopup';
 
 interface IProps {
   sections: ISectionData[];
@@ -15,14 +15,19 @@ const ExportImportIndividual = ({ sections, setSections }: IProps) => {
 
   const handleExport = (sections: ISectionData[], worklistNumber: number) => {
     sections = sections.filter((section) => section.worklistNumber === worklistNumber)
-    const json = JSON.stringify(sections, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'schedule.json';
-    link.click();
-    URL.revokeObjectURL(url);
+    if(sections.length != 0) {
+      const json = JSON.stringify(sections, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'schedule.json';
+      link.click();
+      URL.revokeObjectURL(url);
+    } else {
+      alert("Please Select A Worklist That Is Not Empty!")
+    }
+    
   };
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>, worklistNumber: number) => {
