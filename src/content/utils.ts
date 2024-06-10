@@ -77,14 +77,27 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
     }, []);
 
     //@TODO: Change for summer term support
-    const term = dateRange.includes('2024') ? Term.winterOne : Term.winterTwo
-  
+    let term = dateRange.includes('2024') ? Term.winterOne : Term.winterTwo; 
+    if (dateRange.includes('2024') && dateRange.includes('2025')) {
+      // Case where only one section detail but two term course. Set this term to W1 and push a copy modified to be term 2
+      term = Term.winterOne
+      detailsArr.push({
+        term: Term.winterTwo,
+        days: days,
+        startTime: startTime,
+        endTime: endTime,
+        location: location,
+        dateRange: dateRange
+      })
+    }
+    
     detailsArr.push({
       term: term,
       days: days,
       startTime: startTime,
       endTime: endTime,
-      location: location
+      location: location,
+      dateRange: dateRange
     })
   })
 
@@ -168,13 +181,18 @@ export async function extractSection(element: Element) {
 
   // ~~~ End of stupidly hacky code ~~~
 
-  // Extracting instructors. Query all the "promptOption" that are not links. If it has role as link, it is a Section Detail div, otherwise it is an Instructor div
-  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]:not([role="link"])');
+  // Extracting instructors details from labels
+  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
   let instructors: string[] = [];
   
-  instructorElements?.forEach((elm) => {
-    instructors.push(elm?.textContent || "")
-  })
+  if(instructorElements) {
+    for(let i = 2; i < instructorElements.length; i++) {
+      //if no "|" and no "_", aka formatted like a human name, then instructor -- bandaid fix for now since registration really soon
+      if(!instructorElements[i].textContent?.includes("|") && !instructorElements[i].textContent?.includes("_")) {
+        instructors.push(instructorElements[i]?.textContent || "");
+      }
+    }
+  }
 
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
@@ -195,7 +213,7 @@ export async function extractSection(element: Element) {
     term: term,
     sectionDetails: sectionDetailsArr,
     worklistNumber: 0,
-    color: defaultColorList[0]
+    color: defaultColorList[0],
   };
 
   return newSection;

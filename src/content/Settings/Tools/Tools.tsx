@@ -29,10 +29,11 @@ const Tools = ({setInfoPopupMessage}:IProps) => {
 
   return (
     <div>
-        <div className="SettingsHeader">Tools</div>
-        <hr className='Divider' />
-        <div className="ToolsBodyContainer">
+      <div className="SettingsHeader">Tools</div>
+      <hr className='Divider' />
+      <div className="ToolsBodyContainer">
             <div className='ToolItem'>
+              {/* Coming Soon! */}
                 <div className="ToolContainer">
                   <div><input type="checkbox" checked={autofillEnabled} onChange={handleAutofillChange} /></div>                
                   <div>Enable Autofill</div>
@@ -41,7 +42,7 @@ const Tools = ({setInfoPopupMessage}:IProps) => {
                   <QuestionIcon size={16} color='black' />
                 </div>
             </div>
-        </div>
+      </div>
     </div>
   );
 };
