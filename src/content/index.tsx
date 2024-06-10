@@ -3,79 +3,52 @@ import ReactDOM from 'react-dom';
 import '../index.css';
 import App from './App/App';
 
-function waitForElm(selector: string): Promise<Element | null> {
-  return new Promise((resolve) => {
-    if (document.querySelector(selector)) {
-      return resolve(document.querySelector(selector));
-    }
-
-    const observer = new MutationObserver((mutations) => {
-      if (document.querySelector(selector)) {
-        observer.disconnect();
-        resolve(document.querySelector(selector));
-      }
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-  });
-}
-
-function waitForElms(
-  selector: string,
-  numEls: number
-): Promise<NodeListOf<Element> | null> {
+function waitForElm(selector: string, index: number) {
   return new Promise((resolve) => {
     const existingElements = document.querySelectorAll(selector);
-    if (existingElements.length >= numEls) {
-      resolve(existingElements);
-      return;
+    if (existingElements.length > index) {
+      return resolve(existingElements[index]);
     }
-
-    const observer = new MutationObserver((mutations) => {
-      const newElements = document.querySelectorAll(selector);
-      if (newElements.length >= numEls) {
+    const observer = new MutationObserver(mutations => {
+      const existingElements = document.querySelectorAll(selector);
+      if (existingElements.length > index) {
         observer.disconnect();
-        resolve(newElements);
+        resolve(existingElements[index]);
       }
     });
-
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
+      subtree: true
     });
   });
 }
 
-async function waitAndClick(selector: string) {
-  let element = await waitForElm(selector);
-  (element as HTMLElement).click();
+function waitAndClick(selector: string, index: number = 0): Promise<void> {
+  return waitForElm(selector, index).then((element) => {
+    (element as HTMLElement).click();
+  });
 }
 
 // Function to select the "Start Date within" dropdown
 async function startAutoFill() {
-  const dropDowns = await waitForElms(
-    '[data-automation-id="multiselectInputContainer"] input',
-    2
-  );
-  if (dropDowns) {
-    (dropDowns[0] as HTMLElement).click(); // open time dropdown
-    await waitAndClick(
-      '[data-automation-id="promptOption"][data-automation-label="Future Periods"]'
-    );
-    await waitAndClick('[data-automation-label="2024-25 UBC-V Academic Year"]'); // select UBC V
-    await waitAndClick(
-      '[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]'
-    ); // select Winter Term 1
-    await waitAndClick(
-      '[data-automation-id="promptOption"][data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'
-    ); // select Winter Term 2
-    (dropDowns[1] as HTMLElement).click(); // open level dropdown
-    await waitAndClick('[data-automation-label="Undergraduate"]'); // select Undergraduate
-  }
+  console.log('Starting autofill...');
+
+  waitAndClick('[data-uxi-widget-type="selectinputicon"]', 0) // open start date dropdown
+  .then(() => waitAndClick('[data-automation-label="Future Periods"]')) // select future periods
+  .then(() => waitAndClick('[data-automation-label="2024-25 UBC-V Academic Year"]')) // select UBC V
+  .then(() => waitAndClick('[data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]')) // select Winter Term 1
+  .then(() => waitAndClick('[data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]')) // select Winter Term 2
+  .then(() => waitAndClick('[data-automation-id="promptSearchButton"]', 0)) // close start date dropdown
+  .then(() => console.log('Autofilling start date complete'));
+
+  waitAndClick('[data-automation-id="multiselectInputContainer"]', 1) // open level dropdown
+  .then(() => waitAndClick('[data-automation-label="Undergraduate"]')) // select Undergraduate
+  .then(() => waitAndClick('[data-automation-id="promptSearchButton"]', 1)) // close level dropdown
+  .then(() => console.log('Autofilling academic level complete'));
 }
+
+let isAutofillEnabled = false;
+let hasAlreadyAutofilled = false;
 
 // Observe the DOM for the popup appearance
 function observePopup() {
@@ -87,7 +60,9 @@ function observePopup() {
             const popup = node.querySelector(
               '[data-automation-id="editPopup"] [data-automation-id="pageHeaderTitleText"]'
             );
-            if (popup && isAutofillEnabled && !isAutofillTemporarilyDisabled) {
+            const isCourseSectionsPage = document.title === "Find Course Sections - Workday";
+            if (popup && isCourseSectionsPage && !hasAlreadyAutofilled) {
+              hasAlreadyAutofilled = true;
               startAutoFill();
               observer.disconnect(); // Stop observing after the popup is found and autofill is triggered
             }
@@ -100,30 +75,18 @@ function observePopup() {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-let isAutofillEnabled = false;
-let isAutofillTemporarilyDisabled = false;
-//let shouldAutoFill = false;
-
 window.onload = function () {
-  //console.log('Window loaded');
-
-  //shouldAutoFill = true;
-
   isAutofillEnabled = localStorage.getItem('autofillEnabled') === 'true';
 
   window.addEventListener('autofillToggle', function (event) {
     const customEvent = event as CustomEvent<{ enabled: boolean }>;
     isAutofillEnabled = customEvent.detail.enabled;
-    if (
-      isAutofillEnabled //&& shouldAutoFill
-    ) {
+    if (isAutofillEnabled) {
       observePopup();
     }
   });
 
-  if (
-    isAutofillEnabled //&& shouldAutoFill
-  ) {
+  if (isAutofillEnabled) {
     observePopup();
   }
 };
