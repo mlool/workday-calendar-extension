@@ -29,9 +29,9 @@ const Tools = ({setInfoPopupMessage}:IProps) => {
 
   return (
     <div>
-        <div className="SettingsHeader">Tools</div>
-        <hr className='Divider' />
-        <div className="ToolsBodyContainer">
+      <div className="SettingsHeader">Tools</div>
+      <hr className='Divider' />
+      <div className="ToolsBodyContainer">
             <div className='ToolItem'>
               {/* Coming Soon! */}
                 <div className="ToolContainer">
@@ -42,7 +42,7 @@ const Tools = ({setInfoPopupMessage}:IProps) => {
                   <QuestionIcon size={16} color='black' />
                 </div>
             </div>
-        </div>
+      </div>
     </div>
   );
 };
