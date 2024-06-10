@@ -2,7 +2,7 @@ import { formatDateArray, generateICal } from './ExternalCalendarExportHelper';
 import '../ExportImport.css'
 import { useState } from 'react';
 import { ISectionData } from '../../../App/App.types';
-import ExportCalendarPopup from '../ExportCalendarPopup/ExportCalendarPopup';
+import ExportCalendarPopup from '../ExportImportPopups/ExportCalendarPopup';
 
 // Interface for formatting section details into calendar event
 export interface Event {

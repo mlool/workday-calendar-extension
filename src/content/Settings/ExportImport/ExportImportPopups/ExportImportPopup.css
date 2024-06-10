@@ -1,8 +1,8 @@
-.ExportCalendarBackground {
+.CalendarBackground {
     background-color: rgba(99, 99, 99, 0.6);
     position: fixed;
     top: 0;
-    height: 650px;
+    height: 700px;
     width: 300px;
     justify-content: center;
     align-items: center;
@@ -10,7 +10,7 @@
     z-index: 100;
 }
 
-.ExportCalendarPopup {
+.CalendarPopup {
     background-color: white;
     width: 90%;
     height: 30%;
@@ -20,7 +20,7 @@
     justify-content: space-between;
 }
 
-.ExportCalendarPopupHeader {
+.CalendarPopupHeader {
     height: 15%;
     background-color: #00A7E1;
     color: white;
@@ -36,12 +36,12 @@
     padding-right: 10px;
 }
 
-.ExportCalendarPopupCloseButton {
+.CalendarPopupCloseButton {
     cursor: pointer;
     margin-right: 5px;
 }
 
-.ExportCalendarPopupBody {
+.CalendarPopupBody {
     height: 80%;
     padding: 10px;
     display: flex;
@@ -49,7 +49,7 @@
     justify-content: space-between;
 }
 
-.ExportCalendarPopupButton {
+.CalendarPopupButton {
     border-radius: 5px;
     padding: 3px 5px;
     margin-left: 3px;
@@ -57,16 +57,16 @@
     background-color: rgb(242, 252, 255);
 }
 
-.ExportCalendarPopupButton:hover {
+.CalendarPopupButton:hover {
     background-color: rgb(156, 232, 255)
 }
 
-.ExportCalendarPopupButtonContainer {
+.CalendarPopupButtonContainer {
     display: flex;
     align-items: center;
 }
 
-.ExportCalendarButtonConfirm {
+.CalendarButtonConfirm {
     width: 50%;
     padding: 7px 20px;
     font-size: 12px;
@@ -80,17 +80,17 @@
     margin: 10px 10px 2px 10px;
 }
 
-.ExportCalendarButtonConfirm:hover {
+.CalendarButtonConfirm:hover {
     background-color: #0068d6;;
 }
 
-.ExportCalendarButtonContainer {
+.CalendarButtonContainer {
     display: flex;
     flex-direction: row;
     width: 100%;
 }
 
-.ExportCalendarButtonCancel {
+.CalendarButtonCancel {
     width: 50%;
     padding: 7px 20px;
     font-size: 12px;
@@ -105,6 +105,6 @@
     margin: 10px 10px 2px 10px;
 }
 
-.ExportCalendarButtonCancel:hover {
+.CalendarButtonCancel:hover {
     background-color: #d8d8d8;
 }
