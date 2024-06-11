@@ -1,38 +1,30 @@
 <p align="center">
-  <img src="/public/logo128.png" width="128px" height="128px" alt="LectureSurfers logo">
+  <img src="/public/logo128.png" width="128px" height="128px" alt="Workday Calendar Tool logo">
 </p>
 <h1 align="center">Workday Calendar Tool</h1>
 
-This program is made to counter the highly unintuitive and frustrating experience with UBC's new workday system!
+Welcome to the Workday Calendar Tool! This program is designed to improve your experience with UBC's new Workday system by making it more intuitive and user-friendly.
 
-## Getting the extension
-Our extension is available on the Chrome Web Store: 
+## Download
+Download the latest version from the Chrome Web Store [here](https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh).
 
-https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh?pli=1
+It's also released on Firefox [here](https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar).
 
-It's also released on Firefox: 
+Alternatively, to download the latest version, check out our Discord channel `#download-versions`. 
 
-https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar
+## Community
+Join our community and make the most out of the Workday Calendar Tool!
+Join the discord channel [here](https://discord.gg/cx93fAJUJf).
 
-You can get the latest releases from the discord channel `#download-versions`.
+## How To Use
+1. On the `Find Course Selections` page on workday, buttons should appear on the left hand side. 
+2. Click these buttons to add a course to the extension's calendar
+3. A preview of where the course will fit in your schedule should appear in the extension's calendar
+4. Click either `Confirm ` or `Cancel` to do the respective actions
+5. Different worklists and terms can be viewed using the top bar
+6. Calendars can be exported and imported to/from JSON by going to `Settings` and then `Export/Import`
+7. Calendars can also be exported to `.ics` for Google and Apple calendats using `Export to External Calendar`
 
-Our Discord server is linked below. Please join!
-
-## How to use
-
-1. Go to workday course view page
-2. Right click on title of course => Copy Text => Paste it into the Title field
-3. Right click on Section Details => Copy Text => Paste it into Section Details field
-4. The orange mark is the newly added section, verify for conflicts
-5. Click add section to add it to the table
-6. Click clear to clear calendar completely
-
-## Collaborators
-Join the discord channel: https://discord.gg/cx93fAJUJf
-
-We have channels for feature requests, bug reports, announcements, and more!
-
-You may also submit feature requests or bug reports by opening a GitHub issue, as long as there are no duplicates. 
 
 ## Feature Requests
 Feel free to create issues for any feature requests or bug reports, 
@@ -41,24 +33,45 @@ as long as there are no duplicate issues.
 ## Building manually for Chrome
 
 1. Clone the repo
-2. Run `yarn install` and then `yarn run build` in the root directory
-3. Go to `chrome://extensions/`
-4. Change Chrome to Developer mode on the top right
-5. Click `load unpacked` to the top left
-6. Select the downloaded `build` folder
-7. The tool should now appear in your extension menu in chrome
+   ```bash
+   git clone <repository_url>
+   ```
+2. Navigate to the root directory and install dependencies:
+   ```bash
+   yarn install
+   ```
+3. Build the project:
+   ```bash
+   yarn run build
+   ```
+4. Go to `chrome://extensions/`
+5. Change Chrome to Developer mode on the top right
+6. Click `load unpacked` to the top left
+7. Select the downloaded `build` folder
+8. The tool should now appear in your extension menu in chrome
 
 ## Building manually for Firefox
-We recommend downloading a pre-built Firefox release from `#download-versions`. But you can follow the steps below to create a build yourself.
 
-1. Clone the repo 
-2. Run `yarn install` and then `yarn run build` in the root directory
-3. Replace `manifest.json` with the Firefox-compatible version: `cp firefox-manifest.json build/manifest.json`
-
-## Installing on Firefox
-1. Open Firefox and go to `about:debugging`
-2. Select `This Firefox` in the top left
-3. Select `Load Temporary Add-on`
-4. Upload `build/manifest.json`
+1. Clone the repo
+   ```bash
+   git clone <repository_url>
+   ```
+2. Navigate to the root directory and install dependencies:
+   ```bash
+   yarn install
+   ```
+3. Build the project:
+   ```bash
+   yarn run build
+   ```
+4. Replace `manifest.json` with the Firefox-compatible version:
+  ```bash
+   cp firefox-manifest.json build/manifest.json
+   ```
+5. Open Firefox and go to `about:debugging`
+6. Select `This Firefox` in the top left
+7. Select `Load Temporary Add-on`
+9. Upload `build/manifest.json`
+10. The tool should now appear in your extension menu in chrome
 
 See this [Firefox installation demo](./public/firefox-demo-v1.3.gif)

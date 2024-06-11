@@ -53,7 +53,7 @@ function App() {
       areaName: string
     ) => {
       if (areaName === 'sync') {
-        if (changes.newSection && JSON.stringify(changes.newSection.newValue) !== JSON.stringify(newSection)) {
+        if (changes.newSection) {
           setNewSection(changes.newSection.newValue);
         }
       }

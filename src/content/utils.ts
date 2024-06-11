@@ -77,8 +77,20 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
     }, []);
 
     //@TODO: Change for summer term support
-    const term = dateRange.includes('2024') ? Term.winterOne : Term.winterTwo
-  
+    let term = dateRange.includes('2024') ? Term.winterOne : Term.winterTwo; 
+    if (dateRange.includes('2024') && dateRange.includes('2025')) {
+      // Case where only one section detail but two term course. Set this term to W1 and push a copy modified to be term 2
+      term = Term.winterOne
+      detailsArr.push({
+        term: Term.winterTwo,
+        days: days,
+        startTime: startTime,
+        endTime: endTime,
+        location: location,
+        dateRange: dateRange
+      })
+    }
+    
     detailsArr.push({
       term: term,
       days: days,
@@ -201,7 +213,7 @@ export async function extractSection(element: Element) {
     term: term,
     sectionDetails: sectionDetailsArr,
     worklistNumber: 0,
-    color: defaultColorList[0]
+    color: defaultColorList[0],
   };
 
   return newSection;
