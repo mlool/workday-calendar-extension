@@ -123,7 +123,9 @@ export async function extractSection(element: Element) {
     alert('Title or section details not found');
     return;
   }
-
+  console.log(courseLabels)
+  console.log(element)
+console.log(element.parentElement)
   // Extracting title and section details from the labels
   const titleElement = courseLabels[0];
   const sectionDetailsElement = courseLabels[1];
@@ -182,7 +184,7 @@ export async function extractSection(element: Element) {
   // ~~~ End of stupidly hacky code ~~~
 
   // Extracting instructors details from labels
-  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
+  const instructorElements = element.querySelectorAll('[data-automation-id="promptOption"]');
   let instructors: string[] = [];
   
   if(instructorElements) {
