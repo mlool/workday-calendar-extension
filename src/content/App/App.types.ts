@@ -48,6 +48,5 @@ export interface ISectionData {
     term: Term,
     worklistNumber: number,
     color: string
-    // details: string,
-    // title: string,
+    courseID?: string
 }

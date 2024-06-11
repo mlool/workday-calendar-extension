@@ -194,6 +194,9 @@ export async function extractSection(element: Element) {
     }
   }
 
+  // Extract Course ID
+  const courseID = findCourseId(element);
+  
   //Find all the sectionDetails elements, turn to an array, and then join them all into one string that contains all the sectionDetails
   sectionDetailsElements = element.querySelectorAll('[data-automation-id="promptOption"][data-automation-label*="|"][role="link"]')
   //can slice first element because it should be duplicate. The first elem is from non-expand sectionDetails
@@ -214,7 +217,25 @@ export async function extractSection(element: Element) {
     sectionDetails: sectionDetailsArr,
     worklistNumber: 0,
     color: defaultColorList[0],
+    courseID: courseID
   };
 
   return newSection;
+}
+
+function findCourseId(element: Element) {
+  const dataAutomationIds: string[] = [];
+  const elements = element.parentElement?.querySelectorAll("[data-automation-id^='selectedItem_15194$']");
+  
+  if (elements) {
+    elements.forEach(element => {
+      const dataAutomationId = (element as HTMLElement).dataset.automationId;
+      if(dataAutomationId) {
+        dataAutomationIds.push(dataAutomationId);
+      }
+    }); 
+  }
+  const dataAutomationId = dataAutomationIds[0].split("$")[1]
+
+  return dataAutomationId
 }
