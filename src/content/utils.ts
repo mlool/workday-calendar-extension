@@ -123,9 +123,7 @@ export async function extractSection(element: Element) {
     alert('Title or section details not found');
     return;
   }
-  console.log(courseLabels)
-  console.log(element)
-console.log(element.parentElement)
+
   // Extracting title and section details from the labels
   const titleElement = courseLabels[0];
   const sectionDetailsElement = courseLabels[1];
