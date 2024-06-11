@@ -2,7 +2,6 @@ import { ISectionData, Term} from '../App/App.types'
 import { convertToMatrix, getEndHour } from './utils'
 import SectionPopup from '../SectionPopup/SectionPopup'
 import './Calendar.css'
-import { useState } from 'react';
 
 interface IProps {
   sections: ISectionData[],
@@ -17,9 +16,7 @@ interface IProps {
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
-const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setSectionConflict, currentTerm}:IProps) => {
-  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
-
+const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setSectionConflict, currentTerm, selectedSection, setSelectedSection}:IProps) => {
   const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
   const sectionsToRender = convertToMatrix(calendarSections, newSection, setSectionConflict, currentTerm)
 
