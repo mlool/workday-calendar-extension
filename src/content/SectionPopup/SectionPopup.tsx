@@ -29,7 +29,16 @@ const SectionPopup = ({
   return (
     <div className="SectionPopup">
       <div>
-        <div className="SectionPopupTitle">{selectedSection?.code}</div>
+        {selectedSection?.courseID && (
+          <a
+            href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection?.courseID}.htmld`}
+          >
+            <div className="SectionPopupTitle">{selectedSection?.code}</div>
+          </a>
+        )}
+        {!selectedSection?.courseID && (
+          <div className="SectionPopupTitle">{selectedSection?.code}</div>
+        )}
         <hr />
         <div className="SectionPopupDetails">{selectedSection?.name}</div>
         <InstructorComponent selectedSection={selectedSection} />

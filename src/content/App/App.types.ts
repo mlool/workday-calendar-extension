@@ -48,8 +48,7 @@ export interface ISectionData {
     term: Term,
     worklistNumber: number,
     color: string
-    // details: string,
-    // title: string,
+    courseID?: string
 }
 
 export const baseSection:ISectionData = {
@@ -60,5 +59,6 @@ export const baseSection:ISectionData = {
     sectionDetails: [],
     term: Term.winterOne,
     worklistNumber: 0,
-    color: defaultColorList[0]
+    color: defaultColorList[0],
+    courseID: ""
 }
