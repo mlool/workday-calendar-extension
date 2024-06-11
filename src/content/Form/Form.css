@@ -48,5 +48,9 @@
 }
 
 .NewSectionButton:hover {
-    background-color: #0068d6;;
+    background-color: #0068d6;
+}
+
+.NewSectionButton:disabled {
+    background-color: #c4c4c4;
 }
