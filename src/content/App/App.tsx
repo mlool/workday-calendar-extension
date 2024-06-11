@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import CalendarContainer from '../CalendarContainer/CalendarContainer';
-import { ISectionData, Term, Views, baseSection } from './App.types';
+import { ISectionData, Term, Views } from './App.types';
 import Form from '../Form/Form';
 import TopBar from '../TopBar/TopBar';
 import Settings from '../Settings/Settings';
 import { assignColors, ColorTheme } from '../../helpers/courseColors';
 
 function App() {
-  const [newSection, setNewSection] = useState<ISectionData>(baseSection);
+  const [newSection, setNewSection] = useState<ISectionData | null>(null);
   const [sections, setSections] = useState<ISectionData[]>([]);
-  const [invalidSection, setInvalidSection] = useState<boolean>(false);
+  const [sectionConflict, setSectionConflict] = useState<boolean>(false);
   const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0);
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
   const [currentView, setCurrentView] = useState<Views>(Views.calendar);
@@ -75,7 +75,7 @@ function App() {
   }, [sections]);
 
   useEffect(() => {
-    if (newSection.code !== baseSection.code) {
+    if (newSection !== null) {
       if (newSection.term != Term.winterFull) {
         //Don't set the term to WF, just keep the term to what is selected
         setCurrentTerm(newSection.term);
@@ -119,7 +119,7 @@ function App() {
             sections={sections}
             setSections={setSections}
             newSection={newSection}
-            setInvalidSection={setInvalidSection}
+            setSectionConflict={setSectionConflict}
             currentWorklistNumber={currentWorklistNumber}
             setCurrentWorklistNumber={setCurrentWorklistNumber}
             currentTerm={currentTerm}
@@ -132,7 +132,7 @@ function App() {
             currentWorklistNumber={currentWorklistNumber}
             newSection={newSection}
             sections={sections}
-            invalidSection={invalidSection}
+            sectionConflict={sectionConflict}
             setNewSection={setNewSection}
             setSections={setSections}
             currentTerm={currentTerm}
