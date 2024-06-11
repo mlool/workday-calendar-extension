@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import CalendarContainer from '../CalendarContainer/CalendarContainer';
-import { ISectionData, Term, Views, baseSection } from './App.types';
+import { ISectionData, Term, Views } from './App.types';
 import Form from '../Form/Form';
 import TopBar from '../TopBar/TopBar';
 import Settings from '../Settings/Settings';
-import { assignColors, ColorTheme } from '../../helpers/courseColors';
+import { assignColors, ColorTheme, getNewSectionColor } from '../../helpers/courseColors';
 
 function App() {
-  const [newSection, setNewSection] = useState<ISectionData>(baseSection);
+  const [newSection, setNewSection] = useState<ISectionData | null>(null);
   const [sections, setSections] = useState<ISectionData[]>([]);
-  const [invalidSection, setInvalidSection] = useState<boolean>(false);
+  const [sectionConflict, setSectionConflict] = useState<boolean>(false);
   const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0);
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
   const [currentView, setCurrentView] = useState<Views>(Views.calendar);
@@ -22,15 +22,11 @@ function App() {
   useEffect(() => {
     const syncInitialState = () => {
       chrome.storage.sync.get([
-        'newSection',
         'currentTerm',
         'colorTheme',
         'sections',
         'currentWorklistNumber',
       ], (result) => {
-        if (result.newSection !== undefined) {
-          setNewSection(result.newSection);
-        }
         if (result.currentTerm !== undefined) {
           setCurrentTerm(result.currentTerm);
         }
@@ -52,9 +48,12 @@ function App() {
       changes: { [key: string]: chrome.storage.StorageChange },
       areaName: string
     ) => {
-      if (areaName === 'sync') {
-        if (changes.newSection) {
-          setNewSection(changes.newSection.newValue);
+      if (changes.newSection) {
+        const newVal = changes.newSection.newValue
+        setNewSection(newVal);
+        if (newVal.term !== Term.winterFull) {
+          //Don't set the term to WF, just keep the term to what is selected
+          setCurrentTerm(newVal.term);
         }
       }
     };
@@ -73,15 +72,6 @@ function App() {
     chrome.storage.sync.set({ sections });
     // alert(JSON.stringify(sections, null, 2))
   }, [sections]);
-
-  useEffect(() => {
-    if (newSection.code !== baseSection.code) {
-      if (newSection.term != Term.winterFull) {
-        //Don't set the term to WF, just keep the term to what is selected
-        setCurrentTerm(newSection.term);
-      }
-    }
-  }, [newSection]);
 
   useEffect(() => {
     chrome.storage.sync.set({ currentWorklistNumber });
@@ -110,6 +100,28 @@ function App() {
     // }
   }, [colorTheme, sections]); // React only if these values change
 
+
+  const handleAddNewSection = () => {
+    let updatedNewSection = newSection!;
+    updatedNewSection.worklistNumber = currentWorklistNumber;
+    updatedNewSection.color = getNewSectionColor(
+      sections,
+      updatedNewSection,
+      colorTheme
+    );
+
+    setSections([...sections, updatedNewSection]);
+    setNewSection(null);
+  }
+
+  const handleClearWorklist = () => {
+    const updatedSections = sections.filter(
+      (x) => x.worklistNumber !== currentWorklistNumber
+    );
+    setSections(updatedSections);
+    setSelectedSection(null);
+  };
+
   return (
     <div className="App">
       <TopBar currentView={currentView} setCurrentView={setCurrentView} />
@@ -119,7 +131,7 @@ function App() {
             sections={sections}
             setSections={setSections}
             newSection={newSection}
-            setInvalidSection={setInvalidSection}
+            setSectionConflict={setSectionConflict}
             currentWorklistNumber={currentWorklistNumber}
             setCurrentWorklistNumber={setCurrentWorklistNumber}
             currentTerm={currentTerm}
@@ -131,14 +143,10 @@ function App() {
           <Form
             currentWorklistNumber={currentWorklistNumber}
             newSection={newSection}
-            sections={sections}
-            invalidSection={invalidSection}
-            setNewSection={setNewSection}
-            setSections={setSections}
-            currentTerm={currentTerm}
-            colorTheme={colorTheme}
-            setColorTheme={setColorTheme}
-            setSelectedSection={setSelectedSection}
+            sectionConflict={sectionConflict}
+            handleAddNewSection={handleAddNewSection}
+            handleClearWorklist={handleClearWorklist}
+            handleCancel={() => setNewSection(null)}
           />
         </div>
       ) : (

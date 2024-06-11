@@ -50,15 +50,3 @@ export interface ISectionData {
     color: string
     courseID?: string
 }
-
-export const baseSection:ISectionData = {
-    code: "",
-    name: "",
-    instructors: [],
-    type: SectionType.lecture,
-    sectionDetails: [],
-    term: Term.winterOne,
-    worklistNumber: 0,
-    color: defaultColorList[0],
-    courseID: ""
-}
