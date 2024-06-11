@@ -27,8 +27,12 @@ Join the discord channel [here](https://discord.gg/cx93fAJUJf).
 
 
 ## Feature Requests
-Feel free to create issues for any feature requests or bug reports, 
-as long as there are no duplicate issues.
+We value your input! If you have any feature requests, please create an issue.
+Before doing so, kindly check to ensure there are no duplicates.
+
+## Collaborators
+We welcome new collaborators! To set up the development environment, follow 
+the instructions in the following sections.
 
 ## Building manually for Chrome
 
@@ -74,4 +78,4 @@ as long as there are no duplicate issues.
 9. Upload `build/manifest.json`
 10. The tool should now appear in your extension menu in chrome
 
-See this [Firefox installation demo](./public/firefox-demo-v1.3.gif)
+See this [Firefox installation demo](./public/firefox-demo-v1.3.gif).
