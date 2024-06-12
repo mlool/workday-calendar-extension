@@ -250,7 +250,7 @@ export async function extractSection(element: Element) {
   );
 }
 
-async function findCourseId(name: string) {
+export async function findCourseId(name: string) {
   const urlencoded = new URLSearchParams();
   urlencoded.append("q", name);
 

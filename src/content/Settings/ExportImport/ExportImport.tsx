@@ -4,6 +4,9 @@ import '../Settings.css';
 import './ExportImport.css'
 import ExternalCalendarExport from './ExternalCalendarExport/ExternalCalendarExport';
 import ExportImportIndividual from './ExportImportIndividual/ExportImportIndividual';
+import { findCourseId } from '../../utils';
+import { useState } from 'react';
+import InfoModal from '../../InfoModal/InfoModal';
 
 interface IProps {
   sections: ISectionData[];
@@ -11,6 +14,7 @@ interface IProps {
 }
 
 const ExportImport = ({ sections, setSections }: IProps) => {
+  const [importingInProgress, setImportInProgress] = useState(false)
 
   const handleExport = () => {
     const json = JSON.stringify(sections, null, 2);
@@ -24,6 +28,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   };
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImportInProgress(true)
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -31,7 +36,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target?.result as string);
-        setSections(data);
+        handleSectionImport(data);
       } catch (error) {
         console.error('Failed to parse JSON file', error);
       }
@@ -39,11 +44,35 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     reader.readAsText(file);
   };
 
+  const handleSectionImport = async (sections: ISectionData[]) => {
+    let newSections = []
+    for (let i = 0; i < sections.length; i++) {
+      if (!sections[i].courseID) {
+        sections[i].courseID = await findCourseId(sections[i].code)
+      }
+      newSections.push(sections[i])
+    }
+    sections.forEach(async (section: ISectionData) => {
+      if (!section.courseID) {
+        section.courseID = await findCourseId(section.code)
+      }
+    })
+    setSections(newSections);
+    setImportInProgress(false)
+  }
+
+
   return (
     <div>
+        {importingInProgress && <InfoModal message='Loading ....' onCancel={() => {}} />}
         <div className="SettingsHeader">Export/Import</div>
         <hr className='Divider' />
-        <ExportImportIndividual sections={sections} setSections={setSections}/>
+        <ExportImportIndividual 
+          sections={sections} 
+          setSections={setSections} 
+          handleSectionImport={handleSectionImport} 
+          setImportInProgress={setImportInProgress}
+        />
         <div className="ExportImportButtonContainer">
           <div className="ExportImportRow">  
             <div className="ExportImportButton" onClick={handleExport}>
