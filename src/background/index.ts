@@ -4,7 +4,7 @@
 let portFromContentScript: chrome.runtime.Port | null;
 
 chrome.runtime.onConnect.addListener((port) => {
-  console.assert(port.name === 'courseHover');
+  console.assert(port.name === "courseHover");
   portFromContentScript = port;
   portFromContentScript.onDisconnect.addListener(() => {
     portFromContentScript = null;
@@ -12,7 +12,7 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === 'HOVER' && portFromContentScript) {
+  if (message.type === "HOVER" && portFromContentScript) {
     portFromContentScript.postMessage(message.course);
   }
 });
@@ -22,8 +22,32 @@ chrome.action.onClicked.addListener((tab) => {
   if (tab.id !== undefined) {
     chrome.tabs.sendMessage(tab.id, { toggleContainer: true });
   } else {
-    console.error('Tab ID is undefined.');
+    console.error("Tab ID is undefined.");
   }
 });
 
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  (details) => {
+    // Access the existing cookies
+    const existingCookies = chrome.cookies.getAll({ url: details.url });
+
+    // Construct the Cookie header string
+    let cookieHeader = "";
+    existingCookies.then((cookies) => {
+      for (const cookie of cookies) {
+        cookieHeader += `${cookie.name}=${cookie.value}; `;
+      }
+
+      let headers = details.requestHeaders || [];
+
+      // Modify the request headers
+      headers.push({ name: "Cookie", value: cookieHeader.trim() });
+
+      // Allow the modified request to proceed
+      return { cancel: false };
+    });
+  },
+  { urls: ["<all_urls>"] },
+  ["blocking", "extraHeaders", "requestHeaders"]
+);
 export {};
