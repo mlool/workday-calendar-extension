@@ -182,7 +182,7 @@ export async function extractSection(element: Element) {
   // ~~~ End of stupidly hacky code ~~~
 
   // Extracting instructors details from labels
-  const instructorElements = element.parentElement?.querySelectorAll('[data-automation-id="promptOption"]');
+  const instructorElements = element.querySelectorAll('[data-automation-id="promptOption"]');
   let instructors: string[] = [];
   
   if(instructorElements) {
