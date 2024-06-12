@@ -282,3 +282,8 @@ async function findCourseId(name: string) {
       return null;
     });
 }
+
+export function isCourseFormatted(courseName: string) {
+  const regex = /^[A-Z]{3}_V [0-9]+-[0-9]+$/;
+  return regex.test(courseName);
+}
