@@ -26,5 +26,5 @@
     }
   ],
   "action": {},
-  "permissions": ["storage"]
+  "permissions": ["storage", "webRequest", "webRequestBlocking"]
 }
