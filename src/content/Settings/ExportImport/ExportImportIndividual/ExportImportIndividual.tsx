@@ -3,19 +3,23 @@ import '../ExportImport.css'
 import { useState } from 'react';
 import ExportCalendarPopup from '../ExportImportPopups/ExportCalendarPopup';
 import ImportCalendarPopup from '../ExportImportPopups/ImportCalendarPopup';
+import { findCourseId } from '../../../utils';
+import InfoModal from '../../../InfoModal/InfoModal';
 
 interface IProps {
   sections: ISectionData[];
   setSections: (data: ISectionData[]) => void;
+  setImportInProgress: (state: boolean) => void;
+  handleSectionImport: (data: ISectionData[]) => void;
 }
 
-const ExportImportIndividual = ({ sections, setSections }: IProps) => {
+const ExportImportIndividual = ({ sections, setSections, setImportInProgress, handleSectionImport }: IProps) => {
   const [showExportPopup, setShowExportPopup] = useState(false);
   const [showImportPopup, setShowImportPopup] = useState(false);
 
   const handleExport = (sections: ISectionData[], worklistNumber: number) => {
     sections = sections.filter((section) => section.worklistNumber === worklistNumber)
-    if(sections.length != 0) {
+    if(sections.length !== 0) {
       const json = JSON.stringify(sections, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -31,6 +35,7 @@ const ExportImportIndividual = ({ sections, setSections }: IProps) => {
   };
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>, worklistNumber: number) => {
+    setImportInProgress(true)
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -50,7 +55,7 @@ const ExportImportIndividual = ({ sections, setSections }: IProps) => {
                                        term: section.term
                                       }))
         newSections = newSections.concat(data)
-        setSections(newSections);
+        handleSectionImport(newSections)
       } catch (error) {
         console.error('Failed to parse JSON file', error);
       }
