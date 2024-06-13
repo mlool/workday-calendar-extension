@@ -1,14 +1,36 @@
-import { useState } from "react";
+import { Reducer, useReducer } from "react";
 import "./ModalLayer.css";
-import Contact from "./Settings/Contact/Contact";
 
 enum ModalAlignment {
   Top,
   Center,
 }
 
-function ModalLayer() {
-  const { modalConfig, setModalConfig } = useModal();
+enum ModalPreset {
+  CLEAR,
+  ConfirmClearWorklist,
+}
+
+interface ModalLayerProps {
+  reducer: Reducer<ModalConfig | null, ModalAction>;
+}
+
+interface ModalConfig {
+  hasTintedBg: boolean;
+  alignment: ModalAlignment;
+  title: string;
+  body: string | JSX.Element;
+  closeButtonText: string;
+  actionButtonText?: string;
+  actionHandler?: () => void;
+}
+
+interface ModalAction {
+  preset: ModalPreset;
+}
+
+function ModalLayer(props: ModalLayerProps) {
+  const [modalConfig, dispatchModal] = useReducer(props.reducer, null);
 
   if (modalConfig === null) return <></>;
 
@@ -27,70 +49,43 @@ function ModalLayer() {
 
   return (
     <div className={bgStyle()}>
-    <div className="modal-window">
-      <div className="modal-header">{modalConfig.title}</div>
-      <div className="modal-body">
-        {typeof modalConfig.body === "string" ? (
-          <p className="modal-text-body">{modalConfig.body}</p>
-        ) : (
-          modalConfig.body
-        )}
-      </div>
-      <div className="modal-button-container">
-        <button
-          className="modal-button cancel-button"
-          onClick={() => setModalConfig(null)}
-        >
-            {modalConfig.closeButtonText}
-        </button>
-        {modalConfig.actionHandler && (
+      <div className="modal-window">
+        <div className="modal-header">{modalConfig.title}</div>
+        <div className="modal-body">
+          {typeof modalConfig.body === "string" ? (
+            <p className="modal-text-body">{modalConfig.body}</p>
+          ) : (
+            modalConfig.body
+          )}
+        </div>
+        <div className="modal-button-container">
           <button
-          className="modal-button action-button"
-            onClick={modalConfig.actionHandler}
+            className="modal-button cancel-button"
+            onClick={() => dispatchModal({ preset: ModalPreset.CLEAR })}
           >
-              {modalConfig.actionButtonText}
+            {modalConfig.closeButtonText}
           </button>
-        )}
-      </div>
+          {modalConfig.actionHandler && (
+            <button
+              className="modal-button action-button"
+              onClick={() => {
+                modalConfig.actionHandler!();
+                dispatchModal({ preset: ModalPreset.CLEAR });
+              }}
+            >
+              {modalConfig.actionButtonText}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-interface ModalConfig {
-  hasTintedBg: boolean;
-  alignment: ModalAlignment;
-  title: string;
-  body: string | JSX.Element;
-  closeButtonText: string;
-  actionButtonText?: string;
-  actionHandler?: (() => void);
-}
-
-function useModal() {
-  const [modalConfig, setModalConfig] = useState<ModalConfig | null>({
-    hasTintedBg: true,
-    alignment: ModalAlignment.Top,
-    title: "Untitled",
-    //body: (
-    //  <>
-    //    <Contact />
-    //    <Contact />
-    //    <Contact />
-    //    <Contact />
-    //    <Contact />
-    //  </>
-    //),
-    closeButtonText: "Close",
-    body: "test",
-    actionHandler: () => alert("WHEE"),
-    actionButtonText: "OK",
-  });
-
-  return {
-    modalConfig,
-    setModalConfig,
-  };
-}
-
-export { ModalLayer, useModal };
+export {
+  ModalLayer,
+  ModalPreset,
+  ModalAlignment,
+  type ModalConfig,
+  type ModalAction,
+};

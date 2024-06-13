@@ -1,12 +1,22 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import CalendarContainer from '../CalendarContainer/CalendarContainer';
-import { ISectionData, Term, Views } from './App.types';
-import Form from '../Form/Form';
-import TopBar from '../TopBar/TopBar';
-import Settings from '../Settings/Settings';
-import { assignColors, ColorTheme, getNewSectionColor } from '../../helpers/courseColors';
-import { ModalLayer } from '../ModalLayer';
+import { Reducer, useEffect, useState } from "react";
+import "./App.css";
+import CalendarContainer from "../CalendarContainer/CalendarContainer";
+import { ISectionData, Term, Views } from "./App.types";
+import Form from "../Form/Form";
+import TopBar from "../TopBar/TopBar";
+import Settings from "../Settings/Settings";
+import {
+  assignColors,
+  ColorTheme,
+  getNewSectionColor,
+} from "../../helpers/courseColors";
+import {
+  ModalAction,
+  ModalAlignment,
+  ModalConfig,
+  ModalLayer,
+  ModalPreset,
+} from "../ModalLayer";
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null);
@@ -16,33 +26,36 @@ function App() {
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
   const [currentView, setCurrentView] = useState<Views>(Views.calendar);
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green);
-  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
+  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(
+    null
+  );
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
-      chrome.storage.local.get([
-        'currentTerm',
-        'colorTheme',
-        'sections',
-        'currentWorklistNumber',
-      ], (result) => {
-        if (result.currentTerm !== undefined) {
-          setCurrentTerm(result.currentTerm);
+      chrome.storage.local.get(
+        ["currentTerm", "colorTheme", "sections", "currentWorklistNumber"],
+        (result) => {
+          if (result.currentTerm !== undefined) {
+            setCurrentTerm(result.currentTerm);
+          }
+          if (result.colorTheme !== undefined) {
+            setColorTheme(result.colorTheme);
+          }
+          if (result.sections !== undefined) {
+            setSections(
+              assignColors(
+                result.sections,
+                result.colorTheme || ColorTheme.Green
+              )
+            );
+          }
+          if (result.currentWorklistNumber !== undefined) {
+            setCurrentWorklistNumber(result.currentWorklistNumber);
+          }
         }
-        if (result.colorTheme !== undefined) {
-          setColorTheme(result.colorTheme);
-        }
-        if (result.sections !== undefined) {
-          setSections(
-            assignColors(result.sections, result.colorTheme || ColorTheme.Green)
-          );
-        }
-        if (result.currentWorklistNumber !== undefined) {
-          setCurrentWorklistNumber(result.currentWorklistNumber);
-        }
-      });
+      );
     };
 
     const handleStorageChange = (
@@ -50,7 +63,7 @@ function App() {
       areaName: string
     ) => {
       if (changes.newSection) {
-        const newVal = changes.newSection.newValue
+        const newVal = changes.newSection.newValue;
         if (newVal === null) return;
         setNewSection(newVal);
         if (newVal.term !== Term.winterFull) {
@@ -66,7 +79,6 @@ function App() {
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
     };
-
   }, []); // Run only once on mount
 
   // Update chrome storage whenever relevant state changes
@@ -102,7 +114,6 @@ function App() {
     // }
   }, [colorTheme, sections]); // React only if these values change
 
-
   const handleAddNewSection = () => {
     let updatedNewSection = newSection!;
     updatedNewSection.worklistNumber = currentWorklistNumber;
@@ -114,12 +125,12 @@ function App() {
 
     setSections([...sections, updatedNewSection]);
     setNewSection(null);
-  }
+  };
 
   const handleCancelNewSection = () => {
     setNewSection(null);
-    chrome.storage.local.set({ "newSection": null })
-  }
+    chrome.storage.local.set({ newSection: null });
+  };
 
   const handleClearWorklist = () => {
     const updatedSections = sections.filter(
@@ -129,45 +140,66 @@ function App() {
     setSelectedSection(null);
   };
 
-  return (
-      <>
-    <ModalLayer />
-    <div className="App">
-      <TopBar currentView={currentView} setCurrentView={setCurrentView} />
-      {currentView === Views.calendar ? (
-        <div className="CalendarViewContainer">
-          <CalendarContainer
-            sections={sections}
-            setSections={setSections}
-            newSection={newSection}
-            setSectionConflict={setSectionConflict}
-            currentWorklistNumber={currentWorklistNumber}
-            setCurrentWorklistNumber={setCurrentWorklistNumber}
-            currentTerm={currentTerm}
-            setCurrentTerm={setCurrentTerm}
-            selectedSection={selectedSection}
-            setSelectedSection={setSelectedSection}
-          />
+  const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
+    conf: ModalConfig | null,
+    action: ModalAction
+  ) => {
+    switch (action.preset) {
+      case ModalPreset.CLEAR:
+        return null;
+      case ModalPreset.ConfirmClearWorklist:
+        return {
+          title: "Confirm Clear Worklist",
+          body: `Clearing the worklist will remove all sections from both terms under worklist ${currentWorklistNumber}. Are you sure you want to continue?`,
+          actionHandler: handleClearWorklist,
+          hasTintedBg: true,
+          alignment: ModalAlignment.Center,
+          closeButtonText: "Cancel",
+          actionButtonText: "Confirm",
+        };
+      default:
+        throw Error("ModalPreset not valid!");
+    }
+  };
 
-          <Form
-            currentWorklistNumber={currentWorklistNumber}
-            newSection={newSection}
-            sectionConflict={sectionConflict}
-            handleAddNewSection={handleAddNewSection}
-            handleClearWorklist={handleClearWorklist}
-            handleCancel={handleCancelNewSection}
+  return (
+    <>
+      <ModalLayer reducer={modalReducer} />
+      <div className="App">
+        <TopBar currentView={currentView} setCurrentView={setCurrentView} />
+        {currentView === Views.calendar ? (
+          <div className="CalendarViewContainer">
+            <CalendarContainer
+              sections={sections}
+              setSections={setSections}
+              newSection={newSection}
+              setSectionConflict={setSectionConflict}
+              currentWorklistNumber={currentWorklistNumber}
+              setCurrentWorklistNumber={setCurrentWorklistNumber}
+              currentTerm={currentTerm}
+              setCurrentTerm={setCurrentTerm}
+              selectedSection={selectedSection}
+              setSelectedSection={setSelectedSection}
+            />
+            <Form
+              currentWorklistNumber={currentWorklistNumber}
+              newSection={newSection}
+              sectionConflict={sectionConflict}
+              handleAddNewSection={handleAddNewSection}
+              handleClearWorklist={handleClearWorklist}
+              handleCancel={handleCancelNewSection}
+            />
+          </div>
+        ) : (
+          <Settings
+            colorTheme={colorTheme}
+            sections={sections}
+            setColorTheme={setColorTheme}
+            setSections={setSections}
           />
-        </div>
-      ) : (
-        <Settings 
-          colorTheme={colorTheme} 
-          sections={sections}
-          setColorTheme={setColorTheme}
-          setSections={setSections}
-        />
-      )}
-    </div>
-      </>
+        )}
+      </div>
+    </>
   );
 }
 
