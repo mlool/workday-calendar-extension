@@ -1,24 +1,23 @@
-import { ISectionData } from "../../App/App.types";
 import "../PopupComponent.css";
 
 interface IProps {
-    selectedSection: ISectionData
+  locations: string[];
 }
 
-const LocationComponent = ({ selectedSection }: IProps) => {
+const LocationComponent = ({ locations }: IProps) => {
   const uniqueLocations = new Set(
-    selectedSection.sectionDetails.map((section) => {
-      const parts = section.location?.split(/[- ]/) || ""; 
-      if (parts.length > 1) { 
-        const location = parts[0] + "-" + parts.slice(-1)[0];
+    locations.map((location) => {
+      const parts = location.split(/[- ]/) || "";
+      if (parts.length > 1) {
+        const loca = parts[0] + "-" + parts.slice(-1)[0];
         return {
-          location: section.location,
-          link: `https://learningspaces.ubc.ca/classrooms/${location}`,
+          location: location,
+          link: `https://learningspaces.ubc.ca/classrooms/${loca}`,
         };
       } else {
         return {
-          location: section.location,
-          link: "", 
+          location: location,
+          link: "",
         };
       }
     })
@@ -37,6 +36,5 @@ const LocationComponent = ({ selectedSection }: IProps) => {
     </div>
   );
 };
-
 
 export default LocationComponent;
