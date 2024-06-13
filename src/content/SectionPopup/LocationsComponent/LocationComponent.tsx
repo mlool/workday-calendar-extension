@@ -5,8 +5,10 @@ interface IProps {
 }
 
 const LocationComponent = ({ locations }: IProps) => {
+  const locationsArr = locations.filter((item, index) => locations.indexOf(item) === index);
+
   const uniqueLocations = new Set(
-    locations.map((location) => {
+    locationsArr.map((location) => {
       const parts = location.split(/[- ]/) || "";
       if (parts.length > 1) {
         const loca = parts[0] + "-" + parts.slice(-1)[0];

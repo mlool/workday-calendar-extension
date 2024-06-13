@@ -214,7 +214,7 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr;
 };
 
-async function findCourseId(name: string) {
+export async function findCourseId(name: string) {
   const urlencoded = new URLSearchParams();
   urlencoded.append("q", name);
 
