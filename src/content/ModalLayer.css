@@ -1,0 +1,97 @@
+.modal-background {
+    position: absolute;
+
+    display: grid;
+    width: 100%;
+    height: 100%;
+
+    z-index: 100;
+
+    justify-items: center;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+.position-top {
+    align-content: start;
+}
+
+.position-center {
+    align-content: center;
+}
+
+.tinted-bg {
+    background-color: rgba(99, 99, 99, 0.6);
+}
+
+.modal-window {
+    min-height: 120px;
+    max-height: 50%;
+    width: 80%;
+    border-radius: var(--default-radius);
+    box-shadow: var(--default-shadow);
+    overflow: hidden;
+    background-color: white;
+}
+
+.modal-header {
+    display: grid;
+    height: max(30px, 10%);
+    padding: 2px;
+
+    background-color: var(--main-accent-colour);
+    color: white;
+    align-items: center;
+
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.modal-body {
+    max-height: 65%;
+    overflow-y: scroll;
+}
+
+.modal-text-body {
+    padding: 10px;
+    font-size: 14px;
+}
+
+.modal-button-container {
+    height: max(15%, 32px);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    column-gap: 10px;
+
+    padding: 10px 12px 10px;
+    justify-items: center;
+}
+
+.modal-button {
+    width: 100%;
+
+    border: var(--base-1) 1px solid;
+    border-radius: var(--default-radius);
+
+    font-size: 14px;
+
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-button:hover {
+    background-color: var(--base-1-shaded);
+}
+
+.cancel-button {
+    color: var(--base-1);
+    background-color: white;
+}
+
+
+.action-button {
+    color: white;
+    background: var(--main-accent-colour);
+}

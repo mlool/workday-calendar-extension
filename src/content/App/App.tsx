@@ -6,6 +6,7 @@ import Form from '../Form/Form';
 import TopBar from '../TopBar/TopBar';
 import Settings from '../Settings/Settings';
 import { assignColors, ColorTheme, getNewSectionColor } from '../../helpers/courseColors';
+import { ModalLayer } from '../ModalLayer';
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null);
@@ -129,6 +130,8 @@ function App() {
   };
 
   return (
+      <>
+    <ModalLayer />
     <div className="App">
       <TopBar currentView={currentView} setCurrentView={setCurrentView} />
       {currentView === Views.calendar ? (
@@ -164,6 +167,7 @@ function App() {
         />
       )}
     </div>
+      </>
   );
 }
 

@@ -9,3 +9,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+:root {
+  --main-accent-colour: #00A7E1;
+  --default-radius: 28px;
+  --default-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --base-1: #626262;
+  --base-1-shaded: #d8d8d8;
+}
