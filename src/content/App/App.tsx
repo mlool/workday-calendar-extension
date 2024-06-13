@@ -21,7 +21,7 @@ function App() {
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
-      chrome.storage.sync.get([
+      chrome.storage.local.get([
         'currentTerm',
         'colorTheme',
         'sections',
@@ -69,20 +69,20 @@ function App() {
 
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
-    chrome.storage.sync.set({ sections });
+    chrome.storage.local.set({ sections });
     // alert(JSON.stringify(sections, null, 2))
   }, [sections]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ currentWorklistNumber });
+    chrome.storage.local.set({ currentWorklistNumber });
   }, [currentWorklistNumber]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ currentTerm });
+    chrome.storage.local.set({ currentTerm });
   }, [currentTerm]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ colorTheme });
+    chrome.storage.local.set({ colorTheme });
   }, [colorTheme]);
 
   useEffect(() => {

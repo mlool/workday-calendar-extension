@@ -1,8 +1,10 @@
-import { ISectionData } from "../App/App.types";
+import { ISectionData, SupplementaryData } from "../App/App.types";
+import { useEffect, useState } from "react";
 import "./SectionPopup.css";
 import GradesComponent from "./GradesComponent/GradesComponent";
 import InstructorComponent from "./InstructorComponent/InstructorComponent";
 import LocationComponent from "./LocationsComponent/LocationComponent";
+import { findSupplementaryData } from "../utils";
 
 interface IProps {
   selectedSection: ISectionData;
@@ -17,6 +19,24 @@ const SectionPopup = ({
   setSections,
   setSelectedSection,
 }: IProps) => {
+  const [isLoading, setIsLoading] = useState(false); 
+  const [supplementaryData, setSupplementaryData] =
+    useState<SupplementaryData | null>(null); 
+
+  useEffect(() => {
+    if (selectedSection?.code) {
+      setIsLoading(true);
+      findSupplementaryData(selectedSection.code)
+        .then((response) => {
+          setSupplementaryData(response);
+        })
+        .catch((error) => {
+          console.error("Error finding supplementary data:", error);
+        })
+        .finally(() => setIsLoading(false));
+    }
+  }, [selectedSection.code]);
+
   const removeSection = () => {
     let updatedSections = [...sections];
     updatedSections = updatedSections.filter(
@@ -41,8 +61,13 @@ const SectionPopup = ({
         )}
         <hr />
         <div className="SectionPopupDetails">{selectedSection?.name}</div>
-        <InstructorComponent selectedSection={selectedSection} />
-        <LocationComponent selectedSection={selectedSection}/>
+        {isLoading && <div>Loading Data...</div>}
+        {supplementaryData && (
+          <>
+            <InstructorComponent instructors={supplementaryData.instructors} />
+            <LocationComponent locations={supplementaryData.locations} />
+          </>
+        )}
         <GradesComponent selectedSection={selectedSection} />
       </div>
       <div className="SectionPopupButtonContainer">
