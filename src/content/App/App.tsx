@@ -143,7 +143,7 @@ function App() {
   const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
     conf: ModalConfig | null,
     action: ModalAction
-  ) => {
+  ): ModalConfig | null => {
     switch (action.preset) {
       case ModalPreset.CLEAR:
         return null;
@@ -151,11 +151,19 @@ function App() {
         return {
           title: "Confirm Clear Worklist",
           body: `Clearing the worklist will remove all sections from both terms under worklist ${currentWorklistNumber}. Are you sure you want to continue?`,
-          actionHandler: handleClearWorklist,
-          hasTintedBg: true,
-          alignment: ModalAlignment.Center,
           closeButtonText: "Cancel",
           actionButtonText: "Confirm",
+          actionHandler: handleClearWorklist,
+        };
+      case ModalPreset.AutofillSettingInfo:
+        return {
+          title: "Info: Enable Autofill",
+          body: 'Autofills "Find Course Sections".',
+        };
+      case ModalPreset.HidePfpInfo:
+        return {
+          title: "Info: Hide Profile Picture",
+          body: "Hides your profile picture."
         };
       default:
         throw Error("ModalPreset not valid!");
