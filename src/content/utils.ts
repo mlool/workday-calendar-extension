@@ -36,7 +36,7 @@ export async function extractSection(element: Element) {
   });
 }
 
-async function findCourseInfo(code: string) {
+export async function findCourseInfo(code: string) {
   const urlencoded = new URLSearchParams();
   urlencoded.append("q", code);
 
