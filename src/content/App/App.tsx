@@ -163,43 +163,44 @@ function App() {
   };
 
   return (
-    <>
-      <ModalLayer reducer={modalReducer} />
-      <div className="App">
-        <TopBar currentView={currentView} setCurrentView={setCurrentView} />
-        {currentView === Views.calendar ? (
-          <div className="CalendarViewContainer">
-            <CalendarContainer
+    <ModalLayer
+      reducer={modalReducer}
+      children={
+        <div className="App">
+          <TopBar currentView={currentView} setCurrentView={setCurrentView} />
+          {currentView === Views.calendar ? (
+            <div className="CalendarViewContainer">
+              <CalendarContainer
+                sections={sections}
+                setSections={setSections}
+                newSection={newSection}
+                setSectionConflict={setSectionConflict}
+                currentWorklistNumber={currentWorklistNumber}
+                setCurrentWorklistNumber={setCurrentWorklistNumber}
+                currentTerm={currentTerm}
+                setCurrentTerm={setCurrentTerm}
+                selectedSection={selectedSection}
+                setSelectedSection={setSelectedSection}
+              />
+
+              <Form
+                newSection={newSection}
+                sectionConflict={sectionConflict}
+                handleAddNewSection={handleAddNewSection}
+                handleCancel={handleCancelNewSection}
+              />
+            </div>
+          ) : (
+            <Settings
+              colorTheme={colorTheme}
               sections={sections}
+              setColorTheme={setColorTheme}
               setSections={setSections}
-              newSection={newSection}
-              setSectionConflict={setSectionConflict}
-              currentWorklistNumber={currentWorklistNumber}
-              setCurrentWorklistNumber={setCurrentWorklistNumber}
-              currentTerm={currentTerm}
-              setCurrentTerm={setCurrentTerm}
-              selectedSection={selectedSection}
-              setSelectedSection={setSelectedSection}
             />
-            <Form
-              currentWorklistNumber={currentWorklistNumber}
-              newSection={newSection}
-              sectionConflict={sectionConflict}
-              handleAddNewSection={handleAddNewSection}
-              handleClearWorklist={handleClearWorklist}
-              handleCancel={handleCancelNewSection}
-            />
-          </div>
-        ) : (
-          <Settings
-            colorTheme={colorTheme}
-            sections={sections}
-            setColorTheme={setColorTheme}
-            setSections={setSections}
-          />
-        )}
-      </div>
-    </>
+          )}
+        </div>
+      }
+    />
   );
 }
 

@@ -25,23 +25,20 @@
 }
 
 .modal-window {
-    min-height: 120px;
-    max-height: 50%;
     width: 80%;
-    border-radius: var(--default-radius);
-    box-shadow: var(--default-shadow);
-    overflow: hidden;
-    background-color: white;
 }
 
 .modal-header {
     display: grid;
-    height: max(30px, 10%);
+    height: 30px;
     padding: 2px;
 
     background-color: var(--main-accent-colour);
     color: white;
     align-items: center;
+    border-top-left-radius: var(--default-radius);
+    border-top-right-radius: var(--default-radius);
+    box-shadow: var(--default-shadow);
 
     font-size: 14px;
     font-weight: bold;
@@ -49,22 +46,30 @@
 }
 
 .modal-body {
+    background: white;
     max-height: 65%;
     overflow-y: scroll;
+    box-shadow: var(--default-shadow);
 }
 
 .modal-text-body {
+    background: white;
     padding: 10px;
     font-size: 14px;
+    box-shadow: var(--default-shadow);
 }
 
 .modal-button-container {
-    height: max(15%, 32px);
+    height: 32px;
 
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     column-gap: 10px;
+    box-shadow: var(--default-shadow);
 
+    border-bottom-left-radius: var(--default-radius);
+    border-bottom-right-radius: var(--default-radius);
+    background: white;
     padding: 10px 12px 10px;
     justify-items: center;
 }
