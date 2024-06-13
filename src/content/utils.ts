@@ -136,15 +136,11 @@ export async function findSupplementaryData(code: string) {
 
 const parseSectionDetails = (details: string[]): SectionDetail[] => {
   let detailsArr: SectionDetail[] = [];
-  let detailsArr: SectionDetail[] = [];
 
   details.forEach((detail) => {
     const detailParts = detail.split(" | ");
     if (detailParts.length !== 3 && detailParts.length !== 4) {
-    const detailParts = detail.split(" | ");
-    if (detailParts.length !== 3 && detailParts.length !== 4) {
       alert(JSON.stringify(detailParts));
-      alert("Invalid section details format");
       alert("Invalid section details format");
     }
 
@@ -163,26 +159,14 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
 
     let days = daysString.split(" ");
     let [startTime, endTime] = timeRange.split(" - ");
-    let days = daysString.split(" ");
-    let [startTime, endTime] = timeRange.split(" - ");
 
-    startTime = convertTo24HourFormat(startTime);
-    endTime = convertTo24HourFormat(endTime);
     startTime = convertTo24HourFormat(startTime);
     endTime = convertTo24HourFormat(endTime);
 
     //Handle the "Fri (Alternate Weeks)" case, or any text that isn't a valid day
     const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
     days = days.reduce<string[]>((acc, str) => {
-      const firstThreeChars = str.substring(0, 3);
-
-      if (daysOfWeek.includes(firstThreeChars)) {
-        acc.push(firstThreeChars);
-      }
-
-      return acc;
       const firstThreeChars = str.substring(0, 3);
 
       if (daysOfWeek.includes(firstThreeChars)) {
@@ -195,10 +179,7 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
     //@TODO: Change for summer term support
     let term = dateRange.includes("2024") ? Term.winterOne : Term.winterTwo;
     if (dateRange.includes("2024") && dateRange.includes("2025")) {
-    let term = dateRange.includes("2024") ? Term.winterOne : Term.winterTwo;
-    if (dateRange.includes("2024") && dateRange.includes("2025")) {
       // Case where only one section detail but two term course. Set this term to W1 and push a copy modified to be term 2
-      term = Term.winterOne;
       term = Term.winterOne;
       detailsArr.push({
         term: Term.winterTwo,
@@ -208,7 +189,6 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
         dateRange: dateRange,
       });
     }
-
 
     detailsArr.push({
       term: term,
@@ -223,12 +203,10 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   const removeDuplicates = (arr: SectionDetail[]) => {
     const seen = new Set();
     return arr.filter((item) => {
-    return arr.filter((item) => {
       const serializedItem = JSON.stringify(item);
       return seen.has(serializedItem) ? false : seen.add(serializedItem);
     });
   };
-
 
   // Remove duplicates
   detailsArr = removeDuplicates(detailsArr);
