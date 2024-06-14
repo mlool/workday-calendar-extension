@@ -52,6 +52,7 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
                 className="body-cell" 
                 style={{backgroundColor: cell.color}}
                 onClick={() => {
+                    if (cell.sectionContent === null) return;
                     setSelectedSection(cell.sectionContent)
                     dispatchModal({preset: ModalPreset.SectionPopup, additionalData: cell.sectionContent})
                 }}
