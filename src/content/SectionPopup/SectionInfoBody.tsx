@@ -1,6 +1,6 @@
 import { ISectionData, SupplementaryData } from "../App/App.types";
 import { useEffect, useState } from "react";
-import "./SectionPopup.css";
+import "./SectionInfoBody.css";
 import GradesComponent from "./GradesComponent/GradesComponent";
 import InstructorComponent from "./InstructorComponent/InstructorComponent";
 import LocationComponent from "./LocationsComponent/LocationComponent";
@@ -27,8 +27,8 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
         })
         .finally(() => setIsLoading(false));
     }
-      setIsLoading(false);
-  }, [selectedSection.code]);
+    setIsLoading(false);
+  }, [selectedSection?.code]);
 
   return (
     <div>

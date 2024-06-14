@@ -33,6 +33,7 @@ interface ModalConfig {
 
 interface ModalAction {
   preset: ModalPreset;
+  additionalData?: unknown;
 }
 
 interface ModalLayerProps {

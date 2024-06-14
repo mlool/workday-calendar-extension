@@ -53,7 +53,7 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
                 style={{backgroundColor: cell.color}}
                 onClick={() => {
                     setSelectedSection(cell.sectionContent)
-                    dispatchModal({preset: ModalPreset.SectionPopup})
+                    dispatchModal({preset: ModalPreset.SectionPopup, additionalData: cell.sectionContent})
                 }}
               >
                 {cell.name}

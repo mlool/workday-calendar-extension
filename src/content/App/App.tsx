@@ -17,7 +17,7 @@ import {
   ModalLayer,
   ModalPreset,
 } from "../ModalLayer";
-import SectionInfoBody from "../SectionPopup/SectionPopup";
+import SectionInfoBody from "../SectionPopup/SectionInfoBody";
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null);
@@ -171,9 +171,10 @@ function App() {
           body: "Hides your profile picture.",
         };
       case ModalPreset.SectionPopup:
+        const sectionData: ISectionData = action.additionalData as ISectionData;
         return {
-          title: selectedSection!.code,
-          body: <SectionInfoBody selectedSection={selectedSection!} />,
+          title: sectionData.code,
+          body: <SectionInfoBody selectedSection={sectionData} />,
           closeButtonText: "Close",
           actionButtonText: "Remove",
           actionHandler: handleDeleteSelectedSection,
