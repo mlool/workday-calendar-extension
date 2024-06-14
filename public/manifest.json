@@ -26,5 +26,13 @@
     }
   ],
   "action": {},
-  "permissions": ["storage", "webRequest"]
+  "permissions": [
+    "storage", 
+    "cookies",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
 }
