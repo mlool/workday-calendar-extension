@@ -11,6 +11,12 @@ enum ModalPreset {
   ConfirmClearWorklist,
   AutofillSettingInfo,
   HidePfpInfo,
+  SectionPopup,
+}
+
+enum ModalActionType {
+  Normal,
+  Destructive,
 }
 
 interface ModalConfig {
@@ -18,9 +24,11 @@ interface ModalConfig {
   body: string | JSX.Element;
   hasTintedBg?: boolean;
   alignment?: ModalAlignment;
+  actionType?: ModalActionType;
   closeButtonText?: string;
   actionButtonText?: string;
   actionHandler?: () => void;
+  cancelHandler?: () => void;
 }
 
 interface ModalAction {
@@ -71,13 +79,20 @@ function ModalLayer(props: ModalLayerProps) {
             <div className="modal-button-container">
               <button
                 className="modal-button cancel-button"
-                onClick={() => dispatchModal({ preset: ModalPreset.CLEAR })}
+                onClick={() => {
+                  modalConfig.cancelHandler && modalConfig.cancelHandler();
+                  dispatchModal({ preset: ModalPreset.CLEAR });
+                }}
               >
                 {modalConfig.closeButtonText ?? "OK"}
               </button>
               {modalConfig.actionHandler && (
                 <button
-                  className="modal-button action-button"
+                  className={`modal-button action-button${
+                    modalConfig.actionType === ModalActionType.Normal
+                      ? ""
+                      : "-destructive"
+                  }`}
                   onClick={() => {
                     modalConfig.actionHandler!();
                     dispatchModal({ preset: ModalPreset.CLEAR });

@@ -1,7 +1,8 @@
 import { ISectionData, Term} from '../App/App.types'
 import { convertToMatrix, getEndHour } from './utils'
-import SectionPopup from '../SectionPopup/SectionPopup'
 import './Calendar.css'
+import { useContext } from 'react';
+import { ModalDispatchContext, ModalPreset } from '../ModalLayer';
 
 interface IProps {
   sections: ISectionData[],
@@ -17,6 +18,9 @@ interface IProps {
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
 const Calendar = ({sections, newSection, currentWorklistNumber, setSections, setSectionConflict, currentTerm, selectedSection, setSelectedSection}:IProps) => {
+    const dispatchModal = useContext(ModalDispatchContext)
+
+
   const calendarSections = sections.filter((section) => section.worklistNumber === currentWorklistNumber && (section.term === currentTerm || section.term == Term.winterFull))
   const sectionsToRender = convertToMatrix(calendarSections, newSection, setSectionConflict, currentTerm)
 
@@ -28,7 +32,6 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
 
   return (
     <div className="calendar">
-      {selectedSection && <SectionPopup selectedSection={selectedSection} sections={sections} setSections={setSections} setSelectedSection={setSelectedSection} />}
       <div className="header">
         <div className="time-marker"></div>
         {daysOfWeek.map((day, index) => (
@@ -48,7 +51,10 @@ const Calendar = ({sections, newSection, currentWorklistNumber, setSections, set
                 key={index} 
                 className="body-cell" 
                 style={{backgroundColor: cell.color}}
-                onClick={() => {setSelectedSection(cell.sectionContent)}}
+                onClick={() => {
+                    setSelectedSection(cell.sectionContent)
+                    dispatchModal({preset: ModalPreset.SectionPopup})
+                }}
               >
                 {cell.name}
               </div>

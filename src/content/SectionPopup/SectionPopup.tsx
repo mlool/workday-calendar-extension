@@ -6,22 +6,14 @@ import InstructorComponent from "./InstructorComponent/InstructorComponent";
 import LocationComponent from "./LocationsComponent/LocationComponent";
 import { findSupplementaryData } from "../utils";
 
-interface IProps {
+interface SectionInfoProps {
   selectedSection: ISectionData;
-  sections: ISectionData[];
-  setSections: (data: ISectionData[]) => void;
-  setSelectedSection: (state: ISectionData | null) => void;
 }
 
-const SectionPopup = ({
-  selectedSection,
-  sections,
-  setSections,
-  setSelectedSection,
-}: IProps) => {
-  const [isLoading, setIsLoading] = useState(false); 
+const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [supplementaryData, setSupplementaryData] =
-    useState<SupplementaryData | null>(null); 
+    useState<SupplementaryData | null>(null);
 
   useEffect(() => {
     if (selectedSection?.code) {
@@ -35,54 +27,31 @@ const SectionPopup = ({
         })
         .finally(() => setIsLoading(false));
     }
+      setIsLoading(false);
   }, [selectedSection.code]);
 
-  const removeSection = () => {
-    let updatedSections = [...sections];
-    updatedSections = updatedSections.filter(
-      (section) => section !== selectedSection
-    );
-    setSections(updatedSections);
-    setSelectedSection(null);
-  };
-
   return (
-    <div className="SectionPopup">
-      <div>
-        {selectedSection?.courseID && (
-          <a
-            href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection?.courseID}.htmld`}
-          >
-            <div className="SectionPopupTitle">{selectedSection?.code}</div>
-          </a>
-        )}
-        {!selectedSection?.courseID && (
-          <div className="SectionPopupTitle">{selectedSection?.code}</div>
-        )}
-        <hr />
-        <div className="SectionPopupDetails">{selectedSection?.name}</div>
-        {isLoading && <div>Loading Data...</div>}
-        {supplementaryData && (
-          <>
-            <InstructorComponent instructors={supplementaryData.instructors} />
-            <LocationComponent locations={supplementaryData.locations} />
-          </>
-        )}
-        <GradesComponent selectedSection={selectedSection} />
-      </div>
-      <div className="SectionPopupButtonContainer">
-        <button
-          className="SectionPopupCancelButton"
-          onClick={() => setSelectedSection(null)}
+    <div>
+      {selectedSection?.courseID && (
+        <a
+          href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection?.courseID}.htmld`}
         >
-          Close
-        </button>
-        <button className="SectionPopupButton" onClick={removeSection}>
-          Remove
-        </button>
-      </div>
+          <div className="SectionPopupTitle">{selectedSection?.code}</div>
+        </a>
+      )}
+      <hr />
+      <div className="SectionPopupDetails">{selectedSection?.name}</div>
+      {isLoading || supplementaryData === null ? (
+        <div>Loading Data...</div>
+      ) : (
+        <>
+          <InstructorComponent instructors={supplementaryData.instructors} />
+          <LocationComponent locations={supplementaryData.locations} />
+        </>
+      )}
+      <GradesComponent selectedSection={selectedSection} />
     </div>
   );
 };
 
-export default SectionPopup;
+export default SectionInfoBody;

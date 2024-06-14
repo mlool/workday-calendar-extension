@@ -17,6 +17,7 @@ import {
   ModalLayer,
   ModalPreset,
 } from "../ModalLayer";
+import SectionInfoBody from "../SectionPopup/SectionPopup";
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null);
@@ -58,10 +59,9 @@ function App() {
       );
     };
 
-    const handleStorageChange = (
-      changes: { [key: string]: chrome.storage.StorageChange },
-      areaName: string
-    ) => {
+    const handleStorageChange = (changes: {
+      [key: string]: chrome.storage.StorageChange;
+    }) => {
       if (changes.newSection) {
         const newVal = changes.newSection.newValue;
         if (newVal === null) return;
@@ -127,6 +127,11 @@ function App() {
     setNewSection(null);
   };
 
+  const handleDeleteSelectedSection = () => {
+    setSections(sections.filter((s) => s !== selectedSection));
+    setSelectedSection(null);
+  };
+
   const handleCancelNewSection = () => {
     setNewSection(null);
     chrome.storage.local.set({ newSection: null });
@@ -163,7 +168,18 @@ function App() {
       case ModalPreset.HidePfpInfo:
         return {
           title: "Info: Hide Profile Picture",
-          body: "Hides your profile picture."
+          body: "Hides your profile picture.",
+        };
+      case ModalPreset.SectionPopup:
+        return {
+          title: selectedSection!.code,
+          body: <SectionInfoBody selectedSection={selectedSection!} />,
+          closeButtonText: "Close",
+          actionButtonText: "Remove",
+          actionHandler: handleDeleteSelectedSection,
+          cancelHandler: () => setSelectedSection(null),
+          alignment: ModalAlignment.Top,
+          hasTintedBg: false,
         };
       default:
         throw Error("ModalPreset not valid!");

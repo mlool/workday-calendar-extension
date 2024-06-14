@@ -47,7 +47,7 @@
 
 .modal-body {
     background: white;
-    max-height: 65%;
+    max-height: 200px;
     overflow-y: scroll;
     box-shadow: var(--default-shadow);
 }
@@ -78,7 +78,7 @@
     width: 100%;
 
     border: var(--base-1) 1px solid;
-    border-radius: var(--default-radius);
+    border-radius: var(--small-radius);
 
     font-size: 14px;
 
@@ -99,4 +99,9 @@
 .action-button {
     color: white;
     background: var(--main-accent-colour);
+}
+
+.action-button-destructive {
+    color: white;
+    background: var(--warning-colour);
 }
