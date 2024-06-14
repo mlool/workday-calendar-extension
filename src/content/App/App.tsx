@@ -50,6 +50,7 @@ function App() {
     ) => {
       if (changes.newSection) {
         const newVal = changes.newSection.newValue
+        if (newVal === null) return;
         setNewSection(newVal);
         if (newVal.term !== Term.winterFull) {
           //Don't set the term to WF, just keep the term to what is selected
@@ -114,6 +115,11 @@ function App() {
     setNewSection(null);
   }
 
+  const handleCancelNewSection = () => {
+    setNewSection(null);
+    chrome.storage.local.set({ "newSection": null })
+  }
+
   const handleClearWorklist = () => {
     const updatedSections = sections.filter(
       (x) => x.worklistNumber !== currentWorklistNumber
@@ -146,7 +152,7 @@ function App() {
             sectionConflict={sectionConflict}
             handleAddNewSection={handleAddNewSection}
             handleClearWorklist={handleClearWorklist}
-            handleCancel={() => setNewSection(null)}
+            handleCancel={handleCancelNewSection}
           />
         </div>
       ) : (
