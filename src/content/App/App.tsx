@@ -1,4 +1,4 @@
-import { Reducer, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import CalendarContainer from "../CalendarContainer/CalendarContainer";
 import { ISectionData, Term, Views } from "./App.types";
@@ -10,14 +10,7 @@ import {
   ColorTheme,
   getNewSectionColor,
 } from "../../helpers/courseColors";
-import {
-  ModalAction,
-  ModalAlignment,
-  ModalConfig,
-  ModalLayer,
-  ModalPreset,
-} from "../ModalLayer";
-import SectionInfoBody from "../SectionPopup/SectionInfoBody";
+import { ModalLayer } from "../ModalLayer";
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null);
@@ -145,51 +138,12 @@ function App() {
     setSelectedSection(null);
   };
 
-  const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
-    conf: ModalConfig | null,
-    action: ModalAction
-  ): ModalConfig | null => {
-    switch (action.preset) {
-      case ModalPreset.CLEAR:
-        return null;
-      case ModalPreset.ConfirmClearWorklist:
-        return {
-          title: "Confirm Clear Worklist",
-          body: `Clearing the worklist will remove all sections from both terms under worklist ${currentWorklistNumber}. Are you sure you want to continue?`,
-          closeButtonText: "Cancel",
-          actionButtonText: "Confirm",
-          actionHandler: handleClearWorklist,
-        };
-      case ModalPreset.AutofillSettingInfo:
-        return {
-          title: "Info: Enable Autofill",
-          body: 'Autofills "Find Course Sections".',
-        };
-      case ModalPreset.HidePfpInfo:
-        return {
-          title: "Info: Hide Profile Picture",
-          body: "Hides your profile picture.",
-        };
-      case ModalPreset.SectionPopup:
-        const sectionData: ISectionData = action.additionalData as ISectionData;
-        return {
-          title: sectionData.code,
-          body: <SectionInfoBody selectedSection={sectionData} />,
-          closeButtonText: "Close",
-          actionButtonText: "Remove",
-          actionHandler: handleDeleteSelectedSection,
-          cancelHandler: () => setSelectedSection(null),
-          alignment: ModalAlignment.Top,
-          hasTintedBg: false,
-        };
-      default:
-        throw Error("ModalPreset not valid!");
-    }
-  };
-
   return (
     <ModalLayer
-      reducer={modalReducer}
+      currentWorklistNumber={currentWorklistNumber}
+      handleClearWorklist={handleClearWorklist}
+      handleDeleteSelectedSection={handleDeleteSelectedSection}
+      setSelectedSection={setSelectedSection}
       children={
         <div className="App">
           <TopBar currentView={currentView} setCurrentView={setCurrentView} />
