@@ -26,28 +26,30 @@ chrome.action.onClicked.addListener((tab) => {
   }
 });
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  (details) => {
-    // Access the existing cookies
-    const existingCookies = chrome.cookies.getAll({ url: details.url });
-
-    // Construct the Cookie header string
-    let cookieHeader = "";
-    existingCookies.then((cookies) => {
-      for (const cookie of cookies) {
-        cookieHeader += `${cookie.name}=${cookie.value}; `;
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    addRules: [{
+      id: 1,
+      priority: 1,
+      action: {
+        type: chrome.declarativeNetRequest.RuleActionType.MODIFY_HEADERS,
+        requestHeaders: [{
+          header: "Cookie",
+          operation: chrome.declarativeNetRequest.HeaderOperation.SET,
+          value: "name=value; another_name=another_value;"
+        }]
+      },
+      condition: {
+        urlFilter: "*",
+        resourceTypes: [
+          chrome.declarativeNetRequest.ResourceType.MAIN_FRAME,
+          chrome.declarativeNetRequest.ResourceType.SUB_FRAME,
+          chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
+        ]
       }
+    }],
+    removeRuleIds: [1]
+  });
+});
 
-      let headers = details.requestHeaders || [];
-
-      // Modify the request headers
-      headers.push({ name: "Cookie", value: cookieHeader.trim() });
-
-      // Allow the modified request to proceed
-      return { cancel: false };
-    });
-  },
-  { urls: ["<all_urls>"] },
-  ["blocking", "extraHeaders", "requestHeaders"]
-);
 export {};
