@@ -47,7 +47,7 @@
 
 .modal-body {
     background: white;
-    max-height: 200px;
+    max-height: 220px;
     overflow-y: scroll;
     box-shadow: var(--default-shadow);
 }

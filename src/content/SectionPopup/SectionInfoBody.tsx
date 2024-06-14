@@ -31,7 +31,7 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
   }, [selectedSection?.code]);
 
   return (
-    <div>
+    <div className="section-info-body">
       {selectedSection?.courseID && (
         <a
           href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection?.courseID}.htmld`}
