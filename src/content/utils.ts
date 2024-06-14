@@ -57,17 +57,19 @@ export async function findCourseInfo(code: string) {
         const name = path["title"]["instances"][0]["text"];
         const term = path["detailResultFields"][0]["instances"][0]["text"];
         const id = path["title"]["instances"][0]["instanceId"];
+        console.log(path)
+        console.log(term)
 
         let sectionDetailsArr: string[] = [];
         for (const item of path["detailResultFields"][0]["instances"]) {
           sectionDetailsArr.push(item["text"]);
         }
-
+        console.log(sectionDetailsArr)
         const newSection: ISectionData = {
           code: code,
           name: name.slice(name.indexOf(" - ") + 3),
           sectionDetails: parseSectionDetails(sectionDetailsArr),
-          term: getTermFromSectionDetailsString(term),
+          term: getTermFromSectionDetailsString(sectionDetailsArr),
           worklistNumber: 0,
           color: defaultColorList[0],
           courseID: id.split("$")[1],
@@ -269,16 +271,17 @@ const convertTo24HourFormat = (time: string): string => {
 };
 
 const getTermFromSectionDetailsString = (
-  sectionDetailsTextsStr: string
+  sectionDetailsArray: string[]
 ): Term => {
   //If the string includes 2024, check if it includes 2025 also, if it does then it is both W1 and W2, if only 2024, W1, else W2
   //@TODO: In future this also needs to work for summer terms. Perhaps switch from year based to month based to work for every year
-  if (sectionDetailsTextsStr.includes("2024")) {
-    if (sectionDetailsTextsStr.includes("2025")) {
-      return Term.winterFull;
-    }
-    return Term.winterOne;
-  } else {
-    return Term.winterTwo;
-  }
+  let includes2024 = false
+  let includes2025 = false
+  sectionDetailsArray.forEach((detail) => {
+    includes2024 = includes2024 || detail.includes("2024")
+    includes2025 = includes2025 || detail.includes("2025")
+  })
+  if (includes2024 && includes2025) return Term.winterFull;
+  if (includes2024) return Term.winterOne;
+  return Term.winterTwo;
 };
