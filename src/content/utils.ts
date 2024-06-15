@@ -57,14 +57,11 @@ export async function findCourseInfo(code: string) {
         const name = path["title"]["instances"][0]["text"];
         const term = path["detailResultFields"][0]["instances"][0]["text"];
         const id = path["title"]["instances"][0]["instanceId"];
-        console.log(path)
-        console.log(term)
 
         let sectionDetailsArr: string[] = [];
         for (const item of path["detailResultFields"][0]["instances"]) {
           sectionDetailsArr.push(item["text"]);
         }
-        console.log(sectionDetailsArr)
         const newSection: ISectionData = {
           code: code,
           name: name.slice(name.indexOf(" - ") + 3),
