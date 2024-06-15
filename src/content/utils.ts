@@ -57,14 +57,11 @@ export async function findCourseInfo(code: string) {
         const name = path["title"]["instances"][0]["text"];
         const term = path["detailResultFields"][0]["instances"][0]["text"];
         const id = path["title"]["instances"][0]["instanceId"];
-        console.log(path)
-        console.log(term)
 
         let sectionDetailsArr: string[] = [];
         for (const item of path["detailResultFields"][0]["instances"]) {
           sectionDetailsArr.push(item["text"]);
         }
-        console.log(sectionDetailsArr)
         const newSection: ISectionData = {
           code: code,
           name: name.slice(name.indexOf(" - ") + 3),
@@ -250,8 +247,10 @@ export async function findCourseId(name: string) {
 }
 
 export function isCourseFormatted(courseName: string) {
-  const regex = /^[A-Z]{3}_V [0-9]+-[0-9]+$/;
-  return regex.test(courseName);
+  const regexV = /^[A-Z]{3}_V [0-9]+-[0-9]+$/;
+  const regexO = /^[A-Z]{3}_O [0-9]+-[0-9]+$/;
+
+  return regexV.test(courseName) || regexO.test(courseName);
 }
 
 // Convert times from 12-hour format to 24-hour format

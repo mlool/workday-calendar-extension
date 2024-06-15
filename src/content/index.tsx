@@ -525,7 +525,6 @@ async function handleCopySavedScheduleButtonClick(
 
     tableData.push(rowData);
   });
-  console.log(tableData);
   const button = document.querySelector(
     '.NewSectionButton[title="Add Section"]'
   ) as HTMLElement;
