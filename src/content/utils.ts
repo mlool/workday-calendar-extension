@@ -247,8 +247,10 @@ export async function findCourseId(name: string) {
 }
 
 export function isCourseFormatted(courseName: string) {
-  const regex = /^[A-Z]{3}_V [0-9]+-[0-9]+$/;
-  return regex.test(courseName);
+  const regexV = /^[A-Z]{3}_V [0-9]+-[0-9]+$/;
+  const regexO = /^[A-Z]{3}_O [0-9]+-[0-9]+$/;
+
+  return regexV.test(courseName) || regexO.test(courseName);
 }
 
 // Convert times from 12-hour format to 24-hour format
