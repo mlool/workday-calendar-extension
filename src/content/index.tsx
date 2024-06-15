@@ -542,7 +542,7 @@ async function handleCopySavedScheduleButtonClick(
     }
   }
 
-  if (button) {
+  if ( button) {
     setTimeout(function() {
       button.click();
     }, 500);  
