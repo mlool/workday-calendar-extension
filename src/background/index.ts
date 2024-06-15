@@ -30,7 +30,7 @@ chrome.runtime.onInstalled.addListener(() => {
   (async () => {
     // Get existing cookies as a promise
     const cookiePromise = new Promise<string | undefined>((resolve) => {
-      chrome.cookies.getAll({ url: "<all_urls>" }, (cookies) => {
+      chrome.cookies.getAll({ url: "https://*.myworkday.com/*" }, (cookies) => {
         if (!cookies) {
           resolve(undefined); // Handle case where no cookies exist
           return;
