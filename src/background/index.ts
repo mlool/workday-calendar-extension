@@ -36,13 +36,13 @@ chrome.runtime.onInstalled.addListener(() => {
           return;
         }
 
-        let cookieHeader = "";
-        for (const cookie of cookies) {
-          cookieHeader += `${cookie.name}=${cookie.value}; `;
-        }
-        resolve(cookieHeader.trim());
-      });
+      let cookieHeader = "";
+      for (const cookie of cookies) {
+        cookieHeader += `${cookie.name}=${cookie.value}; `;
+      }
+      resolve(cookieHeader.trim());
     });
+  });
 
     try {
       // Wait for the cookie promise to resolve
