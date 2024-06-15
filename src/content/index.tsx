@@ -491,6 +491,8 @@ async function handleCopySavedScheduleButtonClick(
   element: Element,
   counter: number
 ): Promise<void> {
+  // Ensure the drawer opens when a button is clicked
+  toggleContainer(true);
   const tables = document.querySelectorAll('[data-automation-id="table"]');
 
   // Check if table exists
@@ -540,6 +542,9 @@ async function handleCopySavedScheduleButtonClick(
     }
   }
 
-  // Ensure the drawer opens when a button is clicked
-  toggleContainer(true);
+  if (button) {
+    setTimeout(function() {
+      button.click();
+    }, 500);  
+  }
 }
