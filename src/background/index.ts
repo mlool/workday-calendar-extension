@@ -26,26 +26,31 @@ chrome.action.onClicked.addListener((tab) => {
   }
 });
 
-chrome.runtime.onInstalled.addListener(() => {
-  (async () => {
-    // Get existing cookies as a promise
-    const cookiePromise = new Promise<string | undefined>((resolve) => {
-      chrome.cookies.getAll({ url: "https://*.myworkday.com/*" }, (cookies) => {
-        if (!cookies) {
-          resolve(undefined); // Handle case where no cookies exist
-          return;
-        }
+(async () => {
+  // Get existing cookies
+  const cookiePromise = new Promise<string | undefined>((resolve) => {
+    chrome.cookies.getAll({ url: "https://*.myworkday.com/*" }, (cookies) => {
+      if (!cookies) {
+        resolve(undefined);
+        return;
+      }
 
-        let cookieHeader = "";
-        for (const cookie of cookies) {
-          cookieHeader += `${cookie.name}=${cookie.value}; `;
-        }
-        resolve(cookieHeader.trim());
-      });
+      let cookieHeader = "";
+      for (const cookie of cookies) {
+        cookieHeader += `${cookie.name}=${cookie.value}; `;
+      }
+      resolve(cookieHeader.trim());
     });
+  });
 
+  try {
     // Wait for the cookie promise to resolve
     const cookieHeader = await cookiePromise;
+
+    if (!cookieHeader) {
+      // Handle case where no cookies were retrieved (optional)
+      return;
+    }
 
     // Update dynamic rules with the retrieved cookie header
     chrome.declarativeNetRequest.updateDynamicRules({
@@ -57,21 +62,23 @@ chrome.runtime.onInstalled.addListener(() => {
           requestHeaders: [{
             header: "Cookie",
             operation: chrome.declarativeNetRequest.HeaderOperation.SET,
-            value: cookieHeader 
+            value: cookieHeader
           }]
         },
         condition: {
-          urlFilter: "*",
+          urlFilter: "https://*.myworkday.com/*", 
           resourceTypes: [
             chrome.declarativeNetRequest.ResourceType.MAIN_FRAME,
             chrome.declarativeNetRequest.ResourceType.SUB_FRAME,
-            chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
+            chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST
           ]
         }
-      }],
-      removeRuleIds: [1]
+      }]
     });
-  })();
-});
+  } catch (error) {
+    console.error("Error retrieving cookies:", error);
+  }
+})();
+
 
 export {};
