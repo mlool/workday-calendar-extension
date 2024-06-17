@@ -36,7 +36,7 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
         <a
           href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection?.courseID}.htmld`}
         >
-          <div className="SectionPopupTitle">{selectedSection?.code}</div>
+          <div className="SectionPopupTitle">{"<< View Course Page >>"}</div>
         </a>
       )}
       <hr />
