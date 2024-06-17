@@ -148,6 +148,7 @@ function App() {
 
           <Form
             currentWorklistNumber={currentWorklistNumber}
+            sections={sections}
             newSection={newSection}
             sectionConflict={sectionConflict}
             handleAddNewSection={handleAddNewSection}

@@ -38,6 +38,19 @@
     margin: 10px 10px 2px 10px;
 }
 
+.SyncWorklistButton {
+    width: 280px;
+    padding: 7px 20px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #007bff;;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin: 10px 10px 2px 10px;
+}
+
 .NewSectionInfo {
     margin-bottom: 5px;
     color: black;
@@ -52,5 +65,13 @@
 }
 
 .NewSectionButton:disabled {
+    background-color: #c4c4c4;
+}
+
+.SyncWorklistButton:hover {
+    background-color: #0068d6;
+}
+
+.SyncWorklistButton:disabled {
     background-color: #c4c4c4;
 }

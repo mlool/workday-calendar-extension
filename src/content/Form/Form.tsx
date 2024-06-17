@@ -1,9 +1,11 @@
 import { ISectionData } from "../App/App.types";
 import "./Form.css";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import { syncSavedSchedules } from "../../helpers/syncSavedSchedules";
 import { useState } from "react";
 
 interface IProps {
+  sections: ISectionData[];
   newSection: ISectionData | null;
   sectionConflict: boolean;
   currentWorklistNumber: number;
@@ -14,6 +16,14 @@ interface IProps {
 
 const Form = (props: IProps) => {
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const [showSyncConfirmation, setShowSyncConfirmation] = useState<boolean>(false);
+
+  let filteredSections:ISectionData[] = []
+  for (const section of props.sections) {
+    if(section.worklistNumber == props.currentWorklistNumber) {
+      filteredSections.push(section)
+    }
+  }
 
   return (
     <div className="NewSectionForm">
@@ -26,6 +36,21 @@ const Form = (props: IProps) => {
             props.handleClearWorklist();
             setShowConfirmation(false);
           }}
+        />
+      )}
+      {showSyncConfirmation && (
+        <ConfirmationModal
+          title="Select Saved Schedule Name"
+          message={`Enter the name of the saved schedule you would like to create:`}
+          showTextField={true}
+          onCancel={() => setShowSyncConfirmation(false)}
+          onConfirm={(text?: string, sections?: ISectionData[]) => {
+            if (text && sections) {
+                syncSavedSchedules(text, filteredSections);
+            }
+            setShowSyncConfirmation(false);
+        }}
+          sections={filteredSections}
         />
       )}
       {props.newSection && (
@@ -52,6 +77,14 @@ const Form = (props: IProps) => {
           Add Section
         </button>
       </div>
+      <button
+        className="SyncWorklistButton"
+        title="Sync Worklist"
+        disabled={filteredSections.length == 0}
+        onClick={() => setShowSyncConfirmation(true)}
+      >
+        Sync Worklist To Saved Schedules
+      </button>
       <div
         className="ClearWorklistButton"
         title="Clear Worklist"
