@@ -1,48 +1,48 @@
-import { useEffect, useState } from "react";
-import { IGradesAPIData, getGradesData, getGradesUrl } from "./GradesHelper";
-import { ISectionData } from "../../App/App.types";
-import "./GradesComponent.css";
-import "../PopupComponent.css";
+import { useEffect, useState } from "react"
+import { IGradesAPIData, getGradesData, getGradesUrl } from "./GradesHelper"
+import { ISectionData } from "../../App/App.types"
+import "./GradesComponent.css"
+import "../PopupComponent.css"
 
 interface IProps {
-  selectedSection: ISectionData;
+  selectedSection: ISectionData
 }
 
 const GradesComponent = ({ selectedSection }: IProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [gradesData, setGradesData] = useState<IGradesAPIData>();
-  const [isError, setIsError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [gradesData, setGradesData] = useState<IGradesAPIData>()
+  const [isError, setIsError] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchGrades = async () => {
-      setIsLoading(true);
-      setIsError(false);
+      setIsLoading(true)
+      setIsError(false)
       try {
-        let data = await getGradesData(selectedSection);
-        setGradesData(data);
+        const data = await getGradesData(selectedSection)
+        setGradesData(data)
       } catch (error) {
-        setIsError(true);
+        setIsError(true)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
-    fetchGrades();
-  }, [selectedSection]);
+    }
+    fetchGrades()
+  }, [selectedSection])
 
-  const gradesURL = getGradesUrl(selectedSection);
+  const gradesURL = getGradesUrl(selectedSection)
 
   const getClassName = (average: number | undefined) => {
     if (!average) return "AverageContainer unavailable"
     if (average < 60) {
-      return "AverageContainer VeryLowAverage";
+      return "AverageContainer VeryLowAverage"
     } else if (average < 70) {
-      return "AverageContainer LowAverage";
+      return "AverageContainer LowAverage"
     } else if (average < 80) {
-      return "AverageContainer MidAverage";
+      return "AverageContainer MidAverage"
     } else if (average < 90) {
-      return "AverageContainer HighAverage";
+      return "AverageContainer HighAverage"
     } else {
-      return "AverageContainer VeryHighAverage";
+      return "AverageContainer VeryHighAverage"
     }
   }
 
@@ -57,8 +57,13 @@ const GradesComponent = ({ selectedSection }: IProps) => {
         <>
           <div className="GradesContainer">
             <div>Average (5 Years):</div>
-            <div className={getClassName(gradesData?.averageFiveYears)} onClick={() => window.open(gradesURL, "_blank")}>
-                {gradesData?.average? gradesData?.average.toFixed(2): "unavailable"}
+            <div
+              className={getClassName(gradesData?.averageFiveYears)}
+              onClick={() => window.open(gradesURL, "_blank")}
+            >
+              {gradesData?.average
+                ? gradesData?.average.toFixed(2)
+                : "unavailable"}
             </div>
             {/* <table>
               <tr>
@@ -90,7 +95,7 @@ const GradesComponent = ({ selectedSection }: IProps) => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GradesComponent;
+export default GradesComponent

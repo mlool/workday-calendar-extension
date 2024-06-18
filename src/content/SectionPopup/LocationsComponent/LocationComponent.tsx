@@ -1,29 +1,31 @@
-import "../PopupComponent.css";
+import "../PopupComponent.css"
 
 interface IProps {
-  locations: string[];
+  locations: string[]
 }
 
 const LocationComponent = ({ locations }: IProps) => {
-  const locationsArr = locations.filter((item, index) => locations.indexOf(item) === index);
+  const locationsArr = locations.filter(
+    (item, index) => locations.indexOf(item) === index
+  )
 
   const uniqueLocations = new Set(
     locationsArr.map((location) => {
-      const parts = location.split(/[- ]/) || "";
+      const parts = location.split(/[- ]/) || ""
       if (parts.length > 1) {
-        const loca = parts[0] + "-" + parts.slice(-1)[0];
+        const loca = parts[0] + "-" + parts.slice(-1)[0]
         return {
           location: location,
           link: `https://learningspaces.ubc.ca/classrooms/${loca}`,
-        };
+        }
       } else {
         return {
           location: location,
           link: "",
-        };
+        }
       }
     })
-  );
+  )
 
   return (
     <div className="ComponentContainer">
@@ -36,7 +38,7 @@ const LocationComponent = ({ locations }: IProps) => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default LocationComponent;
+export default LocationComponent

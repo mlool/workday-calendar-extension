@@ -1,17 +1,17 @@
-import { ISectionData } from "../App/App.types";
-import "./Form.css";
-import { useContext } from "react";
-import { ModalDispatchContext, ModalPreset } from "../ModalLayer";
+import { ISectionData } from "../App/App.types"
+import "./Form.css"
+import { useContext } from "react"
+import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 
 interface IProps {
-  newSection: ISectionData | null;
-  sectionConflict: boolean;
-  handleAddNewSection: () => void;
-  handleCancel: () => void;
+  newSection: ISectionData | null
+  sectionConflict: boolean
+  handleAddNewSection: () => void
+  handleCancel: () => void
 }
 
 const Form = (props: IProps) => {
-  const dispatchModal = useContext(ModalDispatchContext);
+  const dispatchModal = useContext(ModalDispatchContext)
 
   return (
     <div className="NewSectionForm">
@@ -49,7 +49,7 @@ const Form = (props: IProps) => {
         Clear Worklist
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Form;
+export default Form

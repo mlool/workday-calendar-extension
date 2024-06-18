@@ -1,7 +1,7 @@
-import "../PopupComponent.css";
+import "../PopupComponent.css"
 
 interface IProps {
-  instructors: string[];
+  instructors: string[]
 }
 
 const InstructorComponent = ({ instructors }: IProps) => {
@@ -20,7 +20,7 @@ const InstructorComponent = ({ instructors }: IProps) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default InstructorComponent;
+export default InstructorComponent
