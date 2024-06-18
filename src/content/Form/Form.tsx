@@ -1,33 +1,20 @@
 import { ISectionData } from "../App/App.types";
 import "./Form.css";
-import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
-import { useState } from "react";
+import { useContext } from "react";
+import { ModalDispatchContext, ModalPreset } from "../ModalLayer";
 
 interface IProps {
   newSection: ISectionData | null;
   sectionConflict: boolean;
-  currentWorklistNumber: number;
   handleAddNewSection: () => void;
-  handleClearWorklist: () => void;
   handleCancel: () => void;
 }
 
 const Form = (props: IProps) => {
-  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  const dispatchModal = useContext(ModalDispatchContext);
 
   return (
     <div className="NewSectionForm">
-      {showConfirmation && (
-        <ConfirmationModal
-          title="Confirm Clear Worklist"
-          message={`Clearing the worklist will remove all sections from both terms under worklist ${props.currentWorklistNumber}. Are you sure you want to continue?`}
-          onCancel={() => setShowConfirmation(false)}
-          onConfirm={() => {
-            props.handleClearWorklist();
-            setShowConfirmation(false);
-          }}
-        />
-      )}
       {props.newSection && (
         <div className="NewSectionInfo">
           <div className="NewSectionCode">{props.newSection.code}</div>
@@ -55,7 +42,9 @@ const Form = (props: IProps) => {
       <div
         className="ClearWorklistButton"
         title="Clear Worklist"
-        onClick={() => setShowConfirmation(true)}
+        onClick={() =>
+          dispatchModal({ preset: ModalPreset.ConfirmClearWorklist })
+        }
       >
         Clear Worklist
       </div>
