@@ -1,34 +1,34 @@
-import { ISectionData, SupplementaryData } from "../App/App.types";
-import { useEffect, useState } from "react";
-import "./SectionInfoBody.css";
-import GradesComponent from "./GradesComponent/GradesComponent";
-import InstructorComponent from "./InstructorComponent/InstructorComponent";
-import LocationComponent from "./LocationsComponent/LocationComponent";
-import { findSupplementaryData } from "../utils";
+import { ISectionData, SupplementaryData } from "../App/App.types"
+import { useEffect, useState } from "react"
+import "./SectionInfoBody.css"
+import GradesComponent from "./GradesComponent/GradesComponent"
+import InstructorComponent from "./InstructorComponent/InstructorComponent"
+import LocationComponent from "./LocationsComponent/LocationComponent"
+import { findSupplementaryData } from "../utils"
 
 interface SectionInfoProps {
-  selectedSection: ISectionData;
+  selectedSection: ISectionData
 }
 
 const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
   const [supplementaryData, setSupplementaryData] =
-    useState<SupplementaryData | null>(null);
+    useState<SupplementaryData | null>(null)
 
   useEffect(() => {
     if (selectedSection?.code) {
-      setIsLoading(true);
+      setIsLoading(true)
       findSupplementaryData(selectedSection.code)
         .then((response) => {
-          setSupplementaryData(response);
+          setSupplementaryData(response)
         })
         .catch((error) => {
-          console.error("Error finding supplementary data:", error);
+          console.error("Error finding supplementary data:", error)
         })
-        .finally(() => setIsLoading(false));
+        .finally(() => setIsLoading(false))
     }
-    setIsLoading(false);
-  }, [selectedSection?.code]);
+    setIsLoading(false)
+  }, [selectedSection?.code])
 
   return (
     <div className="section-info-body">
@@ -51,7 +51,7 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
       )}
       <GradesComponent selectedSection={selectedSection} />
     </div>
-  );
-};
+  )
+}
 
-export default SectionInfoBody;
+export default SectionInfoBody

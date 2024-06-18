@@ -1,16 +1,16 @@
-import { ColorTheme } from "../../helpers/courseColors";
-import "./Settings.css";
-import { ISectionData } from "../App/App.types";
-import Tools from "./Tools/Tools";
-import Theme from "./Theme/Theme";
-import ExportImport from "./ExportImport/ExportImport";
-import Contact from "./Contact/Contact";
+import { ColorTheme } from "../../helpers/courseColors"
+import "./Settings.css"
+import { ISectionData } from "../App/App.types"
+import Tools from "./Tools/Tools"
+import Theme from "./Theme/Theme"
+import ExportImport from "./ExportImport/ExportImport"
+import Contact from "./Contact/Contact"
 
 interface ISettingsProps {
-  colorTheme: ColorTheme;
-  sections: ISectionData[];
-  setColorTheme: (theme: ColorTheme) => void;
-  setSections: (data: ISectionData[]) => void;
+  colorTheme: ColorTheme
+  sections: ISectionData[]
+  setColorTheme: (theme: ColorTheme) => void
+  setSections: (data: ISectionData[]) => void
 }
 
 const Settings = ({
@@ -28,7 +28,7 @@ const Settings = ({
         <Contact />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

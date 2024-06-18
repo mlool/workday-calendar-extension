@@ -1,29 +1,28 @@
 .CalendarContainer {
-    /* height: 100%; */
-    /* overflow: hidden; */
+  /* height: 100%; */
+  /* overflow: hidden; */
   flex-grow: 1;
-
 }
 
 .HeaderSectionContainer {
-    display: flex;
-    justify-content: space-between;
-    padding: 3px;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
 }
 
 .HeaderItemContainer {
-    display: flex;
+  display: flex;
 }
 
 .HeaderButton {
-    margin-right: 3px;
-    cursor: pointer;
-    background-color: #f2fcff;
-    font-size: 12px;
-    border-radius: 3px;
-    padding: 3px 5px
+  margin-right: 3px;
+  cursor: pointer;
+  background-color: #f2fcff;
+  font-size: 12px;
+  border-radius: 3px;
+  padding: 3px 5px;
 }
 
 .HeaderButton:hover {
-    background-color: #9ce8ff;
+  background-color: #9ce8ff;
 }
