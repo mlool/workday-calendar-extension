@@ -1,7 +1,7 @@
 import { ISectionData } from "../App/App.types";
 import "./Form.css";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
-import { syncSavedSchedules } from "../../helpers/syncSavedSchedules";
+import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules";
 import { useState } from "react";
 
 interface IProps {
@@ -41,12 +41,11 @@ const Form = (props: IProps) => {
       {showSyncConfirmation && (
         <ConfirmationModal
           title="Select Saved Schedule Name"
-          message={`Enter the name of the saved schedule you would like to create:`}
-          showTextField={true}
+          message={`Please note that you will need to have an existing saved schedule made in Workday for both terms. If you do not have one made, go back and make an empty saved schedule with a 'dummy' course. You will have to do this twice, once for term 1 and once for term 2. Click confirm to continue`}
           onCancel={() => setShowSyncConfirmation(false)}
-          onConfirm={(text?: string, sections?: ISectionData[]) => {
-            if (text && sections) {
-                syncSavedSchedules(text, filteredSections);
+          onConfirm={(sections?: ISectionData[]) => {
+            if (sections) {
+                SyncSavedSchedules(filteredSections);
             }
             setShowSyncConfirmation(false);
         }}
