@@ -2,8 +2,6 @@ import { extractSection, findCourseInfo } from "./utils"
 import ReactDOM from "react-dom"
 import "../index.css"
 import App from "./App/App"
-import { time } from "console"
-import { click } from "@testing-library/user-event/dist/click"
 
 // Function to apply visibility based on stored settings
 function applyVisibility(hide: boolean): void {
@@ -79,7 +77,7 @@ function waitForElm(selector: string, index: number) {
     if (existingElements.length > index) {
       return resolve(existingElements[index])
     }
-    const observer = new MutationObserver((mutations) => {
+    const observer = new MutationObserver(() => {
       const existingElements = document.querySelectorAll(selector)
       if (existingElements.length > index) {
         observer.disconnect()
@@ -127,7 +125,7 @@ async function startAutoFill() {
     .then(() => console.log("Autofilling academic level complete"))
 }
 
-let isAutofillEnabled = localStorage.getItem("autofillEnabled") === "true"
+const isAutofillEnabled = localStorage.getItem("autofillEnabled") === "true"
 let hasAlreadyAutofilled = false
 
 // Observe the DOM for the "Find Course Sections" popup
@@ -239,7 +237,7 @@ function observeDOMAndAddButtons(): void {
   }
 
   // Callback function for the mutation observer
-  const callback: MutationCallback = (mutationsList, observer) => {
+  const callback: MutationCallback = (mutationsList) => {
     mutationsList.forEach((mutation) => {
       if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach((node) => {
@@ -317,7 +315,7 @@ function toggleContainer(forceOpen = false) {
 
 // Listen for messages from background script
 // to know when user clicks extension
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
   if (message.toggleContainer) {
     const reactContainer = document.querySelector("#react-container")
     if (!reactContainer) return
@@ -395,7 +393,7 @@ function observeDOMAndAddCopySavedScheduleButton(): void {
     attributes: false,
   }
 
-  const callback: MutationCallback = (mutationsList, observer) => {
+  const callback: MutationCallback = (mutationsList) => {
     mutationsList.forEach((mutation) => {
       if (mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach((node) => {
@@ -510,12 +508,12 @@ async function handleCopySavedScheduleButtonClick(
 
   const table = tables[counter]
 
-  const tableData: any[] = []
+  const tableData: string[][] = []
 
   const tableRows = table.querySelectorAll("tr")
 
   tableRows.forEach((row) => {
-    const rowData: any[] = []
+    const rowData: string[] = []
 
     const rowCells = row.querySelectorAll("td, th")
 

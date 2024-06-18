@@ -30,6 +30,7 @@ const ExportCalendarPopup = ({
             <div>Worklist: </div>
             {[0, 1, 2, 3].map((worklist) => (
               <div
+                key={worklist}
                 className="CalendarPopupButton"
                 style={
                   selectedWorklist === worklist

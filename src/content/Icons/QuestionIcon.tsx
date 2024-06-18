@@ -1,9 +1,8 @@
 interface IProps {
-  color: string
   size: number
 }
 
-const QuestionIcon = ({ color, size }: IProps) => {
+const QuestionIcon = ({ size }: IProps) => {
   return (
     <svg
       width={`${size}px`}

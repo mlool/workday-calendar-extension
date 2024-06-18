@@ -42,7 +42,7 @@ const CalendarContainer = ({
     }
   }
 
-  const canSwitchTerms = (term: Term): boolean => {
+  const canSwitchTerms = (): boolean => {
     let rsf = true
     if (newSection !== null) {
       rsf = false //False if we have a section selected
@@ -72,6 +72,7 @@ const CalendarContainer = ({
         <div style={{ padding: "3px 5px" }}>Worklists: </div>
         {WORKLISTCOUNT.map((num) => (
           <div
+          key={num}
             className="HeaderButton"
             id={`work${num}`}
             onClick={() => setCurrentWorklistNumber(num)}
@@ -85,9 +86,10 @@ const CalendarContainer = ({
         <div style={{ padding: "3px 5px" }}>Terms: </div>
         {TERMS.map((term) => (
           <div
+          key={term}
             className="HeaderButton"
             id={`term_${Term_String_Map[term]}`}
-            onClick={() => (canSwitchTerms(term) ? setCurrentTerm(term) : null)}
+            onClick={() => (canSwitchTerms() ? setCurrentTerm(term) : null)}
             style={{
               backgroundColor: getBackgroundColour(term),
               color: getFontColor(term),

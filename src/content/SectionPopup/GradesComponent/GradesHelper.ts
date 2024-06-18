@@ -13,7 +13,7 @@ export const getGradesUrl = (section: ISectionData): string => {
   const courseCode = section.code.split("_")[0]
   const courseNum = section.code.split(" ")[1].split("-")[0]
 
-  let url = `https://ubcgrades.com/statistics-by-course#${campus}-${courseCode}-${courseNum}`
+  const url = `https://ubcgrades.com/statistics-by-course#${campus}-${courseCode}-${courseNum}`
   return url
 }
 
@@ -25,8 +25,8 @@ export const getGradesData = async (
   const courseCode = section.code.split("_")[0]
   const courseNum = section.code.split(" ")[1].split("-")[0]
 
-  let reqURL = `https://ubcgrades.com//api/v3/course-statistics/${campus}/${courseCode}/${courseNum}`
-  let response = await fetch(reqURL)
+  const reqURL = `https://ubcgrades.com//api/v3/course-statistics/${campus}/${courseCode}/${courseNum}`
+  const response = await fetch(reqURL)
   if (response.ok) {
     const data = await response.json()
     return {

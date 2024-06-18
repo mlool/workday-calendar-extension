@@ -4483,6 +4483,11 @@ eslint-config-react-app@^7.0.1:
     eslint-plugin-react-hooks "^4.3.0"
     eslint-plugin-testing-library "^5.0.1"
 
+eslint-formatter-unix@^8.40.0:
+  version "8.40.0"
+  resolved "https://registry.yarnpkg.com/eslint-formatter-unix/-/eslint-formatter-unix-8.40.0.tgz#6d2cdeb54a83fb00e22395994d72767e22d15478"
+  integrity sha512-gfsmFZ/cb1MobrMfYl2IPFLZEz2tWQVO/tnmziNQdhWJMN85GfZD64dcPsEgaEoeVKgAtK6W9LWLlOxhJWZvDw==
+
 eslint-import-resolver-node@^0.3.9:
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/eslint-import-resolver-node/-/eslint-import-resolver-node-0.3.9.tgz#d4eaac52b8a2e7c3cd1903eb00f7e053356118ac"

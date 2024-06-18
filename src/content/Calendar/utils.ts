@@ -12,7 +12,7 @@ export const convertToMatrix = (
   setSectionConflict: (state: boolean) => void,
   currentTerm: Term
 ) => {
-  let matrixDict: { [id: string]: CellFormat[] } = {
+  const matrixDict: { [id: string]: CellFormat[] } = {
     Mon: [],
     Tue: [],
     Wed: [],
@@ -37,13 +37,13 @@ export const convertToMatrix = (
   }
 
   const pushEmptyCellToArrays = () => {
-    let keys = Object.keys(matrixDict)
+    const keys = Object.keys(matrixDict)
     keys.forEach((key) => {
       matrixDict[key].push(getEmptyCell())
     })
   }
 
-  let keys = Object.keys(matrixDict)
+  const keys = Object.keys(matrixDict)
   keys.forEach((key) => {
     matrixDict[key] = getEmptyCellArray()
   })
@@ -63,16 +63,16 @@ export const convertToMatrix = (
       if (details.term !== currentTerm) {
         return
       }
-      let [code, number] = section.code.split(" ")
+      const [code, number] = section.code.split(" ")
 
       const [startHour, startMinute] = details.startTime
         .split(":")
         .map((x) => +x)
       const [endHour, endMinute] = details.endTime.split(":").map((x) => +x)
 
-      let startIndex = (startHour - 7) * 2 + startMinute / 30
+      const startIndex = (startHour - 7) * 2 + startMinute / 30
       //Need to subtract 1 here or else we will fill in an extra cell. The diff between start index and end index needs to be # of blocks occupied - 1
-      let endIndex = (endHour - 7) * 2 + endMinute / 30 - 1
+      const endIndex = (endHour - 7) * 2 + endMinute / 30 - 1
 
       //If we don't have enough rows in matrix, keep adding empty rows until enough
       if (!matrixDict["Mon"][endIndex]) {
@@ -116,9 +116,9 @@ export const convertToMatrix = (
     const [startHour, startMinute] = details.startTime.split(":").map((x) => +x)
     const [endHour, endMinute] = details.endTime.split(":").map((x) => +x)
 
-    let startIndex = (startHour - 7) * 2 + startMinute / 30
+    const startIndex = (startHour - 7) * 2 + startMinute / 30
     //Need to subtract 1 here or else we will fill in an extra cell. The diff between start index and end index needs to be # of blocks occupied - 1
-    let endIndex = (endHour - 7) * 2 + endMinute / 30 - 1
+    const endIndex = (endHour - 7) * 2 + endMinute / 30 - 1
 
     //If we don't have enough rows in matrix, keep adding empty rows until enough
     if (!matrixDict["Mon"][endIndex]) {
@@ -149,6 +149,6 @@ export const getEndHour = (matrixDict: {
   [id: string]: CellFormat[]
 }): number => {
   //All the lengths should be the same, so we can just check Mon. If they are not the same, calendar looks off anyways so will need to fix it.
-  let slots = matrixDict["Mon"].length
+  const slots = matrixDict["Mon"].length
   return Math.ceil(slots / 2) + 7 - 1 // subtract 1 since we need to go up to this hour, not past it
 }

@@ -81,7 +81,7 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Info: Hide Profile Picture",
           body: "Hides your profile picture.",
         }
-      case ModalPreset.SectionPopup:
+      case ModalPreset.SectionPopup: {
         const sectionData: ISectionData = action.additionalData as ISectionData
         return {
           title: sectionData.code,
@@ -93,6 +93,7 @@ function ModalLayer(props: ModalLayerProps) {
           alignment: ModalAlignment.Top,
           hasTintedBg: false,
         }
+      }
       default:
         throw Error("ModalPreset not valid!")
     }

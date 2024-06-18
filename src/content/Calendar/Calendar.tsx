@@ -21,10 +21,8 @@ const Calendar = ({
   sections,
   newSection,
   currentWorklistNumber,
-  setSections,
   setSectionConflict,
   currentTerm,
-  selectedSection,
   setSelectedSection,
 }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
@@ -32,7 +30,7 @@ const Calendar = ({
   const calendarSections = sections.filter(
     (section) =>
       section.worklistNumber === currentWorklistNumber &&
-      (section.term === currentTerm || section.term == Term.winterFull)
+      (section.term === currentTerm || section.term === Term.winterFull)
   )
   const sectionsToRender = convertToMatrix(
     calendarSections,
@@ -41,7 +39,7 @@ const Calendar = ({
     currentTerm
   )
 
-  let times: string[] = []
+  const times: string[] = []
   for (let hour = 7; hour <= getEndHour(sectionsToRender); hour++) {
     times.push(`${hour}:00`)
     times.push(`${hour}:30`)

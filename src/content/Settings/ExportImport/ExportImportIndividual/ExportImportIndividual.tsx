@@ -3,8 +3,6 @@ import "../ExportImport.css"
 import { useState } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
-import { findCourseId } from "../../../utils"
-import InfoModal from "../../../InfoModal/InfoModal"
 
 interface IProps {
   sections: ISectionData[]
@@ -15,7 +13,6 @@ interface IProps {
 
 const ExportImportIndividual = ({
   sections,
-  setSections,
   setImportInProgress,
   handleSectionImport,
 }: IProps) => {

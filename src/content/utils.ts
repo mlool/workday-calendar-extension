@@ -3,7 +3,6 @@ import {
   SectionDetail,
   Term,
   ISectionData,
-  SectionType,
   SupplementaryData,
 } from "./App/App.types"
 
@@ -55,10 +54,10 @@ export async function findCourseInfo(code: string) {
       try {
         const path = data["children"][0]["listItems"][0]
         const name = path["title"]["instances"][0]["text"]
-        const term = path["detailResultFields"][0]["instances"][0]["text"]
+        // const term = path["detailResultFields"][0]["instances"][0]["text"]
         const id = path["title"]["instances"][0]["instanceId"]
 
-        let sectionDetailsArr: string[] = []
+        const sectionDetailsArr: string[] = []
         for (const item of path["detailResultFields"][0]["instances"]) {
           sectionDetailsArr.push(item["text"])
         }
@@ -103,7 +102,7 @@ export async function findSupplementaryData(code: string) {
         const path = data["children"][0]["listItems"][0]
         const instructors = path["detailResultFields"][2]["instances"]
 
-        let instructorsArr: string[] = [""]
+        const instructorsArr: string[] = [""]
         if (instructors) {
           for (const item of instructors) {
             instructorsArr.push(item["text"])
@@ -111,7 +110,7 @@ export async function findSupplementaryData(code: string) {
         }
         const locations = path["detailResultFields"][0]["instances"]
 
-        let locationsArr: string[] = [""]
+        const locationsArr: string[] = [""]
         if (locations) {
           for (const item of locations) {
             locationsArr.push(item["text"].split(" | ")[0])

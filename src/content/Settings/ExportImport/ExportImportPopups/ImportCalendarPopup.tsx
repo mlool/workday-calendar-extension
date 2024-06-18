@@ -12,7 +12,7 @@ interface IProps {
   ) => void
 }
 
-const ImportCalendarPopup = ({ onCancel, sections, handleImport }: IProps) => {
+const ImportCalendarPopup = ({ onCancel, handleImport }: IProps) => {
   const [selectedWorklist, setSelectedWorklist] = useState<number>(0)
   return (
     <div className="CalendarBackground">
@@ -29,6 +29,7 @@ const ImportCalendarPopup = ({ onCancel, sections, handleImport }: IProps) => {
             <div>Worklist: </div>
             {[0, 1, 2, 3].map((worklist) => (
               <div
+                key={worklist}
                 className="CalendarPopupButton"
                 style={
                   selectedWorklist === worklist

@@ -68,7 +68,7 @@ export const assignColors = (
   sectionsList: ISectionData[],
   theme: ColorTheme
 ): ISectionData[] => {
-  let newSectionsList: ISectionData[] = []
+  const newSectionsList: ISectionData[] = []
 
   sectionsList.forEach((section) => {
     section.color = getNewSectionColor(newSectionsList, section, theme)
@@ -83,35 +83,35 @@ export const getNewSectionColor = (
   addedSection: ISectionData,
   theme: ColorTheme
 ): string => {
-  let colorList = colorPalettes.get(theme) ?? defaultColorList
+  const colorList = colorPalettes.get(theme) ?? defaultColorList
 
   // Case for single colored themes
   if (colorList.length === 1) {
     return colorList[0]
   }
-  let releventSectionsList = sectionsList.filter(
+  const releventSectionsList = sectionsList.filter(
     (sec) =>
       sec.worklistNumber === addedSection.worklistNumber &&
       sec.term === addedSection.term
   )
 
-  let newCourseCode = getCourseCode(addedSection.code)
+  const newCourseCode = getCourseCode(addedSection.code)
 
-  let existingSection = releventSectionsList.find(
+  const existingSection = releventSectionsList.find(
     (x) => x.code.includes(newCourseCode) && x.color
   )
   if (existingSection) {
     return existingSection.color
   }
 
-  let assignedColors = Array.from(
+  const assignedColors = Array.from(
     new Set(
       releventSectionsList
         .filter((x) => x.color != null)
         .map((section) => section.color)
     )
   )
-  let availableColors = colorList.filter(
+  const availableColors = colorList.filter(
     (color) => !assignedColors.includes(color)
   )
 

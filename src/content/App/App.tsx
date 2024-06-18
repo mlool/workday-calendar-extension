@@ -108,7 +108,7 @@ function App() {
   }, [colorTheme, sections]) // React only if these values change
 
   const handleAddNewSection = () => {
-    let updatedNewSection = newSection!
+    const updatedNewSection = newSection!
     updatedNewSection.worklistNumber = currentWorklistNumber
     updatedNewSection.color = getNewSectionColor(
       sections,
@@ -144,7 +144,7 @@ function App() {
       handleClearWorklist={handleClearWorklist}
       handleDeleteSelectedSection={handleDeleteSelectedSection}
       setSelectedSection={setSelectedSection}
-      children={
+      >
         <div className="App">
           <TopBar currentView={currentView} setCurrentView={setCurrentView} />
           {currentView === Views.calendar ? (
@@ -178,8 +178,7 @@ function App() {
             />
           )}
         </div>
-      }
-    />
+    </ModalLayer>
   )
 }
 

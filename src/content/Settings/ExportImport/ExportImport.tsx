@@ -44,7 +44,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   }
 
   const handleSectionImport = async (sections: ISectionData[]) => {
-    let newSections = []
+    const newSections = []
     for (let i = 0; i < sections.length; i++) {
       if (!sections[i].courseID) {
         sections[i].courseID = await findCourseId(sections[i].code)

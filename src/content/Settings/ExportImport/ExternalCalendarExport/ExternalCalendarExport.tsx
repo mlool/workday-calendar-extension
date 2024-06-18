@@ -65,7 +65,7 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
         let baseDay = parseInt(startDateParts[2])
 
         const endDateParts = endDate.split("-")
-        let endDateArr = [
+        const endDateArr = [
           parseInt(endDateParts[0]),
           parseInt(endDateParts[1]),
           parseInt(endDateParts[2]),
@@ -117,7 +117,7 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
         }
 
         if (worklist == worklistNumber) {
-          if (!formattedEventsByWorklist.hasOwnProperty(worklist)) {
+          if (!Object.prototype.hasOwnProperty.call(formattedEventsByWorklist, worklist)) {
             formattedEventsByWorklist[worklist] = []
           }
           formattedEventsByWorklist[worklist].push(event)

@@ -18,7 +18,7 @@ const GradesComponent = ({ selectedSection }: IProps) => {
       setIsLoading(true)
       setIsError(false)
       try {
-        let data = await getGradesData(selectedSection)
+        const data = await getGradesData(selectedSection)
         setGradesData(data)
       } catch (error) {
         setIsError(true)
