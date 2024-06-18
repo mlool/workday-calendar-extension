@@ -77,3 +77,7 @@
 .SectionPopupCancelButton:hover {
   background-color: #d8d8d8;
 }
+
+.section-info-body {
+    padding: 10px;
+}
