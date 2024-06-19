@@ -1,4 +1,4 @@
-import { useState, useContext } from "react"
+import { useContext } from "react"
 import { ISectionData } from "../App/App.types"
 import {
   getAllSavedScheduleIDs,
@@ -14,6 +14,16 @@ interface IProps {
 const SyncSavedSchedules = (props: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
+  if (props.isVisible) {
+    dispatchModal({
+      preset: ModalPreset.SyncInstructions,
+      additionalData: {
+        syncErrors: null,
+        onCancel: props.onClose,
+        onConfirm: () => beginSync(),
+      },
+    })
+  }
   const beginSync = async () => {
     const scheduleID = getAllSavedScheduleIDs()
     if (scheduleID) {
@@ -25,7 +35,7 @@ const SyncSavedSchedules = (props: IProps) => {
         dispatchModal({
           preset: ModalPreset.SyncErrors,
           additionalData: {
-            data: possibleErrors,
+            syncErrors: possibleErrors,
             oncancel: props.onClose,
             onConfirm: props.onClose,
           },
@@ -34,7 +44,7 @@ const SyncSavedSchedules = (props: IProps) => {
         dispatchModal({
           preset: ModalPreset.SyncConfirm,
           additionalData: {
-            data: "",
+            syncErrors: null,
             oncancel: props.onClose,
             onConfirm: props.onClose,
           },
@@ -44,20 +54,11 @@ const SyncSavedSchedules = (props: IProps) => {
       alert(
         `No saved schedule was detected. The most likely issue is that you are not on the "View My Saved Schedules" page. Please head to that page and try again.`
       )
+      return
     }
   }
-  if (props.isVisible) {
-    dispatchModal({
-      preset: ModalPreset.SyncInstructions,
-      additionalData: {
-        data: null,
-        onCancel: props.onClose,
-        onConfirm: () => beginSync(),
-      },
-    })
-  }
 
-  return <div style={{ display: props.isVisible ? "block" : "none" }}></div>
+  return <div></div>
 }
 
 export default SyncSavedSchedules

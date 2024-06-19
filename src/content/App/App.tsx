@@ -11,6 +11,7 @@ import {
   getNewSectionColor,
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
+import { filterSectionsByWorklist } from "../utils"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -167,8 +168,7 @@ function App() {
                 sectionConflict={sectionConflict}
                 handleAddNewSection={handleAddNewSection}
                 handleCancel={handleCancelNewSection}
-                sections={sections}
-                currentWorklist={currentWorklistNumber}
+                sections={filterSectionsByWorklist(sections, currentWorklistNumber)}
               />
             </div>
           ) : (

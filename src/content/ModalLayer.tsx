@@ -49,7 +49,7 @@ interface ModalAction {
 }
 
 interface SyncScheduleModalData {
-  data: [""]
+  syncErrors: string[]
   onCancel: () => void
   onConfirm: () => void
 }
@@ -109,7 +109,7 @@ function ModalLayer(props: ModalLayerProps) {
 
         const errors = (
           <ul style={{ fontSize: "1.2em", padding: "10px" }}>
-            {data.data.map((error, index) => (
+            {data.syncErrors.map((error, index) => (
               <li key={index}>
                 {index + 1}. {error}
                 <br />
@@ -122,10 +122,9 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Error Syncing With Saved Schedule",
           body: errors,
           closeButtonText: "Close",
-          actionButtonText: "Okay",
+          actionButtonText: "OK",
           actionHandler: data.onConfirm,
           cancelHandler: data.onCancel,
-          alignment: ModalAlignment.Center,
           hasTintedBg: false,
           actionType: ModalActionType.Normal
         }
@@ -138,10 +137,9 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Sync Saved Schedules Instructions",
           body: `Please note that you must be on the "View Saved Schedules" page. If you have multiple schedules, click the "add course sections" button on the one you which to add to, otherwise it will add to the first one. You must have all requirements (for example class requires lab and lecture) in your worklist`,
           closeButtonText: "Close",
-          actionButtonText: "Okay",
+          actionButtonText: "OK",
           actionHandler: data.onConfirm,
           cancelHandler: data.onCancel,
-          alignment: ModalAlignment.Center,
           hasTintedBg: false,
           actionType: ModalActionType.Normal
         }
@@ -154,10 +152,9 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Sync Saved Schedules Success",
           body: `Any matching classes were added to this saved schedule! Please refresh page to see changes.`,
           closeButtonText: "Close",
-          actionButtonText: "Okay",
+          actionButtonText: "OK",
           actionHandler: data.onConfirm,
           cancelHandler: data.onCancel,
-          alignment: ModalAlignment.Center,
           hasTintedBg: false,
           actionType: ModalActionType.Normal
         }

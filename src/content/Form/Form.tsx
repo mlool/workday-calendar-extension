@@ -10,7 +10,6 @@ interface IProps {
   sectionConflict: boolean;
   handleAddNewSection: () => void;
   handleCancel: () => void;
-  currentWorklist: number;
 }
 
 const Form = (props: IProps) => {
@@ -25,12 +24,6 @@ const Form = (props: IProps) => {
     setIsSyncComponentVisible(false);
   };
 
-  let sectionsForWorklist:ISectionData[] = []
-  for (const section of props.sections) {
-    if(section.worklistNumber == props.currentWorklist) {
-      sectionsForWorklist.push(section)
-    }
-  }
 
   return (
     <div className="NewSectionForm">
@@ -61,12 +54,12 @@ const Form = (props: IProps) => {
       <button
         className="SyncWorklistButton"
         title="Sync Worklist"
-        disabled={sectionsForWorklist.length == 0}
+        disabled={props.sections.length == 0}
         onClick={handleSyncClick}
       >
         Sync Worklist To Saved Schedules
       </button>
-      <SyncSavedSchedules sections={sectionsForWorklist}  isVisible={isSyncComponentVisible} onClose={closeSyncComponent}/>
+      <SyncSavedSchedules sections={props.sections}  isVisible={isSyncComponentVisible} onClose={closeSyncComponent}/>
       <div
         className="ClearWorklistButton"
         title="Clear Worklist"
