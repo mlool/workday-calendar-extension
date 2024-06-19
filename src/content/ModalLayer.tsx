@@ -127,6 +127,7 @@ function ModalLayer(props: ModalLayerProps) {
           cancelHandler: data.onCancel,
           alignment: ModalAlignment.Center,
           hasTintedBg: false,
+          actionType: ModalActionType.Normal
         }
       }
       case ModalPreset.SyncInstructions: {
@@ -142,6 +143,7 @@ function ModalLayer(props: ModalLayerProps) {
           cancelHandler: data.onCancel,
           alignment: ModalAlignment.Center,
           hasTintedBg: false,
+          actionType: ModalActionType.Normal
         }
       }
       case ModalPreset.SyncConfirm: {
@@ -157,6 +159,7 @@ function ModalLayer(props: ModalLayerProps) {
           cancelHandler: data.onCancel,
           alignment: ModalAlignment.Center,
           hasTintedBg: false,
+          actionType: ModalActionType.Normal
         }
       }
       default:
