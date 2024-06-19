@@ -1,6 +1,6 @@
-import React from 'react';
-import './DiscordButton.css';
-import DiscordIcon from '../Icons/DiscordIcon';
+import React from "react"
+import "./DiscordButton.css"
+import DiscordIcon from "../Icons/DiscordIcon"
 interface DiscordButtonProps {}
 
 const DiscordButton: React.FC<DiscordButtonProps> = () => {
@@ -13,7 +13,7 @@ const DiscordButton: React.FC<DiscordButtonProps> = () => {
         <span>Join the Discord</span>
       </a>
     </div>
-  );
-};
+  )
+}
 
-export default DiscordButton;
+export default DiscordButton

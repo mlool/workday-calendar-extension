@@ -1,47 +1,47 @@
-import React, { useContext, useEffect, useState } from "react";
-import "./Tools.css";
-import "../Settings.css";
-import QuestionIcon from "../../Icons/QuestionIcon";
-import { ModalDispatchContext, ModalPreset } from "../../ModalLayer";
+import React, { useContext, useEffect, useState } from "react"
+import "./Tools.css"
+import "../Settings.css"
+import QuestionIcon from "../../Icons/QuestionIcon"
+import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 
 const Tools = () => {
-  const dispatchModal = useContext(ModalDispatchContext);
-  const [autofillEnabled, setAutofillEnabled] = useState(false);
-  const [hideProfilePicture, setHideProfilePicture] = useState(false);
+  const dispatchModal = useContext(ModalDispatchContext)
+  const [autofillEnabled, setAutofillEnabled] = useState(false)
+  const [hideProfilePicture, setHideProfilePicture] = useState(false)
 
   useEffect(() => {
     // Retrieve the stored state from localStorage
     const storedAutofillEnabled =
-      localStorage.getItem("autofillEnabled") === "true";
-    setAutofillEnabled(storedAutofillEnabled);
+      localStorage.getItem("autofillEnabled") === "true"
+    setAutofillEnabled(storedAutofillEnabled)
     const storedHideProfilePicture =
-      localStorage.getItem("hideProfilePicture") === "true";
-    setHideProfilePicture(storedHideProfilePicture);
-  }, []);
+      localStorage.getItem("hideProfilePicture") === "true"
+    setHideProfilePicture(storedHideProfilePicture)
+  }, [])
 
   const handleAutofillChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isEnabled = e.target.checked;
-    setAutofillEnabled(isEnabled);
+    const isEnabled = e.target.checked
+    setAutofillEnabled(isEnabled)
     // Store the state in localStorage
-    localStorage.setItem("autofillEnabled", isEnabled.toString());
+    localStorage.setItem("autofillEnabled", isEnabled.toString())
 
     const event = new CustomEvent("autofillToggle", {
       detail: { enabled: isEnabled },
-    });
-    window.dispatchEvent(event);
-  };
+    })
+    window.dispatchEvent(event)
+  }
 
   const handleHidePfpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isEnabled = e.target.checked;
-    setHideProfilePicture(isEnabled);
-    localStorage.setItem("hideProfilePicture", isEnabled.toString());
+    const isEnabled = e.target.checked
+    setHideProfilePicture(isEnabled)
+    localStorage.setItem("hideProfilePicture", isEnabled.toString())
 
     // Dispatch a custom event to notify about the change
     const event = new CustomEvent("hideProfilePictureToggle", {
       detail: { enabled: isEnabled },
-    });
-    window.dispatchEvent(event);
-  };
+    })
+    window.dispatchEvent(event)
+  }
 
   return (
     <div>
@@ -87,7 +87,7 @@ const Tools = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Tools;
+export default Tools

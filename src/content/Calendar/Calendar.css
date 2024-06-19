@@ -1,50 +1,50 @@
 .calendar {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    /* height: 100%; */
-    font-family: Arial, sans-serif;
-  }
-  
-  .calendar  .header {
-    display: grid;
-    grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
-    background-color: #f0f0f0;
-    text-align: center;
-  }
-  
-  .calendar  .header-cell {
-    padding: 5px;
-    font-weight: bold;
-    border: 1px solid #ddd;
-  }
-  
-  .calendar  .body {
-    display: grid;
-    grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
-    grid-auto-rows:15px;
-  }
-  
-  .calendar  .time-markers {
-    display: grid;
-    grid-auto-rows:15px;
-  }
-  
-  .calendar  .time-marker {
-    border: 1px solid #ddd;
-    text-align: center;
-    font-weight: bold;
-    z-index: 10;
-  }
-  
-  .calendar  .body-column {
-    display: grid;
-    grid-auto-rows:15px;
-  }
-  
-  .calendar  .body-cell {
-    border: 1px solid #ddd;
-    /* position: relative; */
-    font-size: 9px;
-    text-align: center;
-    cursor: pointer;
-  }
+  display: grid;
+  grid-template-rows: auto 1fr;
+  /* height: 100%; */
+  font-family: Arial, sans-serif;
+}
+
+.calendar .header {
+  display: grid;
+  grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.calendar .header-cell {
+  padding: 5px;
+  font-weight: bold;
+  border: 1px solid #ddd;
+}
+
+.calendar .body {
+  display: grid;
+  grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
+  grid-auto-rows: 15px;
+}
+
+.calendar .time-markers {
+  display: grid;
+  grid-auto-rows: 15px;
+}
+
+.calendar .time-marker {
+  border: 1px solid #ddd;
+  text-align: center;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.calendar .body-column {
+  display: grid;
+  grid-auto-rows: 15px;
+}
+
+.calendar .body-cell {
+  border: 1px solid #ddd;
+  /* position: relative; */
+  font-size: 9px;
+  text-align: center;
+  cursor: pointer;
+}

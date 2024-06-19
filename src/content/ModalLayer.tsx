@@ -5,10 +5,10 @@ import {
   SetStateAction,
   useContext,
   useReducer,
-} from "react";
-import { ISectionData } from "./App/App.types";
-import "./ModalLayer.css";
-import SectionInfoBody from "./SectionPopup/SectionInfoBody";
+} from "react"
+import { ISectionData } from "./App/App.types"
+import "./ModalLayer.css"
+import SectionInfoBody from "./SectionPopup/SectionInfoBody"
 
 enum ModalAlignment {
   Top,
@@ -29,31 +29,31 @@ enum ModalActionType {
 }
 
 interface ModalConfig {
-  title: string;
-  body: string | JSX.Element;
-  hasTintedBg?: boolean;
-  alignment?: ModalAlignment;
-  actionType?: ModalActionType;
-  closeButtonText?: string;
-  actionButtonText?: string;
-  actionHandler?: () => void;
-  cancelHandler?: () => void;
+  title: string
+  body: string | JSX.Element
+  hasTintedBg?: boolean
+  alignment?: ModalAlignment
+  actionType?: ModalActionType
+  closeButtonText?: string
+  actionButtonText?: string
+  actionHandler?: () => void
+  cancelHandler?: () => void
 }
 
 interface ModalAction {
-  preset: ModalPreset;
-  additionalData?: unknown;
+  preset: ModalPreset
+  additionalData?: unknown
 }
 
 interface ModalLayerProps {
-  currentWorklistNumber: number;
-  handleClearWorklist: VoidCallback;
-  handleDeleteSelectedSection: VoidCallback;
-  setSelectedSection: Dispatch<SetStateAction<ISectionData | null>>;
-  children: JSX.Element;
+  currentWorklistNumber: number
+  handleClearWorklist: VoidCallback
+  handleDeleteSelectedSection: VoidCallback
+  setSelectedSection: Dispatch<SetStateAction<ISectionData | null>>
+  children: JSX.Element
 }
 
-const ModalDispatchContext = createContext<Dispatch<ModalAction>>(() => {});
+const ModalDispatchContext = createContext<Dispatch<ModalAction>>(() => {})
 
 function ModalLayer(props: ModalLayerProps) {
   const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
@@ -62,7 +62,7 @@ function ModalLayer(props: ModalLayerProps) {
   ): ModalConfig | null => {
     switch (action.preset) {
       case ModalPreset.CLEAR:
-        return null;
+        return null
       case ModalPreset.ConfirmClearWorklist:
         return {
           title: "Confirm Clear Worklist",
@@ -70,19 +70,19 @@ function ModalLayer(props: ModalLayerProps) {
           closeButtonText: "Cancel",
           actionButtonText: "Confirm",
           actionHandler: props.handleClearWorklist,
-        };
+        }
       case ModalPreset.AutofillSettingInfo:
         return {
           title: "Info: Enable Autofill",
           body: 'Autofills "Find Course Sections".',
-        };
+        }
       case ModalPreset.HidePfpInfo:
         return {
           title: "Info: Hide Profile Picture",
           body: "Hides your profile picture.",
-        };
-      case ModalPreset.SectionPopup:
-        const sectionData: ISectionData = action.additionalData as ISectionData;
+        }
+      case ModalPreset.SectionPopup: {
+        const sectionData: ISectionData = action.additionalData as ISectionData
         return {
           title: sectionData.code,
           body: <SectionInfoBody selectedSection={sectionData} />,
@@ -92,46 +92,47 @@ function ModalLayer(props: ModalLayerProps) {
           cancelHandler: () => props.setSelectedSection(null),
           alignment: ModalAlignment.Top,
           hasTintedBg: false,
-        };
+        }
+      }
       default:
-        throw Error("ModalPreset not valid!");
+        throw Error("ModalPreset not valid!")
     }
-  };
+  }
 
-  const [modalConfig, dispatchModal] = useReducer(modalReducer, null);
+  const [modalConfig, dispatchModal] = useReducer(modalReducer, null)
 
   return (
     <ModalDispatchContext.Provider value={dispatchModal}>
       {modalConfig && <ModalWindow modalConfig={modalConfig} />}
       {props.children}
     </ModalDispatchContext.Provider>
-  );
+  )
 }
 
 interface ModalWindowProps {
-  modalConfig: ModalConfig;
+  modalConfig: ModalConfig
 }
 
 function ModalWindow({ modalConfig }: ModalWindowProps) {
-  const dispatchModal = useContext(ModalDispatchContext);
+  const dispatchModal = useContext(ModalDispatchContext)
 
   const bgStyle = (): string => {
-    const styles = ["modal-background"];
+    const styles = ["modal-background"]
     if (
       modalConfig!.hasTintedBg === undefined ||
       modalConfig!.hasTintedBg === true
     ) {
-      styles.push("tinted-bg");
+      styles.push("tinted-bg")
     }
     switch (modalConfig!.alignment) {
       case ModalAlignment.Top:
-        styles.push("position-top");
-        break;
+        styles.push("position-top")
+        break
       default:
-        styles.push("position-center");
+        styles.push("position-center")
     }
-    return styles.join(" ");
-  };
+    return styles.join(" ")
+  }
 
   return (
     <div className={bgStyle()}>
@@ -148,8 +149,8 @@ function ModalWindow({ modalConfig }: ModalWindowProps) {
           <button
             className="modal-button cancel-button"
             onClick={() => {
-              modalConfig.cancelHandler && modalConfig.cancelHandler();
-              dispatchModal({ preset: ModalPreset.CLEAR });
+              modalConfig.cancelHandler && modalConfig.cancelHandler()
+              dispatchModal({ preset: ModalPreset.CLEAR })
             }}
           >
             {modalConfig.closeButtonText ?? "OK"}
@@ -162,8 +163,8 @@ function ModalWindow({ modalConfig }: ModalWindowProps) {
                   : "-destructive"
               }`}
               onClick={() => {
-                modalConfig.actionHandler!();
-                dispatchModal({ preset: ModalPreset.CLEAR });
+                modalConfig.actionHandler!()
+                dispatchModal({ preset: ModalPreset.CLEAR })
               }}
             >
               {modalConfig.actionButtonText}
@@ -172,7 +173,7 @@ function ModalWindow({ modalConfig }: ModalWindowProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export { ModalLayer, ModalPreset, ModalDispatchContext };
+export { ModalLayer, ModalPreset, ModalDispatchContext }
