@@ -5,21 +5,22 @@ import {
   addCoursesToSavedSchedule,
 } from "./syncSavedSchedulesHelper"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
+import "../Form/Form.css"
 
 interface IProps {
   sections: ISectionData[]
-  isVisible: boolean
-  onClose: () => void
 }
 const SyncSavedSchedules = (props: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
-  if (props.isVisible) {
+  const dispatchInstructions = () => {
     dispatchModal({
       preset: ModalPreset.SyncInstructions,
       additionalData: {
         syncErrors: null,
-        onCancel: props.onClose,
+        onCancel: () => {
+          return
+        },
         onConfirm: () => beginSync(),
       },
     })
@@ -36,18 +37,13 @@ const SyncSavedSchedules = (props: IProps) => {
           preset: ModalPreset.SyncErrors,
           additionalData: {
             syncErrors: possibleErrors,
-            oncancel: props.onClose,
-            onConfirm: props.onClose,
+            oncancel: null,
+            onConfirm: null,
           },
         })
       } else {
         dispatchModal({
           preset: ModalPreset.SyncConfirm,
-          additionalData: {
-            syncErrors: null,
-            oncancel: props.onClose,
-            onConfirm: props.onClose,
-          },
         })
       }
     } else {
@@ -58,7 +54,16 @@ const SyncSavedSchedules = (props: IProps) => {
     }
   }
 
-  return <div></div>
+  return (
+    <button
+      className="SyncWorklistButton"
+      title="Sync Worklist"
+      disabled={props.sections.length === 0}
+      onClick={() => dispatchInstructions()}
+    >
+      Sync Worklist To Saved Schedules
+    </button>
+  )
 }
 
 export default SyncSavedSchedules

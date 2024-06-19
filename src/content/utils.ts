@@ -284,12 +284,15 @@ const getTermFromSectionDetailsString = (
   return Term.winterTwo
 }
 
-export const filterSectionsByWorklist = (sections: ISectionData[], worklist: number): ISectionData[] => {
-  const sectionsForWorklist:ISectionData[] = []
+export const filterSectionsByWorklist = (
+  sections: ISectionData[],
+  worklist: number
+): ISectionData[] => {
+  const sectionsForWorklist: ISectionData[] = []
   for (const section of sections) {
-    if(section.worklistNumber === worklist) {
+    if (section.worklistNumber === worklist) {
       sectionsForWorklist.push(section)
     }
   }
-  return sectionsForWorklist 
+  return sectionsForWorklist
 }

@@ -363,15 +363,15 @@ chrome.storage.local.get("drawerOpen", function (data) {
   icon.style.cursor = "pointer"
   icon.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)"
 
-  const container = document.createElement("div");
-  container.id = "react-container";
-  container.style.width = "300px";
-  container.style.height = "720px";
-  container.style.border = "1px solid #CCC";
-  container.style.backgroundColor = "#FFF";
-  container.style.overflow = "auto";
-  container.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
-  container.style.borderRadius = "8px";
+  const container = document.createElement("div")
+  container.id = "react-container"
+  container.style.width = "300px"
+  container.style.height = "720px"
+  container.style.border = "1px solid #CCC"
+  container.style.backgroundColor = "#FFF"
+  container.style.overflow = "auto"
+  container.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)"
+  container.style.borderRadius = "8px"
 
   containerWrapper.appendChild(icon)
   containerWrapper.appendChild(container)

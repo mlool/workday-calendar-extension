@@ -126,7 +126,7 @@ function ModalLayer(props: ModalLayerProps) {
           actionHandler: data.onConfirm,
           cancelHandler: data.onCancel,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal
+          actionType: ModalActionType.Normal,
         }
       }
       case ModalPreset.SyncInstructions: {
@@ -141,22 +141,15 @@ function ModalLayer(props: ModalLayerProps) {
           actionHandler: data.onConfirm,
           cancelHandler: data.onCancel,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal
+          actionType: ModalActionType.Normal,
         }
       }
       case ModalPreset.SyncConfirm: {
-        const data: SyncScheduleModalData =
-          action.additionalData as SyncScheduleModalData
-
         return {
           title: "Sync Saved Schedules Success",
           body: `Any matching classes were added to this saved schedule! Please refresh page to see changes.`,
-          closeButtonText: "Close",
-          actionButtonText: "OK",
-          actionHandler: data.onConfirm,
-          cancelHandler: data.onCancel,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal
+          actionType: ModalActionType.Normal,
         }
       }
       default:
