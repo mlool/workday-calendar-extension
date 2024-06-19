@@ -54,7 +54,7 @@ const Form = (props: IProps) => {
       <button
         className="SyncWorklistButton"
         title="Sync Worklist"
-        disabled={props.sections.length == 0}
+        disabled={props.sections.length === 0}
         onClick={handleSyncClick}
       >
         Sync Worklist To Saved Schedules

@@ -285,9 +285,9 @@ const getTermFromSectionDetailsString = (
 }
 
 export const filterSectionsByWorklist = (sections: ISectionData[], worklist: number): ISectionData[] => {
-  let sectionsForWorklist:ISectionData[] = []
+  const sectionsForWorklist:ISectionData[] = []
   for (const section of sections) {
-    if(section.worklistNumber == worklist) {
+    if(section.worklistNumber === worklist) {
       sectionsForWorklist.push(section)
     }
   }
