@@ -1,107 +1,106 @@
 .modal-background {
-    position: absolute;
+  position: absolute;
 
-    display: grid;
-    width: 100%;
-    height: 100%;
+  display: grid;
+  width: 100%;
+  height: 100%;
 
-    z-index: 100;
+  z-index: 100;
 
-    justify-items: center;
-    padding-top: 5%;
-    padding-bottom: 5%;
+  justify-items: center;
+  padding-top: 5%;
+  padding-bottom: 5%;
 }
 
 .position-top {
-    align-content: start;
+  align-content: start;
 }
 
 .position-center {
-    align-content: center;
+  align-content: center;
 }
 
 .tinted-bg {
-    background-color: rgba(99, 99, 99, 0.6);
+  background-color: rgba(99, 99, 99, 0.6);
 }
 
 .modal-window {
-    width: 80%;
+  width: 80%;
 }
 
 .modal-header {
-    display: grid;
-    height: 30px;
-    padding: 2px;
+  display: grid;
+  height: 30px;
+  padding: 2px;
 
-    background-color: var(--main-accent-colour);
-    color: white;
-    align-items: center;
-    border-top-left-radius: var(--default-radius);
-    border-top-right-radius: var(--default-radius);
-    box-shadow: var(--default-shadow);
+  background-color: var(--main-accent-colour);
+  color: white;
+  align-items: center;
+  border-top-left-radius: var(--default-radius);
+  border-top-right-radius: var(--default-radius);
+  box-shadow: var(--default-shadow);
 
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .modal-body {
-    background: white;
-    max-height: 220px;
-    overflow-y: scroll;
-    box-shadow: var(--default-shadow);
+  background: white;
+  max-height: 220px;
+  overflow-y: scroll;
+  box-shadow: var(--default-shadow);
 }
 
 .modal-text-body {
-    background: white;
-    padding: 10px;
-    font-size: 14px;
-    box-shadow: var(--default-shadow);
+  background: white;
+  padding: 10px;
+  font-size: 14px;
+  box-shadow: var(--default-shadow);
 }
 
 .modal-button-container {
-    height: 32px;
+  height: 32px;
 
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    column-gap: 10px;
-    box-shadow: var(--default-shadow);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  column-gap: 10px;
+  box-shadow: var(--default-shadow);
 
-    border-bottom-left-radius: var(--default-radius);
-    border-bottom-right-radius: var(--default-radius);
-    background: white;
-    padding: 10px 12px 10px;
-    justify-items: center;
+  border-bottom-left-radius: var(--default-radius);
+  border-bottom-right-radius: var(--default-radius);
+  background: white;
+  padding: 10px 12px 10px;
+  justify-items: center;
 }
 
 .modal-button {
-    width: 100%;
+  width: 100%;
 
-    border: var(--base-1) 1px solid;
-    border-radius: var(--small-radius);
+  border: var(--base-1) 1px solid;
+  border-radius: var(--small-radius);
 
-    font-size: 14px;
+  font-size: 14px;
 
-    cursor: pointer;
-    transition: background-color 0.3s;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .modal-button:hover {
-    background-color: var(--base-1-shaded);
+  background-color: var(--base-1-shaded);
 }
 
 .cancel-button {
-    color: var(--base-1);
-    background-color: white;
+  color: var(--base-1);
+  background-color: white;
 }
 
-
 .action-button {
-    color: white;
-    background: var(--main-accent-colour);
+  color: white;
+  background: var(--main-accent-colour);
 }
 
 .action-button-destructive {
-    color: white;
-    background: var(--warning-colour);
+  color: white;
+  background: var(--warning-colour);
 }

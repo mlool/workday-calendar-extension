@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import CalendarContainer from "../CalendarContainer/CalendarContainer";
-import { ISectionData, Term, Views } from "./App.types";
-import Form from "../Form/Form";
-import TopBar from "../TopBar/TopBar";
-import Settings from "../Settings/Settings";
+import { useEffect, useState } from "react"
+import "./App.css"
+import CalendarContainer from "../CalendarContainer/CalendarContainer"
+import { ISectionData, Term, Views } from "./App.types"
+import Form from "../Form/Form"
+import TopBar from "../TopBar/TopBar"
+import Settings from "../Settings/Settings"
 import {
   assignColors,
   ColorTheme,
   getNewSectionColor,
-} from "../../helpers/courseColors";
-import { ModalLayer } from "../ModalLayer";
+} from "../../helpers/courseColors"
+import { ModalLayer } from "../ModalLayer"
 
 function App() {
-  const [newSection, setNewSection] = useState<ISectionData | null>(null);
-  const [sections, setSections] = useState<ISectionData[]>([]);
-  const [sectionConflict, setSectionConflict] = useState<boolean>(false);
-  const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0);
-  const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
-  const [currentView, setCurrentView] = useState<Views>(Views.calendar);
-  const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green);
+  const [newSection, setNewSection] = useState<ISectionData | null>(null)
+  const [sections, setSections] = useState<ISectionData[]>([])
+  const [sectionConflict, setSectionConflict] = useState<boolean>(false)
+  const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
+  const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne)
+  const [currentView, setCurrentView] = useState<Views>(Views.calendar)
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
   const [selectedSection, setSelectedSection] = useState<ISectionData | null>(
     null
-  );
+  )
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
@@ -32,10 +32,10 @@ function App() {
         ["currentTerm", "colorTheme", "sections", "currentWorklistNumber"],
         (result) => {
           if (result.currentTerm !== undefined) {
-            setCurrentTerm(result.currentTerm);
+            setCurrentTerm(result.currentTerm)
           }
           if (result.colorTheme !== undefined) {
-            setColorTheme(result.colorTheme);
+            setColorTheme(result.colorTheme)
           }
           if (result.sections !== undefined) {
             setSections(
@@ -43,100 +43,100 @@ function App() {
                 result.sections,
                 result.colorTheme || ColorTheme.Green
               )
-            );
+            )
           }
           if (result.currentWorklistNumber !== undefined) {
-            setCurrentWorklistNumber(result.currentWorklistNumber);
+            setCurrentWorklistNumber(result.currentWorklistNumber)
           }
         }
-      );
-    };
+      )
+    }
 
     const handleStorageChange = (changes: {
-      [key: string]: chrome.storage.StorageChange;
+      [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal = changes.newSection.newValue;
-        if (newVal === null) return;
-        setNewSection(newVal);
+        const newVal = changes.newSection.newValue
+        if (newVal === null) return
+        setNewSection(newVal)
         if (newVal.term !== Term.winterFull) {
           //Don't set the term to WF, just keep the term to what is selected
-          setCurrentTerm(newVal.term);
+          setCurrentTerm(newVal.term)
         }
       }
-    };
+    }
 
-    syncInitialState();
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    syncInitialState()
+    chrome.storage.onChanged.addListener(handleStorageChange)
 
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
-    };
-  }, []); // Run only once on mount
+      chrome.storage.onChanged.removeListener(handleStorageChange)
+    }
+  }, []) // Run only once on mount
 
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
-    chrome.storage.local.set({ sections });
+    chrome.storage.local.set({ sections })
     // alert(JSON.stringify(sections, null, 2))
-  }, [sections]);
+  }, [sections])
 
   useEffect(() => {
-    chrome.storage.local.set({ currentWorklistNumber });
-  }, [currentWorklistNumber]);
+    chrome.storage.local.set({ currentWorklistNumber })
+  }, [currentWorklistNumber])
 
   useEffect(() => {
-    chrome.storage.local.set({ currentTerm });
-  }, [currentTerm]);
+    chrome.storage.local.set({ currentTerm })
+  }, [currentTerm])
 
   useEffect(() => {
-    chrome.storage.local.set({ colorTheme });
-  }, [colorTheme]);
+    chrome.storage.local.set({ colorTheme })
+  }, [colorTheme])
 
   useEffect(() => {
     // Check if there is a real change to trigger the update
     // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
-    const newSections = assignColors(sections, colorTheme);
+    const newSections = assignColors(sections, colorTheme)
 
     if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
-      setSections(newSections);
+      setSections(newSections)
     }
 
     // Update refs
     // prevColorTheme.current = colorTheme;
     // prevSections.current = sections;
     // }
-  }, [colorTheme, sections]); // React only if these values change
+  }, [colorTheme, sections]) // React only if these values change
 
   const handleAddNewSection = () => {
-    let updatedNewSection = newSection!;
-    updatedNewSection.worklistNumber = currentWorklistNumber;
+    const updatedNewSection = newSection!
+    updatedNewSection.worklistNumber = currentWorklistNumber
     updatedNewSection.color = getNewSectionColor(
       sections,
       updatedNewSection,
       colorTheme
-    );
+    )
 
-    setSections([...sections, updatedNewSection]);
-    setNewSection(null);
-  };
+    setSections([...sections, updatedNewSection])
+    setNewSection(null)
+  }
 
   const handleDeleteSelectedSection = () => {
-    setSections(sections.filter((s) => s !== selectedSection));
-    setSelectedSection(null);
-  };
+    setSections(sections.filter((s) => s !== selectedSection))
+    setSelectedSection(null)
+  }
 
   const handleCancelNewSection = () => {
-    setNewSection(null);
-    chrome.storage.local.set({ newSection: null });
-  };
+    setNewSection(null)
+    chrome.storage.local.set({ newSection: null })
+  }
 
   const handleClearWorklist = () => {
     const updatedSections = sections.filter(
       (x) => x.worklistNumber !== currentWorklistNumber
-    );
-    setSections(updatedSections);
-    setSelectedSection(null);
-  };
+    )
+    setSections(updatedSections)
+    setSelectedSection(null)
+  }
 
   return (
     <ModalLayer
@@ -144,7 +144,7 @@ function App() {
       handleClearWorklist={handleClearWorklist}
       handleDeleteSelectedSection={handleDeleteSelectedSection}
       setSelectedSection={setSelectedSection}
-      children={
+      >
         <div className="App">
           <TopBar currentView={currentView} setCurrentView={setCurrentView} />
           {currentView === Views.calendar ? (
@@ -180,9 +180,8 @@ function App() {
             />
           )}
         </div>
-      }
-    />
-  );
+    </ModalLayer>
+  )
 }
 
-export default App;
+export default App

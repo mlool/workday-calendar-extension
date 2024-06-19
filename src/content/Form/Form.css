@@ -1,41 +1,41 @@
 .NewSectionForm {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .ClearWorklistButton {
-    padding: 7px 20px;
-    font-size: 12px;
-    color: #fff;
-    background-color: var(--warning-colour);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin: 2px 10px 10px 10px;
+  padding: 7px 20px;
+  font-size: 12px;
+  color: #fff;
+  background-color: var(--warning-colour);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin: 2px 10px 10px 10px;
 }
 
 .ClearWorklistButton:hover {
-    background-color: #ca1c1c;
+  background-color: #ca1c1c;
 }
 
 .NewSectionButtonContainer {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .NewSectionButton {
-    width: 50%;
-    padding: 7px 20px;
-    font-size: 12px;
-    color: #fff;
-    background-color: #007bff;;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin: 10px 10px 2px 10px;
+  width: 50%;
+  padding: 7px 20px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin: 10px 10px 2px 10px;
 }
 
 .SyncWorklistButton {
@@ -52,20 +52,20 @@
 }
 
 .NewSectionInfo {
-    margin-bottom: 5px;
-    color: black;
+  margin-bottom: 5px;
+  color: black;
 }
 
 .NewSectionCode {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .NewSectionButton:hover {
-    background-color: #0068d6;
+  background-color: #0068d6;
 }
 
 .NewSectionButton:disabled {
-    background-color: #c4c4c4;
+  background-color: #c4c4c4;
 }
 
 .SyncWorklistButton:hover {

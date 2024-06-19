@@ -77,7 +77,7 @@ const Form = (props: IProps) => {
         Clear Worklist
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Form;
+export default Form
