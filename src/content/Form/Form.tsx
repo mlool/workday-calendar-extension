@@ -1,6 +1,6 @@
 import { ISectionData } from "../App/App.types"
 import "./Form.css"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules"
 
