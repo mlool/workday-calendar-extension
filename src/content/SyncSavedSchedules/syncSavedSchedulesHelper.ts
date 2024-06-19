@@ -48,8 +48,7 @@ export async function addCoursesToSavedSchedule(
         requestOptions
       )
         .then((response) => response.json())
-        .then((data) => {
-        })
+        .then((data) => {})
         .catch((error) => {
           console.error("Error with flow controller:", error);
           return null;
@@ -62,21 +61,22 @@ export async function addCoursesToSavedSchedule(
 }
 
 export function getAllSavedScheduleIDs() {
-    const selectedItems = document.querySelectorAll('[data-automation-id^="selectedItem_15873"]');
-  
-    if (selectedItems.length) {
-      const ids = [];
-      for (let i = 0; i < selectedItems.length; i++) {
-        const item = selectedItems[i];
-        if (item instanceof HTMLElement && item.dataset.automationId) {
-          const idParts = item.dataset.automationId.split('_');
-          ids.push(idParts[1]);
-        }
-      }
-      return ids;
-    } else {
-      console.error('No SelectedItem elements found');
-      return [];
-    }
-  }
+  const selectedItems = document.querySelectorAll(
+    '[data-automation-id^="selectedItem_15873"]'
+  );
 
+  if (selectedItems.length) {
+    const ids = [];
+    for (let i = 0; i < selectedItems.length; i++) {
+      const item = selectedItems[i];
+      if (item instanceof HTMLElement && item.dataset.automationId) {
+        const idParts = item.dataset.automationId.split("_");
+        ids.push(idParts[1]);
+      }
+    }
+    return ids;
+  } else {
+    console.error("No SelectedItem elements found");
+    return [];
+  }
+}
