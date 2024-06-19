@@ -1,7 +1,8 @@
 import { ISectionData } from "../App/App.types";
 import "./Form.css";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer";
+import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules";
 
 interface IProps {
   sections: ISectionData[];
@@ -9,10 +10,27 @@ interface IProps {
   sectionConflict: boolean;
   handleAddNewSection: () => void;
   handleCancel: () => void;
+  currentWorklist: number;
 }
 
 const Form = (props: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext);
+  const [isSyncComponentVisible, setIsSyncComponentVisible] = useState(false);
+
+  const handleSyncClick = () => {
+    setIsSyncComponentVisible(true);
+  };
+
+  const closeSyncComponent = () => {
+    setIsSyncComponentVisible(false);
+  };
+
+  let sectionsForWorklist:ISectionData[] = []
+  for (const section of props.sections) {
+    if(section.worklistNumber == props.currentWorklist) {
+      sectionsForWorklist.push(section)
+    }
+  }
 
   return (
     <div className="NewSectionForm">
@@ -43,11 +61,12 @@ const Form = (props: IProps) => {
       <button
         className="SyncWorklistButton"
         title="Sync Worklist"
-        disabled={filteredSections.length == 0}
-        onClick={() => setShowSyncConfirmation(true)}
+        disabled={sectionsForWorklist.length == 0}
+        onClick={handleSyncClick}
       >
         Sync Worklist To Saved Schedules
       </button>
+      <SyncSavedSchedules sections={sectionsForWorklist}  isVisible={isSyncComponentVisible} onClose={closeSyncComponent}/>
       <div
         className="ClearWorklistButton"
         title="Clear Worklist"

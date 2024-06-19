@@ -167,6 +167,8 @@ function App() {
                 sectionConflict={sectionConflict}
                 handleAddNewSection={handleAddNewSection}
                 handleCancel={handleCancelNewSection}
+                sections={sections}
+                currentWorklist={currentWorklistNumber}
               />
             </div>
           ) : (
