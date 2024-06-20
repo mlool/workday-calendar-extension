@@ -66,7 +66,7 @@ const Tools = () => {
               dispatchModal({ preset: ModalPreset.AutofillSettingInfo })
             }
           >
-            <QuestionIcon size={16} color="black" />
+            <QuestionIcon size={16} />
           </div>
           <div className="ToolContainer">
             <div>
@@ -82,7 +82,7 @@ const Tools = () => {
             className="ToolItemInfoButton"
             onClick={() => dispatchModal({ preset: ModalPreset.HidePfpInfo })}
           >
-            <QuestionIcon size={16} color="black" />
+            <QuestionIcon size={16} />
           </div>
         </div>
       </div>

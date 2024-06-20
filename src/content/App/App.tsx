@@ -11,6 +11,7 @@ import {
   getNewSectionColor,
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
+import { filterSectionsByWorklist } from "../utils"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -144,40 +145,44 @@ function App() {
       handleClearWorklist={handleClearWorklist}
       handleDeleteSelectedSection={handleDeleteSelectedSection}
       setSelectedSection={setSelectedSection}
-      >
-        <div className="App">
-          <TopBar currentView={currentView} setCurrentView={setCurrentView} />
-          {currentView === Views.calendar ? (
-            <div className="CalendarViewContainer">
-              <CalendarContainer
-                sections={sections}
-                setSections={setSections}
-                newSection={newSection}
-                setSectionConflict={setSectionConflict}
-                currentWorklistNumber={currentWorklistNumber}
-                setCurrentWorklistNumber={setCurrentWorklistNumber}
-                currentTerm={currentTerm}
-                setCurrentTerm={setCurrentTerm}
-                selectedSection={selectedSection}
-                setSelectedSection={setSelectedSection}
-              />
-
-              <Form
-                newSection={newSection}
-                sectionConflict={sectionConflict}
-                handleAddNewSection={handleAddNewSection}
-                handleCancel={handleCancelNewSection}
-              />
-            </div>
-          ) : (
-            <Settings
-              colorTheme={colorTheme}
+    >
+      <div className="App">
+        <TopBar currentView={currentView} setCurrentView={setCurrentView} />
+        {currentView === Views.calendar ? (
+          <div className="CalendarViewContainer">
+            <CalendarContainer
               sections={sections}
-              setColorTheme={setColorTheme}
               setSections={setSections}
+              newSection={newSection}
+              setSectionConflict={setSectionConflict}
+              currentWorklistNumber={currentWorklistNumber}
+              setCurrentWorklistNumber={setCurrentWorklistNumber}
+              currentTerm={currentTerm}
+              setCurrentTerm={setCurrentTerm}
+              selectedSection={selectedSection}
+              setSelectedSection={setSelectedSection}
             />
-          )}
-        </div>
+
+            <Form
+              newSection={newSection}
+              sectionConflict={sectionConflict}
+              handleAddNewSection={handleAddNewSection}
+              handleCancel={handleCancelNewSection}
+              sections={filterSectionsByWorklist(
+                sections,
+                currentWorklistNumber
+              )}
+            />
+          </div>
+        ) : (
+          <Settings
+            colorTheme={colorTheme}
+            sections={sections}
+            setColorTheme={setColorTheme}
+            setSections={setSections}
+          />
+        )}
+      </div>
     </ModalLayer>
   )
 }

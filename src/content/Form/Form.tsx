@@ -2,8 +2,10 @@ import { ISectionData } from "../App/App.types"
 import "./Form.css"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
+import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules"
 
 interface IProps {
+  sections: ISectionData[]
   newSection: ISectionData | null
   sectionConflict: boolean
   handleAddNewSection: () => void
@@ -39,6 +41,7 @@ const Form = (props: IProps) => {
           Add Section
         </button>
       </div>
+      <SyncSavedSchedules sections={props.sections} />
       <div
         className="ClearWorklistButton"
         title="Clear Worklist"
