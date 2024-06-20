@@ -283,3 +283,16 @@ const getTermFromSectionDetailsString = (
   if (includes2024) return Term.winterOne
   return Term.winterTwo
 }
+
+export const filterSectionsByWorklist = (
+  sections: ISectionData[],
+  worklist: number
+): ISectionData[] => {
+  const sectionsForWorklist: ISectionData[] = []
+  for (const section of sections) {
+    if (section.worklistNumber === worklist) {
+      sectionsForWorklist.push(section)
+    }
+  }
+  return sectionsForWorklist
+}

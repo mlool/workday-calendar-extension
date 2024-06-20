@@ -21,7 +21,10 @@ enum ModalPreset {
   AutofillSettingInfo,
   HidePfpInfo,
   SectionPopup,
-  ImportStatus
+  ImportStatus,
+  SyncErrors,
+  SyncInstructions,
+  SyncConfirm,
 }
 
 enum ModalActionType {
@@ -44,6 +47,12 @@ interface ModalConfig {
 interface ModalAction {
   preset: ModalPreset
   additionalData?: unknown
+}
+
+interface SyncScheduleModalData {
+  syncErrors: string[]
+  onCancel: () => void
+  onConfirm: () => void
 }
 
 interface ModalLayerProps {
@@ -100,6 +109,55 @@ function ModalLayer(props: ModalLayerProps) {
         return {
           title: "Import Status",
           body: message
+        }
+      }
+      case ModalPreset.SyncErrors: {
+        const data: SyncScheduleModalData =
+          action.additionalData as SyncScheduleModalData
+
+        const errors = (
+          <ul style={{ fontSize: "1.2em", padding: "10px" }}>
+            {data.syncErrors.map((error, index) => (
+              <li key={index}>
+                {index + 1}. {error}
+                <br />
+              </li>
+            ))}
+          </ul>
+        )
+
+        return {
+          title: "Error Syncing With Saved Schedule",
+          body: errors,
+          closeButtonText: "Close",
+          actionButtonText: "OK",
+          actionHandler: data.onConfirm,
+          cancelHandler: data.onCancel,
+          hasTintedBg: false,
+          actionType: ModalActionType.Normal,
+        }
+      }
+      case ModalPreset.SyncInstructions: {
+        const data: SyncScheduleModalData =
+          action.additionalData as SyncScheduleModalData
+
+        return {
+          title: "Sync Saved Schedules Instructions",
+          body: `Please note that you must be on the "View Saved Schedules" page. If you have multiple schedules, click the "add course sections" button on the one you which to add to, otherwise it will add to the first one. You must have all requirements (for example class requires lab and lecture) in your worklist`,
+          closeButtonText: "Close",
+          actionButtonText: "OK",
+          actionHandler: data.onConfirm,
+          cancelHandler: data.onCancel,
+          hasTintedBg: false,
+          actionType: ModalActionType.Normal,
+        }
+      }
+      case ModalPreset.SyncConfirm: {
+        return {
+          title: "Sync Saved Schedules Success",
+          body: `Any matching classes were added to this saved schedule! Please refresh page to see changes.`,
+          hasTintedBg: false,
+          actionType: ModalActionType.Normal,
         }
       }
       default:

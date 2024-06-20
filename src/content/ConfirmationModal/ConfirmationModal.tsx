@@ -1,13 +1,29 @@
+import { ISectionData } from "../App/App.types"
 import "./ConfirmationModal.css"
 
 interface IProps {
   title: string
   message: string
   onCancel: () => void
-  onConfirm: () => void
+  onConfirm: (sections?: ISectionData[]) => void
+  sections?: ISectionData[]
 }
 
-const ConfirmationModal = ({ title, message, onCancel, onConfirm }: IProps) => {
+const ConfirmationModal = ({
+  title,
+  message,
+  onCancel,
+  onConfirm,
+  sections,
+}: IProps) => {
+  const handleConfirm = () => {
+    if (sections) {
+      onConfirm(sections)
+    } else {
+      onConfirm()
+    }
+  }
+
   return (
     <div className="ConfirmationModalBackground">
       <div className="ConfirmationModal">
@@ -18,7 +34,7 @@ const ConfirmationModal = ({ title, message, onCancel, onConfirm }: IProps) => {
             <div className="ConfirmationModalCancelButton" onClick={onCancel}>
               Cancel
             </div>
-            <div className="ConfirmationModalButton" onClick={onConfirm}>
+            <div className="ConfirmationModalButton" onClick={handleConfirm}>
               Confirm
             </div>
           </div>
