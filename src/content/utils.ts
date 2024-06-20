@@ -142,18 +142,9 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
       alert("Invalid section details format")
     }
 
-    let location = ""
-    let daysString = ""
-    let timeRange = ""
-    let dateRange = ""
-
-    if (detailParts.length === 3) {
-      // Without location
-      ;[daysString, timeRange, dateRange] = detailParts
-    } else {
-      // With location
-      ;[location, daysString, timeRange, dateRange] = detailParts
-    }
+    // If length === 4, first item is location (which we don't use).
+    if (detailParts.length === 4) detailParts.shift()
+    const [daysString, timeRange, dateRange] = detailParts
 
     let days = daysString.split(" ")
     let [startTime, endTime] = timeRange.split(" - ")
@@ -212,7 +203,7 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr
 }
 
-export async function findCourseId(name: string) {
+export async function findCourseId(name: string): Promise<string> {
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", name)
 
@@ -254,7 +245,9 @@ export function isCourseFormatted(courseName: string) {
 
 // Convert times from 12-hour format to 24-hour format
 const convertTo24HourFormat = (time: string): string => {
+  console.log(time)
   const [timePart, period] = time.split(" ")
+  // eslint-disable-next-line prefer-const
   let [hours, minutes] = timePart.split(":").map(Number)
 
   if (period && period.toLowerCase() === "p.m." && hours !== 12) {

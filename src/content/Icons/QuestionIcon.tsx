@@ -1,3 +1,4 @@
+/* eslint-disable */
 interface IProps {
   size: number
 }
