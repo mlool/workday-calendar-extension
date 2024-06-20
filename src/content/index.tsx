@@ -278,12 +278,12 @@ function setupObserver(): void {
     document.addEventListener("DOMContentLoaded", observeDOMAndAddButtons)
     document.addEventListener(
       "DOMContentLoaded",
-      observeDOMAndAddCopySavedScheduleButton
+      observeDOMAndAddCopyScheduleButtons
     )
   } else {
     // Directly observe DOM changes
     observeDOMAndAddButtons()
-    observeDOMAndAddCopySavedScheduleButton()
+    observeDOMAndAddCopyScheduleButtons()
   }
 }
 
@@ -382,10 +382,10 @@ chrome.storage.local.get("drawerOpen", function (data) {
   ReactDOM.render(<App />, container)
 })
 
-//-------------------- Copy Saved Schedule Button --------------------
+//-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
 // Function to observe DOM changes and add buttons to matching elements
-function observeDOMAndAddCopySavedScheduleButton(): void {
+function observeDOMAndAddCopyScheduleButtons(): void {
   // Configuration for the mutation observer
   const config: MutationObserverInit = {
     childList: true,
@@ -393,32 +393,47 @@ function observeDOMAndAddCopySavedScheduleButton(): void {
     attributes: false,
   }
 
-  const callback: MutationCallback = (mutationsList) => {
+  const callback: MutationCallback = (mutationsList, observer) => {
     mutationsList.forEach((mutation) => {
       if (mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
-            // Find all matching elements using the selector
-            const matchingElements = node.querySelectorAll(
+            // Find all matching elements using the selector for the saved schedule page
+            const matchingElementsSavedSchedule = node.querySelectorAll(
               '[data-automation-id="decorationWrapper"][id="56$381809"] > div'
             )
 
-            let counter: number = 0
-            matchingElements.forEach((matchingElement) => {
-              // Get the course name element (you might need to adjust the selector)
-              const courseNameElement = node.querySelector(
-                '[role="presentation"]'
-              )
+            // Get the course name element (you might need to adjust the selector)
+            const courseNameElement = node.querySelector(
+              '[role="presentation"]'
+            )
 
+            let counter: number = 0
+            matchingElementsSavedSchedule.forEach((matchingElement) => {
               if (courseNameElement) {
-                addCopySavedScheduleButton(
+                addCopyScheduleButton(
                   courseNameElement,
                   matchingElement,
-                  counter
+                  counter,
+                  "saved"
                 )
                 counter++
               }
             })
+
+            const matchingElementCourseSchedule = node.querySelector(
+              '[data-automation-id="gridTitleLabel"][title="My Enrolled Courses"]'
+            )
+
+            // Only add the one table on the course schedule page
+            if (courseNameElement && matchingElementCourseSchedule) {
+              addCopyScheduleButton(
+                courseNameElement,
+                matchingElementCourseSchedule,
+                0,
+                "course"
+              )
+            }
           }
         })
       }
@@ -429,24 +444,35 @@ function observeDOMAndAddCopySavedScheduleButton(): void {
 }
 
 // Function to add a button to a given HTML element
-function addCopySavedScheduleButton(
+function addCopyScheduleButton(
   element: Element,
   buttonElement: Element,
-  counter: number
+  counter: number,
+  buttonType: string
 ): void {
   // Creating a button element
   const button: HTMLButtonElement = document.createElement("button")
-  // Setting the button text content
-  button.textContent = "Copy Saved Schedule Into Extension"
-  // Add custom button id
-  button.id = "add-schedule-button"
+
+  // Two options for buttonType are "saved" and 
+  // Setting the button text content and custom id
+  if (buttonType === "saved") {
+    button.textContent = "Copy Saved Schedule Into Extension"
+    button.id = "add-schedule-button"
+  } else if (buttonType === "course") {
+    button.textContent = "Copy Course Schedule Into Extension"
+    button.id = "import-registered-button"
+  } else {
+    console.error("Invalid button type")
+    return
+  }
+  
   // Adding an event listener for when the button is clicked
   button.addEventListener("click", () => {
     if (element === null) {
       alert("No saved schedule found")
       return
     }
-    handleCopySavedScheduleButtonClick(element, counter)
+    handleCopyScheduleButtonClick(element, counter, buttonType)
   })
 
   // Styling the button
@@ -481,13 +507,22 @@ function addCopySavedScheduleButton(
     button.style.boxShadow = "0 0 0 1px #0056b3"
   })
 
-  // Inserting the button after the given element
-  buttonElement.parentNode?.insertBefore(button, buttonElement.nextSibling)
+  if (buttonType === "saved") {
+    // Inserting the button after the given element
+    buttonElement.parentNode?.insertBefore(button, buttonElement.nextSibling)
+  } else if (buttonType === "course") {
+    // Inserting the button after the last child element
+    buttonElement.parentNode?.appendChild(button)
+  } else {
+    console.error("Invalid button type")
+    return
+  }
 }
 
-async function handleCopySavedScheduleButtonClick(
+async function handleCopyScheduleButtonClick(
   element: Element,
-  counter: number
+  counter: number,
+  buttonType: string
 ): Promise<void> {
   // Ensure the drawer opens when a button is clicked
   toggleContainer(true)
@@ -508,12 +543,12 @@ async function handleCopySavedScheduleButtonClick(
 
   const table = tables[counter]
 
-  const tableData: string[][] = []
+  const tableData: any[] = []
 
   const tableRows = table.querySelectorAll("tr")
 
   tableRows.forEach((row) => {
-    const rowData: string[] = []
+    const rowData: any[] = []
 
     const rowCells = row.querySelectorAll("td, th")
 
@@ -529,10 +564,17 @@ async function handleCopySavedScheduleButtonClick(
     '.NewSectionButton[title="Add Section"]'
   ) as HTMLElement
   for (let i = 2; i < tableData.length; i++) {
-    const code = tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
+    // Change column that course code is being taken from depending on button type
+    const code = (buttonType === "saved") ?
+      tableData[i][3].slice(0, tableData[i][3].indexOf(" - ")) : 
+      tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
 
     const selectedSection = await findCourseInfo(code)
-    if (!selectedSection) return
+    
+    if (!selectedSection) {
+      console.error("Unable to retrieve selected section")
+      return
+    }
     // Getting existing sections from Chrome storage and adding the new section
     chrome.storage.local.set({ newSection: selectedSection })
     if (button) {
@@ -540,9 +582,9 @@ async function handleCopySavedScheduleButtonClick(
     }
   }
 
-  if (button) {
-    setTimeout(function () {
+  if ( button) {
+    setTimeout(function() {
       button.click()
-    }, 500)
+    }, 500)  
   }
 }
