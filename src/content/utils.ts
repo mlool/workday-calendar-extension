@@ -245,7 +245,6 @@ export function isCourseFormatted(courseName: string) {
 
 // Convert times from 12-hour format to 24-hour format
 const convertTo24HourFormat = (time: string): string => {
-  console.log(time)
   const [timePart, period] = time.split(" ")
   // eslint-disable-next-line prefer-const
   let [hours, minutes] = timePart.split(":").map(Number)
