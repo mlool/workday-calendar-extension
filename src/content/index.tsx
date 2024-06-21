@@ -1,5 +1,5 @@
 import { extractSection, findCourseInfo } from "./utils"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"
 
@@ -59,8 +59,8 @@ function initializePfpVisibility() {
   applyVisibility(hideProfilePicture)
 
   // Set up a custom event listener for changes in local storage
-  window.addEventListener("hideProfilePictureToggle", (event: any) => {
-    const hide = event.detail.enabled
+  window.addEventListener("hideProfilePictureToggle", (event) => {
+    const hide = (event as CustomEvent).detail.enabled
     applyVisibility(hide)
   })
 
@@ -379,7 +379,8 @@ chrome.storage.local.get("drawerOpen", function (data) {
 
   icon.addEventListener("click", () => toggleContainer())
 
-  ReactDOM.render(<App />, container)
+  const root = createRoot(container)
+  root.render(<App />)
 })
 
 //-------------------- Copy Saved Schedule Button --------------------
@@ -531,6 +532,11 @@ async function handleCopySavedScheduleButtonClick(
   for (let i = 2; i < tableData.length; i++) {
     const code = tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
 
+    // The following await-in-loop is not currently parallelizable as
+    // each course is manually loaded in by clicking the NewSectionButton.
+    //
+    // TODO: refactor this to add sections more directly.
+    // eslint-disable-next-line no-await-in-loop
     const selectedSection = await findCourseInfo(code)
     if (!selectedSection) return
     // Getting existing sections from Chrome storage and adding the new section
