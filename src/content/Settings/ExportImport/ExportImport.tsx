@@ -4,7 +4,7 @@ import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { findCourseId } from "../../utils"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 interface IProps {
   sections: ISectionData[]
