@@ -1,5 +1,5 @@
-// import { runtime, storage } from 'webextension-polyfill'
-// import { getCurrentTab } from '../helpers/tabs'
+import fetchProfRating from "../backends/rateMyProf"
+
 let portFromContentScript: chrome.runtime.Port | null
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -13,6 +13,9 @@ chrome.runtime.onConnect.addListener((port) => {
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "HOVER" && portFromContentScript) {
     portFromContentScript.postMessage(message.course)
+  }
+  if (message.type === "RMP") {
+    fetchProfRating('Thibault Mayor')
   }
 })
 

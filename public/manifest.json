@@ -25,6 +25,7 @@
       "matches": ["*://*.myworkday.com/*"]
     }
   ],
+  "host_permissions": ["*://*.ratemyprofessors.com/*"],
   "action": {},
   "host_permissions": ["*://*.myworkday.com/*"],
   "permissions": [
