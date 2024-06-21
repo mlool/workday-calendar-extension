@@ -1,11 +1,12 @@
 import { defaultColorList } from "../helpers/courseColors"
-import { sessionSecureToken } from "./App/App"
 import {
   SectionDetail,
   Term,
   ISectionData,
   SupplementaryData,
 } from "./App/App.types"
+
+export let sessionSecureToken: string | null = null
 
 export async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(
@@ -360,4 +361,36 @@ export const versionOneFiveZeroUpdateNotification = () => {
       }
     })
     .catch((error) => console.error("Error retrieving flag:", error))
+}
+
+export const fetchSecureToken = async () => {
+  const headers = new Headers({
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    "Session-Secure-Token": "",
+  })
+
+  const urlencoded = new URLSearchParams()
+
+  const requestOptions = {
+    method: "POST",
+    body: urlencoded,
+    redirect: "follow" as RequestRedirect,
+    headers: headers,
+  }
+
+  return fetch("https://wd10.myworkday.com/ubc/app-root", requestOptions)
+    .then((response) => response.json())
+    .then((data) => {
+      try {
+        sessionSecureToken = data["sessionSecureToken"]
+      } catch (error) {
+        console.error("Error parsing data:", error)
+        return null
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching course data:", error)
+      return null
+    })
 }

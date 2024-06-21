@@ -11,9 +11,12 @@ import {
   getNewSectionColor,
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
-import { filterSectionsByWorklist, findCourseInfo, versionOneFiveZeroUpdateNotification } from "../utils"
-
-export let sessionSecureToken: string | null = null
+import {
+  fetchSecureToken,
+  filterSectionsByWorklist,
+  findCourseInfo,
+  versionOneFiveZeroUpdateNotification,
+} from "../utils"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -30,38 +33,6 @@ function App() {
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
-    const fetchSecureToken = async () => {
-      const headers = new Headers({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Session-Secure-Token": "",
-      })
-
-      const urlencoded = new URLSearchParams()
-
-      const requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow" as RequestRedirect,
-        headers: headers,
-      }
-
-      return fetch("https://wd10.myworkday.com/ubc/app-root", requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          try {
-            sessionSecureToken = data["sessionSecureToken"]
-          } catch (error) {
-            console.error("Error parsing data:", error)
-            return null
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching course data:", error)
-          return null
-        })
-    }
-
     const syncInitialState = () => {
       chrome.storage.local.get(
         ["currentTerm", "colorTheme", "sections", "currentWorklistNumber"],
