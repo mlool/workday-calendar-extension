@@ -35,11 +35,7 @@ const SyncSavedSchedules = (props: IProps) => {
       if (possibleErrors) {
         dispatchModal({
           preset: ModalPreset.SyncErrors,
-          additionalData: {
-            syncErrors: possibleErrors,
-            oncancel: null,
-            onConfirm: null,
-          },
+          additionalData: possibleErrors,
         })
       } else {
         dispatchModal({

@@ -112,12 +112,11 @@ function ModalLayer(props: ModalLayerProps) {
         }
       }
       case ModalPreset.SyncErrors: {
-        const data: SyncScheduleModalData =
-          action.additionalData as SyncScheduleModalData
+        const syncErrors = action.additionalData as string[]
 
         const errors = (
           <ul style={{ fontSize: "1.2em", padding: "10px" }}>
-            {data.syncErrors.map((error, index) => (
+            {syncErrors.map((error, index) => (
               <li key={index}>
                 {index + 1}. {error}
                 <br />
@@ -129,10 +128,6 @@ function ModalLayer(props: ModalLayerProps) {
         return {
           title: "Error Syncing With Saved Schedule",
           body: errors,
-          closeButtonText: "Close",
-          actionButtonText: "OK",
-          actionHandler: data.onConfirm,
-          cancelHandler: data.onCancel,
           hasTintedBg: false,
           actionType: ModalActionType.Normal,
         }

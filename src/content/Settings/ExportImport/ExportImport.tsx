@@ -43,18 +43,22 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   }
 
   const handleSectionImport = async (sections: ISectionData[]) => {
-    const newSections = []
-    for (let i = 0; i < sections.length; i++) {
-      if (!sections[i].courseID) {
-        sections[i].courseID = await findCourseId(sections[i].code)
-      }
-      newSections.push(sections[i])
-    }
-    sections.forEach(async (section: ISectionData) => {
+    const fetchedCourseIDs: Promise<string>[] = []
+    for (const section of sections) {
       if (!section.courseID) {
-        section.courseID = await findCourseId(section.code)
+        fetchedCourseIDs.push(findCourseId(section.code))
+      }
+    }
+
+    const courseIDs = await Promise.all(fetchedCourseIDs)
+    const newSections = sections.map((s) => {
+      if (s.courseID) return s
+      return {
+        ...s,
+        courseID: courseIDs.shift(),
       }
     })
+
     setSections(newSections)
     dispatchExportImportModal("Import Successful! Your courses should now be viewable in your worklist")
 

@@ -107,7 +107,7 @@ export const getNewSectionColor = (
   const assignedColors = Array.from(
     new Set(
       releventSectionsList
-        .filter((x) => x.color != null)
+        .filter((x) => x.color !== null)
         .map((section) => section.color)
     )
   )
