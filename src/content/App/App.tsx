@@ -32,24 +32,21 @@ function App() {
   useEffect(() => {
     const fetchSecureToken = async () => {
       const headers = new Headers({
-        "Accept": "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json",
         "Session-Secure-Token": "",
-      });
-    
-      const urlencoded = new URLSearchParams();
-    
+      })
+
+      const urlencoded = new URLSearchParams()
+
       const requestOptions = {
         method: "POST",
         body: urlencoded,
         redirect: "follow" as RequestRedirect,
-        headers: headers
-      };
+        headers: headers,
+      }
 
-      return fetch(
-        "https://wd10.myworkday.com/ubc/app-root",
-        requestOptions
-      )
+      return fetch("https://wd10.myworkday.com/ubc/app-root", requestOptions)
         .then((response) => response.json())
         .then((data) => {
           try {

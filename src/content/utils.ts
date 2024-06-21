@@ -48,7 +48,7 @@ export async function findCourseInfo(code: string) {
 
     headers = new Headers({
       "Session-Secure-Token": sessionSecureToken,
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     })
 
     requestOptions = {
@@ -64,7 +64,7 @@ export async function findCourseInfo(code: string) {
       redirect: "follow" as RequestRedirect,
     }
     headers = new Headers({
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     })
   }
   return fetch(
@@ -241,7 +241,7 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr
 }
 
-export async function findCourseId(name: string): Promise<string>{
+export async function findCourseId(name: string): Promise<string> {
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", name)
