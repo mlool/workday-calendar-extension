@@ -60,8 +60,9 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     })
 
     setSections(newSections)
-    dispatchExportImportModal("Import Successful! Your courses should now be viewable in your worklist")
-
+    dispatchExportImportModal(
+      "Import Successful! Your courses should now be viewable in your worklist"
+    )
   }
 
   const dispatchExportImportModal = (message: string) => {

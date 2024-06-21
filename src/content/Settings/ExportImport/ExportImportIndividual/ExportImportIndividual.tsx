@@ -11,10 +11,7 @@ interface IProps {
   handleSectionImport: (data: ISectionData[]) => void
 }
 
-const ExportImportIndividual = ({
-  sections,
-  handleSectionImport,
-}: IProps) => {
+const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
   const [showExportPopup, setShowExportPopup] = useState(false)
   const [showImportPopup, setShowImportPopup] = useState(false)
   const dispatchModal = useContext(ModalDispatchContext)

@@ -104,11 +104,11 @@ function ModalLayer(props: ModalLayerProps) {
           hasTintedBg: false,
         }
       }
-      case ModalPreset.ImportStatus:{
+      case ModalPreset.ImportStatus: {
         const message: string = action.additionalData as string
         return {
           title: "Import Status",
-          body: message
+          body: message,
         }
       }
       case ModalPreset.SyncErrors: {
