@@ -42,7 +42,6 @@ export async function findCourseInfo(code: string) {
 
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
-  urlencoded.append("clientRequestID", generateRandomHexId())
 
   if (sessionSecureToken) {
     urlencoded.append("sessionSecureToken", sessionSecureToken)
@@ -109,7 +108,6 @@ export async function findSupplementaryData(code: string) {
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
-  urlencoded.append("clientRequestID", generateRandomHexId())
 
   if (sessionSecureToken) {
     urlencoded.append("sessionSecureToken", sessionSecureToken)
@@ -247,7 +245,6 @@ export async function findCourseId(name: string): Promise<string>{
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", name)
-  urlencoded.append("clientRequestID", generateRandomHexId())
 
   if (sessionSecureToken) {
     urlencoded.append("sessionSecureToken", sessionSecureToken)
@@ -344,14 +341,4 @@ export const filterSectionsByWorklist = (
     }
   }
   return sectionsForWorklist
-}
-
-// Function to generate a random lowercase hexadecimal string
-function generateRandomHexId(): string {
-  const hexChars = "0123456789abcdef";
-  let result = "";
-  for (let i = 0; i < 32; i++) {
-    result += hexChars.charAt(Math.floor(Math.random() * hexChars.length));
-  }
-  return result;
 }
