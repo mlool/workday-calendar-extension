@@ -1,4 +1,5 @@
 import { defaultColorList } from "../helpers/courseColors"
+import { sessionSecureToken } from "./App/App"
 import {
   SectionDetail,
   Term,
@@ -36,15 +37,37 @@ export async function extractSection(element: Element) {
 }
 
 export async function findCourseInfo(code: string) {
+  let requestOptions: RequestInit
+  let headers: Headers
+
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
+  urlencoded.append("clientRequestID", generateRandomHexId())
 
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
+
+    headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+      "Content-Type": "application/x-www-form-urlencoded"
+    })
+
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
+    }
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+    }
+    headers = new Headers({
+      "Content-Type": "application/x-www-form-urlencoded"
+    })
   }
-
   return fetch(
     "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
     requestOptions
@@ -83,13 +106,30 @@ export async function findCourseInfo(code: string) {
 }
 
 export async function findSupplementaryData(code: string) {
+  let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
+  urlencoded.append("clientRequestID", generateRandomHexId())
 
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
+
+    const headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+    })
+
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
+    }
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+    }
   }
 
   return fetch(
@@ -213,13 +253,30 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
 }
 
 export async function findCourseId(name: string) {
+  let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", name)
+  urlencoded.append("clientRequestID", generateRandomHexId())
 
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
+
+    const headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+    })
+
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
+    }
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+    }
   }
 
   return fetch(
@@ -295,4 +352,14 @@ export const filterSectionsByWorklist = (
     }
   }
   return sectionsForWorklist
+}
+
+// Function to generate a random lowercase hexadecimal string
+function generateRandomHexId(): string {
+  const hexChars = "0123456789abcdef";
+  let result = "";
+  for (let i = 0; i < 32; i++) {
+    result += hexChars.charAt(Math.floor(Math.random() * hexChars.length));
+  }
+  return result;
 }
