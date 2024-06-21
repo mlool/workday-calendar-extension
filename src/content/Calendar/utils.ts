@@ -6,6 +6,10 @@ export interface CellFormat {
   sectionContent: ISectionData | null
 }
 
+const splitTimeString = (time: string) => {
+  return time.split(":").map((x) => Math.abs(Number(x)))
+}
+
 export const convertToMatrix = (
   sections: ISectionData[],
   newSection: ISectionData | null,
@@ -65,10 +69,8 @@ export const convertToMatrix = (
       }
       const [code, number] = section.code.split(" ")
 
-      const [startHour, startMinute] = details.startTime
-        .split(":")
-        .map((x) => +x)
-      const [endHour, endMinute] = details.endTime.split(":").map((x) => +x)
+      const [startHour, startMinute] = splitTimeString(details.startTime)
+      const [endHour, endMinute] = splitTimeString(details.endTime)
 
       const startIndex = (startHour - 7) * 2 + startMinute / 30
       //Need to subtract 1 here or else we will fill in an extra cell. The diff between start index and end index needs to be # of blocks occupied - 1
@@ -113,8 +115,8 @@ export const convertToMatrix = (
     if (details.term !== currentTerm) {
       return
     }
-    const [startHour, startMinute] = details.startTime.split(":").map((x) => +x)
-    const [endHour, endMinute] = details.endTime.split(":").map((x) => +x)
+    const [startHour, startMinute] = splitTimeString(details.startTime)
+    const [endHour, endMinute] = splitTimeString(details.endTime)
 
     const startIndex = (startHour - 7) * 2 + startMinute / 30
     //Need to subtract 1 here or else we will fill in an extra cell. The diff between start index and end index needs to be # of blocks occupied - 1

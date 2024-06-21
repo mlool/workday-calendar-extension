@@ -40,3 +40,4 @@ Thumbs.db
 # Miscellaneous
 *.log
 *.tmp
+*.vim

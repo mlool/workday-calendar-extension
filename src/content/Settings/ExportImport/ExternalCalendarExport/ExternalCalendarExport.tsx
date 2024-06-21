@@ -81,10 +81,10 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
 
         const firstDay = days[0]
 
-        if (firstDay != "Mon") {
+        if (firstDay !== "Mon") {
           baseDay += offsets[firstDay as keyof typeof offsets]
         } else {
-          if (days.length == 1) {
+          if (days.length === 1) {
             baseDay += offsets["Mon"]
           } else {
             baseDay += offsets[days[1] as keyof typeof offsets]
@@ -116,8 +116,13 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
           end: [baseYear, baseMonth, baseDay, endHour, endMinute],
         }
 
-        if (worklist == worklistNumber) {
-          if (!Object.prototype.hasOwnProperty.call(formattedEventsByWorklist, worklist)) {
+        if (worklist === worklistNumber) {
+          if (
+            !Object.prototype.hasOwnProperty.call(
+              formattedEventsByWorklist,
+              worklist
+            )
+          ) {
             formattedEventsByWorklist[worklist] = []
           }
           formattedEventsByWorklist[worklist].push(event)
