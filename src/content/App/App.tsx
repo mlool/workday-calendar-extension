@@ -11,7 +11,7 @@ import {
   getNewSectionColor,
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
-import { filterSectionsByWorklist, findCourseInfo } from "../utils"
+import { filterSectionsByWorklist, findCourseInfo, versionOneFiveZeroUpdateNotification } from "../utils"
 
 export let sessionSecureToken: string | null = null
 
@@ -105,7 +105,7 @@ function App() {
     syncInitialState()
     fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)
-
+    versionOneFiveZeroUpdateNotification()
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange)
     }
