@@ -62,8 +62,9 @@ function App() {
     const syncInitialState = () => {
       chrome.storage.sync.get(["sections"], (result) => {
         if (result.sections !== undefined) {
+          setImportInProgress(true)
           handleSectionImport(assignColors(result.sections, ColorTheme.Green))
-          chrome.storage.local.set({ sections: [] }, function () {
+          chrome.storage.local.set({ sections: undefined }, function () {
             console.log("Sections reset to empty.")
           })
         }
