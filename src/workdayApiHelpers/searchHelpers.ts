@@ -129,8 +129,8 @@ export async function findSupplementaryData(name: string) {
   }
 }
 
-export async function findCourseInfo(name: string) {
-  const requestOptions = await buildRequestOptions(name, sessionSecureToken)
+export async function findCourseInfo(code: string) {
+  const requestOptions = await buildRequestOptions(code, sessionSecureToken)
 
   const data = await fetchSearchData(
     "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
@@ -141,13 +141,12 @@ export async function findCourseInfo(name: string) {
       const path = data["children"][0]["listItems"][0]
       const name = path["title"]["instances"][0]["text"]
       const id = path["title"]["instances"][0]["instanceId"]
-
       const sectionDetailsArr: string[] = []
       for (const item of path["detailResultFields"][0]["instances"]) {
         sectionDetailsArr.push(item["text"])
       }
       const newSection: ISectionData = {
-        code: name,
+        code: code,
         name: name.slice(name.indexOf(" - ") + 3),
         sectionDetails: parseSectionDetails(sectionDetailsArr),
         term: getTermFromSectionDetailsString(sectionDetailsArr),
