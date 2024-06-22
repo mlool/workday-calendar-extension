@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import "./App.css"
 import CalendarContainer from "../CalendarContainer/CalendarContainer"
 import { ISectionData, Term, Views } from "./App.types"
@@ -10,16 +10,15 @@ import {
   ColorTheme,
   getNewSectionColor,
 } from "../Settings/courseColors"
-import { ModalLayer } from "../ModalLayer"
+import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import {
   filterSectionsByWorklist,
-  findCourseId,
-  findCourseInfo,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
 import {
   fetchSecureToken,
   findCourseInfo,
+  findCourseId,
 } from "../../workdayApiHelpers/searchHelpers"
 
 function App() {
@@ -33,9 +32,13 @@ function App() {
   const [selectedSection, setSelectedSection] = useState<ISectionData | null>(
     null
   )
-  const [importingInProgress, setImportInProgress] = useState(false)
+  const dispatchModal = useContext(ModalDispatchContext)
 
   const handleSectionImport = async (sections: ISectionData[]) => {
+    dispatchModal({
+      preset: ModalPreset.ImportStatus,
+      additionalData: "Loading...",
+    })
     const fetchedCourseIDs: string[] = []
     await sections.reduce(async (promise, section) => {
       await promise
@@ -54,7 +57,6 @@ function App() {
     })
 
     setSections(newSections)
-    setImportInProgress(false)
   }
 
   // const prevColorTheme = useRef(colorTheme);
@@ -64,7 +66,6 @@ function App() {
     const syncInitialState = () => {
       chrome.storage.sync.get("sections", (result) => {
         if (result.sections !== undefined) {
-          setImportInProgress(true)
           handleSectionImport(assignColors(result.sections, ColorTheme.Green))
           chrome.storage.sync.remove("sections", function () {
             console.log("Sections reset to empty.")
@@ -192,9 +193,6 @@ function App() {
       setSelectedSection={setSelectedSection}
     >
       <div className="App">
-        {importingInProgress && (
-          <InfoModal message="Loading ...." onCancel={() => {}} />
-        )}
         <TopBar currentView={currentView} setCurrentView={setCurrentView} />
         {currentView === Views.calendar ? (
           <div className="CalendarViewContainer">
