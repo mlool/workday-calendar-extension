@@ -60,11 +60,11 @@ function App() {
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
-      chrome.storage.sync.get(["sections"], (result) => {
+      chrome.storage.sync.get("sections", (result) => {
         if (result.sections !== undefined) {
           setImportInProgress(true)
           handleSectionImport(assignColors(result.sections, ColorTheme.Green))
-          chrome.storage.sync.set({ sections: undefined }, function () {
+          chrome.storage.sync.remove("sections", function () {
             console.log("Sections reset to empty.")
           })
         }
