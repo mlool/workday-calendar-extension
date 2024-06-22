@@ -1,10 +1,8 @@
 import { useContext } from "react"
 import { ISectionData } from "../App/App.types"
-import {
-  getAllSavedScheduleIDs,
-  addCoursesToSavedSchedule,
-} from "./syncSavedSchedulesHelper"
+import { getAllSavedScheduleIDs } from "./syncSavedSchedulesHelper"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
+import { addCoursesToSavedSchedule } from "../../workdayApiHelpers/savedScheduleApiHelper"
 import "../Form/Form.css"
 
 interface IProps {
