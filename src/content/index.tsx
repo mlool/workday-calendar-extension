@@ -454,7 +454,7 @@ function addCopyScheduleButton(
   // Creating a button element
   const button: HTMLButtonElement = document.createElement("button")
 
-  // Two options for buttonType are "saved" and 
+  // Two options for buttonType are "saved" and
   // Setting the button text content and custom id
   if (buttonType === "saved") {
     button.textContent = "Copy Saved Schedule Into Extension"
@@ -466,7 +466,7 @@ function addCopyScheduleButton(
     console.error("Invalid button type")
     return
   }
-  
+
   // Adding an event listener for when the button is clicked
   button.addEventListener("click", () => {
     if (element === null) {
@@ -566,9 +566,10 @@ async function handleCopyScheduleButtonClick(
   ) as HTMLElement
   for (let i = 2; i < tableData.length; i++) {
     // Change column that course code is being taken from depending on button type
-    const code = (buttonType === "saved") ?
-      tableData[i][3].slice(0, tableData[i][3].indexOf(" - ")) : 
-      tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
+    const code =
+      buttonType === "saved"
+        ? tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
+        : tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
 
     // The following await-in-loop is not currently parallelizable as
     // each course is manually loaded in by clicking the NewSectionButton.
@@ -576,7 +577,7 @@ async function handleCopyScheduleButtonClick(
     // TODO: refactor this to add sections more directly.
     // eslint-disable-next-line no-await-in-loop
     const selectedSection = await findCourseInfo(code)
-    
+
     if (!selectedSection) {
       console.error("Unable to retrieve selected section")
       return
@@ -588,9 +589,9 @@ async function handleCopyScheduleButtonClick(
     }
   }
 
-  if ( button) {
-    setTimeout(function() {
+  if (button) {
+    setTimeout(function () {
       button.click()
-    }, 500)  
+    }, 500)
   }
 }

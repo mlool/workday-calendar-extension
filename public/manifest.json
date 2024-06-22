@@ -27,7 +27,7 @@
   ],
   "action": {},
   "permissions": [
-    "storage", 
+    "storage",
     "cookies",
     "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess"
