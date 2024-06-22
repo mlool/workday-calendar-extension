@@ -579,7 +579,6 @@ async function handleCopyScheduleButtonClick(
     
     if (!selectedSection) {
       console.error("Unable to retrieve selected section")
-      return
     }
     // Getting existing sections from Chrome storage and adding the new section
     chrome.storage.local.set({ newSection: selectedSection })
