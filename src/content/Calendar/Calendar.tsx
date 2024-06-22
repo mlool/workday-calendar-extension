@@ -1,5 +1,5 @@
 import { ISectionData, Term } from "../App/App.types"
-import { convertToMatrix, getEndHour } from "./calendarHelper"
+import { convertToMatrix, getEndHour } from "./calendarHelpers"
 import "./Calendar.css"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"

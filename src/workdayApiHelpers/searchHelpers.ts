@@ -1,4 +1,3 @@
-export let sessionSecureToken: string = ""
 import {
   getTermFromSectionDetailsString,
   parseSectionDetails,
@@ -6,9 +5,11 @@ import {
 import { SupplementaryData, ISectionData } from "../content/App/App.types"
 import { defaultColorList } from "../content/Settings/courseColors"
 
-async function buildRequestOptions(code: string, sessionSecureToken?: string) {
+let sessionSecureToken: string = ""
+
+function buildRequestOptions(searchTerm: string) {
   const urlencoded = new URLSearchParams()
-  urlencoded.append("q", code)
+  urlencoded.append("q", searchTerm)
 
   const headers = new Headers({
     "Content-Type": "application/x-www-form-urlencoded",
@@ -37,7 +38,7 @@ async function fetchSearchData(url: string, requestOptions: RequestInit) {
   }
 }
 
-export async function fetchSecureToken() {
+async function fetchSecureToken(): Promise<void> {
   const headers = new Headers({
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -60,15 +61,13 @@ export async function fetchSecureToken() {
     )
     const data = await response.json()
     sessionSecureToken = data["sessionSecureToken"]
-    return sessionSecureToken
   } catch (error) {
     console.error("Error fetching secure token:", error)
-    return null
   }
 }
 
-export async function findCourseId(name: string): Promise<string> {
-  const requestOptions = await buildRequestOptions(name, sessionSecureToken)
+async function findCourseId(searchTerm: string): Promise<string> {
+  const requestOptions = buildRequestOptions(searchTerm)
 
   const data = await fetchSearchData(
     "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
@@ -90,8 +89,10 @@ export async function findCourseId(name: string): Promise<string> {
   return ""
 }
 
-export async function findSupplementaryData(name: string) {
-  const requestOptions = await buildRequestOptions(name, sessionSecureToken)
+async function findSupplementaryData(
+  searchTerm: string
+): Promise<SupplementaryData | null | undefined> {
+  const requestOptions = buildRequestOptions(searchTerm)
 
   const data = await fetchSearchData(
     "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
@@ -101,25 +102,25 @@ export async function findSupplementaryData(name: string) {
   if (data) {
     try {
       const path = data["children"][0]["listItems"][0]
-      const instructors = path["detailResultFields"][2]["instances"]
+      const rawInstructorData = path["detailResultFields"][2]["instances"]
 
-      const instructorsArr: string[] = [""]
-      if (instructors) {
-        for (const item of instructors) {
-          instructorsArr.push(item["text"])
+      const instructors: string[] = []
+      if (rawInstructorData) {
+        for (const item of rawInstructorData) {
+          instructors.push(item["text"])
         }
       }
-      const locations = path["detailResultFields"][0]["instances"]
+      const rawLocationData = path["detailResultFields"][0]["instances"]
 
-      const locationsArr: string[] = [""]
-      if (locations) {
-        for (const item of locations) {
-          locationsArr.push(item["text"].split(" | ")[0])
+      const locations: string[] = [""]
+      if (rawLocationData) {
+        for (const item of rawLocationData) {
+          locations.push(item["text"].split(" | ")[0])
         }
       }
       const newSupplementaryData: SupplementaryData = {
-        instructors: instructorsArr,
-        locations: locationsArr,
+        instructors: instructors,
+        locations: locations,
       }
       return newSupplementaryData
     } catch (error) {
@@ -129,8 +130,10 @@ export async function findSupplementaryData(name: string) {
   }
 }
 
-export async function findCourseInfo(code: string) {
-  const requestOptions = await buildRequestOptions(code, sessionSecureToken)
+async function findCourseInfo(
+  searchTerm: string
+): Promise<ISectionData | null | undefined> {
+  const requestOptions = buildRequestOptions(searchTerm)
 
   const data = await fetchSearchData(
     "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
@@ -146,7 +149,7 @@ export async function findCourseInfo(code: string) {
         sectionDetailsArr.push(item["text"])
       }
       const newSection: ISectionData = {
-        code: code,
+        code: searchTerm,
         name: name.slice(name.indexOf(" - ") + 3),
         sectionDetails: parseSectionDetails(sectionDetailsArr),
         term: getTermFromSectionDetailsString(sectionDetailsArr),
@@ -161,3 +164,5 @@ export async function findCourseInfo(code: string) {
     }
   }
 }
+
+export { fetchSecureToken, findCourseId, findSupplementaryData, findCourseInfo }

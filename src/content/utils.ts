@@ -1,7 +1,7 @@
 import { SectionDetail, Term, ISectionData } from "./App/App.types"
 import { findCourseInfo } from "../workdayApiHelpers/searchHelpers"
 
-export async function extractSection(element: Element) {
+async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
   ) // The div with the raw text of the course section data.
@@ -30,7 +30,7 @@ export async function extractSection(element: Element) {
   })
 }
 
-export const parseSectionDetails = (details: string[]): SectionDetail[] => {
+const parseSectionDetails = (details: string[]): SectionDetail[] => {
   let detailsArr: SectionDetail[] = []
 
   details.forEach((detail) => {
@@ -101,7 +101,7 @@ export const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr
 }
 
-export function isCourseFormatted(courseName: string) {
+function isCourseFormatted(courseName: string) {
   const regexV = /^[A-Z]{3}_V [0-9]+-[0-9]+$/
   const regexO = /^[A-Z]{3}_O [0-9]+-[0-9]+$/
 
@@ -125,7 +125,7 @@ const convertTo24HourFormat = (time: string): string => {
     .padStart(2, "0")}`
 }
 
-export const getTermFromSectionDetailsString = (
+const getTermFromSectionDetailsString = (
   sectionDetailsArray: string[]
 ): Term => {
   //If the string includes 2024, check if it includes 2025 also, if it does then it is both W1 and W2, if only 2024, W1, else W2
@@ -141,7 +141,7 @@ export const getTermFromSectionDetailsString = (
   return Term.winterTwo
 }
 
-export const filterSectionsByWorklist = (
+const filterSectionsByWorklist = (
   sections: ISectionData[],
   worklist: number
 ): ISectionData[] => {
@@ -154,7 +154,7 @@ export const filterSectionsByWorklist = (
   return sectionsForWorklist
 }
 
-export const versionOneFiveZeroUpdateNotification = () => {
+const versionOneFiveZeroUpdateNotification = () => {
   const currentVersion = chrome.runtime.getManifest().version
   chrome.storage.local
     .get("versionOneFiveZeroNotificationDisplayed")
@@ -171,4 +171,14 @@ export const versionOneFiveZeroUpdateNotification = () => {
       }
     })
     .catch((error) => console.error("Error retrieving flag:", error))
+}
+
+export {
+  extractSection,
+  parseSectionDetails,
+  isCourseFormatted,
+  convertTo24HourFormat,
+  getTermFromSectionDetailsString,
+  filterSectionsByWorklist,
+  versionOneFiveZeroUpdateNotification,
 }
