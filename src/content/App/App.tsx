@@ -11,7 +11,12 @@ import {
   getNewSectionColor,
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
-import { filterSectionsByWorklist } from "../utils"
+import {
+  fetchSecureToken,
+  filterSectionsByWorklist,
+  findCourseInfo,
+  versionOneFiveZeroUpdateNotification,
+} from "../utils"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -66,10 +71,12 @@ function App() {
         }
       }
     }
-
+    // Set context-id
+    findCourseInfo("CPSC_V 320-101")
     syncInitialState()
+    fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)
-
+    versionOneFiveZeroUpdateNotification()
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange)
     }

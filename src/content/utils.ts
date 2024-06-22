@@ -6,6 +6,8 @@ import {
   SupplementaryData,
 } from "./App/App.types"
 
+export let sessionSecureToken: string | null = null
+
 export async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
@@ -36,15 +38,36 @@ export async function extractSection(element: Element) {
 }
 
 export async function findCourseInfo(code: string) {
+  let requestOptions: RequestInit
+  let headers: Headers
+
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
 
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
-  }
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
 
+    headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+      "Content-Type": "application/x-www-form-urlencoded",
+    })
+
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
+    }
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+    }
+    headers = new Headers({
+      "Content-Type": "application/x-www-form-urlencoded",
+    })
+  }
   return fetch(
     "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
     requestOptions
@@ -83,13 +106,29 @@ export async function findCourseInfo(code: string) {
 }
 
 export async function findSupplementaryData(code: string) {
+  let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
 
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
+
+    const headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+    })
+
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
+    }
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+    }
   }
 
   return fetch(
@@ -142,18 +181,9 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
       alert("Invalid section details format")
     }
 
-    let location = ""
-    let daysString = ""
-    let timeRange = ""
-    let dateRange = ""
-
-    if (detailParts.length === 3) {
-      // Without location
-      ;[daysString, timeRange, dateRange] = detailParts
-    } else {
-      // With location
-      ;[location, daysString, timeRange, dateRange] = detailParts
-    }
+    // If length === 4, first item is location (which we don't use).
+    if (detailParts.length === 4) detailParts.shift()
+    const [daysString, timeRange, dateRange] = detailParts
 
     let days = daysString.split(" ")
     let [startTime, endTime] = timeRange.split(" - ")
@@ -212,14 +242,30 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr
 }
 
-export async function findCourseId(name: string) {
+export async function findCourseId(name: string): Promise<string> {
+  let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", name)
 
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
+
+    const headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+    })
+
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
+    }
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+    }
   }
 
   return fetch(
@@ -255,6 +301,7 @@ export function isCourseFormatted(courseName: string) {
 // Convert times from 12-hour format to 24-hour format
 const convertTo24HourFormat = (time: string): string => {
   const [timePart, period] = time.split(" ")
+  // eslint-disable-next-line prefer-const
   let [hours, minutes] = timePart.split(":").map(Number)
 
   if (period && period.toLowerCase() === "p.m." && hours !== 12) {
@@ -295,4 +342,55 @@ export const filterSectionsByWorklist = (
     }
   }
   return sectionsForWorklist
+}
+
+export const versionOneFiveZeroUpdateNotification = () => {
+  const currentVersion = chrome.runtime.getManifest().version
+  chrome.storage.local
+    .get("versionOneFiveZeroNotificationDisplayed")
+    .then((retrievedFlag) => {
+      const flag =
+        retrievedFlag?.versionOneFiveZeroNotificationDisplayed ?? false
+      if (!flag && currentVersion === "1.5.1") {
+        alert(
+          "Welcome to version 1.5.0! This update includes many changes and a full changelog can be viewed on our communication platforms. Please note that for the best results, it is recommended to sign out and then sign back in as well as exporting all of your worklists and them importing them back in to ensure all features are working correctly. Thank you for using the Workday Extension!"
+        )
+        chrome.storage.local.set({
+          versionOneFiveZeroNotificationDisplayed: true,
+        })
+      }
+    })
+    .catch((error) => console.error("Error retrieving flag:", error))
+}
+
+export const fetchSecureToken = async () => {
+  const headers = new Headers({
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    "Session-Secure-Token": "",
+  })
+
+  const urlencoded = new URLSearchParams()
+
+  const requestOptions = {
+    method: "POST",
+    body: urlencoded,
+    redirect: "follow" as RequestRedirect,
+    headers: headers,
+  }
+
+  return fetch("https://wd10.myworkday.com/ubc/app-root", requestOptions)
+    .then((response) => response.json())
+    .then((data) => {
+      try {
+        sessionSecureToken = data["sessionSecureToken"]
+      } catch (error) {
+        console.error("Error parsing data:", error)
+        return null
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching course data:", error)
+      return null
+    })
 }
