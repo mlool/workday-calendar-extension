@@ -46,20 +46,20 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   const handleSectionImport = async (sections: ISectionData[]) => {
     const fetchedCourseIDs: string[] = []
     await sections.reduce(async (promise, section) => {
-      await promise;
+      await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
-        fetchedCourseIDs.push(courseID);
+        fetchedCourseIDs.push(courseID)
       }
     }, Promise.resolve())
 
     const newSections = sections.map((s) => {
-      if (s.courseID) return s;
+      if (s.courseID) return s
       return {
-          ...s,
-          courseID: fetchedCourseIDs.shift(),
-      };
-    });
+        ...s,
+        courseID: fetchedCourseIDs.shift(),
+      }
+    })
 
     setSections(newSections)
     setImportInProgress(false)
