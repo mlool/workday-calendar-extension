@@ -1,4 +1,5 @@
-import { extractSection, findCourseInfo } from "./utils"
+import { extractSection } from "./utils"
+import { findCourseInfo } from "../workdayApiHelpers/searchHelpers"
 import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"

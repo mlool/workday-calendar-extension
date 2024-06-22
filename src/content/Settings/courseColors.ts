@@ -1,5 +1,5 @@
-import { ISectionData } from "../content/App/App.types"
-import { getCourseCode } from "../content/Calendar/utils"
+import { ISectionData } from "../App/App.types"
+import { getCourseCode } from "../Calendar/utils"
 
 export enum ColorTheme {
   GreenBlue = "GREENBLUE",

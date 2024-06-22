@@ -3,7 +3,7 @@ import "../Settings.css"
 import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
-import { findCourseId } from "../../utils"
+import { findCourseId } from "../../../workdayApiHelpers/searchHelpers"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 interface IProps {

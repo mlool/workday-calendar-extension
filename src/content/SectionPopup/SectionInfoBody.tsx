@@ -4,7 +4,7 @@ import "./SectionInfoBody.css"
 import GradesComponent from "./GradesComponent/GradesComponent"
 import InstructorComponent from "./InstructorComponent/InstructorComponent"
 import LocationComponent from "./LocationsComponent/LocationComponent"
-import { findSupplementaryData } from "../utils"
+import { findSupplementaryData } from "../../workdayApiHelpers/searchHelpers"
 
 interface SectionInfoProps {
   selectedSection: ISectionData
@@ -20,7 +20,9 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
       setIsLoading(true)
       findSupplementaryData(selectedSection.code)
         .then((response) => {
-          setSupplementaryData(response)
+          if (response) {
+            setSupplementaryData(response)
+          }
         })
         .catch((error) => {
           console.error("Error finding supplementary data:", error)

@@ -9,14 +9,16 @@ import {
   assignColors,
   ColorTheme,
   getNewSectionColor,
-} from "../../helpers/courseColors"
+} from "../Settings/courseColors"
 import { ModalLayer } from "../ModalLayer"
 import {
-  fetchSecureToken,
   filterSectionsByWorklist,
-  findCourseInfo,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
+import {
+  fetchSecureToken,
+  findCourseInfo,
+} from "../../workdayApiHelpers/searchHelpers"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)

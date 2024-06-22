@@ -1,12 +1,5 @@
-import { defaultColorList } from "../helpers/courseColors"
-import {
-  SectionDetail,
-  Term,
-  ISectionData,
-  SupplementaryData,
-} from "./App/App.types"
-
-export let sessionSecureToken: string | null = null
+import { SectionDetail, Term, ISectionData } from "./App/App.types"
+import { findCourseInfo } from "../workdayApiHelpers/searchHelpers"
 
 export async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(
@@ -37,141 +30,7 @@ export async function extractSection(element: Element) {
   })
 }
 
-export async function findCourseInfo(code: string) {
-  let requestOptions: RequestInit
-  let headers: Headers
-
-  const urlencoded = new URLSearchParams()
-  urlencoded.append("q", code)
-
-  if (sessionSecureToken) {
-    urlencoded.append("sessionSecureToken", sessionSecureToken)
-
-    headers = new Headers({
-      "Session-Secure-Token": sessionSecureToken,
-      "Content-Type": "application/x-www-form-urlencoded",
-    })
-
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-      headers: headers,
-    }
-  } else {
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-    }
-    headers = new Headers({
-      "Content-Type": "application/x-www-form-urlencoded",
-    })
-  }
-  return fetch(
-    "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
-    requestOptions
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      try {
-        const path = data["children"][0]["listItems"][0]
-        const name = path["title"]["instances"][0]["text"]
-        // const term = path["detailResultFields"][0]["instances"][0]["text"]
-        const id = path["title"]["instances"][0]["instanceId"]
-
-        const sectionDetailsArr: string[] = []
-        for (const item of path["detailResultFields"][0]["instances"]) {
-          sectionDetailsArr.push(item["text"])
-        }
-        const newSection: ISectionData = {
-          code: code,
-          name: name.slice(name.indexOf(" - ") + 3),
-          sectionDetails: parseSectionDetails(sectionDetailsArr),
-          term: getTermFromSectionDetailsString(sectionDetailsArr),
-          worklistNumber: 0,
-          color: defaultColorList[0],
-          courseID: id.split("$")[1],
-        }
-        return newSection
-      } catch (error) {
-        console.error("Error parsing course data:", error)
-        return null
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching course data:", error)
-      return null
-    })
-}
-
-export async function findSupplementaryData(code: string) {
-  let requestOptions: RequestInit
-  const urlencoded = new URLSearchParams()
-  urlencoded.append("q", code)
-
-  if (sessionSecureToken) {
-    urlencoded.append("sessionSecureToken", sessionSecureToken)
-
-    const headers = new Headers({
-      "Session-Secure-Token": sessionSecureToken,
-    })
-
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-      headers: headers,
-    }
-  } else {
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-    }
-  }
-
-  return fetch(
-    "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
-    requestOptions
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      try {
-        const path = data["children"][0]["listItems"][0]
-        const instructors = path["detailResultFields"][2]["instances"]
-
-        const instructorsArr: string[] = [""]
-        if (instructors) {
-          for (const item of instructors) {
-            instructorsArr.push(item["text"])
-          }
-        }
-        const locations = path["detailResultFields"][0]["instances"]
-
-        const locationsArr: string[] = [""]
-        if (locations) {
-          for (const item of locations) {
-            locationsArr.push(item["text"].split(" | ")[0])
-          }
-        }
-        const newSupplementaryData: SupplementaryData = {
-          instructors: instructorsArr,
-          locations: locationsArr,
-        }
-        return newSupplementaryData
-      } catch (error) {
-        console.error("Error parsing course data:", error)
-        return null
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching course data:", error)
-      return null
-    })
-}
-
-const parseSectionDetails = (details: string[]): SectionDetail[] => {
+export const parseSectionDetails = (details: string[]): SectionDetail[] => {
   let detailsArr: SectionDetail[] = []
 
   details.forEach((detail) => {
@@ -242,55 +101,6 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr
 }
 
-export async function findCourseId(name: string): Promise<string> {
-  let requestOptions: RequestInit
-  const urlencoded = new URLSearchParams()
-  urlencoded.append("q", name)
-
-  if (sessionSecureToken) {
-    urlencoded.append("sessionSecureToken", sessionSecureToken)
-
-    const headers = new Headers({
-      "Session-Secure-Token": sessionSecureToken,
-    })
-
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-      headers: headers,
-    }
-  } else {
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-    }
-  }
-
-  return fetch(
-    "https://wd10.myworkday.com/ubc/faceted-search2/c12/fs0/search.htmld",
-    requestOptions
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      try {
-        const courseId =
-          data["children"][0]["listItems"][0]["title"]["instances"][0][
-            "instanceId"
-          ]
-        return courseId.split("$")[1]
-      } catch (error) {
-        console.error("Error parsing course data:", error)
-        return null
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching course data:", error)
-      return null
-    })
-}
-
 export function isCourseFormatted(courseName: string) {
   const regexV = /^[A-Z]{3}_V [0-9]+-[0-9]+$/
   const regexO = /^[A-Z]{3}_O [0-9]+-[0-9]+$/
@@ -315,7 +125,7 @@ const convertTo24HourFormat = (time: string): string => {
     .padStart(2, "0")}`
 }
 
-const getTermFromSectionDetailsString = (
+export const getTermFromSectionDetailsString = (
   sectionDetailsArray: string[]
 ): Term => {
   //If the string includes 2024, check if it includes 2025 also, if it does then it is both W1 and W2, if only 2024, W1, else W2
@@ -361,36 +171,4 @@ export const versionOneFiveZeroUpdateNotification = () => {
       }
     })
     .catch((error) => console.error("Error retrieving flag:", error))
-}
-
-export const fetchSecureToken = async () => {
-  const headers = new Headers({
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    "Session-Secure-Token": "",
-  })
-
-  const urlencoded = new URLSearchParams()
-
-  const requestOptions = {
-    method: "POST",
-    body: urlencoded,
-    redirect: "follow" as RequestRedirect,
-    headers: headers,
-  }
-
-  return fetch("https://wd10.myworkday.com/ubc/app-root", requestOptions)
-    .then((response) => response.json())
-    .then((data) => {
-      try {
-        sessionSecureToken = data["sessionSecureToken"]
-      } catch (error) {
-        console.error("Error parsing data:", error)
-        return null
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching course data:", error)
-      return null
-    })
 }
