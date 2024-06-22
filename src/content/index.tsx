@@ -394,7 +394,7 @@ function observeDOMAndAddCopyScheduleButtons(): void {
     attributes: false,
   }
 
-  const callback: MutationCallback = (mutationsList, observer) => {
+  const callback: MutationCallback = (mutationsList) => {
     mutationsList.forEach((mutation) => {
       if (mutation.addedNodes.length > 0) {
         mutation.addedNodes.forEach((node) => {
@@ -544,12 +544,12 @@ async function handleCopyScheduleButtonClick(
 
   const table = tables[counter]
 
-  const tableData: any[] = []
+  const tableData: string[][] = []
 
   const tableRows = table.querySelectorAll("tr")
 
   tableRows.forEach((row) => {
-    const rowData: any[] = []
+    const rowData: string[] = []
 
     const rowCells = row.querySelectorAll("td, th")
 
