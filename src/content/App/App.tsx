@@ -15,7 +15,6 @@ import {
   fetchSecureToken,
   filterSectionsByWorklist,
   findCourseId,
-  findCourseInfo,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
 import InfoModal from "../InfoModal/InfoModal"

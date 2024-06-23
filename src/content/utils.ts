@@ -69,10 +69,10 @@ export async function findCourseInfo(code: string) {
     })
   }
 
-  let contextId = await chrome.storage.local.get("contextId")
+  const contextId = await chrome.storage.local.get("contextId")
   if (!contextId.contextId) {
     console.warn("contextId not found in storage, using default")
-    contextId.contextId = "12"
+    contextId.contextId = 12
   }
   return fetch(
     `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
@@ -137,10 +137,10 @@ export async function findSupplementaryData(code: string) {
     }
   }
 
-  let contextId = await chrome.storage.local.get("contextId")
+  const contextId = await chrome.storage.local.get("contextId")
   if (!contextId.contextId) {
     console.warn("contextId not found in storage, using default")
-    contextId.contextId = "12"
+    contextId.contextId = 12
   }
 
   return fetch(
@@ -279,10 +279,10 @@ export async function findCourseId(name: string): Promise<string> {
       redirect: "follow" as RequestRedirect,
     }
   }
-  let contextId = await chrome.storage.local.get("contextId")
+  const contextId = await chrome.storage.local.get("contextId")
   if (!contextId.contextId) {
     console.warn("contextId not found in storage, using default")
-    contextId.contextId = "12"
+    contextId.contextId = 12
   }
   return fetch(
     `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
