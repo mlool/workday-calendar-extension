@@ -85,49 +85,59 @@ chrome.runtime.onInstalled.addListener(() => {
   })()
 })
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  (details) => {
-    if (
-      details.url.includes(
-        "https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID="
-      ) &&
-      details.requestHeaders
-    ) {
-      const hasExistingFlag = details.requestHeaders.some(
-        (header) => header.name.toLowerCase() === "flag" && header.value === "1"
-      )
+const updateContextId = (endpoint: string) => {
+  chrome.webRequest.onBeforeSendHeaders.addListener(
+    (details) => {
+      if (details.url.includes(endpoint) && details.requestHeaders) {
+        const hasExistingFlag = details.requestHeaders.some(
+          (header) =>
+            header.name.toLowerCase() === "flag" && header.value === "1"
+        )
 
-      if (hasExistingFlag) {
-        return
-      }
+        if (hasExistingFlag) {
+          return
+        }
 
-      const newClientRequestId = crypto.randomUUID().replace("-", "")
-      const newUrl = `https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=${newClientRequestId}`
-      console.log("Forwarding request to:", newUrl)
-      const headers = new Headers()
-      headers.append("flag", "1")
+        const newClientRequestId = crypto.randomUUID().replace("-", "")
+        const newUrl = `${endpoint}${newClientRequestId}`
+        console.log("Forwarding request to:", newUrl)
+        const headers = new Headers()
+        headers.append("flag", "1")
 
-      fetch(newUrl, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          try {
-            const rawContextId = data["pageContextId"]
-            const contextIdNum = parseInt(rawContextId.substring(1)) + 1 //increment to account for flow controller after
-
-            chrome.storage.local.set({ contextId: contextIdNum })
-          } catch (error) {
-            console.error("Error parsing context id:", error)
-            return null
-          }
+        fetch(newUrl, {
+          method: "GET",
+          headers: headers,
         })
-        .catch((error) => console.error("Error forwarding request:", error))
-    }
-  },
-  { urls: ["<all_urls>"] },
-  ["requestHeaders", "extraHeaders"]
-)
+          .then((response) => response.json())
+          .then((data) => {
+            try {
+              const rawContextId = data["pageContextId"]
+              const contextIdNum = parseInt(rawContextId.substring(1)) + 1 //increment to account for flow controller after
+
+              chrome.storage.local.set({ contextId: contextIdNum })
+            } catch (error) {
+              console.error("Error parsing context id:", error)
+              return null
+            }
+          })
+          .catch((error) => console.error("Error forwarding request:", error))
+      }
+    },
+    { urls: ["<all_urls>"] },
+    ["requestHeaders", "extraHeaders"]
+  )
+}
+
+// "find course sections" button
+updateContextId("https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=")
+
+// "view my saved schedules" button
+updateContextId("https://wd10.myworkday.com/ubc/task/2997$9892.htmld?clientRequestID=")
+
+// "view my courses" button
+updateContextId("https://wd10.myworkday.com/ubc/task/2998$28771.htmld?clientRequestID=")
+
+// "registration and courses" button
+updateContextId("https://wd10.myworkday.com/ubc/inst/12709$165/rel-task/12709$165.htmld?clientRequestID=")
 
 export {}
