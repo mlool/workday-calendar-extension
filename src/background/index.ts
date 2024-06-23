@@ -85,21 +85,49 @@ chrome.runtime.onInstalled.addListener(() => {
   })()
 })
 
-chrome.webRequest.onBeforeRequest.addListener(
+chrome.webRequest.onBeforeSendHeaders.addListener(
   (details) => {
-    const contextIdRegex = /(?<=c)[\d]{1,2}(?=\/)/
- 
-    const newContextIdMatch = details.url.match(contextIdRegex)
+    if (
+      details.url.includes(
+        "https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID="
+      ) &&
+      details.requestHeaders
+    ) {
+      const hasExistingFlag = details.requestHeaders.some(
+        (header) => header.name.toLowerCase() === "flag" && header.value === "1"
+      )
 
-    if (newContextIdMatch) {
-      const newContextId = newContextIdMatch[0]
-      chrome.storage.local.get("contextId", (data) => {
-        if (data.contextId !== newContextId) {
-          chrome.storage.local.set({ contextId: newContextId })
-        }
+      if (hasExistingFlag) {
+        return
+      }
+
+      const newClientRequestId = crypto.randomUUID().replace("-", "")
+      const newUrl = `https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=${newClientRequestId}`
+      console.log("Forwarding request to:", newUrl)
+      const headers = new Headers()
+      headers.append("flag", "1")
+
+      fetch(newUrl, {
+        method: "GET",
+        headers: headers,
       })
+        .then((response) => response.json())
+        .then((data) => {
+          try {
+            const rawContextId = data["pageContextId"]
+            const contextIdNum = parseInt(rawContextId.substring(1)) + 1 //increment to account for flow controller after
+
+            chrome.storage.local.set({ contextId: contextIdNum })
+          } catch (error) {
+            console.error("Error parsing context id:", error)
+            return null
+          }
+        })
+        .catch((error) => console.error("Error forwarding request:", error))
     }
   },
-  { urls: ["<all_urls>"] }
+  { urls: ["<all_urls>"] },
+  ["requestHeaders", "extraHeaders"]
 )
+
 export {}
