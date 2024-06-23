@@ -107,8 +107,7 @@ function App() {
         }
       }
     }
-    // Set context-id
-    findCourseInfo("CPSC_V 320-101")
+
     syncInitialState()
     fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)

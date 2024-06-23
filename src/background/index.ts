@@ -1,6 +1,5 @@
 // import { runtime, storage } from 'webextension-polyfill'
 // import { getCurrentTab } from '../helpers/tabs'
-
 let portFromContentScript: chrome.runtime.Port | null
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -86,4 +85,38 @@ chrome.runtime.onInstalled.addListener(() => {
   })()
 })
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "captureContextId") {
+    const details = request.details
+
+    const urlParts = details.url.split("/")
+
+    const contextId = urlParts[5].substring(1)
+
+    chrome.storage.local.set({ contextId: contextId })
+    sendResponse({})
+  }
+})
+
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    const urlParts = details.url.split("/")
+    const contextIdString = urlParts[5].substring(1)
+
+    const contextId = parseInt(contextIdString, 10)
+
+    if (isNaN(contextId) || contextId < 0 || contextId > 99) {
+      return
+    }
+
+    chrome.storage.local.get("contextId", (data) => {
+      const existingContextId = data.contextId
+
+      if (existingContextId !== contextId) {
+        chrome.storage.local.set({ contextId: contextId })
+      }
+    })
+  },
+  { urls: ["<all_urls>"] }
+)
 export {}
