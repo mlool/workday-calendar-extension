@@ -1,4 +1,4 @@
-import './ExportImportPopup.css'
+import './ImportCalendarPopup.css'
 import CloseIcon from '../../../Icons/CloseIcon'
 import { ISectionData } from '../../../App/App.types';
 import { useState } from 'react';
@@ -12,21 +12,21 @@ interface IProps {
 const ImportCalendarPopup = ({onCancel, sections, handleImport}:IProps) => {
     const [selectedWorklist, setSelectedWorklist] = useState<number>(0)
     return (
-        <div className='CalendarBackground'>
-            <div className='CalendarPopup'>
-                <div className='CalendarPopupHeader'>
+        <div className='ImportCalendarBackground'>
+            <div className='ImportCalendarPopup'>
+                <div className='ImportCalendarPopupHeader'>
                     <div>Import Worklist</div>
-                    <div className='CalendarPopupCloseButton' onClick={(onCancel)}>
+                    <div className='ImportCalendarPopupCloseButton' onClick={(onCancel)}>
                         <CloseIcon size={16} color='white'/>
                     </div>
                 </div>
-                <div className='CalendarPopupBody'>
+                <div className='ImportCalendarPopupBody'>
                     Choose the worklist to import to: 
-                    <div className='CalendarPopupButtonContainer'>
+                    <div className='ImportCalendarPopupButtonContainer'>
                         <div>Worklist: </div>
                         {[0, 1, 2, 3].map((worklist) => 
                             <div 
-                                className='CalendarPopupButton' 
+                                className='ImportCalendarPopupButton' 
                                 style={selectedWorklist === worklist? {backgroundColor: "rgb(156, 232, 255)"}: {}}
                                 onClick={() => setSelectedWorklist(worklist)}
                             >
@@ -35,9 +35,9 @@ const ImportCalendarPopup = ({onCancel, sections, handleImport}:IProps) => {
                             )
                         }
                     </div>
-                    <div className='CalendarButtonContainer'>
-                    <div className='CalendarButtonCancel' onClick={onCancel}>Cancel</div>
-                    <div className='CalendarButtonConfirm' onClick={() => handleImport}>
+                    <div className='ImportCalendarButtonContainer'>
+                    <div className='ImportCalendarButtonCancel' onClick={onCancel}>Cancel</div>
+                    <div className='ImportCalendarButtonConfirm' onClick={() => handleImport}>
                         <input
                         type="file"
                         accept="application/json"

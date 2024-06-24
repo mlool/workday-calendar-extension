@@ -6,37 +6,19 @@
 Welcome to the Workday Calendar Tool! This program is designed to improve your experience with UBC's new Workday system by making it more intuitive and user-friendly.
 
 ## Download
-Download the latest version from the Chrome Web Store [here](https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh).
+To download the latest version, check out our Discord channel `#download-versions`. Join our Discord community using the link below!
 
-It's also released on Firefox [here](https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar).
-
-Alternatively, to download the latest version, check out our Discord channel `#download-versions`. 
-
-## Community
-Join our community and make the most out of the Workday Calendar Tool!
-Join the discord channel [here](https://discord.gg/cx93fAJUJf).
-
-## How To Use
-1. On the `Find Course Selections` page on workday, buttons should appear on the left hand side. 
-2. Click these buttons to add a course to the extension's calendar
-3. A preview of where the course will fit in your schedule should appear in the extension's calendar
-4. Click either `Confirm ` or `Cancel` to do the respective actions
-5. Different worklists and terms can be viewed using the top bar
-6. Calendars can be exported and imported to/from JSON by going to `Settings` and then `Export/Import`
-7. Calendars can also be exported to `.ics` for Google and Apple calendats using `Export to External Calendar`
-
+Or download the latest version from the Chrome Web Store [here](https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh).
 
 ## Feature Requests
-We value your input! If you have any feature requests, please create an issue.
-Before doing so, kindly check to ensure there are no duplicates.
+We value your input! If you have any feature requests, please create an issue. Before doing so, kindly check to ensure there are no duplicates.
 
 ## Collaborators
-We welcome new collaborators! To set up the development environment, follow 
-the instructions in the following sections.
+We welcome new collaborators! Join our Discord channel [here](https://discord.gg/cx93fAJUJf) to get started.
 
-## Building manually for Chrome
+## Setup
 
-1. Clone the repo
+1. Clone the repository:
    ```bash
    git clone <repository_url>
    ```
@@ -48,34 +30,40 @@ the instructions in the following sections.
    ```bash
    yarn run build
    ```
-4. Go to `chrome://extensions/`
-5. Change Chrome to Developer mode on the top right
-6. Click `load unpacked` to the top left
-7. Select the downloaded `build` folder
-8. The tool should now appear in your extension menu in chrome
+4. Open Google Chrome and go to `chrome://extensions/`.
+5. Enable Developer mode by toggling the switch on the top right.
+6. Click the `Load unpacked` button on the top left.
+7. Select the downloaded `build` folder.
 
-## Building manually for Firefox
+The tool should now appear in your Chrome extension menu.
+
+## How to Use
+
+1. Navigate to the Workday course view page.
+2. Right-click on the course title, select `Copy Text`, and paste it into the Title field in the extension.
+3. Right-click on the Section Details, select `Copy Text`, and paste it into the Section Details field.
+4. The newly added section will be marked in orange. Verify for any conflicts.
+5. Click `Add Section` to add it to the table.
+6. Click `Clear` to clear the calendar completely.
+
+Join our community and make the most out of the Workday Calendar Tool!
+Join the discord channel: https://discord.gg/cx93fAJUJf
+
+## Set up
 
 1. Clone the repo
-   ```bash
-   git clone <repository_url>
-   ```
-2. Navigate to the root directory and install dependencies:
-   ```bash
-   yarn install
-   ```
-3. Build the project:
-   ```bash
-   yarn run build
-   ```
-4. Replace `manifest.json` with the Firefox-compatible version:
-  ```bash
-   cp firefox-manifest.json build/manifest.json
-   ```
-5. Open Firefox and go to `about:debugging`
-6. Select `This Firefox` in the top left
-7. Select `Load Temporary Add-on`
-9. Upload `build/manifest.json`
-10. The tool should now appear in your extension menu in chrome
+2. Run `yarn install` and then `yarn run build` in the root directory
+3. Go to `chrome://extensions/`
+4. Change to Developer mode on the top right
+5. Click `load unpacked` to the top left
+6. Select the downloaded `build` folder
+7. The tool should now appear in your extension menu in chrome
 
-See this [Firefox installation demo](./public/firefox-demo-v1.3.gif).
+## How to use
+
+1. Go to workday course view page
+2. Right click on title of course => Copy Text => Paste it into the Title field
+3. Right click on Section Details => Copy Text => Paste it into Section Details field
+4. The orange mark is the newly added section, verify for conflicts
+5. Click add section to add it to the table
+6. Click clear to clear calendar completely

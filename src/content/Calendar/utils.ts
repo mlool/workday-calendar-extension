@@ -6,7 +6,7 @@ export interface CellFormat {
     sectionContent: ISectionData | null,
 }
 
-export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData | null, setSectionConflict: (state: boolean) => void, currentTerm: Term) => {
+export const convertToMatrix = (sections: ISectionData[], newSection: ISectionData, setInvalidSection: (state: boolean) => void, currentTerm: Term) => {
     let matrixDict: {[id: string]: CellFormat[]} = {
         "Mon": [],
         "Tue": [],
@@ -100,8 +100,8 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
     })
 
     //Deal with newSection
-    let hasInvalidSection = newSection !== null && !(newSection?.sectionDetails.length > 0)
-    newSection?.sectionDetails.forEach((details) => {
+    let hasInvalidSection = !(newSection.sectionDetails.length > 0)
+    newSection.sectionDetails.forEach((details) => {
         if(details.term !== currentTerm) {
             return;
         }
@@ -129,7 +129,7 @@ export const convertToMatrix = (sections: ISectionData[], newSection: ISectionDa
         })
     })
 
-    setSectionConflict(hasInvalidSection)
+    setInvalidSection(hasInvalidSection)
     return matrixDict
 };
 
