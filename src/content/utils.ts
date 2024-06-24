@@ -111,9 +111,7 @@ export async function findCourseInfo(code: string) {
 }
 
 export async function findSupplementaryData(code: string) {
-  let oldContextId: { [key: string]: any; }
-  chrome.storage.local.get( "contextId", function(data: { [key: string]: any; }) {oldContextId = data} )
-  updateContextId()
+
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
@@ -171,17 +169,14 @@ export async function findSupplementaryData(code: string) {
           instructors: instructorsArr,
           locations: locationsArr,
         }
-        chrome.storage.local.set(oldContextId)
         return newSupplementaryData
       } catch (error) {
         console.error("Error parsing course data:", error)
-        chrome.storage.local.set(oldContextId)
         return null
       }
     })
     .catch((error) => {
       console.error("Error fetching course data:", error)
-      chrome.storage.local.set(oldContextId)
       return null
     })
 }
@@ -258,7 +253,6 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
 }
 
 export async function findCourseId(name: string): Promise<string> {
-  updateContextId()
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", name)
@@ -413,24 +407,4 @@ export const fetchSecureToken = async () => {
       console.error("Error fetching course data:", error)
       return null
     })
-}
-
-function updateContextId() {
-  const endpoint = `https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=${crypto.randomUUID().replace("-", "")}`
-  fetch(endpoint, {
-    method: "GET",
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      try {
-        const rawContextId = data["pageContextId"]
-        const contextIdNum = parseInt(rawContextId.substring(1))
-
-        chrome.storage.local.set({ contextId: contextIdNum })
-      } catch (error) {
-        console.error("Error parsing context id:", error)
-        return null
-      }
-    })
-    .catch((error) => console.error("Error forwarding request:", error))
 }
