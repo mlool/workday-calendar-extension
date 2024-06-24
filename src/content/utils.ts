@@ -43,6 +43,7 @@ export async function findCourseInfo(code: string) {
 
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
+  urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
 
   if (sessionSecureToken) {
     urlencoded.append("sessionSecureToken", sessionSecureToken)
@@ -114,6 +115,7 @@ export async function findSupplementaryData(code: string) {
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
+  urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
 
   if (sessionSecureToken) {
     urlencoded.append("sessionSecureToken", sessionSecureToken)
@@ -258,6 +260,7 @@ export async function findCourseId(name: string): Promise<string> {
 
   if (sessionSecureToken) {
     urlencoded.append("sessionSecureToken", sessionSecureToken)
+    urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
 
     const headers = new Headers({
       "Session-Secure-Token": sessionSecureToken,
