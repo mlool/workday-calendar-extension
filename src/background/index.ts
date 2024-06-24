@@ -129,15 +129,27 @@ const updateContextId = (endpoint: string) => {
 }
 
 // "find course sections" button
-updateContextId("https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=")
+updateContextId(
+  "https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID="
+)
 
 // "view my saved schedules" button
-updateContextId("https://wd10.myworkday.com/ubc/task/2997$9892.htmld?clientRequestID=")
+updateContextId(
+  "https://wd10.myworkday.com/ubc/task/2997$9892.htmld?clientRequestID="
+)
 
 // "view my courses" button
-updateContextId("https://wd10.myworkday.com/ubc/task/2998$28771.htmld?clientRequestID=")
+updateContextId(
+  "https://wd10.myworkday.com/ubc/task/2998$28771.htmld?clientRequestID="
+)
 
 // "registration and courses" button
-updateContextId("https://wd10.myworkday.com/ubc/inst/12709$165/rel-task/12709$165.htmld?clientRequestID=")
+updateContextId(
+  "https://wd10.myworkday.com/ubc/inst/12709$165/rel-task/12709$165.htmld?clientRequestID="
+)
 
+// "academics" button
+updateContextId(
+  "https://wd10.myworkday.com/ubc/inst/12709$56/rel-task/12709$56.htmld?clientRequestID="
+)
 export {}
