@@ -111,7 +111,6 @@ export async function findCourseInfo(code: string) {
 }
 
 export async function findSupplementaryData(code: string) {
-
   let requestOptions: RequestInit
   const urlencoded = new URLSearchParams()
   urlencoded.append("q", code)
