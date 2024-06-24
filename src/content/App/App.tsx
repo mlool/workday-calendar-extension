@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import CalendarContainer from '../CalendarContainer/CalendarContainer';
-import { ISectionData, Term, Views, baseSection } from './App.types';
-import Form from '../Form/Form';
-import TopBar from '../TopBar/TopBar';
-import Settings from '../Settings/Settings';
-import { assignColors, ColorTheme } from '../../helpers/courseColors';
+import { useEffect, useState } from "react";
+import "./App.css";
+import CalendarContainer from "../CalendarContainer/CalendarContainer";
+import { ISectionData, Term, Views, baseSection } from "./App.types";
+import Form from "../Form/Form";
+import TopBar from "../TopBar/TopBar";
+import Settings from "../Settings/Settings";
+import { assignColors, ColorTheme } from "../../helpers/courseColors";
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData>(baseSection);
@@ -15,44 +15,61 @@ function App() {
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne);
   const [currentView, setCurrentView] = useState<Views>(Views.calendar);
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green);
-  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(null)
+  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(
+    null
+  );
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
-      chrome.storage.sync.get([
-        'newSection',
-        'currentTerm',
-        'colorTheme',
-        'sections',
-        'currentWorklistNumber',
-      ], (result) => {
-        if (result.newSection !== undefined) {
-          setNewSection(result.newSection);
-        }
-        if (result.currentTerm !== undefined) {
-          setCurrentTerm(result.currentTerm);
-        }
-        if (result.colorTheme !== undefined) {
-          setColorTheme(result.colorTheme);
-        }
+      chrome.storage.sync.get("sections", (result) => {
         if (result.sections !== undefined) {
-          setSections(
-            assignColors(result.sections, result.colorTheme || ColorTheme.Green)
-          );
-        }
-        if (result.currentWorklistNumber !== undefined) {
-          setCurrentWorklistNumber(result.currentWorklistNumber);
+          setSections(assignColors(result.sections, ColorTheme.Green));
+          chrome.storage.sync.remove("sections", function () {
+            console.log("Sections reset to empty.");
+          });
         }
       });
+
+      chrome.storage.local.get(
+        [
+          "newSection",
+          "currentTerm",
+          "colorTheme",
+          "sections",
+          "currentWorklistNumber",
+        ],
+        (result) => {
+          if (result.newSection !== undefined) {
+            setNewSection(result.newSection);
+          }
+          if (result.currentTerm !== undefined) {
+            setCurrentTerm(result.currentTerm);
+          }
+          if (result.colorTheme !== undefined) {
+            setColorTheme(result.colorTheme);
+          }
+          if (result.sections !== undefined) {
+            setSections(
+              assignColors(
+                result.sections,
+                result.colorTheme || ColorTheme.Green
+              )
+            );
+          }
+          if (result.currentWorklistNumber !== undefined) {
+            setCurrentWorklistNumber(result.currentWorklistNumber);
+          }
+        }
+      );
     };
 
     const handleStorageChange = (
       changes: { [key: string]: chrome.storage.StorageChange },
       areaName: string
     ) => {
-      if (areaName === 'sync') {
+      if (areaName === "local") {
         if (changes.newSection) {
           setNewSection(changes.newSection.newValue);
         }
@@ -65,18 +82,17 @@ function App() {
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange);
     };
-
   }, []); // Run only once on mount
 
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
-    chrome.storage.sync.set({ sections });
+    chrome.storage.local.set({ sections });
     // alert(JSON.stringify(sections, null, 2))
   }, [sections]);
 
   useEffect(() => {
     if (newSection.code !== baseSection.code) {
-      if (newSection.term != Term.winterFull) {
+      if (newSection.term !== Term.winterFull) {
         //Don't set the term to WF, just keep the term to what is selected
         setCurrentTerm(newSection.term);
       }
@@ -84,15 +100,15 @@ function App() {
   }, [newSection]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ currentWorklistNumber });
+    chrome.storage.local.set({ currentWorklistNumber });
   }, [currentWorklistNumber]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ currentTerm });
+    chrome.storage.local.set({ currentTerm });
   }, [currentTerm]);
 
   useEffect(() => {
-    chrome.storage.sync.set({ colorTheme });
+    chrome.storage.local.set({ colorTheme });
   }, [colorTheme]);
 
   useEffect(() => {
@@ -142,8 +158,8 @@ function App() {
           />
         </div>
       ) : (
-        <Settings 
-          colorTheme={colorTheme} 
+        <Settings
+          colorTheme={colorTheme}
           sections={sections}
           setColorTheme={setColorTheme}
           setSections={setSections}
