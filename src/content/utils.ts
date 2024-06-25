@@ -1,10 +1,5 @@
 import { defaultColorList } from "../helpers/courseColors"
-import {
-  SectionDetail,
-  Term,
-  ISectionData,
-  SupplementaryData,
-} from "./App/App.types"
+import { SectionDetail, Term, ISectionData } from "./App/App.types"
 
 export let sessionSecureToken: string | null = null
 
@@ -86,7 +81,7 @@ export async function findCourseInfo(code: string, recursive?: boolean) {
           const name = path["title"]["instances"][0]["text"]
           const id = path["title"]["instances"][0]["instanceId"]
           const rawInstructors = path["detailResultFields"][2]["instances"]
-          let instructors: string[] = []
+          const instructors: string[] = []
           if (rawInstructors) {
             for (const item of rawInstructors) {
               instructors.push(item["text"])
