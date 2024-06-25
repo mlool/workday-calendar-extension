@@ -9,6 +9,24 @@ interface SectionInfoProps {
 }
 
 const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
+  const uniqueLocations = new Set(
+    selectedSection.sectionDetails.map((section) => {
+      const parts = section.location?.split(/[- ]/) || ""
+      if (parts.length > 1) {
+        const location = parts[0] + "-" + parts.slice(-1)[0]
+        return {
+          location: section.location,
+          link: `https://learningspaces.ubc.ca/classrooms/${location}`,
+        }
+      } else {
+        return {
+          location: section.location,
+          link: "",
+        }
+      }
+    })
+  )
+
   return (
     <div className="section-info-body">
       {selectedSection?.courseID && (
@@ -20,8 +38,8 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
       )}
       <hr />
       <div className="SectionPopupDetails">{selectedSection?.name}</div>
-      <InstructorComponent selectedSection={selectedSection} />
-      <LocationComponent selectedSection={selectedSection} />
+      <InstructorComponent instructors={selectedSection.instructors} />
+      <LocationComponent locations={uniqueLocations} />
       <GradesComponent selectedSection={selectedSection} />
     </div>
   )
