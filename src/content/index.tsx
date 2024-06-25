@@ -529,6 +529,10 @@ async function handleCopySavedScheduleButtonClick(
   const button = document.querySelector(
     '.NewSectionButton[title="Add Section"]'
   ) as HTMLElement
+
+  // Update context id
+  const oldContextId = await chrome.storage.local.get("contextId")
+  await updateContextId()
   for (let i = 2; i < tableData.length; i++) {
     const code = tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
 
@@ -546,9 +550,33 @@ async function handleCopySavedScheduleButtonClick(
     }
   }
 
+  // Reset context id to old val
+  chrome.storage.local.set({ contextId: oldContextId.contextId })
+
   if (button) {
     setTimeout(function () {
       button.click()
     }, 500)
+  }
+}
+
+async function updateContextId() {
+  try {
+    const response = await fetch(
+      `https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=${crypto
+        .randomUUID()
+        .replace("-", "")}`,
+      {
+        method: "GET",
+      }
+    )
+
+    const data = await response.json()
+    const rawContextId = data["pageContextId"]
+    const contextIdNum = parseInt(rawContextId.substring(1))
+
+    await chrome.storage.local.set({ contextId: contextIdNum })
+  } catch (error) {
+    console.error("Error updating context id:", error)
   }
 }

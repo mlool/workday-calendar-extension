@@ -266,59 +266,59 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
 }
 
 export async function findCourseId(name: string, recursive?: boolean) {
-    let requestOptions: RequestInit
-    const urlencoded = new URLSearchParams()
-    urlencoded.append("q", name)
+  let requestOptions: RequestInit
+  const urlencoded = new URLSearchParams()
+  urlencoded.append("q", name)
 
-    if (sessionSecureToken) {
-      urlencoded.append("sessionSecureToken", sessionSecureToken)
-      urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
+  if (sessionSecureToken) {
+    urlencoded.append("sessionSecureToken", sessionSecureToken)
+    urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
 
-      const headers = new Headers({
-        "Session-Secure-Token": sessionSecureToken,
-      })
+    const headers = new Headers({
+      "Session-Secure-Token": sessionSecureToken,
+    })
 
-      requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow" as RequestRedirect,
-        headers: headers,
-      }
-    } else {
-      requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow" as RequestRedirect,
-      }
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
+      headers: headers,
     }
-    const contextId = await chrome.storage.local.get("contextId")
-    if (!contextId.contextId) {
-      console.warn("contextId not found in storage, using default")
-      contextId.contextId = 0
+  } else {
+    requestOptions = {
+      method: "POST",
+      body: urlencoded,
+      redirect: "follow" as RequestRedirect,
     }
-    return fetch(
-      `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        try {
-          const courseId =
-            data["children"][0]["listItems"][0]["title"]["instances"][0][
-              "instanceId"
-            ]
-          return courseId.split("$")[1]
-        } catch (error: any) {
-          console.error("Error parsing course data:", error)
+  }
+  const contextId = await chrome.storage.local.get("contextId")
+  if (!contextId.contextId) {
+    console.warn("contextId not found in storage, using default")
+    contextId.contextId = 0
+  }
+  return fetch(
+    `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
+    requestOptions
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      try {
+        const courseId =
+          data["children"][0]["listItems"][0]["title"]["instances"][0][
+            "instanceId"
+          ]
+        return courseId.split("$")[1]
+      } catch (error) {
+        console.error("Error parsing course data:", error)
 
-          return null
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching course data:", error)
-      
         return null
-      })
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching course data:", error)
+
+      return null
+    })
 }
 
 export function isCourseFormatted(courseName: string) {

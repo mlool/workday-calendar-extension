@@ -85,7 +85,7 @@ chrome.runtime.onInstalled.addListener(() => {
   })()
 })
 
-const updateContextId = (endpoint: string) => {
+const updateContextId = (endpoint: string, increment: number) => {
   chrome.webRequest.onBeforeSendHeaders.addListener(
     (details) => {
       if (details.url.includes(endpoint) && details.requestHeaders) {
@@ -112,7 +112,8 @@ const updateContextId = (endpoint: string) => {
           .then((data) => {
             try {
               const rawContextId = data["pageContextId"]
-              const contextIdNum = parseInt(rawContextId.substring(1)) + 1 //increment to account for flow controller after
+              const contextIdNum =
+                parseInt(rawContextId.substring(1)) + increment //increment to account for flow controller after
 
               chrome.storage.local.set({ contextId: contextIdNum })
             } catch (error) {
@@ -130,26 +131,31 @@ const updateContextId = (endpoint: string) => {
 
 // "find course sections" button
 updateContextId(
-  "https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID="
+  "https://wd10.myworkday.com/ubc/task/1422$5132.htmld?clientRequestID=",
+  1
 )
 
 // "view my saved schedules" button
 updateContextId(
-  "https://wd10.myworkday.com/ubc/task/2997$9892.htmld?clientRequestID="
+  "https://wd10.myworkday.com/ubc/task/2997$9892.htmld?clientRequestID=",
+  1
 )
 
 // "view my courses" button
 updateContextId(
-  "https://wd10.myworkday.com/ubc/task/2998$28771.htmld?clientRequestID="
+  "https://wd10.myworkday.com/ubc/task/2998$28771.htmld?clientRequestID=",
+  0
 )
 
 // "registration and courses" button
 updateContextId(
-  "https://wd10.myworkday.com/ubc/inst/12709$165/rel-task/12709$165.htmld?clientRequestID="
+  "https://wd10.myworkday.com/ubc/inst/12709$165/rel-task/12709$165.htmld?clientRequestID=",
+  0
 )
 
 // "academics" button
 updateContextId(
-  "https://wd10.myworkday.com/ubc/inst/12709$56/rel-task/12709$56.htmld?clientRequestID="
+  "https://wd10.myworkday.com/ubc/inst/12709$56/rel-task/12709$56.htmld?clientRequestID=",
+  0
 )
 export {}
