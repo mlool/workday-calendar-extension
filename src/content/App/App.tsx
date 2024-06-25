@@ -15,7 +15,6 @@ import {
   fetchSecureToken,
   filterSectionsByWorklist,
   findCourseId,
-  findCourseInfo,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
 import InfoModal from "../InfoModal/InfoModal"
@@ -107,8 +106,7 @@ function App() {
         }
       }
     }
-    // Set context-id
-    findCourseInfo("CPSC_V 320-101")
+
     syncInitialState()
     fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)

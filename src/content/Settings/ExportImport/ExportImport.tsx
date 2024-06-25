@@ -45,14 +45,25 @@ const ExportImport = ({ sections, setSections }: IProps) => {
 
   const handleSectionImport = async (sections: ISectionData[]) => {
     const fetchedCourseIDs: string[] = []
+    let error: boolean = false
     await sections.reduce(async (promise, section) => {
       await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
+        if (courseID === null) {
+          error = true
+          return
+        }
         fetchedCourseIDs.push(courseID)
       }
     }, Promise.resolve())
 
+    if (error) {
+      setImportInProgress(false)
+      alert(
+        `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
+      )
+    }
     const newSections = sections.map((s) => {
       if (s.courseID) return s
       return {

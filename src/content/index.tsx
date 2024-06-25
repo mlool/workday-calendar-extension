@@ -529,6 +529,7 @@ async function handleCopySavedScheduleButtonClick(
   const button = document.querySelector(
     '.NewSectionButton[title="Add Section"]'
   ) as HTMLElement
+
   for (let i = 2; i < tableData.length; i++) {
     const code = tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
 
