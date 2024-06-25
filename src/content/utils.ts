@@ -102,11 +102,17 @@ export async function findCourseInfo(code: string) {
         return newSection
       } catch (error) {
         console.error("Error parsing course data:", error)
+        alert(
+          `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
+        )
         return null
       }
     })
     .catch((error) => {
       console.error("Error fetching course data:", error)
+      alert(
+        `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
+      )
       return null
     })
 }
@@ -296,8 +302,9 @@ export async function findCourseId(name: string): Promise<string> {
             "instanceId"
           ]
         return courseId.split("$")[1]
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error parsing course data:", error)
+
         return null
       }
     })
