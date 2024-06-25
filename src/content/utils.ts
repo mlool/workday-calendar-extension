@@ -316,10 +316,7 @@ export async function findCourseId(name: string, recursive?: boolean) {
       })
       .catch((error) => {
         console.error("Error fetching course data:", error)
-       
-        alert(
-          `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
-        )
+      
         return null
       })
 }
