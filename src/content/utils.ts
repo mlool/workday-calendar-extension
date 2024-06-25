@@ -1,5 +1,9 @@
 import { defaultColorList } from "../helpers/courseColors"
-import { SectionDetail, Term, ISectionData } from "./App/App.types"
+import {
+  SectionDetail,
+  Term,
+  ISectionData,
+} from "./App/App.types"
 
 export let sessionSecureToken: string | null = null
 
@@ -133,8 +137,18 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
       alert(JSON.stringify(detailParts))
       alert("Invalid section details format")
     }
+    let location = "";
+    let daysString = "";
+    let timeRange = "";
+    let dateRange = "";
 
-    const [location, daysString, timeRange, dateRange] = detailParts
+    if (detailParts.length === 3) {
+      // Without location
+      [daysString, timeRange, dateRange] = detailParts;
+    } else {
+      // With location
+      [location, daysString, timeRange, dateRange] = detailParts;
+    }
 
     let days = daysString.split(" ")
     let [startTime, endTime] = timeRange.split(" - ")
