@@ -1,26 +1,23 @@
 import "../PopupComponent.css"
+import { ISectionData } from "../../App/App.types"
 
 interface IProps {
-  locations: string[]
+  selectedSection: ISectionData
 }
 
-const LocationComponent = ({ locations }: IProps) => {
-  const locationsArr = locations.filter(
-    (item, index) => locations.indexOf(item) === index
-  )
-
+const LocationComponent = ({ selectedSection }: IProps) => {
   const uniqueLocations = new Set(
-    locationsArr.map((location) => {
-      const parts = location.split(/[- ]/) || ""
+    selectedSection.sectionDetails.map((section) => {
+      const parts = section.location?.split(/[- ]/) || ""
       if (parts.length > 1) {
-        const loca = parts[0] + "-" + parts.slice(-1)[0]
+        const location = parts[0] + "-" + parts.slice(-1)[0]
         return {
-          location: location,
-          link: `https://learningspaces.ubc.ca/classrooms/${loca}`,
+          location: section.location,
+          link: `https://learningspaces.ubc.ca/classrooms/${location}`,
         }
       } else {
         return {
-          location: location,
+          location: section.location,
           link: "",
         }
       }

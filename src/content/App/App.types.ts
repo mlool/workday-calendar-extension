@@ -37,12 +37,14 @@ export type SectionDetail = {
   days: string[]
   startTime: string
   endTime: string
+  location?: string
   dateRange: string
 }
 
 export interface ISectionData {
   code: string
   name: string
+  instructors: string[],
   sectionDetails: SectionDetail[]
   term: Term
   worklistNumber: number

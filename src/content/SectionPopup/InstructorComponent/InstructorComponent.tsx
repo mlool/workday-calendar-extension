@@ -1,17 +1,17 @@
 import "../PopupComponent.css"
-
+import { ISectionData } from "../../App/App.types";
 interface IProps {
-  instructors: string[]
+  selectedSection: ISectionData;
 }
 
-const InstructorComponent = ({ instructors }: IProps) => {
+const InstructorComponent = ({ selectedSection }: IProps) => {
   return (
     <div className="ComponentContainer">
       <div className="ComponentTitle">Instructors:</div>
       <div>
-        {instructors.length >= 2 ? (
+        {selectedSection?.instructors?.length > 0 ? (
           <ul>
-            {instructors.map((instructor, index) => (
+            {selectedSection.instructors.map((instructor, index) => (
               <li key={index}>{instructor}</li>
             ))}
           </ul>
