@@ -44,7 +44,7 @@ export type SectionDetail = {
 export interface ISectionData {
   code: string
   name: string
-  instructors: string[],
+  instructors: string[]
   sectionDetails: SectionDetail[]
   term: Term
   worklistNumber: number

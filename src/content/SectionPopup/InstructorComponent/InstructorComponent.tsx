@@ -1,7 +1,7 @@
 import "../PopupComponent.css"
-import { ISectionData } from "../../App/App.types";
+import { ISectionData } from "../../App/App.types"
 interface IProps {
-  selectedSection: ISectionData;
+  selectedSection: ISectionData
 }
 
 const InstructorComponent = ({ selectedSection }: IProps) => {
