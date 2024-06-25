@@ -41,19 +41,19 @@ export async function findCourseInfo(code: string, recursive?: boolean) {
   if (!recursive) {
     let requestOptions: RequestInit
     let headers: Headers
-  
+
     const urlencoded = new URLSearchParams()
     urlencoded.append("q", code)
     urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
-  
+
     if (sessionSecureToken) {
       urlencoded.append("sessionSecureToken", sessionSecureToken)
-  
+
       headers = new Headers({
         "Session-Secure-Token": sessionSecureToken,
         "Content-Type": "application/x-www-form-urlencoded",
       })
-  
+
       requestOptions = {
         method: "POST",
         body: urlencoded,
@@ -86,7 +86,7 @@ export async function findCourseInfo(code: string, recursive?: boolean) {
           const name = path["title"]["instances"][0]["text"]
           // const term = path["detailResultFields"][0]["instances"][0]["text"]
           const id = path["title"]["instances"][0]["instanceId"]
-  
+
           const sectionDetailsArr: string[] = []
           for (const item of path["detailResultFields"][0]["instances"]) {
             sectionDetailsArr.push(item["text"])
@@ -111,7 +111,7 @@ export async function findCourseInfo(code: string, recursive?: boolean) {
       })
       .catch((error) => {
         console.error("Error fetching course data:", error)
-        chrome.storage.local.get("contextId", function(oldContextId) {
+        chrome.storage.local.get("contextId", function (oldContextId) {
           chrome.storage.local.set({ contextId: oldContextId.contextId + 1 })
           findCourseInfo(code, true)
         })
@@ -265,58 +265,59 @@ const parseSectionDetails = (details: string[]): SectionDetail[] => {
   return detailsArr
 }
 
-export async function findCourseId(name: string, recursive?: boolean): Promise<string> {
-  let requestOptions: RequestInit
-  const urlencoded = new URLSearchParams()
-  urlencoded.append("q", name)
+export async function findCourseId(name: string, recursive?: boolean) {
+  if (!recursive) {
+    let requestOptions: RequestInit
+    const urlencoded = new URLSearchParams()
+    urlencoded.append("q", name)
 
-  if (sessionSecureToken) {
-    urlencoded.append("sessionSecureToken", sessionSecureToken)
-    urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
+    if (sessionSecureToken) {
+      urlencoded.append("sessionSecureToken", sessionSecureToken)
+      urlencoded.append("clientRequestId", crypto.randomUUID().replace("-", ""))
 
-    const headers = new Headers({
-      "Session-Secure-Token": sessionSecureToken,
-    })
+      const headers = new Headers({
+        "Session-Secure-Token": sessionSecureToken,
+      })
 
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-      headers: headers,
-    }
-  } else {
-    requestOptions = {
-      method: "POST",
-      body: urlencoded,
-      redirect: "follow" as RequestRedirect,
-    }
-  }
-  const contextId = await chrome.storage.local.get("contextId")
-  if (!contextId.contextId) {
-    console.warn("contextId not found in storage, using default")
-    contextId.contextId = 0
-  }
-  return fetch(
-    `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
-    requestOptions
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      try {
-        const courseId =
-          data["children"][0]["listItems"][0]["title"]["instances"][0][
-            "instanceId"
-          ]
-        return courseId.split("$")[1]
-      } catch (error: any) {
-        console.error("Error parsing course data:", error)
-
-        return null
+      requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow" as RequestRedirect,
+        headers: headers,
       }
-    })
-    .catch((error) => {
-      console.error("Error fetching course data:", error)
-        chrome.storage.local.get("contextId", function(oldContextId) {
+    } else {
+      requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow" as RequestRedirect,
+      }
+    }
+    const contextId = await chrome.storage.local.get("contextId")
+    if (!contextId.contextId) {
+      console.warn("contextId not found in storage, using default")
+      contextId.contextId = 0
+    }
+    return fetch(
+      `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        try {
+          const courseId =
+            data["children"][0]["listItems"][0]["title"]["instances"][0][
+              "instanceId"
+            ]
+          return courseId.split("$")[1]
+        } catch (error: any) {
+          console.error("Error parsing course data:", error)
+
+          return null
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching course data:", error)
+        chrome.storage.local.get("contextId", function (oldContextId) {
           chrome.storage.local.set({ contextId: oldContextId.contextId + 1 })
           findCourseId(name, true)
         })
@@ -324,7 +325,8 @@ export async function findCourseId(name: string, recursive?: boolean): Promise<s
           `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
         )
         return null
-    })
+      })
+  }
 }
 
 export function isCourseFormatted(courseName: string) {
