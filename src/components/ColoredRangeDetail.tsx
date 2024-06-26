@@ -2,7 +2,7 @@ import "./ColoredRangeDetail.css"
 
 interface ColoredRangeProps {
   label: string
-  numericValue: number
+  numericValue: number | null
   max: number
   // renders what the numericValue is "out of".
   // for example, 2 with a max of 5, is rendered as "2 / 5"
@@ -11,7 +11,7 @@ interface ColoredRangeProps {
 
 function ColoredRangeDetail(props: ColoredRangeProps) {
   const getColor = () => {
-    props.max / 4
+    if (props.numericValue === null) return "unavailable-number"
     const segments: Record<number, string> = {
       [props.max / 5]: "very-low-number",
       [(props.max * 2) / 5]: "low-number",
@@ -25,14 +25,17 @@ function ColoredRangeDetail(props: ColoredRangeProps) {
     throw `Color for "${props.numericValue}" out of "${props.max}" not found!`
   }
 
+  const getNumberDisplay = () => {
+    if (props.numericValue === null) return "??"
+    return props.showRange
+      ? props.numericValue + " / " + props.max
+      : props.numericValue
+  }
+
   return (
     <div className="colored-range-detail">
       <p>{props.label}</p>
-      <p className={`numeric-value-box ${getColor()}`}>
-        {props.showRange
-          ? props.numericValue + " / " + props.max
-          : props.numericValue}
-      </p>
+      <p className={`numeric-value-box ${getColor()}`}>{getNumberDisplay()}</p>
     </div>
   )
 }
