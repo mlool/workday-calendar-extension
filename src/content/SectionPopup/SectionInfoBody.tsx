@@ -18,11 +18,6 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
           location: section.location,
           link: `https://learningspaces.ubc.ca/classrooms/${location}`,
         }
-      } else {
-        return {
-          location: section.location,
-          link: "",
-        }
       }
     })
   )
