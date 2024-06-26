@@ -80,7 +80,13 @@ export async function findCourseInfo(code: string, recursive: boolean) {
         const name = path["title"]["instances"][0]["text"]
         // const term = path["detailResultFields"][0]["instances"][0]["text"]
         const id = path["title"]["instances"][0]["instanceId"]
-
+        const rawInstructors = path["detailResultFields"][2]["instances"]
+        const instructors: string[] = []
+        if (rawInstructors) {
+          for (const item of rawInstructors) {
+            instructors.push(item["text"])
+          }
+        }
         const sectionDetailsArr: string[] = []
         for (const item of path["detailResultFields"][0]["instances"]) {
           sectionDetailsArr.push(item["text"])
@@ -88,6 +94,7 @@ export async function findCourseInfo(code: string, recursive: boolean) {
         const newSection: ISectionData = {
           code: code,
           name: name.slice(name.indexOf(" - ") + 3),
+          instructors: instructors,
           sectionDetails: parseSectionDetails(sectionDetailsArr),
           term: getTermFromSectionDetailsString(sectionDetailsArr),
           worklistNumber: 0,
@@ -106,69 +113,6 @@ export async function findCourseInfo(code: string, recursive: boolean) {
     .catch((error) => {
       console.error("Error fetching course data:", error)
       if (!recursive) {
-      requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow" as RequestRedirect,
-        headers: headers,
-      }
-    } else {
-      requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow" as RequestRedirect,
-      }
-      headers = new Headers({
-        "Content-Type": "application/x-www-form-urlencoded",
-      })
-    }
-    const contextId = await chrome.storage.local.get("contextId")
-    if (!contextId.contextId) {
-      console.warn("contextId not found in storage, using default")
-      contextId.contextId = 0
-    }
-    return fetch(
-      `https://wd10.myworkday.com/ubc/faceted-search2/c${contextId.contextId}/fs0/search.htmld`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        try {
-          const path = data["children"][0]["listItems"][0]
-          const name = path["title"]["instances"][0]["text"]
-          const id = path["title"]["instances"][0]["instanceId"]
-          const rawInstructors = path["detailResultFields"][2]["instances"]
-          const instructors: string[] = []
-          if (rawInstructors) {
-            for (const item of rawInstructors) {
-              instructors.push(item["text"])
-            }
-          }
-          const sectionDetailsArr: string[] = []
-          for (const item of path["detailResultFields"][0]["instances"]) {
-            sectionDetailsArr.push(item["text"])
-          }
-          const newSection: ISectionData = {
-            code: code,
-            name: name.slice(name.indexOf(" - ") + 3),
-            instructors: instructors,
-            sectionDetails: parseSectionDetails(sectionDetailsArr),
-            term: getTermFromSectionDetailsString(sectionDetailsArr),
-            worklistNumber: 0,
-            color: defaultColorList[0],
-            courseID: id.split("$")[1],
-          }
-          return newSection
-        } catch (error) {
-          console.error("Error parsing course data:", error)
-          alert(
-            `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
-          )
-          return null
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching course data:", error)
         chrome.storage.local.get("contextId", function (oldContextId) {
           chrome.storage.local.set({ contextId: oldContextId.contextId + 1 })
           findCourseInfo(code, true)
