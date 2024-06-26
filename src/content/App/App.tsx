@@ -12,12 +12,11 @@ import {
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
 import {
-  fetchSecureToken,
   filterSectionsByWorklist,
-  findCourseId,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
 import InfoModal from "../InfoModal/InfoModal"
+import { findCourseId } from "../../background/scheduler/nameSearchApi"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -108,7 +107,6 @@ function App() {
     }
 
     syncInitialState()
-    fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)
     versionOneFiveZeroUpdateNotification()
     return () => {
