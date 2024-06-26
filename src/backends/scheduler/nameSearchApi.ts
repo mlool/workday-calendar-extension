@@ -63,13 +63,12 @@ export async function findCourseInfo(
   searchTerm: string
 ): Promise<ISectionData | null> {
   const courseId = await findCourseId(searchTerm)
-
   if (!courseId) {
     return null
   }
 
   const courseData: RawWorkdayData | null = await fetchWorkdayData(courseId)
-
+  console.log(courseData)
   if (!courseData) {
     return null
   }

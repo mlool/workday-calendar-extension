@@ -50,7 +50,6 @@ const ExportImport = ({ sections, setSections }: IProps) => {
       await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
-        console.log("Course Id: " + courseID)
         if (courseID === null) {
           error = true
           return

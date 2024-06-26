@@ -14,36 +14,39 @@ export async function fetchWorkdayData(
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
 
   const path = rawData["body"]["children"][0]["children"][0]["children"]
-
   const rawName = path[0]["instances"][0]["text"]
   const formattedName = rawName.split(" - ")[1]
   const possibleDetailsPath =
     rawData["body"]["children"][0]["children"][1]["children"]
+
   const meetingPatternIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["label"] === "Meeting Patterns"
   )
+  console.log(meetingPatternIndex)
   const detailsPath = possibleDetailsPath[meetingPatternIndex]["instances"]
   const rawDetails: string[] = []
   for (const detail of detailsPath) {
     rawDetails.push(detail["text"])
   }
-
+  console.log(rawDetails)
   const instructorsIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["widget"] === "panel"
   )
 
   const instructors: string[] = []
-
+  console.log(instructorsIndex)
   if (instructorsIndex !== -1) {
-    const instructorsPath =
-      possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
-        "instances"
-      ]
-    for (const instructor of instructorsPath) {
-      instructors.push(instructor["text"])
-    }
+    try {
+      const instructorsPath =
+        possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
+          "instances"
+        ]
+      console.log(instructorsPath)
+      for (const instructor of instructorsPath) {
+        instructors.push(instructor["text"])
+      }
+    } catch (error) {}
   }
-
   const formattedData: RawWorkdayData = {
     name: formattedName,
     instructors: instructors,
