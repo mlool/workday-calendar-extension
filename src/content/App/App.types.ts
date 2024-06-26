@@ -27,22 +27,19 @@ export const Term_String_Map: { [key in Term]: string } = {
   [Term.winterFull]: "W",
 }
 
-export type SupplementaryData = {
-  instructors: string[]
-  locations: string[]
-}
-
 export type SectionDetail = {
   term: Term
   days: string[]
   startTime: string
   endTime: string
+  location?: string
   dateRange: string
 }
 
 export interface ISectionData {
   code: string
   name: string
+  instructors: string[]
   sectionDetails: SectionDetail[]
   term: Term
   worklistNumber: number

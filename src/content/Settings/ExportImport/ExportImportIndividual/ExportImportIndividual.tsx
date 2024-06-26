@@ -60,6 +60,7 @@ const ExportImportIndividual = ({
           sectionDetails: section.sectionDetails,
           worklistNumber: worklistNumber,
           term: section.term,
+          instructors: section.instructors,
         }))
         newSections = newSections.concat(data)
         handleSectionImport(newSections)

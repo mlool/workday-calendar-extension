@@ -1,5 +1,4 @@
 import "../PopupComponent.css"
-
 interface IProps {
   instructors: string[]
 }
@@ -9,7 +8,7 @@ const InstructorComponent = ({ instructors }: IProps) => {
     <div className="ComponentContainer">
       <div className="ComponentTitle">Instructors:</div>
       <div>
-        {instructors.length >= 2 ? (
+        {instructors.length > 0 ? (
           <ul>
             {instructors.map((instructor, index) => (
               <li key={index}>{instructor}</li>
