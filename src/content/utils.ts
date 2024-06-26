@@ -23,7 +23,7 @@ export async function extractSection(element: Element) {
 
   const code = title.slice(0, title.indexOf(" - "))
 
-  const newSectionPromise = findCourseInfo(code, false)
+  const newSectionPromise = findCourseInfo(code)
 
   return Promise.all([newSectionPromise]).then(([newSection]) => {
     return newSection
