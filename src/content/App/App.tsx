@@ -16,7 +16,7 @@ import {
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
 import InfoModal from "../InfoModal/InfoModal"
-import { findCourseId } from "../../background/scheduler/nameSearchApi"
+import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)

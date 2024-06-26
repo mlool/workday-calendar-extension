@@ -1,5 +1,5 @@
 import { ISectionData } from "./App/App.types"
-import { findCourseInfo } from "../background/scheduler/nameSearchApi"
+import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 
 export async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(

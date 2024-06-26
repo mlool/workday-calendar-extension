@@ -1,7 +1,7 @@
 import { extractSection } from "./utils"
 import { createRoot } from "react-dom/client"
 import "../index.css"
-import { findCourseInfo } from "../background/scheduler/nameSearchApi"
+import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import App from "./App/App"
 
 // Function to apply visibility based on stored settings
