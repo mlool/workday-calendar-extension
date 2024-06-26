@@ -3,7 +3,7 @@ import "../Settings.css"
 import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
-import { findCourseId } from "../../utils"
+import { findCourseId } from "../../../backends/scheduler/nameSearchApi"
 import { useState } from "react"
 import InfoModal from "../../InfoModal/InfoModal"
 

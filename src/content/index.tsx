@@ -1,6 +1,7 @@
-import { extractSection, findCourseInfo } from "./utils"
+import { extractSection } from "./utils"
 import { createRoot } from "react-dom/client"
 import "../index.css"
+import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import App from "./App/App"
 
 // Function to apply visibility based on stored settings
@@ -538,7 +539,7 @@ async function handleCopySavedScheduleButtonClick(
     //
     // TODO: refactor this to add sections more directly.
     // eslint-disable-next-line no-await-in-loop
-    const selectedSection = await findCourseInfo(code, false)
+    const selectedSection = await findCourseInfo(code)
     if (!selectedSection) return
     // Getting existing sections from Chrome storage and adding the new section
     chrome.storage.local.set({ newSection: selectedSection })

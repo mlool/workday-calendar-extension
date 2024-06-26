@@ -12,12 +12,11 @@ import {
 } from "../../helpers/courseColors"
 import { ModalLayer } from "../ModalLayer"
 import {
-  fetchSecureToken,
   filterSectionsByWorklist,
-  findCourseId,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
 import InfoModal from "../InfoModal/InfoModal"
+import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -38,6 +37,9 @@ function App() {
       await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
+        if (!courseID) {
+          return
+        }
         fetchedCourseIDs.push(courseID)
       }
     }, Promise.resolve())
@@ -108,7 +110,6 @@ function App() {
     }
 
     syncInitialState()
-    fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)
     versionOneFiveZeroUpdateNotification()
     return () => {
@@ -160,6 +161,7 @@ function App() {
 
     setSections([...sections, updatedNewSection])
     setNewSection(null)
+    chrome.storage.local.set({ newSection: null })
   }
 
   const handleDeleteSelectedSection = () => {
