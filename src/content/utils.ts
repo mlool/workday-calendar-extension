@@ -9,7 +9,10 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
     return await findCourseInfo(element.id)
   }
 
-  const result = await Browser.runtime.sendMessage({type: "RMP", prof: "Laura Stirchak"})
+  const result = await Browser.runtime.sendMessage({
+    type: "RMP",
+    prof: "Laura Stirchak",
+  })
   console.log(result)
 
   const courseLabels = element.parentElement?.querySelectorAll(

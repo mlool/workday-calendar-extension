@@ -1,7 +1,9 @@
 const RMP_API_URL = "https://www.ratemyprofessors.com/graphql"
 const BASIC_AUTH_KEY = "dGVzdDp0ZXN0"
 
-export default async function fetchProfRating(profName: string): Promise<number> {
+export default async function fetchProfRating(
+  profName: string
+): Promise<number> {
   const headers = new Headers({
     Authorization: `Basic ${BASIC_AUTH_KEY}`,
     "Content-Type": "application/json",

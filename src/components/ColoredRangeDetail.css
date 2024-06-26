@@ -1,0 +1,36 @@
+.colored-range-detail {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 2px 0px;
+  align-items: center;
+}
+
+.numeric-value-box {
+  border: 1px solid grey;
+  border-radius: var(--tiny-radius);
+  padding: 1px 10px;
+}
+
+.number-unavailable {
+  background-color: rgb(226, 226, 226);
+}
+
+.very-low-number {
+  background-color: rgb(255, 142, 142);
+}
+
+.low-number {
+  background-color: rgb(255, 187, 142);
+}
+
+.mid-number {
+  background-color: rgb(255, 247, 142);
+}
+
+.high-number {
+  background-color: rgb(208, 255, 142);
+}
+
+.very-high-number {
+  background-color: rgb(142, 255, 163);
+}

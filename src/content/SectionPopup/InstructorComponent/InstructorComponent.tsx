@@ -1,3 +1,4 @@
+import { ColoredRangeDetail } from "../../../components/ColoredRangeDetail"
 import "../PopupComponent.css"
 interface IProps {
   instructors: string[]
@@ -11,7 +12,13 @@ const InstructorComponent = ({ instructors }: IProps) => {
         {instructors && instructors.length > 0 ? (
           <ul>
             {instructors.map((instructor, index) => (
-              <li key={index}>{instructor}</li>
+              <ColoredRangeDetail
+                key={index}
+                label={instructor}
+                numericValue={Math.min(index, 5)}
+                max={5}
+                showRange={true}
+              />
             ))}
           </ul>
         ) : (
