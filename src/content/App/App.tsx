@@ -37,6 +37,9 @@ function App() {
       await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
+        if (!courseID) {
+          return
+        }
         fetchedCourseIDs.push(courseID)
       }
     }, Promise.resolve())
