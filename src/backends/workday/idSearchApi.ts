@@ -45,7 +45,9 @@ export async function fetchWorkdayData(
       for (const instructor of instructorsPath) {
         instructors.push(instructor["text"])
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error extracting instructors from search data:", error)
+    }
   }
   const formattedData: RawWorkdayData = {
     name: formattedName,
