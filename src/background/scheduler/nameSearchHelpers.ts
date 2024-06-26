@@ -33,13 +33,6 @@ export function getUrlFromSearchTerm(
   return null
 }
 
-export function formatSearchTermForData(searchTerm: string): string {
-  const parts = searchTerm.split(" ")
-  const subject = parts[0].split("_")[0]
-  const courseNumber = parts[1].split("-")[0]
-  const sectionNumber = parts[1].split("-")[1]
-  return `${subject} ${courseNumber} ${sectionNumber}`
-}
 
 export function getCourseIdFromUrl(url: string): string {
   const parts = url.split("$")
@@ -57,9 +50,24 @@ export async function fetchSearchData(url: string) {
 }
 
 export function parseSearchParameters(searchTerm: string) {
+  //ACAM_V 320-B_001
   const subject = searchTerm.split("_")[0]
-  const courseNumber = searchTerm.split("_")[1].split("-")[0].split(" ")[1]
-  const campus = searchTerm.split("_")[1].split("-")[0].split(" ")[0]
 
-  return { subject, courseNumber, campus }
+  const campus = searchTerm.split("_")[1].split("-")[0].split(" ")[0]
+  let courseNumber = ""
+  let sectionNumber = ""
+
+  const formatCheck = searchTerm.split("_")
+  const parts = searchTerm.split(" ")
+  // Normal format like CPSC_V 320-101
+  if (formatCheck.length === 2) {
+    courseNumber = parts[1].split("-")[0]
+    sectionNumber = parts[1].split("-")[1]
+  } else {
+    // Special format like ACAM_V 320-B_001
+    courseNumber = parts[1].split("_")[0].replace("-", "")
+    sectionNumber = parts[1].split("_")[1]
+  }
+
+  return { subject, courseNumber, sectionNumber, campus }
 }

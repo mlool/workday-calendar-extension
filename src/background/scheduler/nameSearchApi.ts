@@ -2,7 +2,6 @@ import { ISectionData } from "../../content/App/App.types"
 import { defaultColorList } from "../../helpers/courseColors"
 import {
   getUrlFromSearchTerm,
-  formatSearchTermForData,
   getCourseIdFromUrl,
   fetchSearchData,
   parseSearchParameters,
@@ -14,7 +13,7 @@ const searchEndpoint =
   "https://coursescheduler-api-2.vercel.app/api/W/sections?"
 
 export async function findCourseId(searchTerm: string): Promise<string> {
-  const { subject, courseNumber, campus } = parseSearchParameters(searchTerm)
+  const { subject, courseNumber, sectionNumber, campus } = parseSearchParameters(searchTerm)
 
   const termOneData = await fetchSearchData(
     searchEndpoint +
@@ -26,8 +25,8 @@ export async function findCourseId(searchTerm: string): Promise<string> {
       `subject=${subject}&number=${courseNumber}&term=2&campus=${campus}`
   )
 
-  const searchTermFormattedForData = formatSearchTermForData(searchTerm)
-
+  const searchTermFormattedForData = `${subject} ${courseNumber} ${sectionNumber}`
+  console.log("Search Term Formatted For Data: " + searchTermFormattedForData)
   const courseUrl =
     getUrlFromSearchTerm(termOneData, searchTermFormattedForData) ||
     getUrlFromSearchTerm(termTwoData, searchTermFormattedForData)
