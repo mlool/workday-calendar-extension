@@ -155,11 +155,13 @@ function observePopup() {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-window.onload = function () {
+function initializeAutofill() {
   if (isAutofillEnabled) {
     observePopup()
   }
 }
+
+initializeAutofill()
 
 // Function to add a button to a given HTML element
 function addButtonToElement(element: Element): void {
