@@ -14,17 +14,16 @@ export async function fetchWorkdayData(
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
 
   const path = rawData["body"]["children"][0]["children"][0]["children"]
+
   const rawName = path[0]["instances"][0]["text"]
   const formattedName = rawName.split(" - ")[1]
-
   const possibleDetailsPath =
     rawData["body"]["children"][0]["children"][1]["children"]
   const meetingPatternIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["label"] === "Meeting Patterns"
   )
   const detailsPath = possibleDetailsPath[meetingPatternIndex]["instances"]
-
-  let rawDetails: string[] = []
+  const rawDetails: string[] = []
   for (const detail of detailsPath) {
     rawDetails.push(detail["text"])
   }
@@ -33,13 +32,16 @@ export async function fetchWorkdayData(
     (item: DetailsPath) => item["widget"] === "panel"
   )
 
-  const instructorsPath =
-    possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
-      "instances"
-    ]
-  let instructors: string[] = []
-  for (const instructor of instructorsPath) {
-    instructors.push(instructor["text"])
+  const instructors: string[] = []
+
+  if (instructorsIndex !== -1) {
+    const instructorsPath =
+      possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
+        "instances"
+      ]
+    for (const instructor of instructorsPath) {
+      instructors.push(instructor["text"])
+    }
   }
 
   const formattedData: RawWorkdayData = {
