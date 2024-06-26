@@ -538,7 +538,7 @@ async function handleCopySavedScheduleButtonClick(
     //
     // TODO: refactor this to add sections more directly.
     // eslint-disable-next-line no-await-in-loop
-    const selectedSection = await findCourseInfo(code)
+    const selectedSection = await findCourseInfo(code, false)
     if (!selectedSection) return
     // Getting existing sections from Chrome storage and adding the new section
     chrome.storage.local.set({ newSection: selectedSection })
