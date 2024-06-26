@@ -10,12 +10,12 @@ chrome.runtime.onConnect.addListener((port) => {
   })
 })
 
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener(async (message) => {
   if (message.type === "HOVER" && portFromContentScript) {
     portFromContentScript.postMessage(message.course)
   }
   if (message.type === "RMP") {
-    fetchProfRating('Thibault Mayor')
+    return await fetchProfRating(message.prof)
   }
 })
 
