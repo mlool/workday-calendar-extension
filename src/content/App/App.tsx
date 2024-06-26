@@ -161,6 +161,7 @@ function App() {
 
     setSections([...sections, updatedNewSection])
     setNewSection(null)
+    chrome.storage.local.set({ newSection: null })
   }
 
   const handleDeleteSelectedSection = () => {

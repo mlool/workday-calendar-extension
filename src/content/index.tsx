@@ -222,7 +222,7 @@ async function handleButtonClick(element: Element): Promise<void> {
   const selectedSection = await extractSection(element)
   if (!selectedSection) return
   // Getting existing sections from Chrome storage and adding the new section
-  await chrome.storage.local.set({ newSection: selectedSection })
+  chrome.storage.local.set({ newSection: selectedSection })
 
   // Ensure the drawer opens when a button is clicked
   toggleContainer(true)

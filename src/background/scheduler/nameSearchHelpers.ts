@@ -33,7 +33,6 @@ export function getUrlFromSearchTerm(
   return null
 }
 
-
 export function getCourseIdFromUrl(url: string): string {
   const parts = url.split("$")
   return parts[2].split(".")[0]
