@@ -22,26 +22,22 @@ export async function fetchWorkdayData(
   const meetingPatternIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["label"] === "Meeting Patterns"
   )
-  console.log(meetingPatternIndex)
   const detailsPath = possibleDetailsPath[meetingPatternIndex]["instances"]
   const rawDetails: string[] = []
   for (const detail of detailsPath) {
     rawDetails.push(detail["text"])
   }
-  console.log(rawDetails)
   const instructorsIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["widget"] === "panel"
   )
 
   const instructors: string[] = []
-  console.log(instructorsIndex)
   if (instructorsIndex !== -1) {
     try {
       const instructorsPath =
         possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
           "instances"
         ]
-      console.log(instructorsPath)
       for (const instructor of instructorsPath) {
         instructors.push(instructor["text"])
       }
