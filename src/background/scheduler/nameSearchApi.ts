@@ -30,7 +30,7 @@ export async function findCourseId(searchTerm: string): Promise<string> {
 
   const courseUrl =
     getUrlFromSearchTerm(termOneData, searchTermFormattedForData) ||
-    getUrlFromSearchTerm(termTwoData, searchTerm)
+    getUrlFromSearchTerm(termTwoData, searchTermFormattedForData)
 
   if (!courseUrl) {
     return ""
