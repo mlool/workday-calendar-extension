@@ -31,7 +31,6 @@
     "storage",
     "cookies",
     "declarativeNetRequest",
-    "declarativeNetRequestWithHostAccess",
-    "webRequest"
+    "declarativeNetRequestWithHostAccess"
   ]
 }

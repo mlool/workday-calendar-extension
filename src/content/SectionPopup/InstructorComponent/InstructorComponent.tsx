@@ -8,7 +8,7 @@ const InstructorComponent = ({ instructors }: IProps) => {
     <div className="ComponentContainer">
       <div className="ComponentTitle">Instructors:</div>
       <div>
-        {instructors.length > 0 ? (
+        {instructors ? (
           <ul>
             {instructors.map((instructor, index) => (
               <li key={index}>{instructor}</li>
