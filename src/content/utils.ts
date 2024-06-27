@@ -65,5 +65,5 @@ const versionOneFiveZeroUpdateNotification = () => {
 export {
   versionOneFiveZeroUpdateNotification,
   filterSectionsByWorklist,
-  extractSection
+  extractSection,
 }
