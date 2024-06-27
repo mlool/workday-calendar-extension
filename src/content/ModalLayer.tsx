@@ -1,10 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  Reducer,
-  useContext,
-  useReducer,
-} from "react"
+import { createContext, Dispatch, Reducer, useContext, useReducer } from "react"
 import { ISectionData } from "./App/App.types"
 import "./ModalLayer.css"
 import SectionInfoBody from "./SectionPopup/SectionInfoBody"

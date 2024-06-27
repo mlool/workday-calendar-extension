@@ -165,7 +165,8 @@ function App() {
   }
 
   const handleDeleteSection = (sectionToDelete: ISectionData) => {
-    setSections(sections.filter((s) => s !== sectionToDelete))}
+    setSections(sections.filter((s) => s !== sectionToDelete))
+  }
 
   const handleCancelNewSection = () => {
     setNewSection(null)

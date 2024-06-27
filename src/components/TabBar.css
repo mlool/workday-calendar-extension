@@ -25,17 +25,17 @@
 }
 
 .tab-selected {
-  background-color: var(--secondary-accent-colour)
+  background-color: var(--secondary-accent-colour);
 }
 
 .tab-highlighted {
-  background-color: var(--highlight-colour)
+  background-color: var(--highlight-colour);
 }
 
 .tab-backgrounded {
-  background-color: var(--disabled-colour)
+  background-color: var(--disabled-colour);
 }
 
 .tab-backgrounded:hover {
-  background-color: var(--secondary-accent-colour)
+  background-color: var(--secondary-accent-colour);
 }

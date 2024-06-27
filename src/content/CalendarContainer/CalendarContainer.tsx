@@ -27,40 +27,9 @@ const CalendarContainer = ({
   const WORKLISTCOUNT = [0, 1, 2, 3]
   const TERMS = [Term.winterOne, Term.winterTwo]
 
-  const getBackgroundColour = (term: Term): string => {
-    if (currentTerm === term) {
-      return "#9ce8ff"
-    } else if (newSection?.term === Term.winterFull) {
-      return "#ffa500" //If not selected term, but newSection term is winterFull, orange to indicate course in other term also
-    } else if (newSection !== null) {
-      return "#f7faff" //Gray out if section selected & not correct term
-    } else {
-      return ""
-    }
-  }
-
   const canSwitchTerms = (): boolean => {
-    let rsf = true
-    if (newSection !== null) {
-      rsf = false //False if we have a section selected
-    }
-
-    if (newSection?.term === Term.winterFull) {
-      rsf = true //But if our term is winterFull, then we should allow switching term no matter what
-    }
-    return rsf
-  }
-
-  const getFontColor = (term: Term): string => {
-    if (currentTerm === term) {
-      return "black"
-    } else if (newSection?.term === Term.winterFull) {
-      return "black" //black still
-    } else if (newSection !== null) {
-      return "#d4d4d4" //Gray out if section selected & not correct term
-    } else {
-      return ""
-    }
+    if (newSection !== null && newSection.term !== Term.winterFull) return false
+    return true
   }
 
   return (
@@ -75,7 +44,9 @@ const CalendarContainer = ({
         <TabBar
           label="Terms"
           items={TERMS}
-          onClickHandler={(term) => (canSwitchTerms() ? setCurrentTerm(term) : null)}
+          onClickHandler={(term) =>
+            canSwitchTerms() ? setCurrentTerm(term) : null
+          }
           isSelected={(x) => x === currentTerm}
           isHighlighted={() => newSection?.term === Term.winterFull}
           tabTextBuilder={(x) => Term_String_Map[x]}
