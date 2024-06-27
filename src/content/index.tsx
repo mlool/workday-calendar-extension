@@ -164,7 +164,7 @@ function initializeAutofill() {
 initializeAutofill()
 
 // Function to add a button to a given HTML element
-function addButtonToElement(element: Element): void {
+function addButtonToElement(element: Element, addDirectly?: boolean): void {
   // Creating a button element
   const button: HTMLButtonElement = document.createElement("button")
   // Setting the button text content to '+'
@@ -172,9 +172,15 @@ function addButtonToElement(element: Element): void {
   // Add custom button id
   button.id = "add-section-button"
   // Adding an event listener for when the button is clicked
-  button.addEventListener("click", () => {
-    handleButtonClick(element)
-  })
+  if (addDirectly) {
+    button.addEventListener("click", () => {
+      handleButtonClick(element, true)
+    })
+  } else {
+    button.addEventListener("click", () => {
+      handleButtonClick(element)
+    })
+  }
 
   // Styling the button
   button.style.padding = "10px 20px"
@@ -216,12 +222,22 @@ function addButtonToElement(element: Element): void {
   })
 
   // Inserting the button before the given element
+  if (addDirectly && addDirectly === true) {
+    element.insertAdjacentElement("beforebegin", button)
+    return
+  }
   element.parentNode?.insertBefore(button, element)
 }
 
 // Function to handle button click event
-async function handleButtonClick(element: Element): Promise<void> {
-  const selectedSection = await extractSection(element)
+async function handleButtonClick(
+  element: Element,
+  isReskinButton?: boolean
+): Promise<void> {
+  const selectedSection = await extractSection(
+    element,
+    isReskinButton !== null && isReskinButton === true
+  )
   if (!selectedSection) return
   // Getting existing sections from Chrome storage and adding the new section
   chrome.storage.local.set({ newSection: selectedSection })
@@ -260,6 +276,17 @@ function observeDOMAndAddButtons(): void {
 
               if (!isButtonAlreadyPresent && isCourseInfo) {
                 addButtonToElement(matchingElement)
+              }
+            })
+            const matchingElementsForReskinExtension = document
+              .getElementById("react-root")
+              ?.querySelectorAll("div.AddButtonGoHere")
+            matchingElementsForReskinExtension?.forEach((matchingElement) => {
+              const previousSibling = matchingElement.previousElementSibling
+              const isButtonAlreadyPresent =
+                previousSibling && previousSibling.id === "add-section-button"
+              if (!isButtonAlreadyPresent) {
+                addButtonToElement(matchingElement, true)
               }
             })
           }

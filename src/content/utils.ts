@@ -1,7 +1,11 @@
 import { ISectionData } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 
-async function extractSection(element: Element) {
+// bypassDetailsCheck is for reskin extension compat
+async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
+  if (bypassDetailsCheck && bypassDetailsCheck === true) {
+    return await findCourseInfo(element.id)
+  }
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
   ) // The div with the raw text of the course section data.
