@@ -3,7 +3,7 @@ const BASIC_AUTH_KEY = "dGVzdDp0ZXN0"
 
 export default async function fetchProfRating(
   profName: string
-): Promise<number> {
+): Promise<number | null> {
   const headers = new Headers({
     Authorization: `Basic ${BASIC_AUTH_KEY}`,
     "Content-Type": "application/json",
@@ -15,8 +15,10 @@ export default async function fetchProfRating(
   })
   const rawRes = await fetch(req)
   const res = await rawRes.json()
-  const rating =
-    res["data"]["search"]["teachers"]["edges"][0]["node"]["avgRating"]
+
+  const rawProfs = res["data"]["search"]["teachers"]["edges"]
+  if (rawProfs.length === 0) return null
+  const rating = rawProfs[0]["node"]["avgRating"]
   return rating
 }
 
@@ -29,7 +31,7 @@ const buildRMPQueryBody = (profName: string) => {
       query: {
         text: profName,
         schoolID: "U2Nob29sLTE0MTM=",
-        fallback: true,
+        fallback: false,
         departmentID: null,
       },
       schoolID: "U2Nob29sLTE0MTM=",

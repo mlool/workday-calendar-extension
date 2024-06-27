@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react"
 import Browser from "webextension-polyfill"
-import { ColoredRangeDetail } from "../../../components/ColoredRangeDetail"
+import {
+  ColoredRange,
+  ColoredRangeDetail,
+} from "../../../components/ColoredRangeDetail"
 import "../PopupComponent.css"
+
 interface IProps {
   instructors: string[]
 }
+
+const RMP_RANGE: ColoredRange = { lowerBound: 0, upperBound: 5 }
 
 const InstructorComponent = ({ instructors }: IProps) => {
   const [rmpRatings, setRmpRatings] = useState<Record<string, number | null>>()
@@ -48,7 +54,7 @@ const InstructorComponent = ({ instructors }: IProps) => {
                   key={index}
                   label={instructor}
                   numericValue={rmpRatings[instructor]}
-                  max={5}
+                  range={RMP_RANGE}
                   showRange={true}
                 />
               )
