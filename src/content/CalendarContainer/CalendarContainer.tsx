@@ -1,3 +1,4 @@
+import TabBar from "../../components/TabBar"
 import { ISectionData, Term_String_Map, Term } from "../App/App.types"
 import Calendar from "../Calendar/Calendar"
 import "./CalendarContainer.css"
@@ -65,20 +66,13 @@ const CalendarContainer = ({
   return (
     <div className="CalendarContainer">
       <div className="HeaderItemContainer">
-        <div style={{ padding: "3px 5px" }}>Worklists: </div>
-        {WORKLISTCOUNT.map((num) => (
-          <div
-            key={num}
-            className="HeaderButton"
-            id={`work${num}`}
-            onClick={() => setCurrentWorklistNumber(num)}
-            style={{
-              backgroundColor: num === currentWorklistNumber ? "#9ce8ff" : "",
-            }}
-          >
-            {num}
-          </div>
-        ))}
+        <TabBar
+          label="Worklists"
+          items={WORKLISTCOUNT}
+          onClickHandler={setCurrentWorklistNumber}
+          isSelected={(x) => x === currentWorklistNumber}
+          isHighlighted={() => newSection?.term === Term.winterFull}
+        />
         <div style={{ padding: "3px 5px" }}>Terms: </div>
         {TERMS.map((term) => (
           <div
