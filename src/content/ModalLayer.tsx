@@ -2,7 +2,6 @@ import {
   createContext,
   Dispatch,
   Reducer,
-  SetStateAction,
   useContext,
   useReducer,
 } from "react"
@@ -59,8 +58,7 @@ interface SyncScheduleModalData {
 interface ModalLayerProps {
   currentWorklistNumber: number
   handleClearWorklist: VoidCallback
-  handleDeleteSelectedSection: VoidCallback
-  setSelectedSection: Dispatch<SetStateAction<ISectionData | null>>
+  handleDeleteSection: (sectionToDelete: ISectionData) => void
   children: JSX.Element
 }
 
@@ -99,8 +97,7 @@ function ModalLayer(props: ModalLayerProps) {
           body: <SectionInfoBody selectedSection={sectionData} />,
           closeButtonText: "Close",
           actionButtonText: "Remove",
-          actionHandler: props.handleDeleteSelectedSection,
-          cancelHandler: () => props.setSelectedSection(null),
+          actionHandler: () => props.handleDeleteSection(sectionData),
           alignment: ModalAlignment.Top,
           hasTintedBg: false,
         }

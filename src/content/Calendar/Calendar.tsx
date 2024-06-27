@@ -9,10 +9,8 @@ interface IProps {
   newSection: ISectionData | null
   currentWorklistNumber: number
   currentTerm: Term
-  selectedSection: ISectionData | null
   setSections: (data: ISectionData[]) => void
   setSectionConflict: (state: boolean) => void
-  setSelectedSection: (section: ISectionData | null) => void
 }
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"]
@@ -23,7 +21,6 @@ const Calendar = ({
   currentWorklistNumber,
   setSectionConflict,
   currentTerm,
-  setSelectedSection,
 }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
@@ -77,7 +74,6 @@ const Calendar = ({
                 style={{ backgroundColor: cell.color }}
                 onClick={() => {
                   if (cell.sectionContent === null) return
-                  setSelectedSection(cell.sectionContent)
                   dispatchModal({
                     preset: ModalPreset.SectionPopup,
                     additionalData: cell.sectionContent,

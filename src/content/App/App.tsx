@@ -26,9 +26,7 @@ function App() {
   const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne)
   const [currentView, setCurrentView] = useState<Views>(Views.calendar)
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
-  const [selectedSection, setSelectedSection] = useState<ISectionData | null>(
-    null
-  )
+
   const dispatchModal = useContext(ModalDispatchContext)
 
   const handleSectionImport = async (sections: ISectionData[]) => {
@@ -166,10 +164,8 @@ function App() {
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleDeleteSelectedSection = () => {
-    setSections(sections.filter((s) => s !== selectedSection))
-    setSelectedSection(null)
-  }
+  const handleDeleteSection = (sectionToDelete: ISectionData) => {
+    setSections(sections.filter((s) => s !== sectionToDelete))}
 
   const handleCancelNewSection = () => {
     setNewSection(null)
@@ -181,15 +177,13 @@ function App() {
       (x) => x.worklistNumber !== currentWorklistNumber
     )
     setSections(updatedSections)
-    setSelectedSection(null)
   }
 
   return (
     <ModalLayer
       currentWorklistNumber={currentWorklistNumber}
       handleClearWorklist={handleClearWorklist}
-      handleDeleteSelectedSection={handleDeleteSelectedSection}
-      setSelectedSection={setSelectedSection}
+      handleDeleteSection={handleDeleteSection}
     >
       <div className="App">
         <TopBar currentView={currentView} setCurrentView={setCurrentView} />
@@ -204,8 +198,6 @@ function App() {
               setCurrentWorklistNumber={setCurrentWorklistNumber}
               currentTerm={currentTerm}
               setCurrentTerm={setCurrentTerm}
-              selectedSection={selectedSection}
-              setSelectedSection={setSelectedSection}
             />
 
             <Form

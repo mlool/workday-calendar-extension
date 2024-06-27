@@ -7,12 +7,10 @@ interface IProps {
   newSection: ISectionData | null
   currentWorklistNumber: number
   currentTerm: Term
-  selectedSection: ISectionData | null
   setCurrentWorklistNumber: (num: number) => void
   setSections: (data: ISectionData[]) => void
   setSectionConflict: (state: boolean) => void
   setCurrentTerm: (term: Term) => void
-  setSelectedSection: (section: ISectionData | null) => void
 }
 
 const CalendarContainer = ({
@@ -24,8 +22,6 @@ const CalendarContainer = ({
   setCurrentWorklistNumber,
   currentTerm,
   setCurrentTerm,
-  selectedSection,
-  setSelectedSection,
 }: IProps) => {
   const WORKLISTCOUNT = [0, 1, 2, 3]
   const TERMS = [Term.winterOne, Term.winterTwo]
@@ -107,8 +103,6 @@ const CalendarContainer = ({
         setSections={setSections}
         setSectionConflict={setSectionConflict}
         currentTerm={currentTerm}
-        selectedSection={selectedSection}
-        setSelectedSection={setSelectedSection}
       />
     </div>
   )
