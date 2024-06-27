@@ -1,4 +1,4 @@
-import { ISectionData } from "./App/App.types"
+import { ISectionData, Term } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import { handleCourseLoading } from "."
 
@@ -37,17 +37,16 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   })
 }
 
-const filterSectionsByWorklist = (
+const filterSections = (
   sections: ISectionData[],
-  worklist: number
+  worklist: number,
+  term: Term
 ): ISectionData[] => {
-  const sectionsForWorklist: ISectionData[] = []
-  for (const section of sections) {
-    if (section.worklistNumber === worklist) {
-      sectionsForWorklist.push(section)
-    }
-  }
-  return sectionsForWorklist
+  return sections.filter(
+    (s) =>
+      s.worklistNumber === worklist &&
+      (s.term === term || s.term === Term.winterFull)
+  )
 }
 
 const versionOneFiveZeroUpdateNotification = () => {
@@ -71,6 +70,6 @@ const versionOneFiveZeroUpdateNotification = () => {
 
 export {
   versionOneFiveZeroUpdateNotification,
-  filterSectionsByWorklist,
+  filterSections,
   extractSection,
 }
