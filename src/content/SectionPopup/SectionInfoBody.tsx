@@ -1,36 +1,26 @@
-import { ISectionData, SupplementaryData } from "../App/App.types"
-import { useEffect, useState } from "react"
+import { ISectionData } from "../App/App.types"
 import "./SectionInfoBody.css"
 import GradesComponent from "./GradesComponent/GradesComponent"
 import InstructorComponent from "./InstructorComponent/InstructorComponent"
 import LocationComponent from "./LocationsComponent/LocationComponent"
-import { findSupplementaryData } from "../../workdayApiHelpers/searchHelpers"
 
 interface SectionInfoProps {
   selectedSection: ISectionData
 }
 
 const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [supplementaryData, setSupplementaryData] =
-    useState<SupplementaryData | null>(null)
-
-  useEffect(() => {
-    if (selectedSection?.code) {
-      setIsLoading(true)
-      findSupplementaryData(selectedSection.code)
-        .then((response) => {
-          if (response) {
-            setSupplementaryData(response)
-          }
-        })
-        .catch((error) => {
-          console.error("Error finding supplementary data:", error)
-        })
-        .finally(() => setIsLoading(false))
-    }
-    setIsLoading(false)
-  }, [selectedSection?.code])
+  const uniqueLocations = new Set(
+    selectedSection.sectionDetails.map((section) => {
+      const parts = section.location?.split(/[- ]/) || ""
+      if (parts.length > 1) {
+        const location = parts[0] + "-" + parts.slice(-1)[0]
+        return {
+          location: section.location,
+          link: `https://learningspaces.ubc.ca/classrooms/${location}`,
+        }
+      }
+    })
+  )
 
   return (
     <div className="section-info-body">
@@ -43,14 +33,8 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
       )}
       <hr />
       <div className="SectionPopupDetails">{selectedSection?.name}</div>
-      {isLoading || supplementaryData === null ? (
-        <div>Loading Data...</div>
-      ) : (
-        <>
-          <InstructorComponent instructors={supplementaryData.instructors} />
-          <LocationComponent locations={supplementaryData.locations} />
-        </>
-      )}
+      <InstructorComponent instructors={selectedSection.instructors} />
+      <LocationComponent locations={uniqueLocations} />
       <GradesComponent selectedSection={selectedSection} />
     </div>
   )

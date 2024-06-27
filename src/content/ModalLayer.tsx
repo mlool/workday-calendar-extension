@@ -25,6 +25,7 @@ enum ModalPreset {
   SyncErrors,
   SyncInstructions,
   SyncConfirm,
+  ApiError,
 }
 
 enum ModalActionType {
@@ -151,6 +152,14 @@ function ModalLayer(props: ModalLayerProps) {
         return {
           title: "Sync Saved Schedules Success",
           body: `Any matching classes were added to this saved schedule! Please refresh page to see changes.`,
+          hasTintedBg: false,
+          actionType: ModalActionType.Normal,
+        }
+      }
+      case ModalPreset.ApiError: {
+        return {
+          title: "Import Error",
+          body: `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`,
           hasTintedBg: false,
           actionType: ModalActionType.Normal,
         }

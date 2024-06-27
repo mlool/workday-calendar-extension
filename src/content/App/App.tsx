@@ -15,11 +15,8 @@ import {
   filterSectionsByWorklist,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
-import {
-  fetchSecureToken,
-  findCourseInfo,
-  findCourseId,
-} from "../../workdayApiHelpers/searchHelpers"
+
+import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -44,6 +41,9 @@ function App() {
       await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
+        if (!courseID) {
+          return
+        }
         fetchedCourseIDs.push(courseID)
       }
     }, Promise.resolve())
@@ -110,10 +110,8 @@ function App() {
         }
       }
     }
-    // Set context-id
-    findCourseInfo("CPSC_V 320-101")
+
     syncInitialState()
-    fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)
     versionOneFiveZeroUpdateNotification()
     return () => {
@@ -165,6 +163,7 @@ function App() {
 
     setSections([...sections, updatedNewSection])
     setNewSection(null)
+    chrome.storage.local.set({ newSection: null })
   }
 
   const handleDeleteSelectedSection = () => {

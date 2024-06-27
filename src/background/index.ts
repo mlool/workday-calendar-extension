@@ -1,6 +1,5 @@
 // import { runtime, storage } from 'webextension-polyfill'
 // import { getCurrentTab } from '../helpers/tabs'
-
 let portFromContentScript: chrome.runtime.Port | null
 
 chrome.runtime.onConnect.addListener((port) => {

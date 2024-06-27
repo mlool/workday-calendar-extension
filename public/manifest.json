@@ -26,8 +26,9 @@
     }
   ],
   "action": {},
+  "host_permissions": ["*://*.myworkday.com/*"],
   "permissions": [
-    "storage", 
+    "storage",
     "cookies",
     "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess"
