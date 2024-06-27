@@ -71,23 +71,15 @@ const CalendarContainer = ({
           items={WORKLISTCOUNT}
           onClickHandler={setCurrentWorklistNumber}
           isSelected={(x) => x === currentWorklistNumber}
-          isHighlighted={() => newSection?.term === Term.winterFull}
         />
-        <div style={{ padding: "3px 5px" }}>Terms: </div>
-        {TERMS.map((term) => (
-          <div
-            key={term}
-            className="HeaderButton"
-            id={`term_${Term_String_Map[term]}`}
-            onClick={() => (canSwitchTerms() ? setCurrentTerm(term) : null)}
-            style={{
-              backgroundColor: getBackgroundColour(term),
-              color: getFontColor(term),
-            }}
-          >
-            {Term_String_Map[term]}
-          </div>
-        ))}
+        <TabBar
+          label="Terms"
+          items={TERMS}
+          onClickHandler={(term) => (canSwitchTerms() ? setCurrentTerm(term) : null)}
+          isSelected={(x) => x === currentTerm}
+          isHighlighted={() => newSection?.term === Term.winterFull}
+          tabTextBuilder={(x) => Term_String_Map[x]}
+        />
       </div>
 
       <Calendar

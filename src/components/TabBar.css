@@ -1,13 +1,14 @@
 .tab-bar-container {
   display: grid;
-  grid-auto-flow: column;
+  grid-template-columns: 20% 1fr;
   column-gap: 5px;
   align-items: center;
-  padding: 3px 5px;
+  padding: 2px 5px;
 }
 
 .tab-bar-label {
   font-weight: 500;
+  text-align: left;
 }
 
 .tab-bar {

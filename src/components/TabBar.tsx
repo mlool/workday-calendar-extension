@@ -1,24 +1,25 @@
 import "./TabBar.css"
 
-interface TabBarProps<Type> {
-  label: string
-  items: Type[]
-  onClickHandler: (item: Type) => void
-  isSelected: (item: Type) => boolean
-  isHighlighted?: (item: Type) => boolean
+interface TabBarProps<T> {
+  label?: string
+  items: T[]
+  onClickHandler: (item: T) => void
+  isSelected: (item: T) => boolean
+  isHighlighted?: (item: T) => boolean
+  tabTextBuilder?: (item: T) => string
 }
 
-export default function TabBar<Type>(props: TabBarProps<Type>) {
-  const determineTabColor = (item: Type) => {
+export default function TabBar<T>(props: TabBarProps<T>) {
+  const determineTabColor = (item: T) => {
     if (props.isSelected(item)) return "tab-selected"
     if (props.isHighlighted && props.isHighlighted(item))
-      return "tab-higlighted"
+      return "tab-highlighted"
     return "tab-backgrounded"
   }
 
   return (
     <div className="tab-bar-container">
-      <p className="tab-bar-label">{props.label}</p>
+      {props.label && <p className="tab-bar-label">{props.label}</p>}
       <div className="tab-bar">
         {props.items.map((item, index) => (
           <div
@@ -26,7 +27,7 @@ export default function TabBar<Type>(props: TabBarProps<Type>) {
             className={`tab-bar-button ${determineTabColor(item)}`}
             onClick={() => props.onClickHandler(item)}
           >
-            {String(item)}
+            {props.tabTextBuilder ? props.tabTextBuilder(item) : String(item)}
           </div>
         ))}
       </div>
