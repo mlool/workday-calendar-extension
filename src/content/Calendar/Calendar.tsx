@@ -5,9 +5,8 @@ import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 
 interface IProps {
-  sections: ISectionData[]
+  filteredSections: ISectionData[]
   newSection: ISectionData | null
-  currentWorklistNumber: number
   currentTerm: Term
   setSections: (data: ISectionData[]) => void
   setSectionConflict: (state: boolean) => void
@@ -16,21 +15,15 @@ interface IProps {
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"]
 
 const Calendar = ({
-  sections,
+  filteredSections,
   newSection,
-  currentWorklistNumber,
   setSectionConflict,
   currentTerm,
 }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
-  const calendarSections = sections.filter(
-    (section) =>
-      section.worklistNumber === currentWorklistNumber &&
-      (section.term === currentTerm || section.term === Term.winterFull)
-  )
   const sectionsToRender = convertToMatrix(
-    calendarSections,
+    filteredSections,
     newSection,
     setSectionConflict,
     currentTerm

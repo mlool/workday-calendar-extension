@@ -68,8 +68,4 @@ const versionOneFiveZeroUpdateNotification = () => {
     .catch((error) => console.error("Error retrieving flag:", error))
 }
 
-export {
-  versionOneFiveZeroUpdateNotification,
-  filterSections,
-  extractSection,
-}
+export { versionOneFiveZeroUpdateNotification, filterSections, extractSection }
