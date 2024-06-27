@@ -1,5 +1,5 @@
 import { ISectionData } from "../../content/App/App.types"
-import { defaultColorList } from "../../helpers/courseColors"
+import { defaultColorList } from "../../content/Settings/courseColors"
 import {
   getUrlFromSearchTerm,
   getCourseIdFromUrl,

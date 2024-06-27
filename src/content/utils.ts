@@ -1,7 +1,7 @@
 import { ISectionData } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 
-export async function extractSection(element: Element) {
+async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
   ) // The div with the raw text of the course section data.
@@ -28,13 +28,6 @@ export async function extractSection(element: Element) {
   return Promise.all([newSectionPromise]).then(([newSection]) => {
     return newSection
   })
-}
-
-export function isCourseFormatted(courseName: string) {
-  const regexV = /^[A-Z]{3}_V [0-9]+-[0-9]+$/
-  const regexO = /^[A-Z]{3}_O [0-9]+-[0-9]+$/
-
-  return regexV.test(courseName) || regexO.test(courseName)
 }
 
 const filterSectionsByWorklist = (
@@ -67,4 +60,10 @@ const versionOneFiveZeroUpdateNotification = () => {
       }
     })
     .catch((error) => console.error("Error retrieving flag:", error))
+}
+
+export {
+  versionOneFiveZeroUpdateNotification,
+  filterSectionsByWorklist,
+  extractSection
 }
