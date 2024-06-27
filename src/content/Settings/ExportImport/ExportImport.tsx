@@ -4,8 +4,8 @@ import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { findCourseId } from "../../../backends/scheduler/nameSearchApi"
-import { useState } from "react"
-import InfoModal from "../../InfoModal/InfoModal"
+import { useContext } from "react"
+import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 
 interface IProps {
   sections: ISectionData[]
@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const ExportImport = ({ sections, setSections }: IProps) => {
-  const [importingInProgress, setImportInProgress] = useState(false)
+  const dispatchModal = useContext(ModalDispatchContext)
 
   const handleExport = () => {
     const json = JSON.stringify(sections, null, 2)
@@ -27,7 +27,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   }
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setImportInProgress(true)
+    dispatchExportImportModal("Loading...")
     const file = event.target.files?.[0]
     if (!file) return
 
@@ -45,25 +45,17 @@ const ExportImport = ({ sections, setSections }: IProps) => {
 
   const handleSectionImport = async (sections: ISectionData[]) => {
     const fetchedCourseIDs: string[] = []
-    let error: boolean = false
     await sections.reduce(async (promise, section) => {
       await promise
       if (!section.courseID) {
         const courseID = await findCourseId(section.code)
-        if (courseID === null) {
-          error = true
+        if (!courseID) {
           return
         }
         fetchedCourseIDs.push(courseID)
       }
     }, Promise.resolve())
 
-    if (error) {
-      setImportInProgress(false)
-      alert(
-        `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`
-      )
-    }
     const newSections = sections.map((s) => {
       if (s.courseID) return s
       return {
@@ -73,21 +65,26 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     })
 
     setSections(newSections)
-    setImportInProgress(false)
+    dispatchExportImportModal(
+      "Import Successful! Your courses should now be viewable in your worklist"
+    )
+  }
+
+  const dispatchExportImportModal = (message: string) => {
+    dispatchModal({
+      preset: ModalPreset.ImportStatus,
+      additionalData: message,
+    })
   }
 
   return (
     <div>
-      {importingInProgress && (
-        <InfoModal message="Loading ...." onCancel={() => {}} />
-      )}
       <div className="SettingsHeader">Export/Import</div>
       <hr className="Divider" />
       <ExportImportIndividual
         sections={sections}
         setSections={setSections}
         handleSectionImport={handleSectionImport}
-        setImportInProgress={setImportInProgress}
       />
       <div className="ExportImportButtonContainer">
         <div className="ExportImportRow">

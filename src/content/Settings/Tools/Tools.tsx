@@ -47,9 +47,8 @@ const Tools = () => {
     <div>
       <div className="SettingsHeader">Tools</div>
       <hr className="Divider" />
-      <div className="ToolsBodyContainer">
+      <div className="SettingsBodyContainer">
         <div className="ToolItem">
-          {/*Coming soon!*/}
           <div className="ToolContainer">
             <div>
               <input

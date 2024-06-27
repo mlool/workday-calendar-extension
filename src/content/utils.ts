@@ -1,7 +1,7 @@
 import { ISectionData } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 
-export async function extractSection(element: Element) {
+async function extractSection(element: Element) {
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
   ) // The div with the raw text of the course section data.
@@ -30,14 +30,7 @@ export async function extractSection(element: Element) {
   })
 }
 
-export function isCourseFormatted(courseName: string) {
-  const regexV = /^[A-Z]{3}_V [0-9]+-[0-9]+$/
-  const regexO = /^[A-Z]{3}_O [0-9]+-[0-9]+$/
-
-  return regexV.test(courseName) || regexO.test(courseName)
-}
-
-export const filterSectionsByWorklist = (
+const filterSectionsByWorklist = (
   sections: ISectionData[],
   worklist: number
 ): ISectionData[] => {
@@ -50,7 +43,7 @@ export const filterSectionsByWorklist = (
   return sectionsForWorklist
 }
 
-export const versionOneFiveZeroUpdateNotification = () => {
+const versionOneFiveZeroUpdateNotification = () => {
   const currentVersion = chrome.runtime.getManifest().version
   chrome.storage.local
     .get("versionOneFiveZeroNotificationDisplayed")
@@ -67,4 +60,10 @@ export const versionOneFiveZeroUpdateNotification = () => {
       }
     })
     .catch((error) => console.error("Error retrieving flag:", error))
+}
+
+export {
+  versionOneFiveZeroUpdateNotification,
+  filterSectionsByWorklist,
+  extractSection,
 }

@@ -21,6 +21,7 @@ enum ModalPreset {
   AutofillSettingInfo,
   HidePfpInfo,
   SectionPopup,
+  ImportStatus,
   SyncErrors,
   SyncInstructions,
   SyncConfirm,
@@ -102,6 +103,13 @@ function ModalLayer(props: ModalLayerProps) {
           cancelHandler: () => props.setSelectedSection(null),
           alignment: ModalAlignment.Top,
           hasTintedBg: false,
+        }
+      }
+      case ModalPreset.ImportStatus: {
+        const message: string = action.additionalData as string
+        return {
+          title: "Import Status",
+          body: message,
         }
       }
       case ModalPreset.SyncErrors: {
