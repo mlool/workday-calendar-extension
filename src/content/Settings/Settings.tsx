@@ -1,4 +1,4 @@
-import { ColorTheme } from "../../helpers/courseColors"
+import { ColorTheme } from "./courseColors"
 import "./Settings.css"
 import { ISectionData } from "../App/App.types"
 import Tools from "./Tools/Tools"

@@ -1,23 +1,20 @@
 import { ISectionData } from "../../../App/App.types"
 import "../ExportImport.css"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
+import { ModalDispatchContext, ModalPreset } from "../../../ModalLayer"
 
 interface IProps {
   sections: ISectionData[]
   setSections: (data: ISectionData[]) => void
-  setImportInProgress: (state: boolean) => void
   handleSectionImport: (data: ISectionData[]) => void
 }
 
-const ExportImportIndividual = ({
-  sections,
-  setImportInProgress,
-  handleSectionImport,
-}: IProps) => {
+const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
   const [showExportPopup, setShowExportPopup] = useState(false)
   const [showImportPopup, setShowImportPopup] = useState(false)
+  const dispatchModal = useContext(ModalDispatchContext)
 
   const handleExport = (sections: ISectionData[], worklistNumber: number) => {
     sections = sections.filter(
@@ -41,7 +38,10 @@ const ExportImportIndividual = ({
     event: React.ChangeEvent<HTMLInputElement>,
     worklistNumber: number
   ) => {
-    setImportInProgress(true)
+    dispatchModal({
+      preset: ModalPreset.ImportStatus,
+      additionalData: "Loading...",
+    })
     const file = event.target.files?.[0]
     if (!file) return
 
@@ -60,6 +60,7 @@ const ExportImportIndividual = ({
           sectionDetails: section.sectionDetails,
           worklistNumber: worklistNumber,
           term: section.term,
+          instructors: section.instructors,
         }))
         newSections = newSections.concat(data)
         handleSectionImport(newSections)

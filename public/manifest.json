@@ -26,6 +26,7 @@
     }
   ],
   "action": {},
+  "host_permissions": ["*://*.myworkday.com/*"],
   "permissions": [
     "storage",
     "cookies",

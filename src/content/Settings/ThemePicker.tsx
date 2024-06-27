@@ -1,4 +1,4 @@
-import { ColorTheme } from "../../helpers/courseColors"
+import { ColorTheme } from "./courseColors"
 
 interface IThemePickerProps {
   colorTheme: ColorTheme

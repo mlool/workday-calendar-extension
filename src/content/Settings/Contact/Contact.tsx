@@ -1,13 +1,12 @@
 import DiscordButton from "../../DiscordButton/DiscordButton"
 import "../Settings.css"
-import "./Contact.css"
 
 const Contact = () => {
   return (
     <div>
       <div className="SettingsHeader">Contact Us</div>
       <hr className="Divider" />
-      <div className="ContactBodyContainer">
+      <div className="SettingsBodyContainer">
         <DiscordButton />
       </div>
     </div>

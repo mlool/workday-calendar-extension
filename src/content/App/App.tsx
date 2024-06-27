@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import "./App.css"
 import CalendarContainer from "../CalendarContainer/CalendarContainer"
 import { ISectionData, Term, Views } from "./App.types"
@@ -9,14 +9,14 @@ import {
   assignColors,
   ColorTheme,
   getNewSectionColor,
-} from "../../helpers/courseColors"
-import { ModalLayer } from "../ModalLayer"
+} from "../Settings/courseColors"
+import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import {
-  fetchSecureToken,
   filterSectionsByWorklist,
-  findCourseInfo,
   versionOneFiveZeroUpdateNotification,
 } from "../utils"
+
+import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -29,11 +29,50 @@ function App() {
   const [selectedSection, setSelectedSection] = useState<ISectionData | null>(
     null
   )
+  const dispatchModal = useContext(ModalDispatchContext)
+
+  const handleSectionImport = async (sections: ISectionData[]) => {
+    dispatchModal({
+      preset: ModalPreset.ImportStatus,
+      additionalData: "Loading...",
+    })
+    const fetchedCourseIDs: string[] = []
+    await sections.reduce(async (promise, section) => {
+      await promise
+      if (!section.courseID) {
+        const courseID = await findCourseId(section.code)
+        if (!courseID) {
+          return
+        }
+        fetchedCourseIDs.push(courseID)
+      }
+    }, Promise.resolve())
+
+    const newSections = sections.map((s) => {
+      if (s.courseID) return s
+      return {
+        ...s,
+        courseID: fetchedCourseIDs.shift(),
+      }
+    })
+
+    setSections(newSections)
+  }
+
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
+      chrome.storage.sync.get("sections", (result) => {
+        if (result.sections !== undefined) {
+          handleSectionImport(assignColors(result.sections, ColorTheme.Green))
+          chrome.storage.sync.remove("sections", function () {
+            console.log("Sections reset to empty.")
+          })
+        }
+      })
+
       chrome.storage.local.get(
         ["currentTerm", "colorTheme", "sections", "currentWorklistNumber"],
         (result) => {
@@ -71,10 +110,8 @@ function App() {
         }
       }
     }
-    // Set context-id
-    findCourseInfo("CPSC_V 320-101")
+
     syncInitialState()
-    fetchSecureToken()
     chrome.storage.onChanged.addListener(handleStorageChange)
     versionOneFiveZeroUpdateNotification()
     return () => {
@@ -126,6 +163,7 @@ function App() {
 
     setSections([...sections, updatedNewSection])
     setNewSection(null)
+    chrome.storage.local.set({ newSection: null })
   }
 
   const handleDeleteSelectedSection = () => {

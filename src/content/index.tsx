@@ -1,6 +1,7 @@
-import { extractSection, findCourseInfo } from "./utils"
+import { extractSection } from "./utils"
 import { createRoot } from "react-dom/client"
 import "../index.css"
+import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import App from "./App/App"
 
 // Function to apply visibility based on stored settings
@@ -154,11 +155,13 @@ function observePopup() {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-window.onload = function () {
+function initializeAutofill() {
   if (isAutofillEnabled) {
     observePopup()
   }
 }
+
+initializeAutofill()
 
 // Function to add a button to a given HTML element
 function addButtonToElement(element: Element): void {
@@ -564,6 +567,7 @@ async function handleCopyScheduleButtonClick(
   const button = document.querySelector(
     '.NewSectionButton[title="Add Section"]'
   ) as HTMLElement
+
   for (let i = 2; i < tableData.length; i++) {
     // Change column that course code is being taken from depending on button type
     const code =

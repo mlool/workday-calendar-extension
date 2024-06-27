@@ -3,9 +3,9 @@ import "../Settings.css"
 import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
-import { findCourseId } from "../../utils"
-import { useState } from "react"
-import InfoModal from "../../InfoModal/InfoModal"
+import { findCourseId } from "../../../backends/scheduler/nameSearchApi"
+import { useContext } from "react"
+import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 
 interface IProps {
   sections: ISectionData[]
@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const ExportImport = ({ sections, setSections }: IProps) => {
-  const [importingInProgress, setImportInProgress] = useState(false)
+  const dispatchModal = useContext(ModalDispatchContext)
 
   const handleExport = () => {
     const json = JSON.stringify(sections, null, 2)
@@ -27,7 +27,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   }
 
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setImportInProgress(true)
+    dispatchExportImportModal("Loading...")
     const file = event.target.files?.[0]
     if (!file) return
 
@@ -44,38 +44,47 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   }
 
   const handleSectionImport = async (sections: ISectionData[]) => {
-    const fetchedCourseIDs: Promise<string>[] = []
-    for (const section of sections) {
+    const fetchedCourseIDs: string[] = []
+    await sections.reduce(async (promise, section) => {
+      await promise
       if (!section.courseID) {
-        fetchedCourseIDs.push(findCourseId(section.code))
+        const courseID = await findCourseId(section.code)
+        if (!courseID) {
+          return
+        }
+        fetchedCourseIDs.push(courseID)
       }
-    }
+    }, Promise.resolve())
 
-    const courseIDs = await Promise.all(fetchedCourseIDs)
     const newSections = sections.map((s) => {
       if (s.courseID) return s
       return {
         ...s,
-        courseID: courseIDs.shift(),
+        courseID: fetchedCourseIDs.shift(),
       }
     })
 
     setSections(newSections)
-    setImportInProgress(false)
+    dispatchExportImportModal(
+      "Import Successful! Your courses should now be viewable in your worklist"
+    )
+  }
+
+  const dispatchExportImportModal = (message: string) => {
+    dispatchModal({
+      preset: ModalPreset.ImportStatus,
+      additionalData: message,
+    })
   }
 
   return (
     <div>
-      {importingInProgress && (
-        <InfoModal message="Loading ...." onCancel={() => {}} />
-      )}
       <div className="SettingsHeader">Export/Import</div>
       <hr className="Divider" />
       <ExportImportIndividual
         sections={sections}
         setSections={setSections}
         handleSectionImport={handleSectionImport}
-        setImportInProgress={setImportInProgress}
       />
       <div className="ExportImportButtonContainer">
         <div className="ExportImportRow">
