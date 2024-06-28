@@ -17,22 +17,17 @@ const Form = (props: IProps) => {
   const [isCourseLoading, setIsCourseLoading] = useState(false)
   const [progress, setProgress] = useState(0)
 
+  const handleCourseAddingProgress = (event: any) => {
+   setProgress(event.detail.progress)
+  };
+
+  const handleCourseLoading = (event: any) => {
+    setIsCourseLoading(event.detail.isLoading)
+   };
+
   useEffect(() => {
-    const onStorageChange = (changes: {
-      [key: string]: chrome.storage.StorageChange
-    }) => {
-      if (changes.isCourseLoading) {
-        setIsCourseLoading(changes.isCourseLoading.newValue)
-      } else if (changes.courseAddProgress) {
-        setProgress(changes.courseAddProgress.newValue)
-      }
-    }
-
-    chrome.storage.onChanged.addListener(onStorageChange)
-
-    return () => {
-      chrome.storage.onChanged.removeListener(onStorageChange) // Cleanup
-    }
+    document.addEventListener('courseAddingProgress', handleCourseAddingProgress);
+    document.addEventListener('isCourseLoading', handleCourseLoading);
   }, [])
 
   return (

@@ -1,3 +1,4 @@
+import { handleProgressUpdate } from "../scheduler/nameSearchHelpers"
 import {
   fetchSearchData,
   parseTerm,
@@ -12,7 +13,7 @@ export async function fetchWorkdayData(
   courseId: string
 ): Promise<RawWorkdayData | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
-  chrome.storage.local.set({ courseAddProgress: 75 })
+  handleProgressUpdate(65)
 
   const path = rawData["body"]["children"][0]["children"][0]["children"]
   const rawName = path[0]["instances"][0]["text"]
@@ -46,7 +47,7 @@ export async function fetchWorkdayData(
       console.error("Error extracting instructors from search data:", error)
     }
   }
-  chrome.storage.local.set({ courseAddProgress: 75 })
+  handleProgressUpdate(75)
 
   const formattedData: RawWorkdayData = {
     name: formattedName,

@@ -234,12 +234,22 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   element.parentNode?.insertBefore(button, element)
 }
 
+const handleCourseLoading = (isLoading: boolean) => { 
+  const courseLoadingEvent = new CustomEvent('isCourseLoading', {
+    detail: {
+      isLoading: isLoading
+    }
+  });
+  document.dispatchEvent(courseLoadingEvent);
+};
+
 // Function to handle button click event
 async function handleButtonClick(
   element: Element,
   isReskinButton?: boolean
 ): Promise<void> {
-  await chrome.storage.local.set({ isCourseLoading: true })
+  toggleContainer(true)
+  handleCourseLoading(true)
   const selectedSection = await extractSection(
     element,
     isReskinButton !== null && isReskinButton === true
@@ -247,7 +257,7 @@ async function handleButtonClick(
   if (!selectedSection) return
   // Getting existing sections from Chrome storage and adding the new section
   await chrome.storage.local.set({ newSection: selectedSection })
-  chrome.storage.local.set({ isCourseLoading: false })
+  handleCourseLoading(false)
 }
 
 // Function to observe DOM changes and add buttons to matching elements

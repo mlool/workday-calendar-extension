@@ -5,6 +5,7 @@ import {
   getCourseIdFromUrl,
   fetchSearchData,
   parseSearchParameters,
+  handleProgressUpdate,
 } from "./nameSearchHelpers"
 import { fetchWorkdayData } from "../workday/idSearchApi"
 import { RawWorkdayData } from "../workday/idSearchHelpers"
@@ -13,7 +14,7 @@ const searchEndpoint =
   "https://coursescheduler-api-2.vercel.app/api/W/sections?"
 
 export async function findCourseId(searchTerm: string): Promise<string | null> {
-  chrome.storage.local.set({ courseAddProgress: 25 })
+  handleProgressUpdate(25)
   const { subject, courseNumber, sectionNumber, campus } =
     parseSearchParameters(searchTerm)
 
@@ -30,7 +31,7 @@ export async function findCourseId(searchTerm: string): Promise<string | null> {
 
   try {
     const [termOneData, termTwoData] = await Promise.all(promises)
-    chrome.storage.local.set({ courseAddProgress: 50 })
+    handleProgressUpdate(50)
 
     const searchTermFormattedForData = `${subject} ${courseNumber} ${sectionNumber}`
 
@@ -50,7 +51,7 @@ export async function findCourseId(searchTerm: string): Promise<string | null> {
 
     try {
       const courseId = getCourseIdFromUrl(courseUrl)
-      chrome.storage.local.set({ courseAddProgress: 60 })
+      handleProgressUpdate(60)
 
       return courseId
     } catch (error) {
@@ -75,7 +76,7 @@ export async function findCourseInfo(
   if (!courseData) {
     return null
   }
-  chrome.storage.local.set({ courseAddProgress: 85 })
+  handleProgressUpdate(90)
 
   const newSectionData: ISectionData = {
     code: searchTerm,
@@ -87,7 +88,7 @@ export async function findCourseInfo(
     color: defaultColorList[0],
     courseID: courseId,
   }
-  chrome.storage.local.set({ courseAddProgress: 95 })
+  handleProgressUpdate(95)
 
   return newSectionData
 }
