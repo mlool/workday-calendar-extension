@@ -1,6 +1,6 @@
 import { ISectionData } from "../App/App.types"
 import "./Form.css"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules"
 
@@ -14,15 +14,40 @@ interface IProps {
 
 const Form = (props: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
+  const [isCourseLoading, setIsCourseLoading] = useState(false)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const onStorageChange = (changes: {
+      [key: string]: chrome.storage.StorageChange
+    }) => {
+      if (changes.isCourseLoading) {
+        setIsCourseLoading(changes.isCourseLoading.newValue)
+      } else if (changes.courseAddProgress) {
+        setProgress(changes.courseAddProgress.newValue)
+      }
+    }
+
+    chrome.storage.onChanged.addListener(onStorageChange)
+
+    return () => {
+      chrome.storage.onChanged.removeListener(onStorageChange) // Cleanup
+    }
+  }, [])
 
   return (
     <div className="NewSectionForm">
-      {props.newSection && (
+      {isCourseLoading ? (
+        <div className="LoadingContainer">
+          <div className="NewSectionCode">Loading Course Data...</div>
+          <progress value={progress / 100} />
+        </div>
+      ) : props.newSection ? (
         <div className="NewSectionInfo">
           <div className="NewSectionCode">{props.newSection.code}</div>
           <div>{props.newSection.name}</div>
         </div>
-      )}
+      ) : null}
       <div className="NewSectionButtonContainer">
         <button
           className="NewSectionButton"

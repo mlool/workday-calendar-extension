@@ -221,13 +221,15 @@ function addButtonToElement(element: Element): void {
 
 // Function to handle button click event
 async function handleButtonClick(element: Element): Promise<void> {
+  // Ensure the drawer opens when a button is clicked
+  toggleContainer(true)
+
+  await chrome.storage.local.set({ isCourseLoading: true })
   const selectedSection = await extractSection(element)
   if (!selectedSection) return
   // Getting existing sections from Chrome storage and adding the new section
-  chrome.storage.local.set({ newSection: selectedSection })
-
-  // Ensure the drawer opens when a button is clicked
-  toggleContainer(true)
+  await chrome.storage.local.set({ newSection: selectedSection })
+  chrome.storage.local.set({ isCourseLoading: false })
 }
 
 // Function to observe DOM changes and add buttons to matching elements
