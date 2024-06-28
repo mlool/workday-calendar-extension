@@ -43,8 +43,19 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     reader.readAsText(file)
   }
 
+  const handleProgressUpdate = (newProgress: number) => {
+    const progressEvent = new CustomEvent("progress", {
+      detail: {
+        progress: newProgress,
+      },
+    })
+
+    document.dispatchEvent(progressEvent)
+  }
+
   const handleSectionImport = async (sections: ISectionData[]) => {
     const fetchedCourseIDs: string[] = []
+    const sectionsCount = sections.filter((section) => !section.courseID).length
     await sections.reduce(async (promise, section) => {
       await promise
       if (!section.courseID) {
@@ -53,6 +64,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
           return
         }
         fetchedCourseIDs.push(courseID)
+        handleProgressUpdate(fetchedCourseIDs.length / sectionsCount)
       }
     }, Promise.resolve())
 

@@ -4,6 +4,7 @@ import { useState, useContext } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
 import { ModalDispatchContext, ModalPreset } from "../../../ModalLayer"
+import ProgressBar from "../../../ProgressBar/ProgressBar"
 
 interface IProps {
   sections: ISectionData[]
@@ -38,9 +39,10 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
     event: React.ChangeEvent<HTMLInputElement>,
     worklistNumber: number
   ) => {
+    const loadingMesage = <ProgressBar message={"Loading Progress: "} />
     dispatchModal({
       preset: ModalPreset.ImportStatus,
-      additionalData: "Loading...",
+      additionalData: loadingMesage,
     })
     const file = event.target.files?.[0]
     if (!file) return

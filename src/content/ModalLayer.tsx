@@ -106,7 +106,8 @@ function ModalLayer(props: ModalLayerProps) {
         }
       }
       case ModalPreset.ImportStatus: {
-        const message: string = action.additionalData as string
+        const message: JSX.Element = action.additionalData as JSX.Element
+
         return {
           title: "Import Status",
           body: message,
