@@ -164,7 +164,7 @@ function initializeAutofill() {
 initializeAutofill()
 
 // Function to add a button to a given HTML element
-function addButtonToElement(element: Element, addDirectly?: boolean): void {
+function addButtonToElement(element: Element, reskinButton?: boolean): void {
   // Creating a button element
   const button: HTMLButtonElement = document.createElement("button")
   // Setting the button text content to '+'
@@ -172,7 +172,7 @@ function addButtonToElement(element: Element, addDirectly?: boolean): void {
   // Add custom button id
   button.id = "add-section-button"
   // Adding an event listener for when the button is clicked
-  if (addDirectly) {
+  if (reskinButton) {
     button.addEventListener("click", () => {
       handleButtonClick(element, true)
     })
@@ -183,7 +183,12 @@ function addButtonToElement(element: Element, addDirectly?: boolean): void {
   }
 
   // Styling the button
-  button.style.padding = "10px 20px"
+  if (reskinButton) {
+    button.style.padding = "5px 10px"
+  } else {
+    button.style.padding = "10px 20px"
+  }
+  
   button.style.fontSize = "16px"
   button.style.color = "#333"
   button.style.backgroundColor = "#EEF1F2"
@@ -222,8 +227,8 @@ function addButtonToElement(element: Element, addDirectly?: boolean): void {
   })
 
   // Inserting the button before the given element
-  if (addDirectly && addDirectly === true) {
-    element.insertAdjacentElement("beforebegin", button)
+  if (reskinButton && reskinButton === true) {
+    element.appendChild(button)
     return
   }
   element.parentNode?.insertBefore(button, element)
@@ -282,9 +287,9 @@ function observeDOMAndAddButtons(): void {
               .getElementById("react-root")
               ?.querySelectorAll("div.AddButtonGoHere")
             matchingElementsForReskinExtension?.forEach((matchingElement) => {
-              const previousSibling = matchingElement.previousElementSibling
+              const matchingElementChild = matchingElement.firstElementChild 
               const isButtonAlreadyPresent =
-                previousSibling && previousSibling.id === "add-section-button"
+              matchingElementChild && matchingElementChild.id === "add-section-button"
               if (!isButtonAlreadyPresent) {
                 addButtonToElement(matchingElement, true)
               }
