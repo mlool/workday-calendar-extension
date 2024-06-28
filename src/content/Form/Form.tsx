@@ -12,22 +12,37 @@ interface IProps {
   handleCancel: () => void
 }
 
+interface CourseAddingProgressEventDetail {
+  progress: number
+}
+
+interface CourseLoadingEventDetail {
+  isLoading: boolean
+}
+
 const Form = (props: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
   const [isCourseLoading, setIsCourseLoading] = useState(false)
   const [progress, setProgress] = useState(0)
 
-  const handleCourseAddingProgress = (event: any) => {
-   setProgress(event.detail.progress)
-  };
+  const handleCourseAddingProgress = (
+    event: CustomEvent<CourseAddingProgressEventDetail>
+  ) => {
+    setProgress(event.detail.progress)
+  }
 
-  const handleCourseLoading = (event: any) => {
+  const handleCourseLoading = (
+    event: CustomEvent<CourseLoadingEventDetail>
+  ) => {
     setIsCourseLoading(event.detail.isLoading)
-   };
+  }
 
   useEffect(() => {
-    document.addEventListener('courseAddingProgress', handleCourseAddingProgress);
-    document.addEventListener('isCourseLoading', handleCourseLoading);
+    const progressEventHandler = handleCourseAddingProgress as EventListener
+    const courseLoadingEventHandler = handleCourseLoading as EventListener
+
+    document.addEventListener("courseAddingProgress", progressEventHandler)
+    document.addEventListener("isCourseLoading", courseLoadingEventHandler)
   }, [])
 
   return (

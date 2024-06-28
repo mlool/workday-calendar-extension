@@ -234,14 +234,14 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   element.parentNode?.insertBefore(button, element)
 }
 
-const handleCourseLoading = (isLoading: boolean) => { 
-  const courseLoadingEvent = new CustomEvent('isCourseLoading', {
+const handleCourseLoading = (isLoading: boolean) => {
+  const courseLoadingEvent = new CustomEvent("isCourseLoading", {
     detail: {
-      isLoading: isLoading
-    }
-  });
-  document.dispatchEvent(courseLoadingEvent);
-};
+      isLoading: isLoading,
+    },
+  })
+  document.dispatchEvent(courseLoadingEvent)
+}
 
 // Function to handle button click event
 async function handleButtonClick(
