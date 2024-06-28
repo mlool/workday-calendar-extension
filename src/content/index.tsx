@@ -188,7 +188,7 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   } else {
     button.style.padding = "10px 20px"
   }
-  
+
   button.style.fontSize = "16px"
   button.style.color = "#333"
   button.style.backgroundColor = "#EEF1F2"
@@ -287,9 +287,10 @@ function observeDOMAndAddButtons(): void {
               .getElementById("react-root")
               ?.querySelectorAll("div.AddButtonGoHere")
             matchingElementsForReskinExtension?.forEach((matchingElement) => {
-              const matchingElementChild = matchingElement.firstElementChild 
+              const matchingElementChild = matchingElement.firstElementChild
               const isButtonAlreadyPresent =
-              matchingElementChild && matchingElementChild.id === "add-section-button"
+                matchingElementChild &&
+                matchingElementChild.id === "add-section-button"
               if (!isButtonAlreadyPresent) {
                 addButtonToElement(matchingElement, true)
               }
