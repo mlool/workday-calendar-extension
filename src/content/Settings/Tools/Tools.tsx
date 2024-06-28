@@ -3,8 +3,15 @@ import "./Tools.css"
 import "../Settings.css"
 import QuestionIcon from "../../Icons/QuestionIcon"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
+import { ISectionData } from "../../App/App.types"
+import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules"
+import ManualCourseEntry from "../../ManualCourseEntry/ManualCourseEntry"
 
-const Tools = () => {
+interface IToolsProps {
+  sections: ISectionData[]
+}
+
+const Tools = ({ sections }: IToolsProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
   const [autofillEnabled, setAutofillEnabled] = useState(false)
   const [hideProfilePicture, setHideProfilePicture] = useState(false)
@@ -47,7 +54,7 @@ const Tools = () => {
     <div>
       <div className="SettingsHeader">Tools</div>
       <hr className="Divider" />
-      <div className="SettingsBodyContainer">
+      <div className="ToolsBodyContainer">
         <div className="ToolItem">
           <div className="ToolContainer">
             <div>
@@ -84,6 +91,9 @@ const Tools = () => {
             <QuestionIcon size={16} />
           </div>
         </div>
+      </div>
+      <div className="ToolsButtonGroup">
+        <SyncSavedSchedules sections={sections} />
       </div>
     </div>
   )

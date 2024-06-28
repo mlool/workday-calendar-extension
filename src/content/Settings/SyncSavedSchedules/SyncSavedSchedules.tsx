@@ -1,9 +1,9 @@
 import { useContext } from "react"
-import { ISectionData } from "../App/App.types"
+import { ISectionData } from "../../App/App.types"
 import { getAllSavedScheduleIDs } from "./syncSavedSchedulesHelper"
-import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
-import { addCoursesToSavedSchedule } from "../../backends/workday/savedSchedulesApi"
-import "../Form/Form.css"
+import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
+import { addCoursesToSavedSchedule } from "../../../backends/workday/savedSchedulesApi"
+import "../Tools/Tools.css"
 
 interface IProps {
   sections: ISectionData[]
@@ -50,7 +50,7 @@ const SyncSavedSchedules = (props: IProps) => {
 
   return (
     <button
-      className="SyncWorklistButton"
+      className="ToolsButton"
       title="Sync Worklist"
       disabled={props.sections.length === 0}
       onClick={() => dispatchInstructions()}

@@ -5,10 +5,12 @@ import Tools from "./Tools/Tools"
 import Theme from "./Theme/Theme"
 import ExportImport from "./ExportImport/ExportImport"
 import Contact from "./Contact/Contact"
+import { filterSectionsByWorklist } from "../utils"
 
 interface ISettingsProps {
   colorTheme: ColorTheme
   sections: ISectionData[]
+  currentWorklistNumber: number
   setColorTheme: (theme: ColorTheme) => void
   setSections: (data: ISectionData[]) => void
 }
@@ -16,6 +18,7 @@ interface ISettingsProps {
 const Settings = ({
   colorTheme,
   sections,
+  currentWorklistNumber,
   setColorTheme,
   setSections,
 }: ISettingsProps) => {
@@ -23,7 +26,7 @@ const Settings = ({
     <div>
       <div className="Settings">
         <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
-        <Tools />
+        <Tools sections={filterSectionsByWorklist(sections, currentWorklistNumber)}/>
         <ExportImport sections={sections} setSections={setSections} />
         <Contact />
       </div>

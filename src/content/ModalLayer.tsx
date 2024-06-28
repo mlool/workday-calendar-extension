@@ -26,6 +26,7 @@ enum ModalPreset {
   SyncInstructions,
   SyncConfirm,
   ApiError,
+  ManualCourseEntry
 }
 
 enum ModalActionType {

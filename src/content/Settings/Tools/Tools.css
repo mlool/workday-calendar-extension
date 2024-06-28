@@ -14,3 +14,34 @@
   justify-content: center;
   align-items: center;
 }
+
+.ToolsButtonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.ToolsButton {
+  min-width: 95%;
+  height: 30px;
+  font-weight: bold;
+  display: flex;
+  font-size: 12px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+}
+
+.ToolsButton:hover {
+  background-color: #0068d6;
+}
+.ToolsBodyContainer {
+  margin-left: 10px;
+}
