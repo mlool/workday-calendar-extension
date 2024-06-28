@@ -1,8 +1,8 @@
 import { extractSection } from "./utils"
 import { createRoot } from "react-dom/client"
 import "../index.css"
-import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import App from "./App/App"
+import { observeDOMAndAddCopyScheduleButtons } from "../domManipulators/copySchedules"
 
 // Function to apply visibility based on stored settings
 function applyVisibility(hide: boolean): void {
@@ -164,7 +164,7 @@ function initializeAutofill() {
 initializeAutofill()
 
 // Function to add a button to a given HTML element
-function addButtonToElement(element: Element): void {
+function addButtonToElement(element: Element, reskinButton?: boolean): void {
   // Creating a button element
   const button: HTMLButtonElement = document.createElement("button")
   // Setting the button text content to '+'
@@ -172,12 +172,23 @@ function addButtonToElement(element: Element): void {
   // Add custom button id
   button.id = "add-section-button"
   // Adding an event listener for when the button is clicked
-  button.addEventListener("click", () => {
-    handleButtonClick(element)
-  })
+  if (reskinButton) {
+    button.addEventListener("click", () => {
+      handleButtonClick(element, true)
+    })
+  } else {
+    button.addEventListener("click", () => {
+      handleButtonClick(element)
+    })
+  }
 
   // Styling the button
-  button.style.padding = "10px 20px"
+  if (reskinButton) {
+    button.style.padding = "5px 10px"
+  } else {
+    button.style.padding = "10px 20px"
+  }
+
   button.style.fontSize = "16px"
   button.style.color = "#333"
   button.style.backgroundColor = "#EEF1F2"
@@ -216,16 +227,23 @@ function addButtonToElement(element: Element): void {
   })
 
   // Inserting the button before the given element
+  if (reskinButton && reskinButton === true) {
+    element.appendChild(button)
+    return
+  }
   element.parentNode?.insertBefore(button, element)
 }
 
 // Function to handle button click event
-async function handleButtonClick(element: Element): Promise<void> {
-  // Ensure the drawer opens when a button is clicked
-  toggleContainer(true)
-
+async function handleButtonClick(
+  element: Element,
+  isReskinButton?: boolean
+): Promise<void> {
   await chrome.storage.local.set({ isCourseLoading: true })
-  const selectedSection = await extractSection(element)
+  const selectedSection = await extractSection(
+    element,
+    isReskinButton !== null && isReskinButton === true
+  )
   if (!selectedSection) return
   // Getting existing sections from Chrome storage and adding the new section
   await chrome.storage.local.set({ newSection: selectedSection })
@@ -264,6 +282,18 @@ function observeDOMAndAddButtons(): void {
                 addButtonToElement(matchingElement)
               }
             })
+            const matchingElementsForReskinExtension = document
+              .getElementById("react-root")
+              ?.querySelectorAll("div.AddButtonGoHere")
+            matchingElementsForReskinExtension?.forEach((matchingElement) => {
+              const matchingElementChild = matchingElement.firstElementChild
+              const isButtonAlreadyPresent =
+                matchingElementChild &&
+                matchingElementChild.id === "add-section-button"
+              if (!isButtonAlreadyPresent) {
+                addButtonToElement(matchingElement, true)
+              }
+            })
           }
         })
       }
@@ -283,16 +313,16 @@ function setupObserver(): void {
     document.addEventListener("DOMContentLoaded", observeDOMAndAddButtons)
     document.addEventListener(
       "DOMContentLoaded",
-      observeDOMAndAddCopySavedScheduleButton
+      observeDOMAndAddCopyScheduleButtons
     )
   } else {
     // Directly observe DOM changes
     observeDOMAndAddButtons()
-    observeDOMAndAddCopySavedScheduleButton()
+    observeDOMAndAddCopyScheduleButtons()
   }
 }
 
-function toggleContainer(forceOpen = false) {
+export function toggleContainer(forceOpen = false) {
   const reactContainer = document.querySelector("#react-container")
   if (!reactContainer) return
   const containerWrapper = reactContainer.parentElement
@@ -387,174 +417,3 @@ chrome.storage.local.get("drawerOpen", function (data) {
   const root = createRoot(container)
   root.render(<App />)
 })
-
-//-------------------- Copy Saved Schedule Button --------------------
-
-// Function to observe DOM changes and add buttons to matching elements
-function observeDOMAndAddCopySavedScheduleButton(): void {
-  // Configuration for the mutation observer
-  const config: MutationObserverInit = {
-    childList: true,
-    subtree: true,
-    attributes: false,
-  }
-
-  const callback: MutationCallback = (mutationsList) => {
-    mutationsList.forEach((mutation) => {
-      if (mutation.addedNodes.length > 0) {
-        mutation.addedNodes.forEach((node) => {
-          if (node instanceof Element) {
-            // Find all matching elements using the selector
-            const matchingElements = node.querySelectorAll(
-              '[data-automation-id="decorationWrapper"][id="56$381809"] > div'
-            )
-
-            let counter: number = 0
-            matchingElements.forEach((matchingElement) => {
-              // Get the course name element (you might need to adjust the selector)
-              const courseNameElement = node.querySelector(
-                '[role="presentation"]'
-              )
-
-              if (courseNameElement) {
-                addCopySavedScheduleButton(
-                  courseNameElement,
-                  matchingElement,
-                  counter
-                )
-                counter++
-              }
-            })
-          }
-        })
-      }
-    })
-  }
-  const observer: MutationObserver = new MutationObserver(callback)
-  observer.observe(document.body, config)
-}
-
-// Function to add a button to a given HTML element
-function addCopySavedScheduleButton(
-  element: Element,
-  buttonElement: Element,
-  counter: number
-): void {
-  // Creating a button element
-  const button: HTMLButtonElement = document.createElement("button")
-  // Setting the button text content
-  button.textContent = "Copy Saved Schedule Into Extension"
-  // Add custom button id
-  button.id = "add-schedule-button"
-  // Adding an event listener for when the button is clicked
-  button.addEventListener("click", () => {
-    if (element === null) {
-      alert("No saved schedule found")
-      return
-    }
-    handleCopySavedScheduleButtonClick(element, counter)
-  })
-
-  // Styling the button
-  button.style.padding = "10px 20px"
-  button.style.fontSize = "14px"
-  button.style.color = "#fff"
-  button.style.backgroundColor = "#007bff" // Blue color
-  button.style.boxShadow = "0 0 0 1px #0056b3"
-  button.style.cursor = "pointer"
-  button.style.marginLeft = "10px"
-  button.style.borderRadius = "5px"
-  button.style.transition = "all 120ms ease-in"
-  button.style.border = "none"
-  button.style.outline = "none"
-  button.style.textAlign = "center" // Center the text horizontally
-
-  // Adding display flex and align-items center to the button's parent
-  const parentElement = buttonElement.parentElement
-  if (parentElement) {
-    parentElement.style.display = "flex"
-    parentElement.style.alignItems = "center"
-  }
-
-  // Adding event listeners for mouse enter and leave to change button style
-  button.addEventListener("mouseenter", () => {
-    button.style.backgroundColor = "#0056b3"
-    button.style.boxShadow = "0 0 0 1px #004085"
-  })
-
-  button.addEventListener("mouseleave", () => {
-    button.style.backgroundColor = "#007bff"
-    button.style.boxShadow = "0 0 0 1px #0056b3"
-  })
-
-  // Inserting the button after the given element
-  buttonElement.parentNode?.insertBefore(button, buttonElement.nextSibling)
-}
-
-async function handleCopySavedScheduleButtonClick(
-  element: Element,
-  counter: number
-): Promise<void> {
-  // Ensure the drawer opens when a button is clicked
-  toggleContainer(true)
-  const tables = document.querySelectorAll('[data-automation-id="table"]')
-
-  // Check if table exists
-  if (!tables.length) {
-    console.error("Tables not found.")
-    return
-  }
-
-  if (counter < 0 || counter >= tables.length) {
-    console.error(
-      `Invalid counter value. Valid range: 0 to ${tables.length - 1}`
-    )
-    return
-  }
-
-  const table = tables[counter]
-
-  const tableData: string[][] = []
-
-  const tableRows = table.querySelectorAll("tr")
-
-  tableRows.forEach((row) => {
-    const rowData: string[] = []
-
-    const rowCells = row.querySelectorAll("td, th")
-
-    rowCells.forEach((cell) => {
-      const cellText = cell.textContent ? cell.textContent.trim() : ""
-
-      rowData.push(cellText)
-    })
-
-    tableData.push(rowData)
-  })
-  const button = document.querySelector(
-    '.NewSectionButton[title="Add Section"]'
-  ) as HTMLElement
-
-  for (let i = 2; i < tableData.length; i++) {
-    const code = tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
-
-    // The following await-in-loop is not currently parallelizable as
-    // each course is manually loaded in by clicking the NewSectionButton.
-    //
-    // TODO: refactor this to add sections more directly.
-    // eslint-disable-next-line no-await-in-loop
-    const selectedSection = await findCourseInfo(code)
-    if (!selectedSection) return
-    // Getting existing sections from Chrome storage and adding the new section
-    chrome.storage.local.set({ newSection: selectedSection })
-    if (button) {
-      button.click()
-    }
-  }
-
-  if (button) {
-    setTimeout(function () {
-      button.click()
-    }, 500)
-  }
-}
