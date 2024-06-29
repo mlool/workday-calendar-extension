@@ -12,6 +12,8 @@ interface ColoredRangeDetailProps {
   // renders what the numericValue is "out of".
   // for example, 2 with a max of 5, is rendered as "2 / 5"
   showRange: boolean
+  // decimal places to show for numericValue
+  precision?: number
 }
 
 function ColoredRangeDetail(props: ColoredRangeDetailProps) {
@@ -34,9 +36,10 @@ function ColoredRangeDetail(props: ColoredRangeDetailProps) {
 
   const getNumberDisplay = () => {
     if (props.numericValue === null) return "??"
-    return props.showRange
-      ? props.numericValue + " / " + props.range.upperBound
+    const display = props.precision
+      ? props.numericValue.toFixed(props.precision)
       : props.numericValue
+    return props.showRange ? display + " / " + props.range.upperBound : display
   }
 
   return (

@@ -2,10 +2,16 @@ import { useEffect, useState } from "react"
 import { IGradesAPIData, getGradesData, getGradesUrl } from "./GradesHelper"
 import "./GradesComponent.css"
 import "../PopupComponent.css"
+import {
+  ColoredRange,
+  ColoredRangeDetail,
+} from "../../../components/ColoredRangeDetail"
 
 interface GradesDetailProps {
   sectionCode: string
 }
+
+const UBC_GRADES_RANGE: ColoredRange = { lowerBound: 50, upperBound: 100 }
 
 const GradesComponent = ({ sectionCode }: GradesDetailProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -30,21 +36,6 @@ const GradesComponent = ({ sectionCode }: GradesDetailProps) => {
 
   const gradesURL = getGradesUrl(sectionCode)
 
-  const getClassName = (average: number | undefined) => {
-    if (!average) return "AverageContainer unavailable"
-    if (average < 60) {
-      return "AverageContainer VeryLowAverage"
-    } else if (average < 70) {
-      return "AverageContainer LowAverage"
-    } else if (average < 80) {
-      return "AverageContainer MidAverage"
-    } else if (average < 90) {
-      return "AverageContainer HighAverage"
-    } else {
-      return "AverageContainer VeryHighAverage"
-    }
-  }
-
   return (
     <div className="ComponentContainer">
       <div className="ComponentTitle">Grade Information: </div>
@@ -53,45 +44,17 @@ const GradesComponent = ({ sectionCode }: GradesDetailProps) => {
       ) : isLoading ? (
         <div>Loading...</div>
       ) : (
-        <>
-          <div className="GradesContainer">
-            <div>Average (5 Years):</div>
-            <div
-              className={getClassName(gradesData?.averageFiveYears)}
-              onClick={() => window.open(gradesURL, "_blank")}
-            >
-              {gradesData?.average
-                ? gradesData?.average.toFixed(2)
-                : "unavailable"}
-            </div>
-            {/* <table>
-              <tr>
-                <td>Average (All Time)</td>
-                <td>
-                  {gradesData?.average
-                    ? gradesData?.average.toFixed(2)
-                    : "unavailable"}
-                </td>
-              </tr>
-              <tr>
-                <td>Average (5 Years)</td>
-                <td>
-                  {gradesData?.averageFiveYears
-                    ? gradesData?.averageFiveYears.toFixed(2)
-                    : "unavailable"}
-                </td>
-              </tr>
-            </table> */}
-          </div>
-          {/* <a
-            className="GradesLink"
-            href={gradesURL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View on UBC-Grades
-          </a> */}
-        </>
+        <ColoredRangeDetail
+          label={
+            <a href={gradesURL} target="_blank" rel="noreferrer">
+              Average (5 Years)
+            </a>
+          }
+          numericValue={gradesData ? gradesData?.average : null}
+          range={UBC_GRADES_RANGE}
+          showRange={false}
+          precision={2}
+        />
       )}
     </div>
   )
