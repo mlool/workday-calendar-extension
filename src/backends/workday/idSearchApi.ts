@@ -1,3 +1,4 @@
+import { handleProgressUpdate } from "../scheduler/nameSearchHelpers"
 import {
   fetchSearchData,
   parseTerm,
@@ -12,6 +13,7 @@ export async function fetchWorkdayData(
   courseId: string
 ): Promise<RawWorkdayData | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
+  handleProgressUpdate(65)
 
   const path = rawData["body"]["children"][0]["children"][0]["children"]
   const rawName = path[0]["instances"][0]["text"]
@@ -46,9 +48,11 @@ export async function fetchWorkdayData(
         instructors.push(instructor["text"])
       }
     } catch (error) {
-      console.error("Error extracting instructors from search data:", error)
+      // Not an error, just no instructors in Workday Response. Need a comment or Eslint gets mad
     }
   }
+  handleProgressUpdate(75)
+
   const formattedData: RawWorkdayData = {
     code: code,
     name: formattedName,
