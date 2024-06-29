@@ -33,7 +33,13 @@
 }
 
 .tab-backgrounded {
+  background-color: var(--base-colour);
+}
+
+.tab-backgrounded-disabled {
   background-color: var(--disabled-colour);
+  color: var(--disabled-font-colour);
+  cursor: default;
 }
 
 .tab-backgrounded:hover {

@@ -7,6 +7,7 @@ interface TabBarProps<T> {
   isSelected: (item: T) => boolean
   isHighlighted?: (item: T) => boolean
   tabTextBuilder?: (item: T) => string
+  focus: boolean
 }
 
 export default function TabBar<T>(props: TabBarProps<T>) {
@@ -14,6 +15,8 @@ export default function TabBar<T>(props: TabBarProps<T>) {
     if (props.isSelected(item)) return "tab-selected"
     if (props.isHighlighted && props.isHighlighted(item))
       return "tab-highlighted"
+    if (props.focus && !props.isSelected(item))
+      return "tab-backgrounded-disabled"
     return "tab-backgrounded"
   }
 

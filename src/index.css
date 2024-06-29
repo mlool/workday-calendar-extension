@@ -23,5 +23,7 @@ code {
   --base-1-shaded: #d8d8d8;
   --warning-colour: #ed2121;
   --highlight-colour: #ffa500;
-  --disabled-colour: #eeeff0;
+  --base-colour: #eaeaea;
+  --disabled-colour: #fbfbfb;
+  --disabled-font-colour: #eaeaea;
 }
