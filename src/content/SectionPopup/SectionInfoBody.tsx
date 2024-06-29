@@ -33,7 +33,9 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
       )}
       <hr />
       <div className="SectionPopupDetails">{selectedSection.name}</div>
-      <InstructorComponent instructors={selectedSection.instructors} />
+      <InstructorComponent
+        instructors={selectedSection.instructors?.filter(Boolean)}
+      />
       <LocationComponent locations={uniqueLocations} />
       <GradesComponent sectionCode={selectedSection.code} />
     </div>
