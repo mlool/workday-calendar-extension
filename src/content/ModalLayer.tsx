@@ -5,7 +5,6 @@ import {
   SetStateAction,
   useContext,
   useReducer,
-  useState,
 } from "react"
 import { ISectionData } from "./App/App.types"
 import "./ModalLayer.css"
