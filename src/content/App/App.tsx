@@ -208,6 +208,7 @@ function App() {
           <Settings
             colorTheme={colorTheme}
             sections={sections}
+            currentTerm={currentTerm}
             currentWorklistNumber={currentWorklistNumber}
             setColorTheme={setColorTheme}
             setSections={setSections}
