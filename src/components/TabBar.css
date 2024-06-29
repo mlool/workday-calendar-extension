@@ -3,7 +3,7 @@
   grid-template-columns: 20% 1fr;
   column-gap: 5px;
   align-items: center;
-  padding: 2px 5px;
+  padding: 1px 5px;
 }
 
 .tab-bar-label {
@@ -19,8 +19,8 @@
 
 .tab-bar-button {
   cursor: pointer;
-  font-size: 12px;
-  padding: 3px 5px;
+  font-size: 10px;
+  padding: 2px 5px;
   border-radius: 3px;
 }
 
