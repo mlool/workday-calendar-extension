@@ -1,0 +1,41 @@
+.tab-bar-container {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+  column-gap: 5px;
+  align-items: center;
+  padding: 2px 5px;
+}
+
+.tab-bar-label {
+  font-weight: 500;
+  text-align: left;
+}
+
+.tab-bar {
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 3px;
+}
+
+.tab-bar-button {
+  cursor: pointer;
+  font-size: 12px;
+  padding: 3px 5px;
+  border-radius: 3px;
+}
+
+.tab-selected {
+  background-color: var(--secondary-accent-colour);
+}
+
+.tab-highlighted {
+  background-color: var(--highlight-colour);
+}
+
+.tab-backgrounded {
+  background-color: var(--disabled-colour);
+}
+
+.tab-backgrounded:hover {
+  background-color: var(--secondary-accent-colour);
+}

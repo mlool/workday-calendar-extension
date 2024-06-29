@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
 import { IGradesAPIData, getGradesData, getGradesUrl } from "./GradesHelper"
-import { ISectionData } from "../../App/App.types"
 import "./GradesComponent.css"
 import "../PopupComponent.css"
 
-interface IProps {
-  selectedSection: ISectionData
+interface GradesDetailProps {
+  sectionCode: string
 }
 
-const GradesComponent = ({ selectedSection }: IProps) => {
+const GradesComponent = ({ sectionCode }: GradesDetailProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [gradesData, setGradesData] = useState<IGradesAPIData>()
   const [isError, setIsError] = useState<boolean>(false)
@@ -18,7 +17,7 @@ const GradesComponent = ({ selectedSection }: IProps) => {
       setIsLoading(true)
       setIsError(false)
       try {
-        const data = await getGradesData(selectedSection)
+        const data = await getGradesData(sectionCode)
         setGradesData(data)
       } catch (error) {
         setIsError(true)
@@ -27,9 +26,9 @@ const GradesComponent = ({ selectedSection }: IProps) => {
       }
     }
     fetchGrades()
-  }, [selectedSection])
+  }, [])
 
-  const gradesURL = getGradesUrl(selectedSection)
+  const gradesURL = getGradesUrl(sectionCode)
 
   const getClassName = (average: number | undefined) => {
     if (!average) return "AverageContainer unavailable"

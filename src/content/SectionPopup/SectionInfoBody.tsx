@@ -24,18 +24,18 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
 
   return (
     <div className="section-info-body">
-      {selectedSection?.courseID && (
+      {selectedSection.courseID && (
         <a
-          href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection?.courseID}.htmld`}
+          href={`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${selectedSection.courseID}.htmld`}
         >
           <div className="SectionPopupTitle">{"<< View Course Page >>"}</div>
         </a>
       )}
       <hr />
-      <div className="SectionPopupDetails">{selectedSection?.name}</div>
+      <div className="SectionPopupDetails">{selectedSection.name}</div>
       <InstructorComponent instructors={selectedSection.instructors} />
       <LocationComponent locations={uniqueLocations} />
-      <GradesComponent selectedSection={selectedSection} />
+      <GradesComponent sectionCode={selectedSection.code} />
     </div>
   )
 }

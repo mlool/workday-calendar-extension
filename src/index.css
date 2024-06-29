@@ -14,10 +14,13 @@ code {
 
 :root {
   --main-accent-colour: #00a7e1;
+  --secondary-accent-colour: #9ce8ff;
   --default-radius: 20px;
   --small-radius: 12px;
   --default-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   --base-1: #626262;
   --base-1-shaded: #d8d8d8;
   --warning-colour: #ed2121;
+  --highlight-colour: #ffa500;
+  --disabled-colour: #eeeff0;
 }

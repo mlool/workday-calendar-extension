@@ -1,11 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  Reducer,
-  SetStateAction,
-  useContext,
-  useReducer,
-} from "react"
+import { createContext, Dispatch, Reducer, useContext, useReducer } from "react"
 import { ISectionData } from "./App/App.types"
 import "./ModalLayer.css"
 import SectionInfoBody from "./SectionPopup/SectionInfoBody"
@@ -64,8 +57,7 @@ interface ManualCourseEntryModalData {
 interface ModalLayerProps {
   currentWorklistNumber: number
   handleClearWorklist: VoidCallback
-  handleDeleteSelectedSection: VoidCallback
-  setSelectedSection: Dispatch<SetStateAction<ISectionData | null>>
+  handleDeleteSection: (sectionToDelete: ISectionData) => void
   children: JSX.Element
 }
 
@@ -104,8 +96,7 @@ function ModalLayer(props: ModalLayerProps) {
           body: <SectionInfoBody selectedSection={sectionData} />,
           closeButtonText: "Close",
           actionButtonText: "Remove",
-          actionHandler: props.handleDeleteSelectedSection,
-          cancelHandler: () => props.setSelectedSection(null),
+          actionHandler: () => props.handleDeleteSection(sectionData),
           alignment: ModalAlignment.Top,
           hasTintedBg: false,
         }

@@ -1,5 +1,3 @@
-import { ISectionData } from "../../App/App.types"
-
 export interface IGradesAPIData {
   average: number
   averageFiveYears: number
@@ -7,23 +5,23 @@ export interface IGradesAPIData {
   averageMin: number
 }
 
-export const getGradesUrl = (section: ISectionData): string => {
-  const isVancouver = section.code.includes("_V")
+export const getGradesUrl = (sectionCode: string): string => {
+  const isVancouver = sectionCode.includes("_V")
   const campus = isVancouver ? "UBCV" : "UBCO"
-  const courseCode = section.code.split("_")[0]
-  const courseNum = section.code.split(" ")[1].split("-")[0]
+  const courseCode = sectionCode.split("_")[0]
+  const courseNum = sectionCode.split(" ")[1].split("-")[0]
 
   const url = `https://ubcgrades.com/statistics-by-course#${campus}-${courseCode}-${courseNum}`
   return url
 }
 
 export const getGradesData = async (
-  section: ISectionData
+  sectionCode: string
 ): Promise<IGradesAPIData> => {
-  const isVancouver = section.code.includes("_V")
+  const isVancouver = sectionCode.includes("_V")
   const campus = isVancouver ? "UBCV" : "UBCO"
-  const courseCode = section.code.split("_")[0]
-  const courseNum = section.code.split(" ")[1].split("-")[0]
+  const courseCode = sectionCode.split("_")[0]
+  const courseNum = sectionCode.split(" ")[1].split("-")[0]
 
   const reqURL = `https://ubcgrades.com//api/v3/course-statistics/${campus}/${courseCode}/${courseNum}`
   const response = await fetch(reqURL)
