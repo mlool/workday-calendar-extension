@@ -1,0 +1,13 @@
+.manual-entry-body {
+  text-align: center;
+  margin: 20px 10px;
+  font-size: 14px;
+  display: grid;
+  grid-auto-flow: row;
+  row-gap: 8px;
+}
+
+.manual-entry-input {
+  border-radius: var(--small-radius);
+  font-size: 14px;
+}

@@ -1,5 +1,13 @@
-import { createContext, Dispatch, Reducer, useContext, useReducer } from "react"
+import {
+  createContext,
+  Dispatch,
+  Reducer,
+  useContext,
+  useReducer,
+  useState,
+} from "react"
 import { ISectionData } from "./App/App.types"
+import ManualEntryModalBody from "./modalBodies/ManualEntryModalBody"
 import "./ModalLayer.css"
 import SectionInfoBody from "./SectionPopup/SectionInfoBody"
 
@@ -36,6 +44,7 @@ interface ModalConfig {
   closeButtonText?: string
   actionButtonText?: string
   actionHandler?: () => void
+  actionHandlerWithParams?: (x: unknown) => void
   cancelHandler?: () => void
 }
 
@@ -50,10 +59,6 @@ interface SyncScheduleModalData {
   onConfirm: () => void
 }
 
-interface ManualCourseEntryModalData {
-  onConfirm: (searchTerm: string, manualUrl?: string) => Promise<string | null>
-}
-
 interface ModalLayerProps {
   currentWorklistNumber: number
   handleClearWorklist: VoidCallback
@@ -64,6 +69,8 @@ interface ModalLayerProps {
 const ModalDispatchContext = createContext<Dispatch<ModalAction>>(() => {})
 
 function ModalLayer(props: ModalLayerProps) {
+  const [modalBodyData, setModalBodyData] = useState<unknown>(undefined)
+
   const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
     conf: ModalConfig | null,
     action: ModalAction
@@ -162,32 +169,15 @@ function ModalLayer(props: ModalLayerProps) {
         }
       }
       case ModalPreset.ManualCourseEntry: {
-        const data: ManualCourseEntryModalData =
-          action.additionalData as ManualCourseEntryModalData
-
-        const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
-          event.preventDefault()
-          const form = new FormData(event.currentTarget)
-          const url = form.get("manualEntryUrl") as string
-          data.onConfirm("MANUAL_ENTRY", url)
-          dispatchModal({ preset: ModalPreset.CLEAR })
-        }
-        const message = `If you are having issues adding courses normally, or if you wish to add the course manually, you can input the link to the course below. The link can be found by clicking on the course in Workday`
-        const body = (
-          <div style={{ textAlign: "center" }}>
-            <label>{message}</label>
-            <form onSubmit={handleChange}>
-              <input name="manualEntryUrl" placeholder="Enter URL Here" />
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        )
+        const submitHandler = action.additionalData as (x: unknown) => void
         return {
           title: "Manual Course Entry",
-          body: body,
+          body: <ManualEntryModalBody handleURLUpdate={setModalBodyData} />,
           hasTintedBg: true,
           closeButtonText: "Close",
           actionType: ModalActionType.Normal,
+          actionHandlerWithParams: submitHandler,
+          actionButtonText: "Add Course",
         }
       }
       default:
@@ -199,7 +189,9 @@ function ModalLayer(props: ModalLayerProps) {
 
   return (
     <ModalDispatchContext.Provider value={dispatchModal}>
-      {modalConfig && <ModalWindow modalConfig={modalConfig} />}
+      {modalConfig && (
+        <ModalWindow modalConfig={modalConfig} bodyData={modalBodyData} />
+      )}
       {props.children}
     </ModalDispatchContext.Provider>
   )
@@ -207,9 +199,10 @@ function ModalLayer(props: ModalLayerProps) {
 
 interface ModalWindowProps {
   modalConfig: ModalConfig
+  bodyData: unknown
 }
 
-function ModalWindow({ modalConfig }: ModalWindowProps) {
+function ModalWindow({ modalConfig, bodyData }: ModalWindowProps) {
   const dispatchModal = useContext(ModalDispatchContext)
 
   const bgStyle = (): string => {
@@ -228,6 +221,17 @@ function ModalWindow({ modalConfig }: ModalWindowProps) {
         styles.push("position-center")
     }
     return styles.join(" ")
+  }
+
+  const handleActionButtonClick = () => {
+    if (bodyData !== undefined) {
+      if (modalConfig.actionHandlerWithParams === undefined)
+        throw "WARNING: Your modal body posts data to modalBodyData, but does not have an actionHandler that can handle parameters."
+      modalConfig.actionHandlerWithParams!(bodyData)
+    } else {
+      modalConfig.actionHandler!()
+    }
+    dispatchModal({ preset: ModalPreset.CLEAR })
   }
 
   return (
@@ -251,17 +255,15 @@ function ModalWindow({ modalConfig }: ModalWindowProps) {
           >
             {modalConfig.closeButtonText ?? "OK"}
           </button>
-          {modalConfig.actionHandler && (
+          {(modalConfig.actionHandler ||
+            modalConfig.actionHandlerWithParams) && (
             <button
               className={`modal-button action-button${
                 modalConfig.actionType === ModalActionType.Normal
                   ? ""
                   : "-destructive"
               }`}
-              onClick={() => {
-                modalConfig.actionHandler!()
-                dispatchModal({ preset: ModalPreset.CLEAR })
-              }}
+              onClick={handleActionButtonClick}
             >
               {modalConfig.actionButtonText}
             </button>

@@ -6,23 +6,23 @@ import { findCourseInfo } from "../../backends/scheduler/nameSearchApi"
 const ManualCourseEntry = () => {
   const dispatchModal = useContext(ModalDispatchContext)
 
-  const handleManualCourseEntry = () => {
+  const postModal = () => {
     dispatchModal({
       preset: ModalPreset.ManualCourseEntry,
-      additionalData: {
-        onConfirm: async (searchTerm: string, manualUrl: string) => {
-          console.log("reach")
-          const selectedSection = await findCourseInfo(searchTerm, manualUrl)
-          await chrome.storage.local.set({ newSection: selectedSection })
-        },
-      },
+      additionalData: handleManualEntrySubmit,
     })
   }
+
+  const handleManualEntrySubmit = async (manualUrl: string) => {
+    const selectedSection = await findCourseInfo("MANUAL_ENTRY", manualUrl)
+    await chrome.storage.local.set({ newSection: selectedSection })
+  }
+
   return (
     <button
       className="ManualEntryButton"
       title="Manual Entry"
-      onClick={() => handleManualCourseEntry()}
+      onClick={() => postModal()}
     >
       Add Course By Link
     </button>
