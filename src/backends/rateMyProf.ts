@@ -1,17 +1,24 @@
+const RMP_BASE_URL = "https://www.ratemyprofessors.com"
 const RMP_API_URL = "https://www.ratemyprofessors.com/graphql"
 const BASIC_AUTH_KEY = "dGVzdDp0ZXN0"
+
+interface RMPData {
+  rating: number
+  link: string
+}
 
 interface PartialProf {
   node: {
     avgRating: number
     firstName: string
     lastName: string
+    legacyId: string
   }
 }
 
 export default async function fetchProfRating(
   profName: string
-): Promise<number | null> {
+): Promise<RMPData | null> {
   const nameParts = profName.split(" ")
   if (nameParts.length < 2) throw "Name does not include both first and last!"
   const firstName = nameParts.shift()!
@@ -39,7 +46,10 @@ export default async function fetchProfRating(
       prof.node.firstName.startsWith(firstName) &&
       prof.node.lastName.endsWith(lastName)
     )
-      return prof.node.avgRating
+      return {
+        rating: prof.node.avgRating,
+        link: `${RMP_BASE_URL}/professor/${prof.node.legacyId}`,
+      }
   }
   return null
 }
@@ -61,3 +71,5 @@ const buildRMPQueryBody = (profName: string) => {
     },
   }
 }
+
+export { fetchProfRating, type RMPData }

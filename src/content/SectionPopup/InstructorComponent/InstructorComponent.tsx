@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Browser from "webextension-polyfill"
+import { RMPData } from "../../../backends/rateMyProf"
 import {
   ColoredRange,
   ColoredRangeDetail,
@@ -13,7 +14,7 @@ interface IProps {
 const RMP_RANGE: ColoredRange = { lowerBound: 0, upperBound: 5 }
 
 const InstructorComponent = ({ instructors }: IProps) => {
-  const [rmpRatings, setRmpRatings] = useState<Record<string, number | null>>()
+  const [rmpRatings, setRmpRatings] = useState<Record<string, RMPData | null>>()
 
   useEffect(() => {
     populateRmpRatings()
@@ -33,7 +34,7 @@ const InstructorComponent = ({ instructors }: IProps) => {
       )
     }
     const results = await Promise.all(fetches)
-    const ratings = results.reduce<Record<string, number>>(
+    const ratings = results.reduce<Record<string, RMPData>>(
       (acc, item, index) => {
         acc[instructors[index]] = item
         return acc
@@ -55,8 +56,20 @@ const InstructorComponent = ({ instructors }: IProps) => {
               ) : (
                 <ColoredRangeDetail
                   key={index}
-                  label={instructor}
-                  numericValue={rmpRatings[instructor]}
+                  label={
+                    <a
+                      target="_blank"
+                      href={rmpRatings[instructor]?.link}
+                      rel="noreferrer"
+                    >
+                      {instructor}
+                    </a>
+                  }
+                  numericValue={
+                    rmpRatings[instructor]
+                      ? rmpRatings[instructor]!.rating
+                      : null
+                  }
                   range={RMP_RANGE}
                   showRange={true}
                 />

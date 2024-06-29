@@ -6,7 +6,6 @@
 }
 
 .numeric-value-box {
-  border: 1px solid grey;
   border-radius: var(--tiny-radius);
   padding: 1px 10px;
 }
@@ -24,7 +23,7 @@
 }
 
 .mid-number {
-  background-color: rgb(255, 247, 142);
+  background-color: rgb(255, 219, 27);
 }
 
 .high-number {

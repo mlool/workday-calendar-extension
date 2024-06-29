@@ -6,7 +6,7 @@ interface ColoredRange {
 }
 
 interface ColoredRangeDetailProps {
-  label: string
+  label: string | JSX.Element
   numericValue: number | null
   range: ColoredRange
   // renders what the numericValue is "out of".
@@ -41,7 +41,7 @@ function ColoredRangeDetail(props: ColoredRangeDetailProps) {
 
   return (
     <div className="colored-range-detail">
-      <p>{props.label}</p>
+      {typeof props.label === "string" ? <p>{props.label}</p> : props.label}
       <p className={`numeric-value-box ${getColor()}`}>{getNumberDisplay()}</p>
     </div>
   )
