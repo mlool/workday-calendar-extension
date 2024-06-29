@@ -193,7 +193,7 @@ function ModalLayer(props: ModalLayerProps) {
         return {
           title: "Manual Course Entry",
           body: body,
-          hasTintedBg: false,
+          hasTintedBg: true,
           closeButtonText: "Close",
           actionType: ModalActionType.Normal,
         }
