@@ -1,5 +1,6 @@
 import { ISectionData, Term_String_Map, Term } from "../App/App.types"
 import Calendar from "../Calendar/Calendar"
+import { CellFormat, convertToMatrix } from "../Calendar/calendarHelpers"
 import "./CalendarContainer.css"
 
 interface IProps {
@@ -40,6 +41,37 @@ const CalendarContainer = ({
     } else {
       return ""
     }
+  }
+
+  const getSectionMatrix = (term: Term) => {
+    const calendarSectionsTermOne = sections.filter(
+      (section) =>
+        section.worklistNumber === currentWorklistNumber &&
+        (section.term === Term.winterOne || section.term === Term.winterFull)
+    )
+
+    const calendarSectionsTermTwo = sections.filter(
+      (section) =>
+        section.worklistNumber === currentWorklistNumber &&
+        (section.term === Term.winterTwo || section.term === Term.winterFull)
+    )
+
+    const sectionsToRenderTermOne = convertToMatrix(
+      calendarSectionsTermOne,
+      newSection,
+      Term.winterOne
+    )
+
+    const sectionsToRenderTermTwo = convertToMatrix(
+      calendarSectionsTermTwo,
+      newSection,
+      Term.winterTwo
+    )
+
+    setSectionConflict(sectionsToRenderTermOne[0] || sectionsToRenderTermTwo[0])
+    return term === Term.winterOne
+      ? sectionsToRenderTermOne[1]
+      : sectionsToRenderTermTwo[1]
   }
 
   const canSwitchTerms = (): boolean => {
@@ -101,14 +133,8 @@ const CalendarContainer = ({
       </div>
 
       <Calendar
-        sections={sections}
-        currentWorklistNumber={currentWorklistNumber}
-        newSection={newSection}
-        setSections={setSections}
-        setSectionConflict={setSectionConflict}
-        currentTerm={currentTerm}
-        selectedSection={selectedSection}
         setSelectedSection={setSelectedSection}
+        sectionsToRender={getSectionMatrix(currentTerm)}
       />
     </div>
   )

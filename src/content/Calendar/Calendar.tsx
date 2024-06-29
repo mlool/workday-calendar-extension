@@ -1,43 +1,18 @@
 import { ISectionData, Term } from "../App/App.types"
-import { convertToMatrix, getEndHour } from "./calendarHelpers"
+import { CellFormat, convertToMatrix, getEndHour } from "./calendarHelpers"
 import "./Calendar.css"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 
 interface IProps {
-  sections: ISectionData[]
-  newSection: ISectionData | null
-  currentWorklistNumber: number
-  currentTerm: Term
-  selectedSection: ISectionData | null
-  setSections: (data: ISectionData[]) => void
-  setSectionConflict: (state: boolean) => void
   setSelectedSection: (section: ISectionData | null) => void
+  sectionsToRender: { [id: string]: CellFormat[] }
 }
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"]
 
-const Calendar = ({
-  sections,
-  newSection,
-  currentWorklistNumber,
-  setSectionConflict,
-  currentTerm,
-  setSelectedSection,
-}: IProps) => {
+const Calendar = ({ setSelectedSection, sectionsToRender }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
-
-  const calendarSections = sections.filter(
-    (section) =>
-      section.worklistNumber === currentWorklistNumber &&
-      (section.term === currentTerm || section.term === Term.winterFull)
-  )
-  const sectionsToRender = convertToMatrix(
-    calendarSections,
-    newSection,
-    setSectionConflict,
-    currentTerm
-  )
 
   const times: string[] = []
   for (let hour = 7; hour <= getEndHour(sectionsToRender); hour++) {
