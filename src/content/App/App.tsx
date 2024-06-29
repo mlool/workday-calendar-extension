@@ -11,10 +11,7 @@ import {
   getNewSectionColor,
 } from "../Settings/courseColors"
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
-import {
-  filterSectionsByWorklist,
-  versionOneFiveZeroUpdateNotification,
-} from "../utils"
+import { versionOneFiveZeroUpdateNotification } from "../utils"
 
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
@@ -213,16 +210,13 @@ function App() {
               sectionConflict={sectionConflict}
               handleAddNewSection={handleAddNewSection}
               handleCancel={handleCancelNewSection}
-              sections={filterSectionsByWorklist(
-                sections,
-                currentWorklistNumber
-              )}
             />
           </div>
         ) : (
           <Settings
             colorTheme={colorTheme}
             sections={sections}
+            currentWorklistNumber={currentWorklistNumber}
             setColorTheme={setColorTheme}
             setSections={setSections}
           />

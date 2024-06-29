@@ -26,6 +26,7 @@ enum ModalPreset {
   SyncInstructions,
   SyncConfirm,
   ApiError,
+  ManualCourseEntry,
 }
 
 enum ModalActionType {
@@ -54,6 +55,10 @@ interface SyncScheduleModalData {
   syncErrors: string[]
   onCancel: () => void
   onConfirm: () => void
+}
+
+interface ManualCourseEntryModalData {
+  onConfirm: (searchTerm: string, manualUrl?: string) => Promise<string | null>
 }
 
 interface ModalLayerProps {
@@ -162,6 +167,35 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Import Error",
           body: `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`,
           hasTintedBg: false,
+          actionType: ModalActionType.Normal,
+        }
+      }
+      case ModalPreset.ManualCourseEntry: {
+        const data: ManualCourseEntryModalData =
+          action.additionalData as ManualCourseEntryModalData
+
+        const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
+          event.preventDefault()
+          const form = new FormData(event.currentTarget)
+          const url = form.get("manualEntryUrl") as string
+          data.onConfirm("MANUAL_ENTRY", url)
+          dispatchModal({ preset: ModalPreset.CLEAR })
+        }
+        const message = `If you are having issues adding courses normally, or if you wish to add the course manually, you can input the link to the course below. The link can be found by clicking on the course in Workday`
+        const body = (
+          <div style={{ textAlign: "center" }}>
+            <label>{message}</label>
+            <form onSubmit={handleChange}>
+              <input name="manualEntryUrl" placeholder="Enter URL Here" />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+        )
+        return {
+          title: "Manual Course Entry",
+          body: body,
+          hasTintedBg: true,
+          closeButtonText: "Close",
           actionType: ModalActionType.Normal,
         }
       }

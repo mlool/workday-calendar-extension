@@ -1,6 +1,7 @@
 import { Term, SectionDetail } from "../../content/App/App.types"
 
 export interface RawWorkdayData {
+  code: string
   name: string
   instructors: string[]
   sectionDetails: SectionDetail[]

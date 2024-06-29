@@ -45,9 +45,14 @@ export function getUrlFromSearchTerm(
   return null
 }
 
-export function getCourseIdFromUrl(url: string): string {
-  const parts = url.split("$")
-  return parts[2].split(".")[0]
+export function getCourseIdFromUrl(url: string): string | null {
+  try {
+    const parts = url.split("$")
+    return parts[2].split(".")[0]
+  } catch (error) {
+    alert("Invalid URL. Please try again.")
+    return null
+  }
 }
 
 export async function fetchSearchData(url: string) {
@@ -81,4 +86,10 @@ export function parseSearchParameters(searchTerm: string) {
   }
 
   return { subject, courseNumber, sectionNumber, campus }
+}
+
+export function courseIdFailsCheck(courseId: string): boolean {
+  const regex = /^\d{6}$/
+
+  return !regex.test(courseId)
 }
