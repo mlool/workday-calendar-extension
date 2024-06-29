@@ -1,5 +1,6 @@
 import { ISectionData } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
+import { handleCourseLoading } from "."
 
 // bypassDetailsCheck is for reskin extension compat
 async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
@@ -11,6 +12,7 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   ) // The div with the raw text of the course section data.
   // Checking if course labels exist and there are at least two of them
   if (!courseLabels || courseLabels.length < 2) {
+    handleCourseLoading(false)
     alert("Title or section details not found")
     return Promise.reject(new Error("Title or section details not found"))
   }
@@ -21,6 +23,7 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
 
   // Checking if title is missing
   if (!title) {
+    handleCourseLoading(false)
     alert("Title not found")
     return Promise.reject(new Error("Title not found"))
   }

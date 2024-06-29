@@ -21,6 +21,18 @@ interface rawSchedule {
   term: string
 }
 
+export const handleProgressUpdate = (newProgress: number) => {
+  // Allow customization
+
+  const courseAddingProgressEvent = new CustomEvent("courseAddingProgress", {
+    detail: {
+      progress: newProgress,
+    },
+  })
+
+  document.dispatchEvent(courseAddingProgressEvent)
+}
+
 export function getUrlFromSearchTerm(
   rawData: rawCourses,
   searchTerm: string
