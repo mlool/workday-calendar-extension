@@ -44,7 +44,7 @@ export async function fetchWorkdayData(
         instructors.push(instructor["text"])
       }
     } catch (error) {
-      console.error("Error extracting instructors from search data:", error)
+      // Not an error, just no instructors in Workday Response. Need a comment or Eslint gets mad
     }
   }
   handleProgressUpdate(75)

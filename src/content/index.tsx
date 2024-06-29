@@ -234,7 +234,7 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   element.parentNode?.insertBefore(button, element)
 }
 
-const handleCourseLoading = (isLoading: boolean) => {
+export const handleCourseLoading = (isLoading: boolean) => {
   const courseLoadingEvent = new CustomEvent("isCourseLoading", {
     detail: {
       isLoading: isLoading,
