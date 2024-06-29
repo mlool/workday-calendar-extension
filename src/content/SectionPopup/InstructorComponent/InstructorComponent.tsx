@@ -23,6 +23,9 @@ const InstructorComponent = ({ instructors }: IProps) => {
     const fetches = []
     for (const prof of instructors) {
       fetches.push(
+        // cannot directly fetch from RMP here - fetching
+        // from the service worker with the right
+        // host_permissions allows us to bypass CORS.
         Browser.runtime.sendMessage({
           type: "RMP",
           prof: prof,

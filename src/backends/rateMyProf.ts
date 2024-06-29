@@ -1,9 +1,22 @@
 const RMP_API_URL = "https://www.ratemyprofessors.com/graphql"
 const BASIC_AUTH_KEY = "dGVzdDp0ZXN0"
 
+interface PartialProf {
+  node: {
+    avgRating: number
+    firstName: string
+    lastName: string
+  }
+}
+
 export default async function fetchProfRating(
   profName: string
 ): Promise<number | null> {
+  const nameParts = profName.split(" ")
+  if (nameParts.length < 2) throw "Name does not include both first and last!"
+  const firstName = nameParts.shift()!
+  const lastName = nameParts.pop()!
+
   const headers = new Headers({
     Authorization: `Basic ${BASIC_AUTH_KEY}`,
     "Content-Type": "application/json",
@@ -16,10 +29,19 @@ export default async function fetchProfRating(
   const rawRes = await fetch(req)
   const res = await rawRes.json()
 
-  const rawProfs = res["data"]["search"]["teachers"]["edges"]
+  const rawProfs: PartialProf[] = res["data"]["search"]["teachers"]["edges"]
   if (rawProfs.length === 0) return null
-  const rating = rawProfs[0]["node"]["avgRating"]
-  return rating
+  for (const prof of rawProfs) {
+    // we avoid using a more sophisticated matching method as i
+    // want to reduce the chances of returning an incorrect
+    // rating - would rather return null.
+    if (
+      prof.node.firstName.startsWith(firstName) &&
+      prof.node.lastName.endsWith(lastName)
+    )
+      return prof.node.avgRating
+  }
+  return null
 }
 
 const buildRMPQueryBody = (profName: string) => {
