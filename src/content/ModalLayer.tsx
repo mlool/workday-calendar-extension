@@ -5,7 +5,7 @@ import {
   SetStateAction,
   useContext,
   useReducer,
-  useState
+  useState,
 } from "react"
 import { ISectionData } from "./App/App.types"
 import "./ModalLayer.css"
@@ -27,7 +27,7 @@ enum ModalPreset {
   SyncInstructions,
   SyncConfirm,
   ApiError,
-  ManualCourseEntry
+  ManualCourseEntry,
 }
 
 enum ModalActionType {
@@ -73,6 +73,7 @@ interface ModalLayerProps {
 const ModalDispatchContext = createContext<Dispatch<ModalAction>>(() => {})
 
 function ModalLayer(props: ModalLayerProps) {
+  const [manualEntryUrl, setManualEntryUrl] = useState("")
   const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
     conf: ModalConfig | null,
     action: ModalAction
@@ -171,33 +172,32 @@ function ModalLayer(props: ModalLayerProps) {
         }
       }
       case ModalPreset.ManualCourseEntry: {
-        let manualEntryUrl = ""
         const data: ManualCourseEntryModalData =
-        action.additionalData as ManualCourseEntryModalData
+          action.additionalData as ManualCourseEntryModalData
 
-        const handleChange = (event:  React.ChangeEvent<HTMLInputElement>) => {
-          manualEntryUrl = event.target.value
+        const handleChange = (event: any) => {
+          event.preventDefault()
+          const form = new FormData(event.currentTarget)
+          const url = form.get("manualEntryUrl") as string
+          data.onConfirm("MANUAL_ENTRY", url)
+          dispatchModal({ preset: ModalPreset.CLEAR })
         }
         const message = `If you are having issues adding courses normally, or if you wish to add the course manually, you can input the link to the course below. The link can be found by clicking on the course in Workday`
         const body = (
-          <div className="url-input">
-            <label>${message}</label>
-            <input
-              type="text"
-              id="url"
-              value={manualEntryUrl}
-              onChange={handleChange}
-              placeholder="Enter URL Here"
-            />
+          <div style={{ textAlign: "center" }}>
+            <label>{message}</label>
+            <form onSubmit={handleChange}>
+              <input name="manualEntryUrl" placeholder="Enter URL Here" />
+              <button type="submit">Submit</button>
+            </form>
           </div>
         )
         return {
           title: "Manual Course Entry",
           body: body,
           hasTintedBg: false,
+          closeButtonText: "Close",
           actionType: ModalActionType.Normal,
-          actionButtonText: "Submit",
-          actionHandler: () => {data.onConfirm("MANUAL_ENTRY", manualEntryUrl)},
         }
       }
       default:

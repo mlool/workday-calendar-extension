@@ -16,6 +16,10 @@ export async function fetchWorkdayData(
   const path = rawData["body"]["children"][0]["children"][0]["children"]
   const rawName = path[0]["instances"][0]["text"]
   const formattedName = rawName.split(" - ")[1]
+  const code =
+    rawData["body"]["children"][1]["children"][0]["values"]["0"]["label"].split(
+      " - "
+    )[0]
   const possibleDetailsPath =
     rawData["body"]["children"][0]["children"][1]["children"]
 
@@ -46,6 +50,7 @@ export async function fetchWorkdayData(
     }
   }
   const formattedData: RawWorkdayData = {
+    code: code,
     name: formattedName,
     instructors: instructors,
     sectionDetails: parseSectionDetails(rawDetails),

@@ -5,9 +5,12 @@ import {
   getCourseIdFromUrl,
   fetchSearchData,
   parseSearchParameters,
+  courseIdFailsCheck,
 } from "./nameSearchHelpers"
 import { fetchWorkdayData } from "../workday/idSearchApi"
 import { RawWorkdayData } from "../workday/idSearchHelpers"
+import { search } from "webextension-polyfill"
+import { get } from "http"
 
 const searchEndpoint =
   "https://coursescheduler-api-2.vercel.app/api/W/sections?"
@@ -60,9 +63,21 @@ export async function findCourseId(searchTerm: string): Promise<string | null> {
 }
 
 export async function findCourseInfo(
-  searchTerm: string
+  searchTerm: string,
+  manualCourseEntry?: string
 ): Promise<ISectionData | null> {
-  const courseId = await findCourseId(searchTerm)
+  let courseId: string | null = null
+
+  if (manualCourseEntry) {
+    courseId = getCourseIdFromUrl(manualCourseEntry!)
+
+    if (courseId && courseIdFailsCheck(courseId)) {
+      alert("Invalid URL. Please try again.")
+    }
+  } else {
+    courseId = await findCourseId(searchTerm)
+  }
+
   if (!courseId) {
     return null
   }
@@ -74,7 +89,7 @@ export async function findCourseInfo(
   }
 
   const newSectionData: ISectionData = {
-    code: searchTerm,
+    code: courseData.code,
     name: courseData.name,
     instructors: courseData.instructors,
     sectionDetails: courseData.sectionDetails,

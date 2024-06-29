@@ -26,7 +26,9 @@ const Settings = ({
     <div>
       <div className="Settings">
         <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
-        <Tools sections={filterSectionsByWorklist(sections, currentWorklistNumber)}/>
+        <Tools
+          sections={filterSectionsByWorklist(sections, currentWorklistNumber)}
+        />
         <ExportImport sections={sections} setSections={setSections} />
         <Contact />
       </div>
