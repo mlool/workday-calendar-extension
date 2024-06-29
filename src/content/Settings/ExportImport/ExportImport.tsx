@@ -7,7 +7,6 @@ import { findCourseId } from "../../../backends/scheduler/nameSearchApi"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 import ProgressBar from "../../ProgressBar/ProgressBar"
-import { JsxElement } from "typescript"
 
 interface IProps {
   sections: ISectionData[]

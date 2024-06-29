@@ -2,7 +2,6 @@ import "./ExportImportPopup.css"
 import CloseIcon from "../../../Icons/CloseIcon"
 import { ISectionData } from "../../../App/App.types"
 import { useState } from "react"
-import ProgressBar from "../../../ProgressBar/ProgressBar"
 
 interface IProps {
   onCancel: () => void
