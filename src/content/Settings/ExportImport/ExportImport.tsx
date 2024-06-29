@@ -3,7 +3,7 @@ import "../Settings.css"
 import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
-import { findCourseId } from "../../../backends/scheduler/nameSearchApi"
+import { findCourseInfo } from "../../../backends/scheduler/nameSearchApi"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 import ProgressBar from "../../ProgressBar/ProgressBar"
@@ -59,29 +59,21 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   }
 
   const handleSectionImport = async (sections: ISectionData[]) => {
-    const fetchedCourseIDs: string[] = []
+    const fetchedSections: ISectionData[] = []
     const sectionsCount = sections.filter((section) => !section.courseID).length
     await sections.reduce(async (promise, section) => {
       await promise
       if (!section.courseID) {
-        const courseID = await findCourseId(section.code)
-        if (!courseID) {
+        const sectionData = await findCourseInfo(section.code)
+        if (!sectionData) {
           return
         }
-        fetchedCourseIDs.push(courseID)
-        handleProgressUpdate(fetchedCourseIDs.length / sectionsCount)
+        fetchedSections.push(sectionData)
+        handleProgressUpdate(fetchedSections.length / sectionsCount)
       }
     }, Promise.resolve())
 
-    const newSections = sections.map((s) => {
-      if (s.courseID) return s
-      return {
-        ...s,
-        courseID: fetchedCourseIDs.shift(),
-      }
-    })
-
-    setSections(newSections)
+    setSections(fetchedSections)
     dispatchExportImportModal(
       "Import Successful! Your courses should now be viewable in your worklist"
     )
