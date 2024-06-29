@@ -1,20 +1,12 @@
 import { ISectionData } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import { handleCourseLoading } from "."
-import Browser from "webextension-polyfill"
 
 // bypassDetailsCheck is for reskin extension compat
 async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   if (bypassDetailsCheck && bypassDetailsCheck === true) {
     return await findCourseInfo(element.id)
   }
-
-  const result = await Browser.runtime.sendMessage({
-    type: "RMP",
-    prof: "Laura Stirchak",
-  })
-  console.log(result)
-
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
   ) // The div with the raw text of the course section data.
