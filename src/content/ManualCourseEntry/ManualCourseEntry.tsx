@@ -24,7 +24,7 @@ const ManualCourseEntry = () => {
       title="Manual Entry"
       onClick={() => handleManualCourseEntry()}
     >
-      Manually Add Course
+      Add Course By Link
     </button>
   )
 }
