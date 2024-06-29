@@ -9,18 +9,20 @@ interface SectionInfoProps {
 }
 
 const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
-  const filteredLocations: string[] = [];
+  const filteredLocations: string[] = []
 
-
-  const filterLocations = selectedSection.sectionDetails.reduce((acc: string[], currentValue) => {
-    if (currentValue.location) {
-      const location = currentValue.location;
-      if (!acc.includes(location)) {
-        acc.push(location);
+  const filterLocations = selectedSection.sectionDetails.reduce(
+    (acc: string[], currentValue) => {
+      if (currentValue.location) {
+        const location = currentValue.location
+        if (!acc.includes(location)) {
+          acc.push(location)
+        }
       }
-    }
-    return acc;
-  }, filteredLocations);
+      return acc
+    },
+    filteredLocations
+  )
 
   const uniqueLocations = new Set(
     filterLocations.map((location) => {
