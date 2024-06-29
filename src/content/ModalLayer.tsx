@@ -77,12 +77,14 @@ function ModalLayer(props: ModalLayerProps) {
   ): ModalConfig | null => {
     switch (action.preset) {
       case ModalPreset.CLEAR:
+        setModalBodyData(undefined)
         return null
       case ModalPreset.ConfirmClearWorklist:
         return {
           title: "Confirm Clear Worklist",
           body: `Clearing the worklist will remove all sections from both terms under worklist ${props.currentWorklistNumber}. Are you sure you want to continue?`,
           closeButtonText: "Cancel",
+          actionType: ModalActionType.Destructive,
           actionButtonText: "Confirm",
           actionHandler: props.handleClearWorklist,
         }
@@ -103,6 +105,7 @@ function ModalLayer(props: ModalLayerProps) {
           body: <SectionInfoBody selectedSection={sectionData} />,
           closeButtonText: "Close",
           actionButtonText: "Remove",
+          actionType: ModalActionType.Destructive,
           actionHandler: () => props.handleDeleteSection(sectionData),
           alignment: ModalAlignment.Top,
           hasTintedBg: false,
@@ -134,7 +137,6 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Error Syncing With Saved Schedule",
           body: errors,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal,
         }
       }
       case ModalPreset.SyncInstructions: {
@@ -143,13 +145,12 @@ function ModalLayer(props: ModalLayerProps) {
 
         return {
           title: "Sync Saved Schedules Instructions",
-          body: `Please note that you must be on the "View Saved Schedules" page. If you have multiple schedules, click the "add course sections" button on the one you which to add to, otherwise it will add to the first one. You must have all requirements (for example class requires lab and lecture) in your worklist`,
+          body: `Note that you must be on the "View Saved Schedules" page. If you have multiple schedules, click the "Add course sections" button on the one you which to add to, otherwise it will add to the first one. You must satisfy all instructional format requirements (for example class requires lab and lecture) in your worklist`,
           closeButtonText: "Close",
           actionButtonText: "OK",
           actionHandler: data.onConfirm,
           cancelHandler: data.onCancel,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal,
         }
       }
       case ModalPreset.SyncConfirm: {
@@ -157,15 +158,13 @@ function ModalLayer(props: ModalLayerProps) {
           title: "Sync Saved Schedules Success",
           body: `Any matching classes were added to this saved schedule! Please refresh page to see changes.`,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal,
         }
       }
       case ModalPreset.ApiError: {
         return {
           title: "Import Error",
-          body: `Oops something went wrong! Best way to fix this is to head to the "Find Course Sections Page" One way to do this is by going "home" by clicking the UBC logo, then clicking "Academics", "Registration & Courses", "Find Course Sections" . If the issue persists, please contact the developers.`,
+          body: `Something went wrong! To fix this, head to the "Find Course Sections Page", accessible from "Home" > "Academics" > "Registration & Courses" > "Find Course Sections". If the issue persists, please contact the developers.`,
           hasTintedBg: false,
-          actionType: ModalActionType.Normal,
         }
       }
       case ModalPreset.ManualCourseEntry: {
@@ -173,9 +172,7 @@ function ModalLayer(props: ModalLayerProps) {
         return {
           title: "Manual Course Entry",
           body: <ManualEntryModalBody handleURLUpdate={setModalBodyData} />,
-          hasTintedBg: true,
           closeButtonText: "Close",
-          actionType: ModalActionType.Normal,
           actionHandlerWithParams: submitHandler,
           actionButtonText: "Add Course",
         }
@@ -259,9 +256,9 @@ function ModalWindow({ modalConfig, bodyData }: ModalWindowProps) {
             modalConfig.actionHandlerWithParams) && (
             <button
               className={`modal-button action-button${
-                modalConfig.actionType === ModalActionType.Normal
-                  ? ""
-                  : "-destructive"
+                modalConfig.actionType === ModalActionType.Destructive
+                  ? "-destructive"
+                  : ""
               }`}
               onClick={handleActionButtonClick}
             >
