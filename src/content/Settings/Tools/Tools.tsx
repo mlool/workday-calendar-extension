@@ -5,7 +5,6 @@ import QuestionIcon from "../../Icons/QuestionIcon"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 import { ISectionData } from "../../App/App.types"
 import SyncSavedSchedules from "../SyncSavedSchedules/SyncSavedSchedules"
-import ManualCourseEntry from "../../ManualCourseEntry/ManualCourseEntry"
 
 interface IToolsProps {
   sections: ISectionData[]

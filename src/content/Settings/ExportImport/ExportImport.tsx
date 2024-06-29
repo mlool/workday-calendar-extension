@@ -87,7 +87,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
         handleSectionImport={handleSectionImport}
       />
       <div className="ExportImportButtonContainer">
-        <div className="ExportImportRow"> 
+        <div className="ExportImportRow">
           <div className="ExportImportButton" onClick={handleExport}>
             Export All Worklists
           </div>

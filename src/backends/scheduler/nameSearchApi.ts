@@ -9,8 +9,6 @@ import {
 } from "./nameSearchHelpers"
 import { fetchWorkdayData } from "../workday/idSearchApi"
 import { RawWorkdayData } from "../workday/idSearchHelpers"
-import { search } from "webextension-polyfill"
-import { get } from "http"
 
 const searchEndpoint =
   "https://coursescheduler-api-2.vercel.app/api/W/sections?"

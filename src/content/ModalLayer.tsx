@@ -73,7 +73,6 @@ interface ModalLayerProps {
 const ModalDispatchContext = createContext<Dispatch<ModalAction>>(() => {})
 
 function ModalLayer(props: ModalLayerProps) {
-  const [manualEntryUrl, setManualEntryUrl] = useState("")
   const modalReducer: Reducer<ModalConfig | null, ModalAction> = (
     conf: ModalConfig | null,
     action: ModalAction
@@ -175,7 +174,7 @@ function ModalLayer(props: ModalLayerProps) {
         const data: ManualCourseEntryModalData =
           action.additionalData as ManualCourseEntryModalData
 
-        const handleChange = (event: any) => {
+        const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
           event.preventDefault()
           const form = new FormData(event.currentTarget)
           const url = form.get("manualEntryUrl") as string

@@ -13,7 +13,6 @@ import {
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
 
-
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
 function App() {
