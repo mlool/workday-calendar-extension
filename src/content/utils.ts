@@ -56,9 +56,9 @@ const versionOneFiveZeroUpdateNotification = () => {
     .then((retrievedFlag) => {
       const flag =
         retrievedFlag?.versionOneFiveZeroNotificationDisplayed ?? false
-      if (!flag && currentVersion === "1.5.1") {
+      if (!flag && currentVersion === "1.6.0") {
         alert(
-          "Welcome to version 1.5.0! This update includes many changes and a full changelog can be viewed on our communication platforms. Please note that for the best results, it is recommended to sign out and then sign back in as well as exporting all of your worklists and them importing them back in to ensure all features are working correctly. Thank you for using the Workday Extension!"
+          "Welcome to version 1.6.0! This update includes many changes and a full changelog can be viewed on our communication platforms. Please note that for the best results, it is recommended to sign out and then sign back in as well as exporting all of your worklists and them importing them back in to ensure all features are working correctly. Thank you for using the Workday Extension!"
         )
         chrome.storage.local.set({
           versionOneFiveZeroNotificationDisplayed: true,
