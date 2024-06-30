@@ -7,7 +7,7 @@ import {
   useState,
 } from "react"
 import { ISectionData } from "./App/App.types"
-import ManualEntryModalBody from "./modalBodies/ManualEntryModalBody"
+import ManualEntryModalBody from "./modalBodies/Manual Entry/ManualEntryModalBody"
 import "./ModalLayer.css"
 import SectionInfoBody from "./SectionPopup/SectionInfoBody"
 
@@ -51,12 +51,6 @@ interface ModalConfig {
 interface ModalAction {
   preset: ModalPreset
   additionalData?: unknown
-}
-
-interface SyncScheduleModalData {
-  syncErrors: string[]
-  onCancel: () => void
-  onConfirm: () => void
 }
 
 interface ModalLayerProps {
@@ -140,24 +134,17 @@ function ModalLayer(props: ModalLayerProps) {
         }
       }
       case ModalPreset.SyncInstructions: {
-        const data: SyncScheduleModalData =
-          action.additionalData as SyncScheduleModalData
-
         return {
           title: "Sync Saved Schedules Instructions",
           body: `Note that you must be on the "View Saved Schedules" page. If you have multiple schedules, click the "Add course sections" button on the one you which to add to, otherwise it will add to the first one. You must satisfy all instructional format requirements (for example class requires lab and lecture) in your worklist`,
-          closeButtonText: "Close",
-          actionButtonText: "OK",
-          actionHandler: data.onConfirm,
-          cancelHandler: data.onCancel,
-          hasTintedBg: false,
+          hasTintedBg: true,
         }
       }
       case ModalPreset.SyncConfirm: {
         return {
           title: "Sync Saved Schedules Success",
           body: `Any matching classes were added to this saved schedule! Please refresh page to see changes.`,
-          hasTintedBg: false,
+          hasTintedBg: true,
         }
       }
       case ModalPreset.ApiError: {

@@ -1,5 +1,5 @@
-import { ColorTheme } from "../courseColors"
-import ThemePicker from "../ThemePicker"
+import { ColorTheme } from "./courseColors"
+import ThemePicker from "./ThemePicker"
 import "../Settings.css"
 interface IProps {
   colorTheme: ColorTheme

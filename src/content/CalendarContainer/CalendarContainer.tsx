@@ -1,6 +1,7 @@
 import TabBar from "../../components/TabBar"
 import { ISectionData, Term_String_Map, Term } from "../App/App.types"
 import Calendar from "../Calendar/Calendar"
+import { filterSections } from "../utils"
 import "./CalendarContainer.css"
 
 interface IProps {
@@ -54,8 +55,11 @@ const CalendarContainer = ({
       </div>
 
       <Calendar
-        sections={sections}
-        currentWorklistNumber={currentWorklistNumber}
+        filteredSections={filterSections(
+          sections,
+          currentWorklistNumber,
+          currentTerm
+        )}
         newSection={newSection}
         setSections={setSections}
         setSectionConflict={setSectionConflict}

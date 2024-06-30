@@ -9,10 +9,9 @@ import {
   assignColors,
   ColorTheme,
   getNewSectionColor,
-} from "../Settings/courseColors"
+} from "../Settings/Theme/courseColors"
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
-
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 
 function App() {
@@ -210,6 +209,7 @@ function App() {
             colorTheme={colorTheme}
             sections={sections}
             currentWorklistNumber={currentWorklistNumber}
+            currentTerm={currentTerm}
             setColorTheme={setColorTheme}
             setSections={setSections}
           />
