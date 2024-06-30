@@ -2,7 +2,6 @@ import TabBar from "../../components/TabBar"
 import { ISectionData, Term_String_Map, Term } from "../App/App.types"
 import Calendar from "../Calendar/Calendar"
 import { convertToMatrix } from "../Calendar/calendarHelpers"
-import { filterSections } from "../utils"
 import "./CalendarContainer.css"
 
 interface IProps {
