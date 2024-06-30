@@ -49,7 +49,9 @@ export async function findCourseId(searchTerm: string): Promise<string | null> {
 
     if (!courseUrl) {
       handleCourseLoading(false)
-      alert(`Oops something went wrong. Please try to use the "Add Course By Link" feature. If the issue persists, please contact the developers.`)
+      alert(
+        `Oops something went wrong. Please try to use the "Add Course By Link" feature. If the issue persists, please contact the developers.`
+      )
       return null
     }
 
