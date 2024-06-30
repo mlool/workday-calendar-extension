@@ -1,0 +1,71 @@
+.sync-drawer {
+  display: flex;
+  align-items: left;
+  flex-direction: column;
+  cursor: pointer;
+}
+.title {
+  text-align: left;
+}
+
+.drawer-content {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.worklist-buttton {
+  border-radius: 5px;
+  padding: 3px 5px;
+  margin-left: 3px;
+  cursor: pointer;
+  background-color: rgb(242, 252, 255);
+}
+
+.worklist-buttton:hover {
+  background-color: rgb(156, 232, 255);
+}
+
+.worklist-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.instructions-info-button {
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+
+.ToolItem {
+  display: flex;
+}
+.instructions-prompt {
+  margin-right: 2px;
+}
+
+.instructions-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.sync-button {
+  font-weight: bold;
+  display: flex;
+  font-size: 12px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+}
+
+.sync-button:hover {
+  background-color: #0068d6;
+}

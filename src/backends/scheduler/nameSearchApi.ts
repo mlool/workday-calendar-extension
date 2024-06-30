@@ -1,5 +1,5 @@
 import { ISectionData } from "../../content/App/App.types"
-import { defaultColorList } from "../../content/Settings/courseColors"
+import { defaultColorList } from "../../content/Settings/Theme/courseColors"
 import {
   getUrlFromSearchTerm,
   getCourseIdFromUrl,
@@ -10,6 +10,7 @@ import {
 } from "./nameSearchHelpers"
 import { fetchWorkdayData } from "../workday/idSearchApi"
 import { RawWorkdayData } from "../workday/idSearchHelpers"
+import { handleCourseLoading } from "../../content"
 
 const searchEndpoint =
   "https://coursescheduler-api-2.vercel.app/api/W/sections?"
@@ -47,6 +48,10 @@ export async function findCourseId(searchTerm: string): Promise<string | null> {
     }
 
     if (!courseUrl) {
+      handleCourseLoading(false)
+      alert(
+        `Oops something went wrong. Please try to use the "Add Course By Link" feature. If the issue persists, please contact the developers.`
+      )
       return null
     }
 

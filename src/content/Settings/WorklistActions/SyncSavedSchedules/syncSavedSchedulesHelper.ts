@@ -1,3 +1,5 @@
+import { Term } from "../../../App/App.types"
+
 export interface ScheduleItem {
   text: string
   instanceId: string
@@ -22,4 +24,26 @@ export function getAllSavedScheduleIDs() {
     console.error("No SelectedItem elements found")
     return null
   }
+}
+
+export function savedScheduleTerm(): Term {
+  const possibleTerms = document.querySelectorAll(
+    "[data-automation-id=promptOption]"
+  )
+
+  if (!possibleTerms) {
+    return Term.winterFull
+  }
+
+  for (let i = 0; i < possibleTerms.length; i++) {
+    const text = possibleTerms[i].textContent
+
+    if (text && text.includes("Term 1")) {
+      return Term.winterOne
+    } else if (text && text.includes("Term 2")) {
+      return Term.winterTwo
+    }
+  }
+
+  return Term.winterFull
 }

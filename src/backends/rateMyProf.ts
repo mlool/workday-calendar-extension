@@ -44,7 +44,8 @@ export default async function fetchProfRating(
     // rating - would rather return null.
     if (
       prof.node.firstName.startsWith(firstName) &&
-      prof.node.lastName.endsWith(lastName)
+      prof.node.lastName.endsWith(lastName) &&
+      prof.node.avgRating !== 0
     )
       return {
         rating: prof.node.avgRating,
