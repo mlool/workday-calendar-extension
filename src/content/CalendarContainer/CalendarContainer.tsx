@@ -71,7 +71,6 @@ const CalendarContainer = ({
           items={WORKLISTCOUNT}
           onClickHandler={setCurrentWorklistNumber}
           isSelected={(x) => x === currentWorklistNumber}
-          focus={false}
         />
         <TabBar
           label="Terms"
@@ -82,7 +81,7 @@ const CalendarContainer = ({
           isSelected={(x) => x === currentTerm}
           isHighlighted={() => newSection?.term === Term.winterFull}
           tabTextBuilder={(x) => Term_String_Map[x]}
-          focus={!canSwitchTerms()}
+          disableBackgroundTabs={!canSwitchTerms()}
         />
       </div>
 
