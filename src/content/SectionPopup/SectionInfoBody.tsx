@@ -9,14 +9,29 @@ interface SectionInfoProps {
 }
 
 const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
+  const filteredLocations: string[] = []
+
+  const filterLocations = selectedSection.sectionDetails.reduce(
+    (acc: string[], currentValue) => {
+      if (currentValue.location) {
+        const location = currentValue.location
+        if (!acc.includes(location)) {
+          acc.push(location)
+        }
+      }
+      return acc
+    },
+    filteredLocations
+  )
+
   const uniqueLocations = new Set(
-    selectedSection.sectionDetails.map((section) => {
-      const parts = section.location?.split(/[- ]/) || ""
+    filterLocations.map((location) => {
+      const parts = location.split(/[- ]/) || ""
       if (parts.length > 1) {
-        const location = parts[0] + "-" + parts.slice(-1)[0]
+        const urlFormattedLocation = parts[0] + "-" + parts.slice(-1)[0]
         return {
-          location: section.location,
-          link: `https://learningspaces.ubc.ca/classrooms/${location}`,
+          location: location,
+          link: `https://learningspaces.ubc.ca/classrooms/${urlFormattedLocation}`,
         }
       }
     })
