@@ -13,9 +13,8 @@ const splitTimeString = (time: string) => {
 export const convertToMatrix = (
   sections: ISectionData[],
   newSection: ISectionData | null,
-  setSectionConflict: (state: boolean) => void,
   currentTerm: Term
-) => {
+): [boolean, { [id: string]: CellFormat[] }] => {
   const matrixDict: { [id: string]: CellFormat[] } = {
     Mon: [],
     Tue: [],
@@ -139,8 +138,7 @@ export const convertToMatrix = (
     })
   })
 
-  setSectionConflict(hasInvalidSection)
-  return matrixDict
+  return [hasInvalidSection, matrixDict]
 }
 
 export const getCourseCode = (courseName: string): string => {
