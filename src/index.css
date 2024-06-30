@@ -19,11 +19,11 @@ code {
   --small-radius: 12px;
   --tiny-radius: 8px;
   --default-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  --base-1: #626262;
+  --base-1: #545454;
   --base-1-shaded: #d8d8d8;
   --warning-colour: #ed2121;
   --highlight-colour: #ffa500;
   --base-colour: #eaeaea;
-  --disabled-colour: #fbfbfb;
-  --disabled-font-colour: #eaeaea;
+  --disabled-colour: #f2f2f2;
+  --disabled-font-colour: #c5c5c5;
 }
