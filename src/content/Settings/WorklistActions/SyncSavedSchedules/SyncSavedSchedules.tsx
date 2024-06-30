@@ -9,6 +9,7 @@ import { addCoursesToSavedSchedule } from "../../../../backends/workday/savedSch
 import "./SyncSavedSchedules.css"
 import QuestionIcon from "../../../Icons/QuestionIcon"
 import { filterSections } from "../../../utils"
+import TabBar from "../../../../components/TabBar"
 
 interface IProps {
   sections: ISectionData[]

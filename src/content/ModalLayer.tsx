@@ -7,7 +7,7 @@ import {
   useState,
 } from "react"
 import { ISectionData } from "./App/App.types"
-import ManualEntryModalBody from "./modalBodies/Manual Entry/ManualEntryModalBody"
+import ManualEntryModalBody from "./modalBodies/ManualEntryModalBody"
 import "./ModalLayer.css"
 import SectionInfoBody from "./SectionPopup/SectionInfoBody"
 
