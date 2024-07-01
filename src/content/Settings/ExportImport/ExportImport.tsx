@@ -68,9 +68,12 @@ const ExportImport = ({ sections, setSections }: IProps) => {
         if (!sectionData) {
           return
         }
+        sectionData.worklistNumber = section.worklistNumber
         fetchedSections.push(sectionData)
-        handleProgressUpdate(fetchedSections.length / sectionsCount)
+      } else {
+        fetchedSections.push(section)
       }
+      handleProgressUpdate(fetchedSections.length / sectionsCount)
     }, Promise.resolve())
 
     setSections(fetchedSections)
