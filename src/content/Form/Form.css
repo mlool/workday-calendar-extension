@@ -1,6 +1,9 @@
 .NewSectionForm {
   display: flex;
   flex-direction: column;
+  height: 25%;
+  min-height: 150px;
+  overflow: hidden;
 }
 
 .ClearWorklistButton {

@@ -1,9 +1,11 @@
 .CalendarContainer {
   flex-grow: 1;
+  height: 75%;
 }
 
 .HeaderItemContainer {
   display: grid;
   margin-top: 2px;
   margin-bottom: 5px;
+  max-height: 20%;
 }

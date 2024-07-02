@@ -1,11 +1,14 @@
 .calendar {
   display: grid;
   grid-template-rows: auto 1fr;
-  /* height: 100%; */
+  height: 80%;
   font-family: Arial, sans-serif;
 }
 
 .calendar .header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: grid;
   grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
   background-color: #f0f0f0;
@@ -19,6 +22,7 @@
 }
 
 .calendar .body {
+  overflow-y: auto;
   display: grid;
   grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
   grid-auto-rows: 15px;

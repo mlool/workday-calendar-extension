@@ -2,8 +2,8 @@
   background-color: rgba(99, 99, 99, 0.6);
   position: fixed;
   top: 0;
-  height: 720px;
-  width: 300px;
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
   display: flex;

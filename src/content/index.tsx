@@ -411,12 +411,11 @@ chrome.storage.local.get("drawerOpen", function (data) {
   const container = document.createElement("div")
   container.id = "react-container"
   container.style.width = "300px"
-  container.style.height = "720px"
-  container.style.border = "1px solid #CCC"
+  container.style.height = "75vh"
   container.style.backgroundColor = "#FFF"
-  container.style.overflow = "auto"
   container.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)"
   container.style.borderRadius = "8px"
+  container.style.maxHeight = "700px"
 
   containerWrapper.appendChild(icon)
   containerWrapper.appendChild(container)

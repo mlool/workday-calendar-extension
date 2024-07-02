@@ -47,9 +47,10 @@
 
 .modal-body {
   background: white;
-  max-height: 220px;
-  overflow-y: scroll;
+  max-height: 30vh;
+  overflow-y: auto;
   box-shadow: var(--default-shadow);
+  min-height: 50px;
 }
 
 .modal-text-body {
