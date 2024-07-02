@@ -9,7 +9,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
-    "build": "echo Disabled",
+    "build": "esbuild src/content/index.tsx src/background/index.ts --bundle --minify --sourcemap --outdir=./public/build",
     "build-firefox": "yarn run build && cp firefox-manifest.json build/manifest.json",
     "lint": "yarn eslint \"src/**/*.tsx\" \"src/**/*.ts\"",
     "lint-fix": "yarn run lint -- --fix",
@@ -31,13 +31,14 @@
   "devDependencies": {
     "@eslint/compat": "^1.1.0",
     "@eslint/js": "^9.5.0",
-    "@types/webextension-polyfill": "^0.10.0",
     "@types/chrome": "^0.0.268",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@types/webextension-polyfill": "^0.10.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
+    "esbuild": "0.23.0",
     "eslint": "9.x",
     "eslint-formatter-unix": "^8.40.0",
     "eslint-plugin-react": "^7.34.2",
