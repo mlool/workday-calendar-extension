@@ -412,6 +412,7 @@ chrome.storage.local.get("drawerOpen", function (data) {
   container.id = "react-container"
   container.style.width = "300px"
   container.style.height = "75vh"
+  container.style.overflowY = "hidden"
   container.style.backgroundColor = "#FFF"
   container.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)"
   container.style.borderRadius = "8px"
