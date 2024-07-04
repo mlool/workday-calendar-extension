@@ -1,6 +1,7 @@
 .NewSectionForm {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   height: 25%;
   min-height: 150px;
   overflow: hidden;
@@ -59,7 +60,6 @@
 }
 
 .NewSectionInfo {
-  margin-bottom: 5px;
   color: black;
 }
 
