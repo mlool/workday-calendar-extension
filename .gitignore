@@ -15,9 +15,7 @@ node_modules/
 
 # Build directories and files
 build/
-dist/
-build.crx
-build.pem
+public/manifest.json
 *.zip
 
 # Logs
@@ -34,9 +32,6 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
-
-# Prettier
-.prettierrc
 
 # Miscellaneous
 *.log

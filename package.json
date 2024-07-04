@@ -9,8 +9,11 @@
     "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
-    "build": "esbuild src/content/index.tsx src/background/index.ts --bundle --minify --sourcemap --outdir=./public/build",
-    "build-firefox": "yarn run build && cp firefox-manifest.json build/manifest.json",
+    "build-chrome": "node esbuild.mjs --prod chrome",
+    "build-firefox": "node esbuild.mjs --prod firefox",
+    "dev-chrome": "node esbuild.mjs chrome",
+    "dev-firefox": "node esbuild.mjs firefox",
+
     "lint": "yarn eslint \"src/**/*.tsx\" \"src/**/*.ts\"",
     "lint-fix": "yarn run lint -- --fix",
     "fmt": "yarn prettier --check \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\"",

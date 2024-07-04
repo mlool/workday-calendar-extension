@@ -1,30 +1,24 @@
 import * as esbuild from "esbuild"
 import process from "node:process"
-import { copyFile } from "node:fs/promises"
-import { mkdirSync, readdirSync, rmSync, statSync } from "node:fs"
+import { copyFileSync, readdirSync, rmSync, statSync } from "node:fs"
 
-const BUILD_DIR = "build"
-const OUT_DIR = `${BUILD_DIR}/static`
+const PKG_DIR = "public"
+const OUT_DIR = `${PKG_DIR}/build`
 
 const startTime = Date.now()
 const isProd = process.argv.includes("--prod")
-const selectedManifest = `public/${
+const selectedManifest = `assets/${
   process.argv.includes("firefox") ? "firefox" : "chrome"
 }-manifest.json`
 
-rmSync(BUILD_DIR, { recursive: true, force: true })
-mkdirSync(BUILD_DIR)
-const fsPromises = [copyFile(selectedManifest, "build/manifest.json")]
-const copies = ["logo128.png", "logo16.png", "logo32.png", "logo48.png"]
-for (const copy of copies) {
-  fsPromises.push(copyFile(`public/${copy}`, `build/${copy}`))
-}
-await Promise.all(fsPromises)
+copyFileSync(selectedManifest, `${PKG_DIR}/manifest.json`)
 
+rmSync(OUT_DIR, { recursive: true, force: true })
 await esbuild.build({
   entryPoints: ["src/content/index.tsx", "src/background/index.ts"],
   bundle: true,
   minify: isProd,
+  sourcemap: !isProd,
   outdir: OUT_DIR,
 })
 
@@ -40,7 +34,7 @@ const reportLines = [
   "\n~~~~~~~~~~",
   ...sizeReports,
   "~~~~~~~~~~\n",
-  `📦 Total bundle size: ${totalSize.toFixed(2)}kb`,
-  `✨ Done in ${Date.now() - startTime}ms`,
+  `📦 total bundle size: ${totalSize.toFixed(2)}kb`,
+  `✨ esbuild done in ${Date.now() - startTime}ms\n`,
 ]
 reportLines.forEach((x) => console.log(x))
