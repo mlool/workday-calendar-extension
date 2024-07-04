@@ -1,5 +1,7 @@
 .Settings {
+  height: 100%;
   text-align: left;
+  overflow-y: auto;
 }
 
 .SettingsHeader {

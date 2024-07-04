@@ -23,14 +23,12 @@ const Settings = ({
   setSections,
 }: ISettingsProps) => {
   return (
-    <div>
-      <div className="Settings">
-        <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
-        <Tools />
-        <ExportImport sections={sections} setSections={setSections} />
-        <WorklistActions sections={sections} />
-        <Contact />
-      </div>
+    <div className="Settings">
+      <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
+      <Tools />
+      <ExportImport sections={sections} setSections={setSections} />
+      <WorklistActions sections={sections} />
+      <Contact />
     </div>
   )
 }
