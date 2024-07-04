@@ -11,8 +11,8 @@
   "scripts": {
     "build-chrome": "node esbuild.mjs --prod chrome",
     "build-firefox": "node esbuild.mjs --prod firefox",
-    "dev-chrome": "node esbuild.mjs chrome",
-    "dev-firefox": "node esbuild.mjs firefox",
+    "dev-chrome": "node esbuild.mjs --watch chrome",
+    "dev-firefox": "node esbuild.mjs --watch firefox",
 
     "lint": "yarn eslint \"src/**/*.tsx\" \"src/**/*.ts\"",
     "lint-fix": "yarn run lint -- --fix",
