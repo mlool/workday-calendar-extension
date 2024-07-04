@@ -416,7 +416,7 @@ chrome.storage.local.get("drawerOpen", function (data) {
   container.style.backgroundColor = "#FFF"
   container.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)"
   container.style.borderRadius = "8px"
-  container.style.maxHeight = "700px"
+  container.style.maxHeight = "705px"
 
   containerWrapper.appendChild(icon)
   containerWrapper.appendChild(container)
