@@ -8,7 +8,7 @@ Welcome to the Workday Calendar Tool! This program is designed to improve your e
 ## Download
 Download the latest version from the Chrome Web Store [here](https://chromewebstore.google.com/detail/ubc-workday-side-by-side/gonljejijjjmjccdbjokcmmdfmlincmh).
 
-It's also released on Firefox [here](https://addons.mozilla.org/en-GB/firefox/addon/ubc-workday-calendar).
+It can also be manually installed on Firefox [from the latest GitHub Release](https://github.com/mlool/workday-calendar-extension/releases/latest).
 
 Alternatively, to download the latest version, check out our Discord channel `#download-versions`. 
 
@@ -34,48 +34,42 @@ Before doing so, kindly check to ensure there are no duplicates.
 We welcome new collaborators! To set up the development environment, follow 
 the instructions in the following sections.
 
-## Building manually for Chrome
+## Building from source
+You will need a reasonably recent version of Node, as well as Yarn. Note that we
+use Yarn Classic (latest 1.x) - please do not use Yarn Modern.
 
 1. Clone the repo
    ```bash
-   git clone <repository_url>
+   git clone git@github.com:mlool/workday-calendar-extension.git
    ```
 2. Navigate to the root directory and install dependencies:
    ```bash
    yarn install
    ```
-3. Build the project:
+3. Follow the browser-specific instructions below
+
+### For Chrome
+3. Build the project using one of the following commands:
    ```bash
-   yarn run build
+   yarn run build-chrome
+   yarn run dev-chrome # watches for file changes and rebuilds accordingly
    ```
 4. Go to `chrome://extensions/`
 5. Change Chrome to Developer mode on the top right
 6. Click `load unpacked` to the top left
-7. Select the downloaded `build` folder
-8. The tool should now appear in your extension menu in chrome
+7. Select the `public` folder
+8. The tool should now appear in your extension menu in Chrome
 
-## Building manually for Firefox
+### For Firefox
+3. Build the project using one of the following commands:
+   ```bash
+   yarn run build-firefox
+   yarn run dev-firefox # watches for file changes and rebuilds accordingly
+   ```
+4. Open Firefox and go to `about:debugging`
+5. Select `This Firefox` in the top left
+6. Select `Load Temporary Add-on`
+7. Upload `public/manifest.json`
+8. The tool should now appear in your extension menu in Firefox
 
-1. Clone the repo
-   ```bash
-   git clone <repository_url>
-   ```
-2. Navigate to the root directory and install dependencies:
-   ```bash
-   yarn install
-   ```
-3. Build the project:
-   ```bash
-   yarn run build
-   ```
-4. Replace `manifest.json` with the Firefox-compatible version:
-  ```bash
-   cp firefox-manifest.json build/manifest.json
-   ```
-5. Open Firefox and go to `about:debugging`
-6. Select `This Firefox` in the top left
-7. Select `Load Temporary Add-on`
-9. Upload `build/manifest.json`
-10. The tool should now appear in your extension menu in chrome
-
-See this [Firefox installation demo](./public/firefox-demo-v1.3.gif).
+See this [Firefox installation demo](./assets/firefox-demo-v1.3.gif).

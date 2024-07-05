@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild"
 import { argv } from "node:process"
 import { copyFileSync, rmSync } from "node:fs"
+import { rename } from "node:fs/promises"
 
 const PKG_DIR = "public"
 const OUT_DIR = `${PKG_DIR}/build`
@@ -22,6 +23,10 @@ const buildOptions = {
   logLevel: "info",
 }
 
+// Move old build folder to prevent confusion
+rename("build/", "old_build")
+
+console.log("📦 Outputting bundle in public/ ...")
 if (shouldWatch) {
   const ctx = await esbuild.context(buildOptions)
   await ctx.watch()
