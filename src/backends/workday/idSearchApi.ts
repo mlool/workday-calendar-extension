@@ -1,17 +1,18 @@
+import { ISectionData } from "../../content/App/App.types"
 import { handleProgressUpdate } from "../scheduler/nameSearchHelpers"
 import {
   fetchSearchData,
   parseTerm,
   parseSectionDetails,
-  RawWorkdayData,
   DetailsPath,
 } from "./idSearchHelpers"
+import { defaultColorList } from "../../content/Settings/Theme/courseColors"
 
 const searchEndpoint = "https://wd10.myworkday.com/ubc/inst/1$15194/15194$"
 
 export async function fetchWorkdayData(
   courseId: string
-): Promise<RawWorkdayData | null> {
+): Promise<ISectionData | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
   handleProgressUpdate(65)
 
@@ -53,12 +54,15 @@ export async function fetchWorkdayData(
   }
   handleProgressUpdate(75)
 
-  const formattedData: RawWorkdayData = {
+  const formattedData: ISectionData = {
     code: code,
     name: formattedName,
     instructors: instructors,
     sectionDetails: parseSectionDetails(rawDetails),
     term: parseTerm(rawDetails),
+    worklistNumber: 0,
+    color: defaultColorList[0],
+    courseID: courseId,
   }
   return formattedData
 }
