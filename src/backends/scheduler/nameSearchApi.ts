@@ -9,7 +9,6 @@ import {
   handleProgressUpdate,
 } from "./nameSearchHelpers"
 import { fetchWorkdayData } from "../workday/idSearchApi"
-import { RawWorkdayData } from "../workday/idSearchHelpers"
 import { handleCourseLoading } from "../../content"
 
 const searchEndpoint =
@@ -90,7 +89,7 @@ export async function findCourseInfo(
     return null
   }
 
-  const courseData: RawWorkdayData | null = await fetchWorkdayData(courseId)
+  const courseData: ISectionData | null = await fetchWorkdayData(courseId)
   if (!courseData) {
     return null
   }

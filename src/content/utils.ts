@@ -1,5 +1,6 @@
 import { ISectionData, Term } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
+import { fetchWorkdayData } from "../backends/workday/idSearchApi"
 import { handleCourseLoading } from "."
 
 // bypassDetailsCheck is for reskin extension compat
@@ -7,10 +8,12 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   if (bypassDetailsCheck && bypassDetailsCheck === true) {
     return await findCourseInfo(element.id)
   }
+
   const courseLabels = element.parentElement?.querySelectorAll(
     '[data-automation-id="promptOption"]'
   ) // The div with the raw text of the course section data.
   // Checking if course labels exist and there are at least two of them
+
   if (!courseLabels || courseLabels.length < 2) {
     handleCourseLoading(false)
     alert("Title or section details not found")
@@ -28,13 +31,41 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
     return Promise.reject(new Error("Title not found"))
   }
 
-  const code = title.slice(0, title.indexOf(" - "))
+  const courseId = extractIdFromDOM(element)
 
-  const newSectionPromise = findCourseInfo(code)
+  // If courseId is found, fetch the data from Workday dirctly
+  // Otherwise, find the course info from the course code using scheduler API
+  if (courseId) {
+    return await fetchWorkdayData(courseId)
+  } else {
+    const code = title.slice(0, title.indexOf(" - "))
 
-  return Promise.all([newSectionPromise]).then(([newSection]) => {
-    return newSection
-  })
+    const newSectionPromise = findCourseInfo(code)
+
+    return Promise.all([newSectionPromise]).then(([newSection]) => {
+      return newSection
+    })
+  }
+}
+
+const extractIdFromDOM = (element: Element) => {
+  const courseIdElement = element.querySelector(
+    '[data-automation-id^="selectedItem_15194"]'
+  )
+
+  if (
+    courseIdElement &&
+    courseIdElement instanceof HTMLElement &&
+    courseIdElement.dataset.automationId
+  ) {
+    const automationIdParts = courseIdElement.dataset.automationId.split("_")
+    const courseId = automationIdParts[1].split("$")[1]
+
+    return courseId
+  } else {
+    console.error("No SelectedItem elements found")
+    return null
+  }
 }
 
 const filterSections = (
