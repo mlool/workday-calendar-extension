@@ -10,7 +10,7 @@ import { defaultColorList } from "../../content/Settings/Theme/courseColors"
 
 const searchEndpoint = "https://wd10.myworkday.com/ubc/inst/1$15194/15194$"
 
-export async function fetchWorkdayData( 
+export async function fetchWorkdayData(
   courseId: string
 ): Promise<ISectionData | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)

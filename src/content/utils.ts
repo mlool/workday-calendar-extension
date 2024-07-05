@@ -63,7 +63,6 @@ const extractIdFromDOM = (element: Element) => {
 
     return courseId
   } else {
-    console.error("No SelectedItem elements found")
     return null
   }
 }
