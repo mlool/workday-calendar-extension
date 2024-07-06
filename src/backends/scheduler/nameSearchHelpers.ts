@@ -22,8 +22,6 @@ interface rawSchedule {
 }
 
 export const handleProgressUpdate = (newProgress: number) => {
-  // Allow customization
-
   const courseAddingProgressEvent = new CustomEvent("courseAddingProgress", {
     detail: {
       progress: newProgress,
