@@ -50,6 +50,7 @@ const SectionInfoBody = ({ selectedSection }: SectionInfoProps) => {
       <div className="SectionPopupDetails">{selectedSection.name}</div>
       <InstructorComponent
         instructors={selectedSection.instructors?.filter(Boolean)}
+        isVancouver={selectedSection.code.includes("_V")}
       />
       <LocationComponent locations={uniqueLocations} />
       <GradesComponent sectionCode={selectedSection.code} />

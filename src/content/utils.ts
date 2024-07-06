@@ -98,4 +98,14 @@ const versionOneFiveZeroUpdateNotification = () => {
     .catch((error) => console.error("Error retrieving flag:", error))
 }
 
-export { versionOneFiveZeroUpdateNotification, filterSections, extractSection }
+enum Campus {
+  Vancouver,
+  Okanagan,
+}
+
+export {
+  versionOneFiveZeroUpdateNotification,
+  filterSections,
+  extractSection,
+  Campus,
+}
