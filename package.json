@@ -3,35 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/dom": "^10.1.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/chrome": "^0.0.268",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "mini-css-extract-plugin": "^2.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
     "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0",
-    "webextension-polyfill": "^0.10.0",
-    "webpack": "^5.91.0",
-    "webpack-extension-manifest-plugin": "^0.8.0"
+    "webextension-polyfill": "^0.10.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "cross-env INLINE_RUNTIME_CHUNK=false react-app-rewired build",
-    "build-firefox": "yarn run build && cp firefox-manifest.json build/manifest.json",
+    "build-chrome": "node esbuild.mjs --prod chrome",
+    "build-firefox": "node esbuild.mjs --prod firefox",
+    "dev-chrome": "node esbuild.mjs --watch chrome",
+    "dev-firefox": "node esbuild.mjs --watch firefox",
+
     "lint": "yarn eslint \"src/**/*.tsx\" \"src/**/*.ts\"",
     "lint-fix": "yarn run lint -- --fix",
     "fmt": "yarn prettier --check \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\"",
-    "fmt-fix": "yarn prettier --write \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\"",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "fmt-fix": "yarn prettier --write \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\""
   },
   "browserslist": {
     "production": [
@@ -48,17 +34,19 @@
   "devDependencies": {
     "@eslint/compat": "^1.1.0",
     "@eslint/js": "^9.5.0",
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@types/webextension-polyfill": "^0.10.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
-    "cross-env": "^7.0.3",
-    "customize-cra": "^1.0.0",
+    "esbuild": "0.23.0",
     "eslint": "9.x",
     "eslint-formatter-unix": "^8.40.0",
     "eslint-plugin-react": "^7.34.2",
     "globals": "^15.6.0",
     "prettier": "2.8.7",
-    "react-app-rewired": "^2.2.1",
     "typescript-eslint": "^7.13.1"
   }
 }
