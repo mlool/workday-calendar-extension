@@ -1,4 +1,4 @@
-import { Views } from "../App/App.types"
+import { ISectionData, Views } from "../App/App.types"
 import SettingsIcon from "../Icons/SettingsIcon"
 import CalendarIcon from "../Icons/CalendarIcon"
 import "./TopBar.css"
@@ -6,9 +6,30 @@ import "./TopBar.css"
 interface IProps {
   currentView: Views
   setCurrentView: (view: Views) => void
+  sections: ISectionData[]
 }
 
-const TopBar = ({ currentView, setCurrentView }: IProps) => {
+const TopBar = ({ currentView, setCurrentView, sections }: IProps) => {
+  const handleWebPage = () => {
+    const targetUrl = "http://localhost:3000"
+    const newWindow = window.open(targetUrl, "_blank")
+    if (!newWindow) {
+      console.error("Failed to open new window")
+      return
+    }
+
+    // Send a message to the new window after it has been opened
+    const sendMessage = () => {
+      if (newWindow && newWindow.closed === false) {
+        newWindow.postMessage({ sections }, "*")
+        console.log("Message sent:", { sections })
+        clearInterval(intervalId)
+      }
+    }
+
+    const intervalId = setInterval(sendMessage, 1000) // Try sending the message every second
+  }
+
   return (
     <div className="TopBar">
       <div className="TopBarTextContainer">
@@ -27,6 +48,7 @@ const TopBar = ({ currentView, setCurrentView }: IProps) => {
         >
           <SettingsIcon size={24} color={"white"} />
         </div>
+        <div onClick={handleWebPage}>Link to Webste</div>
       </div>
     </div>
   )
