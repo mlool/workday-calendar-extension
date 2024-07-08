@@ -14,7 +14,7 @@ const TopBar = ({ currentView, setCurrentView, sections }: IProps) => {
     const targetUrl = "http://localhost:3000/Calendar"
     const newWindow = window.open(targetUrl, "_blank")
     if (!newWindow) {
-      console.error("Failed to open new window")
+      console.error("Failed to open new wndow")
       return
     }
 
