@@ -11,7 +11,7 @@ interface IProps {
 
 const TopBar = ({ currentView, setCurrentView, sections }: IProps) => {
   const handleWebPage = () => {
-    const targetUrl = "http://localhost:3000"
+    const targetUrl = "http://localhost:3000/Calendar"
     const newWindow = window.open(targetUrl, "_blank")
     if (!newWindow) {
       console.error("Failed to open new window")
