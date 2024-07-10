@@ -1,4 +1,8 @@
-import { formatDateArray, generateICal } from "./ExternalCalendarExportHelper"
+import {
+  formatDateArray,
+  generateICal,
+  WORKDAY_TO_ICS_WEEKDAY_MAP,
+} from "./ExternalCalendarExportHelper"
 import "../ExportImport.css"
 import { useState } from "react"
 import { ISectionData } from "../../../App/App.types"
@@ -40,18 +44,14 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
         const worklist = sections[i].worklistNumber
         const dateRange = sections[i].sectionDetails[j].dateRange
 
-        // Dictionary of required format
-        const dayMap = {
-          Mon: "MO",
-          Tue: "TU",
-          Wed: "WE",
-          Thu: "TH",
-          Fri: "FR",
-        }
-
         // Map to new format
         const formattedDays = days
-          .map((day) => dayMap[day as keyof typeof dayMap])
+          .map(
+            (day) =>
+              WORKDAY_TO_ICS_WEEKDAY_MAP[
+                day as keyof typeof WORKDAY_TO_ICS_WEEKDAY_MAP
+              ]
+          )
           .join(",")
 
         const dateRangesArray = dateRange.split(" - ")
@@ -77,6 +77,15 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
         // Need to offset if class has a meeting starting a different day
         // Since winter terms start on Tuesdays, if class meets only on mondays, class starts on week 2
         // Will need to find different solution when summer term support is added
+        //
+        //
+        // Note that we cannot rely on the recurrence rule to specify the first instance of the event,
+        // despite this working in some calendar implementations. According to RFC 5545 3.8.5.3:
+        //
+        //   > The recurrence set generated with a "DTSTART" property value not synchronized
+        //   > with the recurrence rule is undefined.
+        //
+        // Therefore this offsetting code is necessary for all events, not just Mondays.
         const offsets = { Mon: 6, Tue: 0, Wed: 1, Thu: 2, Fri: 3 }
 
         const firstDay = days[0]

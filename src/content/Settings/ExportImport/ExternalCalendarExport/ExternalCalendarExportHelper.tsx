@@ -79,3 +79,36 @@ export const formatDateArray = (dateArray: number[]): string => {
 
   return `${year}${monthStr}${dayStr}T${hourStr}${minuteStr}00`
 }
+
+export const WORKDAY_TO_ICS_WEEKDAY_MAP = {
+  Sun: "SU",
+  Mon: "MO",
+  Tue: "TU",
+  Wed: "WE",
+  Thu: "TH",
+  Fri: "FR",
+  Sat: "SA",
+} as const
+
+export const calculateActualCourseStartDate = (
+  workdayStartDate: Date,
+  meetingDays: string[]
+) => {
+  const startDateOffsets = { MO: 6, TU: 0, WE: 1, TH: 2, FR: 3 } as const
+
+  const rawStartWeekday = workdayStartDate.getDay()
+  const startWeekday = Object.values(WORKDAY_TO_ICS_WEEKDAY_MAP)[rawStartWeekday]
+
+  // Workday's course start date may be set to be the start of the winter session,
+  // or the actual start date of the section (first class).
+  // - If given start date is not a Tuesday, it is the actual start date
+  // - If given start day is a Tuesday...
+  //   - and first meeting day is Tuesday, it is the actual start date
+  //   - and first meeting day is NOT Tuesday, it is NOT the actual start date and
+  //     must be offset accordingly.
+  if (startWeekday !== "TU" || startWeekday === meetingDays[0]) return workdayStartDate
+
+  if (startWeekday === meetingDays[0]) {
+    // Course actually starts on tuesday
+  }
+}
