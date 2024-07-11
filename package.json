@@ -17,7 +17,8 @@
     "lint-fix": "yarn run lint -- --fix",
     "fmt": "yarn prettier --check \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\" \"tests/**/*.ts\"",
     "fmt-fix": "yarn prettier --write \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "test": "jest"
+    "test": "jest",
+    "all": "yarn lint && yarn fmt && yarn test"
   },
   "browserslist": {
     "production": [
