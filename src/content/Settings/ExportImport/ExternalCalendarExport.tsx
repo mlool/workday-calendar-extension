@@ -1,14 +1,16 @@
 import {
-  convertVancouverDateStringToDate,
   formatDateArray,
   generateICal,
-  getVancouverWeekdayFromDate,
   WORKDAY_TO_ICS_WEEKDAY_MAP,
-} from "../../../storage/icsUtils"
+} from "../../../storage/helpers/icsUtils"
 import "./ExportImport.css"
 import { useState } from "react"
 import { ISectionData } from "../../App/App.types"
 import ExportCalendarPopup from "./ExportImportPopups/ExportCalendarPopup"
+import {
+  convertVancouverDateStringToDate,
+  getVancouverWeekdayFromDate,
+} from "../../../storage/helpers/vancouverDatetimeUtils"
 
 // Interface for formatting section details into calendar event
 export interface Event {
