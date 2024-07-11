@@ -18,11 +18,12 @@ const getVancouverTimezoneOffset = (date: string) => {
 /**
  * Returns the weekday of a datetime in the Vancouver timezone. Required as
  * `getDay()` uses the local timezone, which may not be Vancouver.
+ * Weekday format is, e.g. "Thu", NOT numeric index like `getDay()`.
  */
 const getVancouverWeekdayFromDate = (date: Date) => {
   const vancouverWeekdayFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Vancouver",
-    weekday: "long",
+    weekday: "short",
   })
   return vancouverWeekdayFormatter.format(date)
 }

@@ -1,16 +1,15 @@
 import {
+  calculateRealCourseStartDate,
   formatDateArray,
   generateICal,
+  WEEKDAY_TO_RAW_WEEKDAY,
   WORKDAY_TO_ICS_WEEKDAY_MAP,
 } from "../../../storage/helpers/icsUtils"
 import "./ExportImport.css"
 import { useState } from "react"
 import { ISectionData } from "../../App/App.types"
 import ExportCalendarPopup from "./ExportImportPopups/ExportCalendarPopup"
-import {
-  convertVancouverDateStringToDate,
-  getVancouverWeekdayFromDate,
-} from "../../../storage/helpers/vancouverDatetimeUtils"
+import { convertVancouverDateStringToDate } from "../../../storage/helpers/vancouverDatetimeUtils"
 
 // Interface for formatting section details into calendar event
 export interface Event {
@@ -42,7 +41,9 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
       // Some classes (Ex. multi term classes) have multiple sectionDetails (one for each term)
       for (let j = 0; j < sections[i].sectionDetails.length; j++) {
         // Save as constants for code readability later
-        const days = sections[i].sectionDetails[j].days
+        const days = sections[i].sectionDetails[j].days as Array<
+          keyof typeof WEEKDAY_TO_RAW_WEEKDAY
+        >
         const startTime = sections[i].sectionDetails[j].startTime
         const endTime = sections[i].sectionDetails[j].endTime
         const worklist = sections[i].worklistNumber
@@ -62,16 +63,13 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
 
         const startDate = dateRangesArray[0]
         const workdayStartDate = convertVancouverDateStringToDate(startDate)
-        console.log("~~~")
-        console.log(startDate)
-        console.log(getVancouverWeekdayFromDate(workdayStartDate))
-        console.log("~~~")
         const endDate = dateRangesArray[dateRangesArray.length - 1] // Sometimes for multi term classes you have more than two dates
 
         const startDateParts = startDate.split("-")
         const baseYear = parseInt(startDateParts[0])
         const baseMonth = parseInt(startDateParts[1])
         let baseDay = parseInt(startDateParts[2])
+        baseDay += calculateRealCourseStartDate(workdayStartDate, days)
 
         const endDateParts = endDate.split("-")
         const endDateArr = [
@@ -81,27 +79,6 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
           23,
           59,
         ]
-
-        // ------------------------------------------------------------------------------------------ //
-        // Need to offset if class has a meeting starting a different day
-        // Since winter terms start on Tuesdays, if class meets only on mondays, class starts on week 2
-        // Will need to find different solution when summer term support is added
-        //
-        //
-        const offsets = { Mon: 6, Tue: 0, Wed: 1, Thu: 2, Fri: 3 }
-
-        const firstDay = days[0]
-
-        if (firstDay !== "Mon") {
-          baseDay += offsets[firstDay as keyof typeof offsets]
-        } else {
-          if (days.length === 1) {
-            baseDay += offsets["Mon"]
-          } else {
-            baseDay += offsets[days[1] as keyof typeof offsets]
-          }
-        }
-        // ------------------------------------------------------------------------------------------ //
 
         // Split start and endtimes into useable format
         const [startHourString, startMinuteString] = startTime.split(":")

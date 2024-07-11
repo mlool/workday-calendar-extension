@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals"
-import { calculateRealCourseStartDate } from "../src/storage/icsUtils"
+import { calculateRealCourseStartDate } from "../src/storage/helpers/icsUtils"
 
 const MONDAY_UTC_DATE = new Date(2000, 1, 7)
 const TUESDAY_UTC_DATE = new Date(2000, 1, 1)

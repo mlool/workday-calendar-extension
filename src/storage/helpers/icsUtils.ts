@@ -1,4 +1,5 @@
-import { Event } from "../content/Settings/ExportImport/ExternalCalendarExport"
+import { Event } from "../../content/Settings/ExportImport/ExternalCalendarExport"
+import { getVancouverWeekdayFromDate } from "./vancouverDatetimeUtils"
 
 // Constructs calendar string according to ical specification
 export const generateICal = (events: Event[]): string => {
@@ -90,15 +91,15 @@ export const WORKDAY_TO_ICS_WEEKDAY_MAP = {
   Sun: "SU",
 } as const
 
-const WEEKDAY_TO_RAW_WEEKDAY = [
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-] as const
+export const WEEKDAY_TO_RAW_WEEKDAY = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+} as const
 
 /**
  * Workday's course start date may indicate the start of the
@@ -125,29 +126,27 @@ const WEEKDAY_TO_RAW_WEEKDAY = [
  */
 export const calculateRealCourseStartDate = (
   workdayStartDate: Date,
-  meetingDays: string[]
+  meetingDays: Array<keyof typeof WEEKDAY_TO_RAW_WEEKDAY>
 ): number => {
-  const rawStartWeekday = workdayStartDate.getDay()
-  const givenStartWeekday = WEEKDAY_TO_RAW_WEEKDAY[rawStartWeekday]
+  const rawStartWeekday = getVancouverWeekdayFromDate(
+    workdayStartDate
+  ) as keyof typeof WEEKDAY_TO_RAW_WEEKDAY
 
-  if (givenStartWeekday === meetingDays[0]) return 0
+  if (rawStartWeekday === meetingDays[0]) return 0
 
-  const actualStartWeekday = WEEKDAY_TO_RAW_WEEKDAY.findIndex(
-    (x) => x === meetingDays[0]
-  )
-
-  if (actualStartWeekday === -1) throw `Weekday ${meetingDays[0]} is invalid!`
-
-  const weekdayDifference = rawStartWeekday - actualStartWeekday
+  const rawStartWeekdayIndex = WEEKDAY_TO_RAW_WEEKDAY[rawStartWeekday]
+  const actualStartWeekday = WEEKDAY_TO_RAW_WEEKDAY[meetingDays[0]]
+  const weekdayDifference = rawStartWeekdayIndex - actualStartWeekday
 
   if (weekdayDifference < 0) return Math.abs(weekdayDifference)
 
   if (meetingDays.length > 1) {
-    const rawWeekdays = meetingDays.map((x) =>
-      WEEKDAY_TO_RAW_WEEKDAY.findIndex((y) => x === y)
+    const meetingDayIndexes = meetingDays.map((x) => WEEKDAY_TO_RAW_WEEKDAY[x])
+    const possibleShifts = meetingDayIndexes.filter(
+      (x) => x > rawStartWeekdayIndex
     )
-    const possibleShifts = rawWeekdays.filter((x) => x > rawStartWeekday)
-    if (possibleShifts.length > 0) return possibleShifts[0] - rawStartWeekday
+    if (possibleShifts.length > 0)
+      return possibleShifts[0] - rawStartWeekdayIndex
   }
 
   return 6
