@@ -1,8 +1,8 @@
-import { formatDateArray, generateICal, WORKDAY_TO_ICS_WEEKDAY_MAP } from "../../../../storage/icsUtils"
+import { formatDateArray, generateICal, WORKDAY_TO_ICS_WEEKDAY_MAP } from "../../../storage/icsUtils"
 import "../ExportImport.css"
 import { useState } from "react"
-import { ISectionData } from "../../../App/App.types"
-import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
+import { ISectionData } from "../../App/App.types"
+import ExportCalendarPopup from "./ExportImportPopups/ExportCalendarPopup"
 
 // Interface for formatting section details into calendar event
 export interface Event {
