@@ -1,5 +1,11 @@
-import { formatDateArray, generateICal, WORKDAY_TO_ICS_WEEKDAY_MAP } from "../../../storage/icsUtils"
-import "../ExportImport.css"
+import {
+  convertVancouverDateStringToDate,
+  formatDateArray,
+  generateICal,
+  getVancouverWeekdayFromDate,
+  WORKDAY_TO_ICS_WEEKDAY_MAP,
+} from "../../../storage/icsUtils"
+import "./ExportImport.css"
 import { useState } from "react"
 import { ISectionData } from "../../App/App.types"
 import ExportCalendarPopup from "./ExportImportPopups/ExportCalendarPopup"
@@ -53,6 +59,11 @@ const ExternalCalendarExport = ({ sections }: IProps) => {
         const dateRangesArray = dateRange.split(" - ")
 
         const startDate = dateRangesArray[0]
+        const workdayStartDate = convertVancouverDateStringToDate(startDate)
+        console.log("~~~")
+        console.log(startDate)
+        console.log(getVancouverWeekdayFromDate(workdayStartDate))
+        console.log("~~~")
         const endDate = dateRangesArray[dateRangesArray.length - 1] // Sometimes for multi term classes you have more than two dates
 
         const startDateParts = startDate.split("-")
