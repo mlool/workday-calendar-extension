@@ -1,4 +1,4 @@
-import { Event } from "./ExternalCalendarExport"
+import { Event } from "../content/Settings/ExportImport/ExternalCalendarExport/ExternalCalendarExport"
 
 // Constructs calendar string according to ical specification
 export const generateICal = (events: Event[]): string => {
@@ -81,34 +81,74 @@ export const formatDateArray = (dateArray: number[]): string => {
 }
 
 export const WORKDAY_TO_ICS_WEEKDAY_MAP = {
-  Sun: "SU",
   Mon: "MO",
   Tue: "TU",
   Wed: "WE",
   Thu: "TH",
   Fri: "FR",
   Sat: "SA",
+  Sun: "SU",
 } as const
 
-export const calculateActualCourseStartDate = (
+const WEEKDAY_TO_RAW_WEEKDAY = [
+  "Sun",
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+] as const
+
+/**
+ * Workday's course start date may indicate the start of the
+ * academic session, or the actual start date of the section
+ * (first class).
+ *
+ * We use a simple heuristic: If given start date has same
+ * weekday as first meeting day of the course, given date is
+ * the real start date. Otherwise, it needs to be offset
+ * accordingly. Additionally, if the session starts within a
+ * week (e.g. winter session usually starts on Tuesday),
+ * sections before the start date in the week (e.g. Monday sections)
+ * must have their start dates offset to the 2nd recurrence.
+ *
+ * Note that we cannot rely on the recurrence rule to specify
+ * the first instance of the event, despite this working in
+ * some calendar implementations. According to RFC 5545 3.8.5.3:
+ *
+ *   > The recurrence set generated with a "DTSTART" property
+ *   > value not synchronized  with the recurrence rule is undefined.
+ *
+ * Therefore this offset calculation is necessary for all events,
+ * not just for when the term starts within the week.
+ */
+export const calculateRealCourseStartDate = (
   workdayStartDate: Date,
   meetingDays: string[]
-) => {
-  const startDateOffsets = { MO: 6, TU: 0, WE: 1, TH: 2, FR: 3 } as const
-
+): number => {
   const rawStartWeekday = workdayStartDate.getDay()
-  const startWeekday = Object.values(WORKDAY_TO_ICS_WEEKDAY_MAP)[rawStartWeekday]
+  const givenStartWeekday = WEEKDAY_TO_RAW_WEEKDAY[rawStartWeekday]
 
-  // Workday's course start date may be set to be the start of the winter session,
-  // or the actual start date of the section (first class).
-  // - If given start date is not a Tuesday, it is the actual start date
-  // - If given start day is a Tuesday...
-  //   - and first meeting day is Tuesday, it is the actual start date
-  //   - and first meeting day is NOT Tuesday, it is NOT the actual start date and
-  //     must be offset accordingly.
-  if (startWeekday !== "TU" || startWeekday === meetingDays[0]) return workdayStartDate
+  if (givenStartWeekday === meetingDays[0]) return 0
 
-  if (startWeekday === meetingDays[0]) {
-    // Course actually starts on tuesday
+  const actualStartWeekday = WEEKDAY_TO_RAW_WEEKDAY.findIndex(
+    (x) => x === meetingDays[0]
+  )
+
+  if (actualStartWeekday === -1) throw `Weekday ${meetingDays[0]} is invalid!`
+
+  const weekdayDifference = rawStartWeekday - actualStartWeekday
+
+  if (weekdayDifference < 0) return Math.abs(weekdayDifference)
+
+  if (meetingDays.length > 1) {
+    const rawWeekdays = meetingDays.map((x) =>
+      WEEKDAY_TO_RAW_WEEKDAY.findIndex((y) => x === y)
+    )
+    const possibleShifts = rawWeekdays.filter((x) => x > rawStartWeekday)
+    if (possibleShifts.length > 0) return possibleShifts[0] - rawStartWeekday
   }
+
+  return 6
 }
