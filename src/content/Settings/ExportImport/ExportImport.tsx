@@ -1,7 +1,7 @@
 import { ISectionData } from "../../App/App.types"
 import "../Settings.css"
 import "./ExportImport.css"
-import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
+import ExternalCalendarExport from "./ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { findCourseInfo } from "../../../backends/scheduler/nameSearchApi"
 import { useContext } from "react"

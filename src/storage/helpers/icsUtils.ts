@@ -1,4 +1,5 @@
-import { Event } from "./ExternalCalendarExport"
+import { Event } from "../../content/Settings/ExportImport/ExternalCalendarExport"
+import { getVancouverWeekdayFromDate } from "./vancouverDatetimeUtils"
 
 // Constructs calendar string according to ical specification
 export const generateICal = (events: Event[]): string => {
@@ -78,4 +79,75 @@ export const formatDateArray = (dateArray: number[]): string => {
   const minuteStr = String(minute).padStart(2, "0")
 
   return `${year}${monthStr}${dayStr}T${hourStr}${minuteStr}00`
+}
+
+export const WORKDAY_TO_ICS_WEEKDAY_MAP = {
+  Mon: "MO",
+  Tue: "TU",
+  Wed: "WE",
+  Thu: "TH",
+  Fri: "FR",
+  Sat: "SA",
+  Sun: "SU",
+} as const
+
+export const WEEKDAY_TO_RAW_WEEKDAY = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+} as const
+
+/**
+ * Workday's course start date may indicate the start of the
+ * academic session, or the actual start date of the section
+ * (first class).
+ *
+ * We use a simple heuristic: If given start date has same
+ * weekday as first meeting day of the course, given date is
+ * the real start date. Otherwise, it needs to be offset
+ * accordingly. Additionally, if the session starts within a
+ * week (e.g. winter session usually starts on Tuesday),
+ * sections before the start date in the week (e.g. Monday sections)
+ * must have their start dates offset to the 2nd recurrence.
+ *
+ * Note that we cannot rely on the recurrence rule to specify
+ * the first instance of the event, despite this working in
+ * some calendar implementations. According to RFC 5545 3.8.5.3:
+ *
+ *   > The recurrence set generated with a "DTSTART" property
+ *   > value not synchronized  with the recurrence rule is undefined.
+ *
+ * Therefore this offset calculation is necessary for all events,
+ * not just for when the term starts within the week.
+ */
+export const calculateRealCourseStartDate = (
+  workdayStartDate: Date,
+  meetingDays: Array<keyof typeof WEEKDAY_TO_RAW_WEEKDAY>
+): number => {
+  const rawStartWeekday = getVancouverWeekdayFromDate(
+    workdayStartDate
+  ) as keyof typeof WEEKDAY_TO_RAW_WEEKDAY
+
+  if (rawStartWeekday === meetingDays[0]) return 0
+
+  const rawStartWeekdayIndex = WEEKDAY_TO_RAW_WEEKDAY[rawStartWeekday]
+  const actualStartWeekday = WEEKDAY_TO_RAW_WEEKDAY[meetingDays[0]]
+  const weekdayDifference = rawStartWeekdayIndex - actualStartWeekday
+
+  if (weekdayDifference < 0) return Math.abs(weekdayDifference)
+
+  if (meetingDays.length > 1) {
+    const meetingDayIndexes = meetingDays.map((x) => WEEKDAY_TO_RAW_WEEKDAY[x])
+    const possibleShifts = meetingDayIndexes.filter(
+      (x) => x > rawStartWeekdayIndex
+    )
+    if (possibleShifts.length > 0)
+      return possibleShifts[0] - rawStartWeekdayIndex
+  }
+
+  return 6
 }
