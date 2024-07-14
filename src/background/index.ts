@@ -16,7 +16,7 @@ Browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     portFromContentScript.postMessage(message.course)
   }
   if (message.type === "RMP") {
-    fetchProfRating(message.prof).then(sendResponse)
+    fetchProfRating(message.prof, message.isVancouver).then(sendResponse)
     return true
   }
 })
