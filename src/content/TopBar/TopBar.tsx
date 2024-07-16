@@ -36,6 +36,19 @@ const TopBar = ({ currentView, setCurrentView, sections }: IProps) => {
         {currentView === Views.calendar ? "My Schedule" : "Settings"}
       </div>
       <div className="TopBarButtonContainer">
+        <button
+          style={{
+            border: "1px solid white",
+            color: "white",
+            backgroundColor: "transparent",
+            borderRadius: "5px",
+            cursor: "pointer",
+            marginRight: "3px",
+          }}
+          onClick={handleWebPage}
+        >
+          Launch Website
+        </button>
         <div
           className="IconContainer"
           onClick={() => setCurrentView(Views.calendar)}
@@ -48,7 +61,6 @@ const TopBar = ({ currentView, setCurrentView, sections }: IProps) => {
         >
           <SettingsIcon size={24} color={"white"} />
         </div>
-        <div onClick={handleWebPage}>Link to Webste</div>
       </div>
     </div>
   )
