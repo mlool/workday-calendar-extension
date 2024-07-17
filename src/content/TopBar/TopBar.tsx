@@ -2,6 +2,7 @@ import { ISectionData, Views } from "../App/App.types"
 import SettingsIcon from "../Icons/SettingsIcon"
 import CalendarIcon from "../Icons/CalendarIcon"
 import "./TopBar.css"
+import ShareIcon from "../Icons/ExternalLinkIcon"
 
 interface IProps {
   currentView: Views
@@ -38,16 +39,19 @@ const TopBar = ({ currentView, setCurrentView, sections }: IProps) => {
       <div className="TopBarButtonContainer">
         <button
           style={{
-            border: "1px solid white",
+            border: "2px solid white",
             color: "white",
             backgroundColor: "transparent",
-            borderRadius: "5px",
+            borderRadius: "8px",
             cursor: "pointer",
-            marginRight: "3px",
+            marginRight: "6px",
           }}
           onClick={handleWebPage}
         >
-          Launch Website
+          <span style={{ display: "flex", alignItems: "center" }}>
+            Student Hub
+            <ShareIcon size={18} color={"white"} />
+          </span>
         </button>
         <div
           className="IconContainer"
