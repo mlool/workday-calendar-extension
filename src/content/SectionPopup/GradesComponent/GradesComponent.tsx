@@ -50,7 +50,7 @@ const GradesComponent = ({ sectionCode }: GradesDetailProps) => {
               Average (5 Years)
             </a>
           }
-          numericValue={gradesData ? gradesData?.average : null}
+          numericValue={gradesData ? gradesData?.averageFiveYears : null}
           range={UBC_GRADES_RANGE}
           showRange={false}
           precision={2}
