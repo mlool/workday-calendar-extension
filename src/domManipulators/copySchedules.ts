@@ -1,6 +1,6 @@
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
-import { toggleContainer } from "../content"
-
+import { toggleContainer, handleCourseLoading } from "../content"
+import { handleProgressUpdate } from "../backends/scheduler/nameSearchHelpers"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
 // Function to observe DOM changes and add buttons to matching elements
@@ -145,6 +145,7 @@ async function handleCopyScheduleButtonClick(
 ): Promise<void> {
   // Ensure the drawer opens when a button is clicked
   toggleContainer(true)
+  handleCourseLoading(true)
   const tables = document.querySelectorAll('[data-automation-id="table"]')
 
   // Check if table exists
@@ -203,6 +204,8 @@ async function handleCopyScheduleButtonClick(
     }
     // Getting existing sections from Chrome storage and adding the new section
     chrome.storage.local.set({ newSection: selectedSection })
+    handleProgressUpdate(((i - 2) / (tableData.length - 2)) * 100)
+
     if (button) {
       button.click()
     }
@@ -213,4 +216,5 @@ async function handleCopyScheduleButtonClick(
       button.click()
     }, 500)
   }
+  handleCourseLoading(false)
 }

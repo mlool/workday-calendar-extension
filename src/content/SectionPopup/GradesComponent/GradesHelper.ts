@@ -1,6 +1,9 @@
 export interface IGradesAPIData {
-  average: number
-  averageFiveYears: number
+  average: number | null
+  averageFiveYears: number | null
+  // THESE MAY BE NULLABLE, WE DON'T USE THEM RN BUT DON'T
+  // PASS THEM AS NUMBERS CAUSE THIS COULD ACTUALLY BE AN
+  // EMPTY STRING AT RUNTIME
   averageMax: number
   averageMin: number
 }
@@ -28,8 +31,11 @@ export const getGradesData = async (
   if (response.ok) {
     const data = await response.json()
     return {
-      average: data["average"],
-      averageFiveYears: data["average_past_5_yrs"],
+      average: data["average"] === "" ? null : Number(data["average"]),
+      averageFiveYears:
+        data["average_past_5_yrs"] === ""
+          ? null
+          : Number(data["average_past_5_yrs"]),
       averageMax: data["max_course_avg"],
       averageMin: data["min_course_avg"],
     }

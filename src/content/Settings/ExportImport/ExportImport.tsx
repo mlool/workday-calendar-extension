@@ -1,7 +1,7 @@
 import { ISectionData } from "../../App/App.types"
 import "../Settings.css"
 import "./ExportImport.css"
-import ExternalCalendarExport from "./ExternalCalendarExport/ExternalCalendarExport"
+import ExternalCalendarExport from "./ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { findCourseInfo } from "../../../backends/scheduler/nameSearchApi"
 import { useContext } from "react"
@@ -60,7 +60,8 @@ const ExportImport = ({ sections, setSections }: IProps) => {
 
   const handleSectionImport = async (sections: ISectionData[]) => {
     const fetchedSections: ISectionData[] = []
-    const sectionsCount = sections.filter((section) => !section.courseID).length
+    const sectionsCount = sections.length
+    let count = 1
     await sections.reduce(async (promise, section) => {
       await promise
       if (!section.courseID) {
@@ -73,7 +74,8 @@ const ExportImport = ({ sections, setSections }: IProps) => {
       } else {
         fetchedSections.push(section)
       }
-      handleProgressUpdate(fetchedSections.length / sectionsCount)
+      handleProgressUpdate(count / sectionsCount)
+      count++
     }, Promise.resolve())
 
     setSections(fetchedSections)

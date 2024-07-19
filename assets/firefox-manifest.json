@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "UBC Workday Side by Side Calendar",
-  "version": "1.6.2",
+  "version": "1.6.1",
   "description": "Calendar for the new UBC Workday course selection.",
   "icons": {
     "16": "logo16.png",
@@ -10,13 +10,13 @@
     "128": "logo128.png"
   },
   "background": {
-    "service_worker": "static/js/background.js"
+    "scripts": ["build/background/index.js"]
   },
   "content_scripts": [
     {
       "matches": ["*://*.myworkday.com/*"],
-      "js": ["static/js/content.js"],
-      "css": ["static/css/content.css"]
+      "js": ["build/content/index.js"],
+      "css": ["build/content/index.css"]
     }
   ],
   "web_accessible_resources": [
@@ -32,5 +32,10 @@
     "cookies",
     "declarativeNetRequest",
     "declarativeNetRequestWithHostAccess"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "WorkdayCalendarExtension@students.ubc.ca"
+    }
+  }
 }
