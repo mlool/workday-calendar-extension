@@ -10,13 +10,13 @@
     "128": "logo128.png"
   },
   "background": {
-    "service_worker": "static/js/background.js"
+    "service_worker": "build/background/index.js"
   },
   "content_scripts": [
     {
       "matches": ["*://*.myworkday.com/*"],
-      "js": ["static/js/content.js"],
-      "css": ["static/css/content.css"]
+      "js": ["build/content/index.js"],
+      "css": ["build/content/index.css"]
     }
   ],
   "web_accessible_resources": [
