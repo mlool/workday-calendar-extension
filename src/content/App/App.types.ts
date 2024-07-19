@@ -4,6 +4,7 @@ export enum SectionType {
   lab,
 }
 
+// TODO refactor this
 export enum Term {
   summerOne,
   summerTwo,
@@ -17,7 +18,7 @@ export enum Views {
   calendar,
   settings,
 }
-
+// TODO refactor this
 export const Term_String_Map: { [key in Term]: string } = {
   [Term.summerOne]: "S1",
   [Term.summerTwo]: "S2",
