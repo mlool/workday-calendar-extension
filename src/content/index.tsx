@@ -285,10 +285,8 @@ function observeDOMAndAddButtons(): void {
               const previousSibling = matchingElement.previousElementSibling
               const isButtonAlreadyPresent =
                 previousSibling && previousSibling.id === "add-section-button"
-              const isCourseInfo =
-                matchingElement.getAttribute("class") === "WOUF WMUF"
 
-              if (!isButtonAlreadyPresent && isCourseInfo) {
+              if (!isButtonAlreadyPresent) {
                 addButtonToElement(matchingElement)
               }
             })
