@@ -9,11 +9,12 @@ import "../PopupComponent.css"
 
 interface IProps {
   instructors: string[]
+  isVancouver: boolean
 }
 
 const RMP_RANGE: ColoredRange = { lowerBound: 0, upperBound: 5 }
 
-const InstructorComponent = ({ instructors }: IProps) => {
+const InstructorComponent = ({ instructors, isVancouver }: IProps) => {
   const [rmpRatings, setRmpRatings] = useState<Record<string, RMPData | null>>()
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const InstructorComponent = ({ instructors }: IProps) => {
         Browser.runtime.sendMessage({
           type: "RMP",
           prof: prof,
+          isVancouver: isVancouver,
         })
       )
     }

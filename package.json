@@ -13,11 +13,12 @@
     "build-firefox": "node esbuild.mjs --prod firefox",
     "dev-chrome": "node esbuild.mjs --watch chrome",
     "dev-firefox": "node esbuild.mjs --watch firefox",
-
-    "lint": "yarn eslint \"src/**/*.tsx\" \"src/**/*.ts\"",
+    "lint": "yarn eslint \"src/**/*.tsx\" \"src/**/*.ts\" \"tests/**/*.ts\"",
     "lint-fix": "yarn run lint -- --fix",
-    "fmt": "yarn prettier --check \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\"",
-    "fmt-fix": "yarn prettier --write \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\""
+    "fmt": "yarn prettier --check \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "fmt-fix": "yarn prettier --write \"src/**/*.tsx\" \"src/**/*.css\" \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "test": "jest",
+    "all": "yarn lint && yarn fmt && yarn test"
   },
   "browserslist": {
     "production": [
@@ -35,6 +36,7 @@
     "@eslint/compat": "^1.1.0",
     "@eslint/js": "^9.5.0",
     "@types/chrome": "^0.0.268",
+    "@types/jest": "^29.5.12",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
@@ -46,7 +48,9 @@
     "eslint-formatter-unix": "^8.40.0",
     "eslint-plugin-react": "^7.34.2",
     "globals": "^15.6.0",
+    "jest": "^29.7.0",
     "prettier": "2.8.7",
+    "ts-jest": "^29.2.2",
     "typescript-eslint": "^7.13.1"
   }
 }

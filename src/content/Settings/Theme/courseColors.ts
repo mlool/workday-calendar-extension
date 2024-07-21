@@ -1,4 +1,4 @@
-import { ISectionData } from "../../App/App.types"
+import { ISectionData, Term } from "../../App/App.types"
 import { getCourseCode } from "../../Calendar/calendarHelpers"
 
 export enum ColorTheme {
@@ -89,31 +89,51 @@ export const getNewSectionColor = (
   if (colorList.length === 1) {
     return colorList[0]
   }
-  const releventSectionsList = sectionsList.filter(
-    (sec) =>
-      sec.worklistNumber === addedSection.worklistNumber &&
-      sec.term === addedSection.term
+  const sectionsInWorklist = sectionsList.filter(
+    (sec) => sec.worklistNumber === addedSection.worklistNumber
   )
 
   const newCourseCode = getCourseCode(addedSection.code)
 
-  const existingSection = releventSectionsList.find(
+  // check if course code is in any term
+  const existingSection = sectionsInWorklist.find(
     (x) => x.code.includes(newCourseCode) && x.color
   )
   if (existingSection) {
     return existingSection.color
   }
 
-  const assignedColors = Array.from(
+  const addedSectionTerms = getOverLappingTerms(addedSection.term)
+  // assign unique color per term
+  const assignedColorsInSameTerm = Array.from(
     new Set(
-      releventSectionsList
-        .filter((x) => x.color !== null)
+      sectionsInWorklist
+        .filter((x) => x.color !== null && addedSectionTerms.includes(x.term))
         .map((section) => section.color)
     )
   )
   const availableColors = colorList.filter(
-    (color) => !assignedColors.includes(color)
+    (color) => !assignedColorsInSameTerm.includes(color)
   )
 
   return availableColors.length >= 1 ? availableColors[0] : "#BDBDBD"
+}
+
+export const getOverLappingTerms = (term: Term) => {
+  switch (term) {
+    case Term.summerOne:
+      return [Term.summerOne, Term.summerFull]
+    case Term.summerTwo:
+      return [Term.summerTwo, Term.summerFull]
+    case Term.summerFull:
+      return [Term.summerOne, Term.summerTwo, Term.summerFull]
+    case Term.winterOne:
+      return [Term.winterOne, Term.winterFull]
+    case Term.winterTwo:
+      return [Term.winterTwo, Term.winterFull]
+    case Term.winterFull:
+      return [Term.winterOne, Term.winterTwo, Term.winterFull]
+    default:
+      return []
+  }
 }

@@ -183,7 +183,11 @@ function App() {
       handleDeleteSection={handleDeleteSection}
     >
       <div className="App">
-        <TopBar currentView={currentView} setCurrentView={setCurrentView} />
+        <TopBar
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          sections={sections}
+        />
         {currentView === Views.calendar ? (
           <div className="CalendarViewContainer">
             <CalendarContainer

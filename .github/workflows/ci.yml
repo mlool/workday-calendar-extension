@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  check-lint-and-fmt:
+  check-lint-fmt-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,3 +25,5 @@ jobs:
       run: yarn run lint
     - name: Check formatting
       run: yarn run fmt
+    - name: Run tests
+      run: yarn run test
