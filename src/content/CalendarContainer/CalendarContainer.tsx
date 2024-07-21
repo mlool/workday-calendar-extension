@@ -1,8 +1,10 @@
+import { Dispatch, SetStateAction } from "react"
 import TabBar from "../../components/TabBar"
 import { ISectionData, Term_String_Map, Term } from "../App/App.types"
 import Calendar from "../Calendar/Calendar"
 import { convertToMatrix } from "../Calendar/calendarHelpers"
 import "./CalendarContainer.css"
+import { filterSections } from "../utils"
 
 interface IProps {
   sections: ISectionData[]
@@ -12,7 +14,7 @@ interface IProps {
   setCurrentWorklistNumber: (num: number) => void
   setSections: (data: ISectionData[]) => void
   setSectionConflict: (state: boolean) => void
-  setCurrentTerm: (term: Term) => void
+  setCurrentTerm: Dispatch<SetStateAction<Term>>
 }
 
 const CalendarContainer = ({
@@ -25,41 +27,40 @@ const CalendarContainer = ({
   setCurrentTerm,
 }: IProps) => {
   const WORKLISTCOUNT = [0, 1, 2, 3]
-  const TERMS = [Term.winterOne, Term.winterTwo]
+  const TERMS = [Term.One, Term.Two]
 
   const getSectionMatrix = (term: Term) => {
-    const calendarSectionsTermOne = sections.filter(
-      (section) =>
-        section.worklistNumber === currentWorklistNumber &&
-        (section.term === Term.winterOne || section.term === Term.winterFull)
+    const calendarSectionsTermOne = filterSections(
+      sections,
+      currentWorklistNumber,
+      Term.One
     )
-
-    const calendarSectionsTermTwo = sections.filter(
-      (section) =>
-        section.worklistNumber === currentWorklistNumber &&
-        (section.term === Term.winterTwo || section.term === Term.winterFull)
+    const calendarSectionsTermTwo = filterSections(
+      sections,
+      currentWorklistNumber,
+      Term.One
     )
 
     const sectionsToRenderTermOne = convertToMatrix(
       calendarSectionsTermOne,
       newSection,
-      Term.winterOne
+      Term.One
     )
 
     const sectionsToRenderTermTwo = convertToMatrix(
       calendarSectionsTermTwo,
       newSection,
-      Term.winterTwo
+      Term.Two
     )
 
     setSectionConflict(sectionsToRenderTermOne[0] || sectionsToRenderTermTwo[0])
-    return term === Term.winterOne
+    return term === Term.One
       ? sectionsToRenderTermOne[1]
       : sectionsToRenderTermTwo[1]
   }
 
   const canSwitchTerms = (): boolean => {
-    if (newSection !== null && newSection.term !== Term.winterFull) return false
+    if (newSection !== null && newSection.terms.size <= 1) return false
     return true
   }
 
@@ -79,7 +80,7 @@ const CalendarContainer = ({
             canSwitchTerms() ? setCurrentTerm(term) : null
           }
           isSelected={(x) => x === currentTerm}
-          isHighlighted={() => newSection?.term === Term.winterFull}
+          isHighlighted={(x) => newSection !== null && newSection.terms.has(x)}
           tabTextBuilder={(x) => Term_String_Map[x]}
           disableBackgroundTabs={!canSwitchTerms()}
         />

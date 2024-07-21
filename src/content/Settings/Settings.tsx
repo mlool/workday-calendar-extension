@@ -1,6 +1,6 @@
 import { ColorTheme } from "./Theme/courseColors"
 import "./Settings.css"
-import { ISectionData, Term } from "../App/App.types"
+import { ISectionData } from "../App/App.types"
 import Tools from "./Tools/Tools"
 import Theme from "./Theme/Theme"
 import ExportImport from "./ExportImport/ExportImport"
@@ -10,8 +10,6 @@ import WorklistActions from "./WorklistActions/WorklistActions"
 interface ISettingsProps {
   colorTheme: ColorTheme
   sections: ISectionData[]
-  currentWorklistNumber: number
-  currentTerm: Term
   setColorTheme: (theme: ColorTheme) => void
   setSections: (data: ISectionData[]) => void
 }

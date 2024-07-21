@@ -19,7 +19,7 @@ function App() {
   const [sections, setSections] = useState<ISectionData[]>([])
   const [sectionConflict, setSectionConflict] = useState<boolean>(false)
   const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
-  const [currentTerm, setCurrentTerm] = useState<Term>(Term.winterOne)
+  const [currentTerm, setCurrentTerm] = useState<Term>(Term.One)
   const [currentView, setCurrentView] = useState<Views>(Views.calendar)
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
 
@@ -67,12 +67,12 @@ function App() {
         }
       })
 
+      // we used to persist this, but no longer need to
+      chrome.storage.local.remove("currentTerm")
+
       chrome.storage.local.get(
-        ["currentTerm", "colorTheme", "sections", "currentWorklistNumber"],
+        ["colorTheme", "sections", "currentWorklistNumber"],
         (result) => {
-          if (result.currentTerm !== undefined) {
-            setCurrentTerm(result.currentTerm)
-          }
           if (result.colorTheme !== undefined) {
             setColorTheme(result.colorTheme)
           }
@@ -95,12 +95,12 @@ function App() {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal = changes.newSection.newValue
+        const newVal: ISectionData = changes.newSection.newValue
         if (newVal === null) return
         setNewSection(newVal)
-        if (newVal.term !== Term.winterFull) {
+        if (newVal.terms.size <= 1) {
           //Don't set the term to WF, just keep the term to what is selected
-          setCurrentTerm(newVal.term)
+          setCurrentTerm(newVal.terms.values().next().value)
         }
       }
     }
@@ -122,10 +122,6 @@ function App() {
   useEffect(() => {
     chrome.storage.local.set({ currentWorklistNumber })
   }, [currentWorklistNumber])
-
-  useEffect(() => {
-    chrome.storage.local.set({ currentTerm })
-  }, [currentTerm])
 
   useEffect(() => {
     chrome.storage.local.set({ colorTheme })
@@ -212,8 +208,6 @@ function App() {
           <Settings
             colorTheme={colorTheme}
             sections={sections}
-            currentWorklistNumber={currentWorklistNumber}
-            currentTerm={currentTerm}
             setColorTheme={setColorTheme}
             setSections={setSections}
           />

@@ -73,9 +73,7 @@ const filterSections = (
   term: Term
 ): ISectionData[] => {
   return sections.filter(
-    (s) =>
-      s.worklistNumber === worklist &&
-      (s.term === term || s.term === Term.winterFull)
+    (s) => s.worklistNumber === worklist && s.terms.has(term)
   )
 }
 

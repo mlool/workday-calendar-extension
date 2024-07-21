@@ -6,12 +6,9 @@ export enum SectionType {
 
 // TODO refactor this
 export enum Term {
-  summerOne,
-  summerTwo,
-  summerFull,
-  winterOne,
-  winterTwo,
-  winterFull,
+  One, //3
+  Two, // 4
+  // winterFull, // 5
 }
 
 export enum Views {
@@ -20,12 +17,8 @@ export enum Views {
 }
 // TODO refactor this
 export const Term_String_Map: { [key in Term]: string } = {
-  [Term.summerOne]: "S1",
-  [Term.summerTwo]: "S2",
-  [Term.summerFull]: "S",
-  [Term.winterOne]: "W1",
-  [Term.winterTwo]: "W2",
-  [Term.winterFull]: "W",
+  [Term.One]: "T1",
+  [Term.Two]: "T2",
 }
 
 export type SectionDetail = {
@@ -41,8 +34,9 @@ export interface ISectionData {
   code: string
   name: string
   instructors: string[]
+  session: string // format of "2024W", "2025S", etc
+  terms: Set<Term>
   sectionDetails: SectionDetail[]
-  term: Term
   worklistNumber: number
   color: string
   courseID?: string
