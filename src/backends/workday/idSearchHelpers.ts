@@ -35,7 +35,7 @@ const parseSessionAndTermFromDateRange = (
 
   // we need to check term for both dates because workday
   // may give us a date range that spans multiple terms.
-  // EXAMPLE: MEDD_V 429
+  // EXAMPLE: MEDD_V 429, BIOC_V 301 labs
   for (const date of dates) {
     const [year, month] = date.split("-").map(Number)
 
@@ -43,19 +43,19 @@ const parseSessionAndTermFromDateRange = (
       case month >= 0 && month <= 3:
         finalSessions.push(`${year - 1}W`)
         finalTerms.add(Term.Two)
-        break;
+        break
       case month >= 4 && month <= 5:
         finalSessions.push(`${year}S`)
         finalTerms.add(Term.One)
-        break;
+        break
       case month >= 6 && month <= 7:
         finalSessions.push(`${year}S`)
         finalTerms.add(Term.Two)
-        break;
+        break
       case month >= 8 && month <= 11:
         finalSessions.push(`${year}W`)
         finalTerms.add(Term.One)
-        break;
+        break
       default:
         throw `Month ${month} parsed from Workday not valid!`
     }

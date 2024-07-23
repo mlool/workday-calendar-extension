@@ -1,4 +1,4 @@
-import { ISectionData } from "../../../App/App.types"
+import { ISectionData, Term } from "../../../App/App.types"
 import "../ExportImport.css"
 import { useState, useContext } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
@@ -17,12 +17,19 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
   const [showImportPopup, setShowImportPopup] = useState(false)
   const dispatchModal = useContext(ModalDispatchContext)
 
+  const serializeSetReplacer = (key: unknown, value: unknown) => {
+    if (value instanceof Set) {
+      return ["_isSet", ...value]
+    }
+    return value
+  }
+
   const handleExport = (sections: ISectionData[], worklistNumber: number) => {
     sections = sections.filter(
       (section) => section.worklistNumber === worklistNumber
     )
     if (sections.length !== 0) {
-      const json = JSON.stringify(sections, null, 2)
+      const json = JSON.stringify(sections, serializeSetReplacer, 2)
       const blob = new Blob([json], { type: "application/json" })
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
@@ -32,6 +39,19 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
       URL.revokeObjectURL(url)
     } else {
       alert("Please Select A Worklist That Is Not Empty!")
+    }
+  }
+
+  const mapLegacyTermEnumToTermsSet = (oldTerm: number): Set<Term> => {
+    switch (oldTerm) {
+      case 3:
+        return new Set([Term.One])
+      case 4:
+        return new Set([Term.Two])
+      case 5:
+        return new Set([Term.One, Term.Two])
+      default:
+        throw `Old term enum number ${oldTerm} not handled!`
     }
   }
 
@@ -61,7 +81,14 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
           name: section.name,
           sectionDetails: section.sectionDetails,
           worklistNumber: worklistNumber,
-          term: section.term,
+          terms:
+            // @ts-expect-error: handling old formats
+            section.term !== undefined
+              ? // @ts-expect-error: handling old formats
+                mapLegacyTermEnumToTermsSet(section.term)
+              : // @ts-expect-error: convert serialized set back to actual Set
+                new Set(section.terms.slice(1)),
+          session: section.session ?? "2024W",
           instructors: section.instructors,
         }))
         newSections = newSections.concat(data)
