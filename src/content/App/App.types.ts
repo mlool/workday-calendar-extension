@@ -4,12 +4,13 @@ export enum SectionType {
   lab,
 }
 
-// TODO refactor this
 export enum Term {
   One, //3
   Two, // 4
   // winterFull, // 5
 }
+
+export const ALL_TERMS_SET = new Set([Term.One, Term.Two])
 
 export enum Views {
   calendar,

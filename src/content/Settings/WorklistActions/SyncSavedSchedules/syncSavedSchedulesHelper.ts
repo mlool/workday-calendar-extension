@@ -1,4 +1,4 @@
-import { Term } from "../../../App/App.types"
+import { ALL_TERMS_SET, Term } from "../../../App/App.types"
 
 export interface ScheduleItem {
   text: string
@@ -26,24 +26,24 @@ export function getAllSavedScheduleIDs() {
   }
 }
 
-export function savedScheduleTerm(): Term {
+export function savedScheduleTerm(): Set<Term> {
   const possibleTerms = document.querySelectorAll(
     "[data-automation-id=promptOption]"
   )
 
   if (!possibleTerms) {
-    return Term.winterFull
+    return ALL_TERMS_SET
   }
 
   for (let i = 0; i < possibleTerms.length; i++) {
     const text = possibleTerms[i].textContent
 
     if (text && text.includes("Term 1")) {
-      return Term.winterOne
+      return new Set([Term.One])
     } else if (text && text.includes("Term 2")) {
-      return Term.winterTwo
+      return new Set([Term.Two])
     }
   }
 
-  return Term.winterFull
+  return ALL_TERMS_SET
 }
