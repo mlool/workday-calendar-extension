@@ -2,7 +2,10 @@ import { ISectionData } from "../../App/App.types"
 import "../Settings.css"
 import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport"
-import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
+import ExportImportIndividual, {
+  rebuildImportedSections,
+  serializeSetReplacer,
+} from "./ExportImportIndividual/ExportImportIndividual"
 import { findCourseInfo } from "../../../backends/scheduler/nameSearchApi"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
@@ -17,7 +20,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
   const handleExport = () => {
-    const json = JSON.stringify(sections, null, 2)
+    const json = JSON.stringify(sections, serializeSetReplacer, 2)
     const blob = new Blob([json], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
@@ -78,7 +81,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
       count++
     }, Promise.resolve())
 
-    setSections(fetchedSections)
+    setSections(rebuildImportedSections(fetchedSections))
     dispatchExportImportModal(
       "Import Successful! Your courses should now be viewable in your worklist"
     )

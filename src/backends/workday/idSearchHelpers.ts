@@ -30,7 +30,7 @@ const parseSessionAndTermFromDateRange = (
   dateRange: string
 ): { session: string; terms: Set<Term> } => {
   const dates = dateRange.trim().split(" - ")
-  const finalSessions: string[] = []
+  const finalSessions = new Set<string>()
   const finalTerms = new Set<Term>()
 
   // we need to check term for both dates because workday
@@ -40,20 +40,20 @@ const parseSessionAndTermFromDateRange = (
     const [year, month] = date.split("-").map(Number)
 
     switch (true) {
-      case month >= 0 && month <= 3:
-        finalSessions.push(`${year - 1}W`)
+      case month >= 1 && month <= 4:
+        finalSessions.add(`${year - 1}W`)
         finalTerms.add(Term.Two)
         break
-      case month >= 4 && month <= 5:
-        finalSessions.push(`${year}S`)
+      case month >= 5 && month <= 6:
+        finalSessions.add(`${year}S`)
         finalTerms.add(Term.One)
         break
-      case month >= 6 && month <= 7:
-        finalSessions.push(`${year}S`)
+      case month >= 7 && month <= 8:
+        finalSessions.add(`${year}S`)
         finalTerms.add(Term.Two)
         break
-      case month >= 8 && month <= 11:
-        finalSessions.push(`${year}W`)
+      case month >= 9 && month <= 12:
+        finalSessions.add(`${year}W`)
         finalTerms.add(Term.One)
         break
       default:
@@ -61,27 +61,27 @@ const parseSessionAndTermFromDateRange = (
     }
   }
 
-  if (finalSessions.length !== 1)
+  if (finalSessions.size !== 1)
     throw `Illegal number of sessions found! ${finalSessions}`
-  return { session: finalSessions[0], terms: finalTerms }
+  return { session: finalSessions.values().next().value, terms: finalTerms }
 }
 
 export function parseSessionAndTerms(rawTerm: string[]): {
   session: string
   terms: Set<Term>
 } {
-  const finalSessions: string[] = []
+  const finalSessions = new Set<string>()
   const finalTerms = new Set<Term>()
   rawTerm.forEach((detail) => {
     const dateSegment = detail.split(" | ").at(-1)!
     const { session, terms } = parseSessionAndTermFromDateRange(dateSegment)
-    finalSessions.push(session)
-    terms.forEach(finalTerms.add)
+    finalSessions.add(session)
+    terms.forEach((x) => finalTerms.add(x))
   })
 
-  if (finalSessions.length !== 1)
+  if (finalSessions.size !== 1)
     throw `Illegal number of sessions found! ${finalSessions}`
-  return { session: finalSessions[0], terms: finalTerms }
+  return { session: finalSessions.values().next().value, terms: finalTerms }
 }
 
 /**

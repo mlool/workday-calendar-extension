@@ -12,17 +12,65 @@ interface IProps {
   handleSectionImport: (data: ISectionData[]) => void
 }
 
+export const serializeSetReplacer = (key: unknown, value: unknown) => {
+  if (value instanceof Set) {
+    return ["_isSet", ...value]
+  }
+  return value
+}
+
+const mapLegacyTermEnumToTermsSet = (oldTerm: number): Set<Term> => {
+  switch (oldTerm) {
+    case 3:
+      return new Set([Term.One])
+    case 4:
+      return new Set([Term.Two])
+    case 5:
+      return new Set([Term.One, Term.Two])
+    default:
+      throw `Old term enum number ${oldTerm} not handled!`
+  }
+}
+
+// sorry in advance to whoever needs to refactor this (probably me)
+const handleImportingTerm = (section: ISectionData): Set<Term> => {
+  // @ts-expect-error handle old term enum format
+  if (section.term !== undefined) {
+    // @ts-expect-error handle old term enum format
+    return mapLegacyTermEnumToTermsSet(section.term)
+  }
+  if (!(section.terms instanceof Set)) {
+    // @ts-expect-error handle serialized set as array with "_isSet" first element
+    return new Set(section.terms.slice(1) as Term[])
+  }
+  return section.terms
+}
+
+// note that the argument type here is not accurate - more accurate
+// "partial" interfaces will probably be implemented with a new data layer
+export const rebuildImportedSections = (
+  sections: ISectionData[],
+  worklistNumber?: number
+) => {
+  return sections.map((section) => {
+    return {
+      code: section.code,
+      color: section.color,
+      name: section.name,
+      sectionDetails: section.sectionDetails,
+      worklistNumber: worklistNumber ?? section.worklistNumber,
+      terms: handleImportingTerm(section),
+      session: section.session ?? "2024W",
+      instructors: section.instructors,
+      courseID: section.courseID,
+    }
+  })
+}
+
 const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
   const [showExportPopup, setShowExportPopup] = useState(false)
   const [showImportPopup, setShowImportPopup] = useState(false)
   const dispatchModal = useContext(ModalDispatchContext)
-
-  const serializeSetReplacer = (key: unknown, value: unknown) => {
-    if (value instanceof Set) {
-      return ["_isSet", ...value]
-    }
-    return value
-  }
 
   const handleExport = (sections: ISectionData[], worklistNumber: number) => {
     sections = sections.filter(
@@ -39,19 +87,6 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
       URL.revokeObjectURL(url)
     } else {
       alert("Please Select A Worklist That Is Not Empty!")
-    }
-  }
-
-  const mapLegacyTermEnumToTermsSet = (oldTerm: number): Set<Term> => {
-    switch (oldTerm) {
-      case 3:
-        return new Set([Term.One])
-      case 4:
-        return new Set([Term.Two])
-      case 5:
-        return new Set([Term.One, Term.Two])
-      default:
-        throw `Old term enum number ${oldTerm} not handled!`
     }
   }
 
@@ -75,22 +110,7 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
         newSections = newSections.filter(
           (section) => section.worklistNumber !== worklistNumber
         )
-        data = data.map((section) => ({
-          code: section.code,
-          color: section.color,
-          name: section.name,
-          sectionDetails: section.sectionDetails,
-          worklistNumber: worklistNumber,
-          terms:
-            // @ts-expect-error: handling old formats
-            section.term !== undefined
-              ? // @ts-expect-error: handling old formats
-                mapLegacyTermEnumToTermsSet(section.term)
-              : // @ts-expect-error: convert serialized set back to actual Set
-                new Set(section.terms.slice(1)),
-          session: section.session ?? "2024W",
-          instructors: section.instructors,
-        }))
+        data = rebuildImportedSections(data, worklistNumber)
         newSections = newSections.concat(data)
         handleSectionImport(newSections)
       } catch (error) {

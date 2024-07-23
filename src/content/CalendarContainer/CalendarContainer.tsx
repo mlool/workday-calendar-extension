@@ -38,7 +38,7 @@ const CalendarContainer = ({
     const calendarSectionsTermTwo = filterSections(
       sections,
       currentWorklistNumber,
-      Term.One
+      Term.Two
     )
 
     const sectionsToRenderTermOne = convertToMatrix(

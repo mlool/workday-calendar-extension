@@ -72,10 +72,12 @@ const filterSections = (
   worklist: number,
   term: Term | Set<Term>
 ): ISectionData[] => {
-  return sections.filter((s) =>
-    s.worklistNumber === worklist && term instanceof Set
-      ? s.terms.isSupersetOf(term)
-      : s.terms.has(term as Term)
+  return sections.filter(
+    (s) =>
+      s.worklistNumber === worklist &&
+      (term instanceof Set
+        ? s.terms.isSupersetOf(term)
+        : s.terms.has(term as Term))
   )
 }
 
