@@ -1,4 +1,4 @@
-import { ALL_TERMS_SET, Term } from "../../../App/App.types"
+import { Term } from "../../../App/App.types"
 
 export interface ScheduleItem {
   text: string
@@ -31,8 +31,9 @@ export function savedScheduleTerm(): Set<Term> {
     "[data-automation-id=promptOption]"
   )
 
+  const allTerms = new Set([Term.One, Term.Two])
   if (!possibleTerms) {
-    return ALL_TERMS_SET
+    return allTerms
   }
 
   for (let i = 0; i < possibleTerms.length; i++) {
@@ -45,5 +46,5 @@ export function savedScheduleTerm(): Set<Term> {
     }
   }
 
-  return ALL_TERMS_SET
+  return allTerms
 }

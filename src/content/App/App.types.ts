@@ -9,8 +9,6 @@ export enum Term {
   Two,
 }
 
-export const ALL_TERMS_SET = new Set([Term.One, Term.Two])
-
 export enum Views {
   calendar,
   settings,
