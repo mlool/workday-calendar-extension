@@ -70,12 +70,14 @@ const extractIdFromDOM = (element: Element) => {
 const filterSections = (
   sections: ISectionData[],
   worklist: number,
-  term: Term
+  term: Term | Set<Term>
 ): ISectionData[] => {
   return sections.filter(
     (s) =>
       s.worklistNumber === worklist &&
-      (s.term === term || s.term === Term.winterFull)
+      (term instanceof Set
+        ? s.terms.isSupersetOf(term)
+        : s.terms.has(term as Term))
   )
 }
 

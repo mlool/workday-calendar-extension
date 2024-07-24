@@ -1,4 +1,4 @@
-import { ISectionData, Term } from "../../App/App.types"
+import { ISectionData } from "../../App/App.types"
 import { getCourseCode } from "../../Calendar/calendarHelpers"
 
 export enum ColorTheme {
@@ -103,12 +103,13 @@ export const getNewSectionColor = (
     return existingSection.color
   }
 
-  const addedSectionTerms = getOverLappingTerms(addedSection.term)
   // assign unique color per term
   const assignedColorsInSameTerm = Array.from(
     new Set(
       sectionsInWorklist
-        .filter((x) => x.color !== null && addedSectionTerms.includes(x.term))
+        .filter(
+          (x) => x.color !== null && x.terms.isSupersetOf(addedSection.terms)
+        )
         .map((section) => section.color)
     )
   )
@@ -117,23 +118,4 @@ export const getNewSectionColor = (
   )
 
   return availableColors.length >= 1 ? availableColors[0] : "#BDBDBD"
-}
-
-export const getOverLappingTerms = (term: Term) => {
-  switch (term) {
-    case Term.summerOne:
-      return [Term.summerOne, Term.summerFull]
-    case Term.summerTwo:
-      return [Term.summerTwo, Term.summerFull]
-    case Term.summerFull:
-      return [Term.summerOne, Term.summerTwo, Term.summerFull]
-    case Term.winterOne:
-      return [Term.winterOne, Term.winterFull]
-    case Term.winterTwo:
-      return [Term.winterTwo, Term.winterFull]
-    case Term.winterFull:
-      return [Term.winterOne, Term.winterTwo, Term.winterFull]
-    default:
-      return []
-  }
 }
