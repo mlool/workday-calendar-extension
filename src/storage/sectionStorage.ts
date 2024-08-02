@@ -10,6 +10,11 @@ import {
   v2_0_0,
   ValidVersionData,
 } from "./legacyStorageMigrators"
+import {
+  isVersionWithNumber,
+  manuallyDetermineVersion,
+  VersionWithNoNumber,
+} from "./helpers/unnumberedVersionTypeGuards"
 
 const readSectionData = async (): Promise<ISectionData[]> => {
   // versions <= v1.4 used the sync storagearea
@@ -19,11 +24,15 @@ const readSectionData = async (): Promise<ISectionData[]> => {
     await Browser.storage.sync.remove("sections")
     await Browser.storage.local.set({ sections: oldSections })
   }
-  const rawSections = (await Browser.storage.local.get(
-    "sections"
-  )) as ValidVersionData
-  // TODO: version number check
-  const processedSections = await sectionDataAutoMigrator(rawSections)
+
+  const rawSections = (await Browser.storage.local.get("sections")) as
+    | ValidVersionData
+    | VersionWithNoNumber
+  const extractedSections = isVersionWithNumber(rawSections)
+    ? rawSections
+    : manuallyDetermineVersion(rawSections)
+
+  const processedSections = await sectionDataAutoMigrator(extractedSections)
   return assignColors(processedSections, ColorTheme.Green)
 }
 
