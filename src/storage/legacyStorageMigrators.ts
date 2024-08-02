@@ -2,10 +2,16 @@ import { findCourseId } from "../backends/scheduler/nameSearchApi"
 import { ISectionData, SectionDetail, Term } from "../content/App/App.types"
 
 type ValidVersionData =
-  | v1_4_1_SectionData[]
-  | v1_5_0_SectionData[]
-  | v2_0_0_SectionData[]
-  | ISectionData[]
+  | SerializedDataFormat<"1.4.1", v1_4_1_SectionData[]>
+  | SerializedDataFormat<"1.5.0", v1_5_0_SectionData[]>
+  | SerializedDataFormat<"1.6.0", v2_0_0_SectionData[]>
+  | SerializedDataFormat<"2.0.0", v2_0_0_SectionData[]>
+  | SerializedDataFormat<"2.0.1", ISectionData[]>
+
+type SerializedDataFormat<T extends string, K> = {
+  version: T
+  data: K
+}
 
 type v1_4_1_SectionData = Omit<
   ISectionData,
