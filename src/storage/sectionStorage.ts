@@ -56,7 +56,7 @@ const sectionDataAutoMigrator = async (
     case "1.5.0":
       return sectionDataAutoMigrator({
         version: "2.0.0",
-        data: v1_5_0(input.data),
+        data: await v1_5_0(input.data),
       })
     case "1.4.1":
       return sectionDataAutoMigrator({
@@ -77,4 +77,4 @@ const writeSectionData = async (newSections: ISectionData[]) => {
   await Browser.storage.local.set({ sections: newSections })
 }
 
-export { readSectionData, writeSectionData }
+export { readSectionData, writeSectionData, sectionDataAutoMigrator }
