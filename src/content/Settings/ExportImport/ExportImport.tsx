@@ -1,26 +1,31 @@
-import { ISectionData } from "../../App/App.types"
 import "../Settings.css"
 import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport"
-import ExportImportIndividual, {
-  rebuildImportedSections,
-  serializeSetReplacer,
-} from "./ExportImportIndividual/ExportImportIndividual"
-import { findCourseInfo } from "../../../backends/scheduler/nameSearchApi"
+import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
 import ProgressBar from "../../ProgressBar/ProgressBar"
+import { ValidVersionData } from "../../../storage/legacyStorageMigrators"
+import { VersionWithNoNumber } from "../../../storage/helpers/unnumberedVersionTypeGuards"
+import {
+  convertSectionDataToJSON,
+  loadSectionDataFromJSON,
+  readSectionData,
+} from "../../../storage/sectionStorage"
 
 interface IProps {
-  sections: ISectionData[]
-  setSections: (data: ISectionData[]) => void
+  handleImportSections: (
+    data: ValidVersionData | VersionWithNoNumber,
+    worklistNumber?: number
+  ) => Promise<void>
 }
 
-const ExportImport = ({ sections, setSections }: IProps) => {
+const ExportImport = ({ handleImportSections }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
-  const handleExport = () => {
-    const json = JSON.stringify(sections, serializeSetReplacer, 2)
+  const handleExport = async () => {
+    const sections = await readSectionData()
+    const json = convertSectionDataToJSON(sections)
     const blob = new Blob([json], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
@@ -42,13 +47,16 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
-        const data = JSON.parse(e.target?.result as string)
-        handleSectionImport(data)
+        const rawSections = loadSectionDataFromJSON(e.target?.result as string)
+        handleImportSections(rawSections)
       } catch (error) {
         console.error("Failed to parse JSON file", error)
       }
     }
     reader.readAsText(file)
+    dispatchExportImportModal(
+      "Import Successful! Your courses should now be viewable in your worklist"
+    )
   }
 
   const handleProgressUpdate = (newProgress: number) => {
@@ -59,32 +67,6 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     })
 
     document.dispatchEvent(progressEvent)
-  }
-
-  const handleSectionImport = async (sections: ISectionData[]) => {
-    const fetchedSections: ISectionData[] = []
-    const sectionsCount = sections.length
-    let count = 1
-    await sections.reduce(async (promise, section) => {
-      await promise
-      if (!section.courseID) {
-        const sectionData = await findCourseInfo(section.code)
-        if (!sectionData) {
-          return
-        }
-        sectionData.worklistNumber = section.worklistNumber
-        fetchedSections.push(sectionData)
-      } else {
-        fetchedSections.push(section)
-      }
-      handleProgressUpdate(count / sectionsCount)
-      count++
-    }, Promise.resolve())
-
-    setSections(rebuildImportedSections(fetchedSections))
-    dispatchExportImportModal(
-      "Import Successful! Your courses should now be viewable in your worklist"
-    )
   }
 
   const dispatchExportImportModal = (message: string | Element) => {
@@ -98,11 +80,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
     <div>
       <div className="SettingsHeader">Export/Import</div>
       <hr className="Divider" />
-      <ExportImportIndividual
-        sections={sections}
-        setSections={setSections}
-        handleSectionImport={handleSectionImport}
-      />
+      <ExportImportIndividual handleImportSections={handleImportSections} />
       <div className="ExportImportButtonContainer">
         <div className="ExportImportRow">
           <div className="ExportImportButton" onClick={handleExport}>
@@ -119,7 +97,7 @@ const ExportImport = ({ sections, setSections }: IProps) => {
             <label htmlFor="import-file">Import All Worklists</label>
           </div>
         </div>
-        <ExternalCalendarExport sections={sections} />
+        <ExternalCalendarExport />
       </div>
     </div>
   )

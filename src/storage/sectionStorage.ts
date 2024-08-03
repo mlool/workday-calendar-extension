@@ -1,10 +1,6 @@
 import Browser from "webextension-polyfill"
 import { ISectionData } from "../content/App//App.types"
 import {
-  assignColors,
-  ColorTheme,
-} from "../content/Settings/Theme/courseColors"
-import {
   v1_4_1,
   v1_5_0,
   v2_0_0,
@@ -28,12 +24,16 @@ const readSectionData = async (): Promise<ISectionData[]> => {
   const rawSections = (await Browser.storage.local.get("sections")) as
     | ValidVersionData
     | VersionWithNoNumber
+  return processRawSections(rawSections)
+}
+
+const processRawSections = async (
+  rawSections: ValidVersionData | VersionWithNoNumber
+): Promise<ISectionData[]> => {
   const extractedSections = isVersionWithNumber(rawSections)
     ? rawSections
     : manuallyDetermineVersion(rawSections)
-
-  const processedSections = await sectionDataAutoMigrator(extractedSections)
-  return assignColors(processedSections, ColorTheme.Green)
+  return await sectionDataAutoMigrator(extractedSections)
 }
 
 /**
@@ -73,8 +73,45 @@ const sectionDataAutoMigrator = async (
   }
 }
 
-const writeSectionData = async (newSections: ISectionData[]) => {
-  await Browser.storage.local.set({ sections: newSections })
+/**
+ * Convenience function to deserialize sections from JSON, using a
+ * custom reviver to convert JSONified `Set`s represented as arrays
+ * back to actual `Set`s.
+ */
+const loadSectionDataFromJSON = (
+  input: string
+): VersionWithNoNumber | ValidVersionData => {
+  return JSON.parse(input, (key: string, value: unknown) => {
+    if (key === "terms") {
+      return new Set((value as []).slice(1))
+    }
+    return value
+  })
 }
 
-export { readSectionData, writeSectionData, sectionDataAutoMigrator }
+/**
+ * Convenience function to serialize sections to JSON, using a custom
+ * replacer since `Set`s aren't JSON-able on their own.
+ */
+const convertSectionDataToJSON = (input: ISectionData[]): string => {
+  return JSON.stringify(input, (key: unknown, value: unknown) => {
+    if (value instanceof Set) {
+      return ["_isSet", ...value]
+    }
+    return value
+  }, 2)
+}
+
+const writeSectionData = async (newSections: ISectionData[]) => {
+  const serializedData = { version: "2.0.1", data: newSections }
+  await Browser.storage.local.set({ sections: serializedData })
+}
+
+export {
+  readSectionData,
+  writeSectionData,
+  loadSectionDataFromJSON,
+  convertSectionDataToJSON,
+  processRawSections,
+  sectionDataAutoMigrator,
+}

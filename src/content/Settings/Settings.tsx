@@ -6,25 +6,30 @@ import Theme from "./Theme/Theme"
 import ExportImport from "./ExportImport/ExportImport"
 import Contact from "./Contact/Contact"
 import WorklistActions from "./WorklistActions/WorklistActions"
+import { ValidVersionData } from "../../storage/legacyStorageMigrators"
+import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
 
 interface ISettingsProps {
   colorTheme: ColorTheme
   sections: ISectionData[]
   setColorTheme: (theme: ColorTheme) => void
-  setSections: (data: ISectionData[]) => void
+  handleImportSections: (
+    data: ValidVersionData | VersionWithNoNumber,
+    worklistNumber?: number
+  ) => Promise<void>
 }
 
 const Settings = ({
   colorTheme,
   sections,
   setColorTheme,
-  setSections,
+  handleImportSections,
 }: ISettingsProps) => {
   return (
     <div className="Settings">
       <Theme colorTheme={colorTheme} setColorTheme={setColorTheme} />
       <Tools />
-      <ExportImport sections={sections} setSections={setSections} />
+      <ExportImport handleImportSections={handleImportSections} />
       <WorklistActions sections={sections} />
       <Contact />
     </div>

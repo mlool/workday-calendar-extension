@@ -1,11 +1,9 @@
 import "./ExportImportPopup.css"
 import CloseIcon from "../../../Icons/CloseIcon"
-import { ISectionData } from "../../../App/App.types"
 import { useState } from "react"
 
 interface IProps {
   onCancel: () => void
-  sections: ISectionData[]
   handleImport: (
     event: React.ChangeEvent<HTMLInputElement>,
     worklistNumber: number

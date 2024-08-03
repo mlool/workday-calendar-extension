@@ -13,6 +13,13 @@ import {
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
+import {
+  processRawSections,
+  readSectionData,
+  writeSectionData,
+} from "../../storage/sectionStorage"
+import { ValidVersionData } from "../../storage/legacyStorageMigrators"
+import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -70,19 +77,13 @@ function App() {
       // we used to persist this, but no longer need to
       chrome.storage.local.remove("currentTerm")
 
+      readSectionData().then((x) => setSections(assignColors(x, colorTheme)))
+
       chrome.storage.local.get(
-        ["colorTheme", "sections", "currentWorklistNumber"],
+        ["colorTheme", "currentWorklistNumber"],
         (result) => {
           if (result.colorTheme !== undefined) {
             setColorTheme(result.colorTheme)
-          }
-          if (result.sections !== undefined) {
-            setSections(
-              assignColors(
-                result.sections,
-                result.colorTheme || ColorTheme.Green
-              )
-            )
           }
           if (result.currentWorklistNumber !== undefined) {
             setCurrentWorklistNumber(result.currentWorklistNumber)
@@ -115,7 +116,7 @@ function App() {
 
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
-    chrome.storage.local.set({ sections })
+    writeSectionData(sections)
     // alert(JSON.stringify(sections, null, 2))
   }, [sections])
 
@@ -172,6 +173,24 @@ function App() {
     setSections(updatedSections)
   }
 
+  const handleImportSections = async (
+    newData: ValidVersionData | VersionWithNoNumber,
+    worklistNumber?: number
+  ) => {
+    const importedSections = await processRawSections(newData)
+    const allSections = worklistNumber
+      ? [
+          ...sections,
+          ...importedSections.filter(
+            (x) => x.worklistNumber === worklistNumber
+          ),
+        ]
+      : [...sections, ...importedSections]
+    const finalSections = assignColors(allSections, colorTheme)
+    setSections(finalSections)
+    await writeSectionData(finalSections)
+  }
+
   return (
     <ModalLayer
       currentWorklistNumber={currentWorklistNumber}
@@ -209,7 +228,7 @@ function App() {
             colorTheme={colorTheme}
             sections={sections}
             setColorTheme={setColorTheme}
-            setSections={setSections}
+            handleImportSections={handleImportSections}
           />
         )}
       </div>

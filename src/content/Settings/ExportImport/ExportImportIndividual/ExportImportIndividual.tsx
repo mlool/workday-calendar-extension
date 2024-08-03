@@ -5,11 +5,19 @@ import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
 import { ModalDispatchContext, ModalPreset } from "../../../ModalLayer"
 import ProgressBar from "../../../ProgressBar/ProgressBar"
+import { ValidVersionData } from "../../../../storage/legacyStorageMigrators"
+import { VersionWithNoNumber } from "../../../../storage/helpers/unnumberedVersionTypeGuards"
+import {
+  convertSectionDataToJSON,
+  loadSectionDataFromJSON,
+  readSectionData,
+} from "../../../../storage/sectionStorage"
 
 interface IProps {
-  sections: ISectionData[]
-  setSections: (data: ISectionData[]) => void
-  handleSectionImport: (data: ISectionData[]) => void
+  handleImportSections: (
+    data: ValidVersionData | VersionWithNoNumber,
+    worklistNumber?: number
+  ) => Promise<void>
 }
 
 export const serializeSetReplacer = (key: unknown, value: unknown) => {
@@ -67,17 +75,17 @@ export const rebuildImportedSections = (
   })
 }
 
-const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
+const ExportImportIndividual = ({ handleImportSections }: IProps) => {
   const [showExportPopup, setShowExportPopup] = useState(false)
   const [showImportPopup, setShowImportPopup] = useState(false)
   const dispatchModal = useContext(ModalDispatchContext)
 
-  const handleExport = (sections: ISectionData[], worklistNumber: number) => {
-    sections = sections.filter(
+  const handleExport = async (worklistNumber: number) => {
+    const sections = (await readSectionData()).filter(
       (section) => section.worklistNumber === worklistNumber
     )
     if (sections.length !== 0) {
-      const json = JSON.stringify(sections, serializeSetReplacer, 2)
+      const json = convertSectionDataToJSON(sections)
       const blob = new Blob([json], { type: "application/json" })
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
@@ -105,14 +113,8 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
-        let data: ISectionData[] = JSON.parse(e.target?.result as string)
-        let newSections = [...sections]
-        newSections = newSections.filter(
-          (section) => section.worklistNumber !== worklistNumber
-        )
-        data = rebuildImportedSections(data, worklistNumber)
-        newSections = newSections.concat(data)
-        handleSectionImport(newSections)
+        const rawSections = loadSectionDataFromJSON(e.target?.result as string)
+        handleImportSections(rawSections, worklistNumber)
       } catch (error) {
         console.error("Failed to parse JSON file", error)
       }
@@ -125,14 +127,12 @@ const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
       {showExportPopup && (
         <ExportCalendarPopup
           onCancel={() => setShowExportPopup(false)}
-          sections={sections}
           exportFunction={handleExport}
         />
       )}
       {showImportPopup && (
         <ImportCalendarPopup
           onCancel={() => setShowImportPopup(false)}
-          sections={sections}
           handleImport={handleImport}
         />
       )}
