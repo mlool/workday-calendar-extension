@@ -25,11 +25,14 @@ export enum LegacyTerm {
   winterFull,
 }
 
+type LegacySectionDetail = Omit<SectionDetail, "term"> & { term: LegacyTerm }
+
 type v1_4_1_SectionData = Omit<
   ISectionData,
-  "session" | "courseID" | "terms"
+  "session" | "courseID" | "terms" | "sectionDetails"
 > & {
   term: LegacyTerm
+  sectionDetails: LegacySectionDetail[]
 }
 
 // version 1.4.1 has no courseID, but still has the location data
@@ -57,7 +60,7 @@ type v1_5_0_SectionData = Omit<
   "session" | "instructors" | "terms" | "sectionDetails"
 > & {
   term: LegacyTerm
-  sectionDetails: Omit<SectionDetail, "location">[]
+  sectionDetails: Omit<LegacySectionDetail, "location">[]
 }
 // 1.5 -> 1.6: no instructors + location
 const v1_5_0 = async (
@@ -85,8 +88,12 @@ const v1_5_0 = async (
   return newSections
 }
 
-type v2_0_0_SectionData = Omit<ISectionData, "session" | "terms"> & {
+type v2_0_0_SectionData = Omit<
+  ISectionData,
+  "session" | "terms" | "sectionDetails"
+> & {
   term: LegacyTerm
+  sectionDetails: LegacySectionDetail[]
 }
 // 2.0 -> 2.0.1: no sessions prop, term are enum instead of set
 const v2_0_0 = (oldSections: v2_0_0_SectionData[]): ISectionData[] => {
@@ -98,14 +105,33 @@ const v2_0_0 = (oldSections: v2_0_0_SectionData[]): ISectionData[] => {
     [LegacyTerm.summerTwo]: undefined,
     [LegacyTerm.summerFull]: undefined,
   }
-  return oldSections.map((x) => {
-    const termSet = legacyTermToTermSetMap[x.term]
+  return oldSections.map((oldSection) => {
+    const termSet = legacyTermToTermSetMap[oldSection.term]
     if (termSet === undefined)
-      throw Error(`Could not convert legacy term ${x.term} to terms set!`)
+      throw Error(
+        `Could not convert legacy term ${oldSection.term} to terms set!`
+      )
+
+    const newDetails = oldSection.sectionDetails.map((x) => {
+      const newTermSet = legacyTermToTermSetMap[x.term]
+      if (newTermSet === undefined || newTermSet.size > 1)
+        throw Error(
+          `SectionDetail could not be converted to new term format: ${JSON.stringify(
+            x
+          )}`
+        )
+      return {
+        ...x,
+        term: [...newTermSet][0],
+      }
+    })
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { term, ...otherOldSectionParts } = oldSection
     return {
-      ...x,
+      ...otherOldSectionParts,
+      sectionDetails: newDetails,
       session: "2024W",
-      term: undefined,
       terms: termSet,
     }
   })

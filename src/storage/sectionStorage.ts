@@ -94,12 +94,16 @@ const loadSectionDataFromJSON = (
  * replacer since `Set`s aren't JSON-able on their own.
  */
 const convertSectionDataToJSON = (input: ISectionData[]): string => {
-  return JSON.stringify(input, (key: unknown, value: unknown) => {
-    if (value instanceof Set) {
-      return ["_isSet", ...value]
-    }
-    return value
-  }, 2)
+  return JSON.stringify(
+    input,
+    (key: unknown, value: unknown) => {
+      if (value instanceof Set) {
+        return ["_isSet", ...value]
+      }
+      return value
+    },
+    2
+  )
 }
 
 const writeSectionData = async (newSections: ISectionData[]) => {
