@@ -13,6 +13,13 @@ import {
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
+import {
+  processRawSections,
+  readSectionData,
+  writeSectionData,
+} from "../../storage/sectionStorage"
+import { ValidVersionData } from "../../storage/legacyStorageMigrators"
+import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -70,19 +77,13 @@ function App() {
       // we used to persist this, but no longer need to
       chrome.storage.local.remove("currentTerm")
 
+      readSectionData().then((x) => setSections(assignColors(x, colorTheme)))
+
       chrome.storage.local.get(
-        ["colorTheme", "sections", "currentWorklistNumber"],
+        ["colorTheme", "currentWorklistNumber"],
         (result) => {
           if (result.colorTheme !== undefined) {
             setColorTheme(result.colorTheme)
-          }
-          if (result.sections !== undefined) {
-            setSections(
-              assignColors(
-                result.sections,
-                result.colorTheme || ColorTheme.Green
-              )
-            )
           }
           if (result.currentWorklistNumber !== undefined) {
             setCurrentWorklistNumber(result.currentWorklistNumber)
@@ -113,12 +114,6 @@ function App() {
     }
   }, []) // Run only once on mount
 
-  // Update chrome storage whenever relevant state changes
-  useEffect(() => {
-    chrome.storage.local.set({ sections })
-    // alert(JSON.stringify(sections, null, 2))
-  }, [sections])
-
   useEffect(() => {
     chrome.storage.local.set({ currentWorklistNumber })
   }, [currentWorklistNumber])
@@ -132,8 +127,10 @@ function App() {
     // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
     const newSections = assignColors(sections, colorTheme)
 
+    // TODO: this could be faulty, remove/change to deep comparison?
     if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
       setSections(newSections)
+      writeSectionData(newSections)
     }
 
     // Update refs
@@ -142,7 +139,7 @@ function App() {
     // }
   }, [colorTheme, sections]) // React only if these values change
 
-  const handleAddNewSection = () => {
+  const handleAddNewSection = async () => {
     const updatedNewSection = newSection!
     updatedNewSection.worklistNumber = currentWorklistNumber
     updatedNewSection.color = getNewSectionColor(
@@ -151,13 +148,17 @@ function App() {
       colorTheme
     )
 
-    setSections([...sections, updatedNewSection])
+    const updatedSections = [...sections, updatedNewSection]
+    setSections(updatedSections)
     setNewSection(null)
+    await writeSectionData(updatedSections)
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleDeleteSection = (sectionToDelete: ISectionData) => {
-    setSections(sections.filter((s) => s !== sectionToDelete))
+  const handleDeleteSection = async (sectionToDelete: ISectionData) => {
+    const updatedSections = sections.filter((s) => s !== sectionToDelete)
+    setSections(updatedSections)
+    await writeSectionData(updatedSections)
   }
 
   const handleCancelNewSection = () => {
@@ -165,11 +166,30 @@ function App() {
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleClearWorklist = () => {
+  const handleClearWorklist = async () => {
     const updatedSections = sections.filter(
       (x) => x.worklistNumber !== currentWorklistNumber
     )
     setSections(updatedSections)
+    await writeSectionData(updatedSections)
+  }
+
+  const handleImportSections = async (
+    newData: ValidVersionData | VersionWithNoNumber,
+    worklistNumber?: number
+  ) => {
+    const importedSections = await processRawSections(newData)
+    const allSections = worklistNumber
+      ? [
+          ...sections,
+          ...importedSections.filter(
+            (x) => x.worklistNumber === worklistNumber
+          ),
+        ]
+      : [...sections, ...importedSections]
+    const finalSections = assignColors(allSections, colorTheme)
+    setSections(finalSections)
+    await writeSectionData(finalSections)
   }
 
   return (
@@ -188,7 +208,6 @@ function App() {
           <div className="CalendarViewContainer">
             <CalendarContainer
               sections={sections}
-              setSections={setSections}
               newSection={newSection}
               setSectionConflict={setSectionConflict}
               currentWorklistNumber={currentWorklistNumber}
@@ -209,7 +228,7 @@ function App() {
             colorTheme={colorTheme}
             sections={sections}
             setColorTheme={setColorTheme}
-            setSections={setSections}
+            handleImportSections={handleImportSections}
           />
         )}
       </div>
