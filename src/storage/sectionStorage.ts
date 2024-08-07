@@ -21,18 +21,24 @@ const readSectionData = async (): Promise<ISectionData[]> => {
     await Browser.storage.local.set({ sections: oldSections })
   }
 
-  const rawSections = (await Browser.storage.local.get("sections")) as
+  const rawSections = (await Browser.storage.local.get("sections")).sections as
     | ValidVersionData
     | VersionWithNoNumber
+    | undefined
   return processRawSections(rawSections)
 }
 
 const processRawSections = async (
-  rawSections: ValidVersionData | VersionWithNoNumber
+  rawSections: ValidVersionData | VersionWithNoNumber | undefined
 ): Promise<ISectionData[]> => {
+  if (rawSections === undefined) return []
+  if (Array.isArray(rawSections) && rawSections.length === 0) return []
+
   const extractedSections = isVersionWithNumber(rawSections)
     ? rawSections
     : manuallyDetermineVersion(rawSections)
+
+  if (extractedSections.data.length === 0) return []
   return await sectionDataAutoMigrator(extractedSections)
 }
 

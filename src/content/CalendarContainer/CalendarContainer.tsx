@@ -12,7 +12,6 @@ interface IProps {
   currentWorklistNumber: number
   currentTerm: Term
   setCurrentWorklistNumber: (num: number) => void
-  setSections: (data: ISectionData[]) => void
   setSectionConflict: (state: boolean) => void
   setCurrentTerm: Dispatch<SetStateAction<Term>>
 }

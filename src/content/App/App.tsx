@@ -114,12 +114,6 @@ function App() {
     }
   }, []) // Run only once on mount
 
-  // Update chrome storage whenever relevant state changes
-  useEffect(() => {
-    writeSectionData(sections)
-    // alert(JSON.stringify(sections, null, 2))
-  }, [sections])
-
   useEffect(() => {
     chrome.storage.local.set({ currentWorklistNumber })
   }, [currentWorklistNumber])
@@ -133,8 +127,10 @@ function App() {
     // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
     const newSections = assignColors(sections, colorTheme)
 
+    // TODO: this could be faulty, remove/change to deep comparison?
     if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
       setSections(newSections)
+      writeSectionData(newSections)
     }
 
     // Update refs
@@ -143,7 +139,7 @@ function App() {
     // }
   }, [colorTheme, sections]) // React only if these values change
 
-  const handleAddNewSection = () => {
+  const handleAddNewSection = async () => {
     const updatedNewSection = newSection!
     updatedNewSection.worklistNumber = currentWorklistNumber
     updatedNewSection.color = getNewSectionColor(
@@ -152,13 +148,17 @@ function App() {
       colorTheme
     )
 
-    setSections([...sections, updatedNewSection])
+    const updatedSections = [...sections, updatedNewSection]
+    setSections(updatedSections)
     setNewSection(null)
+    await writeSectionData(updatedSections)
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleDeleteSection = (sectionToDelete: ISectionData) => {
-    setSections(sections.filter((s) => s !== sectionToDelete))
+  const handleDeleteSection = async (sectionToDelete: ISectionData) => {
+    const updatedSections = sections.filter((s) => s !== sectionToDelete)
+    setSections(updatedSections)
+    await writeSectionData(updatedSections)
   }
 
   const handleCancelNewSection = () => {
@@ -166,11 +166,12 @@ function App() {
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleClearWorklist = () => {
+  const handleClearWorklist = async () => {
     const updatedSections = sections.filter(
       (x) => x.worklistNumber !== currentWorklistNumber
     )
     setSections(updatedSections)
+    await writeSectionData(updatedSections)
   }
 
   const handleImportSections = async (
@@ -207,7 +208,6 @@ function App() {
           <div className="CalendarViewContainer">
             <CalendarContainer
               sections={sections}
-              setSections={setSections}
               newSection={newSection}
               setSectionConflict={setSectionConflict}
               currentWorklistNumber={currentWorklistNumber}
