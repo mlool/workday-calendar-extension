@@ -20,6 +20,7 @@ import {
 } from "../../storage/sectionStorage"
 import { ValidVersionData } from "../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
+import { postAlertIfHasErrors } from "../../storage/errors"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -77,7 +78,10 @@ function App() {
       // we used to persist this, but no longer need to
       chrome.storage.local.remove("currentTerm")
 
-      readSectionData().then((x) => setSections(assignColors(x, colorTheme)))
+      readSectionData().then((x) => {
+        setSections(assignColors(x.data, colorTheme))
+        postAlertIfHasErrors(x)
+      })
 
       chrome.storage.local.get(
         ["colorTheme", "currentWorklistNumber"],
@@ -182,13 +186,14 @@ function App() {
     const allSections = worklistNumber
       ? [
           ...sections,
-          ...importedSections.filter(
+          ...importedSections.data.filter(
             (x) => x.worklistNumber === worklistNumber
           ),
         ]
-      : [...sections, ...importedSections]
+      : [...sections, ...importedSections.data]
     const finalSections = assignColors(allSections, colorTheme)
     setSections(finalSections)
+    postAlertIfHasErrors(importedSections)
     await writeSectionData(finalSections)
   }
 

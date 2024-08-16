@@ -12,6 +12,7 @@ import {
   loadSectionDataFromJSON,
   readSectionData,
 } from "../../../storage/sectionStorage"
+import { postAlertIfHasErrors } from "../../../storage/errors"
 
 interface IProps {
   handleImportSections: (
@@ -24,8 +25,9 @@ const ExportImport = ({ handleImportSections }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
   const handleExport = async () => {
-    const sections = await readSectionData()
-    const json = convertSectionDataToJSON(sections)
+    const res = await readSectionData()
+    postAlertIfHasErrors(res)
+    const json = convertSectionDataToJSON(res.data)
     const blob = new Blob([json], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")

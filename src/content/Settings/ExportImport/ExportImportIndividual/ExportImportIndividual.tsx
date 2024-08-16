@@ -12,6 +12,7 @@ import {
   loadSectionDataFromJSON,
   readSectionData,
 } from "../../../../storage/sectionStorage"
+import { postAlertIfHasErrors } from "../../../../storage/errors"
 
 interface IProps {
   handleImportSections: (
@@ -81,7 +82,9 @@ const ExportImportIndividual = ({ handleImportSections }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
   const handleExport = async (worklistNumber: number) => {
-    const sections = (await readSectionData()).filter(
+    const res = await readSectionData()
+    postAlertIfHasErrors(res)
+    const sections = res.data.filter(
       (section) => section.worklistNumber === worklistNumber
     )
     if (sections.length !== 0) {

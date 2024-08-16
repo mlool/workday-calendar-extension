@@ -10,6 +10,7 @@ import { useState } from "react"
 import ExportCalendarPopup from "./ExportImportPopups/ExportCalendarPopup"
 import { convertVancouverDateStringToDate } from "../../../storage/helpers/vancouverDatetimeUtils"
 import { readSectionData } from "../../../storage/sectionStorage"
+import { postAlertIfHasErrors } from "../../../storage/errors"
 
 // Interface for formatting section details into calendar event
 export interface Event {
@@ -26,7 +27,9 @@ const ExternalCalendarExport = () => {
 
   // Formats section details into an event and generates download link
   const handleExternalCalendarExport = async (worklistNumber: number) => {
-    const sections = await readSectionData()
+    const res = await readSectionData()
+    postAlertIfHasErrors(res)
+    const sections = res.data
     // Dictionary to store formatted events grouped by worklist
     const formattedEventsByWorklist: { [worklist: number]: Event[] } = {}
 

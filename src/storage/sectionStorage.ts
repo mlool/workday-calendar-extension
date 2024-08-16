@@ -11,8 +11,11 @@ import {
   manuallyDetermineVersion,
   VersionWithNoNumber,
 } from "./helpers/unnumberedVersionTypeGuards"
+import { DataErrorObject, DataErrors, Result, wrapInResult } from "./errors"
 
-const readSectionData = async (): Promise<ISectionData[]> => {
+const readSectionData = async (): Promise<
+  Result<ISectionData[], DataErrorObject[]>
+> => {
   // versions <= v1.4 used the sync storagearea
   const oldSections = await Browser.storage.sync.get("sections")
   if (oldSections.sections !== undefined) {
@@ -30,16 +33,17 @@ const readSectionData = async (): Promise<ISectionData[]> => {
 
 const processRawSections = async (
   rawSections: ValidVersionData | VersionWithNoNumber | undefined
-): Promise<ISectionData[]> => {
-  if (rawSections === undefined) return []
-  if (Array.isArray(rawSections) && rawSections.length === 0) return []
+): Promise<Result<ISectionData[], DataErrorObject[]>> => {
+  if (rawSections === undefined) return { ok: true, data: [] }
+  if (Array.isArray(rawSections) && rawSections.length === 0)
+    return { ok: true, data: [] }
 
   const extractedSections = isVersionWithNumber(rawSections)
     ? rawSections
     : manuallyDetermineVersion(rawSections)
 
-  if (extractedSections.data.length === 0) return []
-  return await sectionDataAutoMigrator(extractedSections)
+  if (extractedSections.data.length === 0) return { ok: true, data: [] }
+  return await sectionDataAutoMigrator(extractedSections, [])
 }
 
 /**
@@ -48,34 +52,55 @@ const processRawSections = async (
  * version.
  */
 const sectionDataAutoMigrator = async (
-  input: ValidVersionData
-): Promise<ISectionData[]> => {
+  input: ValidVersionData,
+  accumulatedErrors: DataErrorObject[]
+): Promise<Result<ISectionData[], DataErrorObject[]>> => {
   switch (input.version) {
     case "2.0.1":
-      return input.data as ISectionData[]
+      return wrapInResult(input.data, accumulatedErrors)
     case "1.6.0":
-    case "2.0.0":
-      return sectionDataAutoMigrator({
-        version: "2.0.1",
-        data: v2_0_0(input.data),
-      })
-    case "1.5.0":
-      return sectionDataAutoMigrator({
-        version: "2.0.0",
-        data: await v1_5_0(input.data),
-      })
-    case "1.4.1":
-      return sectionDataAutoMigrator({
-        version: "2.0.0",
-        data: await v1_4_1(input.data),
-      })
-    default:
-      throw Error(
-        // @ts-expect-error    this case shouldn't ever be possible, but on
-        // the off chance that it actually is, i'd like to get a runtime
-        // error for it
-        `Version ${input.version} could not be properly migrated! Are you sure this version of the extension supports this format?`
+    case "2.0.0": {
+      const res = v2_0_0(input.data)
+      return sectionDataAutoMigrator(
+        {
+          version: "2.0.1",
+          data: res.data,
+        },
+        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors)
       )
+    }
+    case "1.5.0": {
+      const res = await v1_5_0(input.data)
+      return sectionDataAutoMigrator(
+        {
+          version: "2.0.0",
+          data: res.data,
+        },
+        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors)
+      )
+    }
+    case "1.4.1": {
+      const res = await v1_4_1(input.data)
+      return sectionDataAutoMigrator(
+        {
+          version: "2.0.0",
+          data: res.data,
+        },
+        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors)
+      )
+    }
+    default:
+      return {
+        ok: false,
+        data: [],
+        errors: [
+          ...accumulatedErrors,
+          // @ts-expect-error this case shouldn't ever be possible, but on
+          // the off chance that it actually is, i'd like to get a runtime
+          // error for it
+          DataErrors.INVALID_VERSION(input.version),
+        ],
+      }
   }
 }
 
