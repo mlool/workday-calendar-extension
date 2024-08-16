@@ -11,10 +11,10 @@ import {
   manuallyDetermineVersion,
   VersionWithNoNumber,
 } from "./helpers/unnumberedVersionTypeGuards"
-import { DataErrorObject, DataErrors, Result, wrapInResult } from "./errors"
+import { DataErrors, Result, wrapInResult } from "./errors"
 
 const readSectionData = async (): Promise<
-  Result<ISectionData[], DataErrorObject[]>
+  Result<ISectionData[], DataErrors[]>
 > => {
   // versions <= v1.4 used the sync storagearea
   const oldSections = await Browser.storage.sync.get("sections")
@@ -33,7 +33,7 @@ const readSectionData = async (): Promise<
 
 const processRawSections = async (
   rawSections: ValidVersionData | VersionWithNoNumber | undefined
-): Promise<Result<ISectionData[], DataErrorObject[]>> => {
+): Promise<Result<ISectionData[], DataErrors[]>> => {
   if (rawSections === undefined) return { ok: true, data: [] }
   if (Array.isArray(rawSections) && rawSections.length === 0)
     return { ok: true, data: [] }
@@ -53,8 +53,8 @@ const processRawSections = async (
  */
 const sectionDataAutoMigrator = async (
   input: ValidVersionData,
-  accumulatedErrors: DataErrorObject[]
-): Promise<Result<ISectionData[], DataErrorObject[]>> => {
+  accumulatedErrors: DataErrors[]
+): Promise<Result<ISectionData[], DataErrors[]>> => {
   switch (input.version) {
     case "2.0.1":
       return wrapInResult(input.data, accumulatedErrors)
@@ -98,7 +98,7 @@ const sectionDataAutoMigrator = async (
           // @ts-expect-error this case shouldn't ever be possible, but on
           // the off chance that it actually is, i'd like to get a runtime
           // error for it
-          DataErrors.INVALID_VERSION(input.version),
+          { errorCode: 0, errorData: { version: input.version } }
         ],
       }
   }

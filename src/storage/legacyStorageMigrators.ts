@@ -1,7 +1,14 @@
 import { findCourseId } from "../backends/scheduler/nameSearchApi"
 import { fetchWorkdayData } from "../backends/workday/idSearchApi"
 import { ISectionData, SectionDetail, Term } from "../content/App/App.types"
-import { DataErrors, Result, wrapInResult } from "./errors"
+import {
+  ConvertLegacyDetailErr,
+  ConvertLegacyTermErr,
+  FetchCourseIdErr,
+  FetchWorkdayDataErr,
+  Result,
+  wrapInResult,
+} from "./errors"
 
 type ValidVersionData =
   | SerializedDataFormat<"1.4.1", v1_4_1_SectionData[]>
@@ -37,9 +44,7 @@ type v1_4_1_SectionData = Omit<
   term: LegacyTerm
   sectionDetails: LegacySectionDetail[]
 }
-type v1_4_1_PossibleErrors = ReturnType<
-  typeof DataErrors.COULD_NOT_FETCH_COURSE_ID
->[]
+type v1_4_1_PossibleErrors = FetchCourseIdErr[]
 // version 1.4.1 has no courseID, but still has the location data
 // that was removed in 1.5.0 and then readded in 1.6.0
 const v1_4_1 = async (
@@ -53,7 +58,7 @@ const v1_4_1 = async (
     // eslint-disable-next-line no-await-in-loop
     const newCourseId = await findCourseId(section.code)
     if (newCourseId === null) {
-      errors.push(DataErrors.COULD_NOT_FETCH_COURSE_ID(section.code))
+      errors.push({ errorCode: 4, errorData: { sectionCode: section.code } })
       continue
     }
     const newSection = {
@@ -73,9 +78,7 @@ type v1_5_0_SectionData = Omit<
   term: LegacyTerm
   sectionDetails: Omit<LegacySectionDetail, "location">[]
 }
-type v1_5_0_PossibleErrors = ReturnType<
-  typeof DataErrors.COULD_NOT_FETCH_WORKDAY_DATA
->[]
+type v1_5_0_PossibleErrors = FetchWorkdayDataErr[]
 // 1.5 -> 1.6: no instructors + location
 const v1_5_0 = async (
   oldSections: v1_5_0_SectionData[]
@@ -88,7 +91,7 @@ const v1_5_0 = async (
     // eslint-disable-next-line no-await-in-loop
     const newData = await fetchWorkdayData(oldSection.courseID!)
     if (newData === null) {
-      errors.push(DataErrors.COULD_NOT_FETCH_WORKDAY_DATA(oldSection.code))
+      errors.push({ errorCode: 3, errorData: { sectionCode: oldSection.code } })
       continue
     }
 
@@ -112,10 +115,7 @@ type v2_0_0_SectionData = Omit<
   term: LegacyTerm
   sectionDetails: LegacySectionDetail[]
 }
-type v2_0_0_PossibleErrors = ReturnType<
-  | typeof DataErrors.COULD_NOT_CONVERT_LEGACY_TERM
-  | typeof DataErrors.COULD_NOT_CONVERT_LEGACY_DETAIL
->[]
+type v2_0_0_PossibleErrors = (ConvertLegacyTermErr | ConvertLegacyDetailErr)[]
 // 2.0 -> 2.0.1: no sessions prop, term are enum instead of set
 const v2_0_0 = (
   oldSections: v2_0_0_SectionData[]
@@ -133,12 +133,10 @@ const v2_0_0 = (
     .map((oldSection) => {
       const termSet = legacyTermToTermSetMap[oldSection.term]
       if (termSet === undefined) {
-        errors.push(
-          DataErrors.COULD_NOT_CONVERT_LEGACY_TERM(
-            oldSection.term,
-            oldSection.code
-          )
-        )
+        errors.push({
+          errorCode: 1,
+          errorData: { oldTerm: oldSection.term, sectionCode: oldSection.code },
+        })
         return undefined
       }
 
@@ -146,9 +144,10 @@ const v2_0_0 = (
         .map((x) => {
           const newTermSet = legacyTermToTermSetMap[x.term]
           if (newTermSet === undefined || newTermSet.size > 1) {
-            errors.push(
-              DataErrors.COULD_NOT_CONVERT_LEGACY_DETAIL(x, oldSection.code)
-            )
+            errors.push({
+              errorCode: 2,
+              errorData: { oldDetail: x, sectionCode: oldSection.code },
+            })
             return undefined
           }
           return {
@@ -168,7 +167,7 @@ const v2_0_0 = (
       }
     })
     .filter((x) => x !== undefined)
-    return wrapInResult(newSections, errors)
+  return wrapInResult(newSections, errors)
 }
 
 export {
