@@ -1,4 +1,3 @@
-import Browser from "webextension-polyfill"
 import { ISectionData } from "../content/App//App.types"
 import {
   v1_4_1,
@@ -12,29 +11,16 @@ import {
   VersionWithNoNumber,
 } from "./helpers/unnumberedVersionTypeGuards"
 import { DataErrors, Result, wrapInResult } from "./errors"
-import { sendProgressUpdateToAll } from "../content/utils"
 
-const readSectionData = async (): Promise<
-  Result<ISectionData[], DataErrors[]>
-> => {
-  // versions <= v1.4 used the sync storagearea
-  const oldSections = await Browser.storage.sync.get("sections")
-  if (oldSections.sections !== undefined) {
-    console.log("Importing sections from sync storagearea...")
-    await Browser.storage.sync.remove("sections")
-    await Browser.storage.local.set({ sections: oldSections })
-  }
-
-  const rawSections = (await Browser.storage.local.get("sections")).sections as
-    | ValidVersionData
-    | VersionWithNoNumber
-    | undefined
-  return processRawSections(rawSections, sendProgressUpdateToAll)
-}
-
+/**
+ * Given section data from any version, determines which format
+ * it's in and converts data to the latest version. Takes an
+ * optional callback for progress updates, to be used in loading
+ * bars, etc.
+ */
 const processRawSections = async (
   rawSections: ValidVersionData | VersionWithNoNumber | undefined,
-  progressUpdater: (x: number) => void
+  progressUpdater?: (x: number) => void
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
   if (rawSections === undefined) return { ok: true, data: [] }
   if (Array.isArray(rawSections) && rawSections.length === 0)
@@ -45,7 +31,11 @@ const processRawSections = async (
     : manuallyDetermineVersion(rawSections)
 
   if (extractedSections.data.length === 0) return { ok: true, data: [] }
-  return await sectionDataAutoMigrator(extractedSections, [], progressUpdater)
+  return await sectionDataAutoMigrator(
+    extractedSections,
+    [],
+    progressUpdater !== undefined ? progressUpdater : () => {}
+  )
 }
 
 /**
@@ -143,14 +133,7 @@ const convertSectionDataToJSON = (input: ISectionData[]): string => {
   )
 }
 
-const writeSectionData = async (newSections: ISectionData[]) => {
-  const serializedData = { version: "2.0.1", data: newSections }
-  await Browser.storage.local.set({ sections: serializedData })
-}
-
 export {
-  readSectionData,
-  writeSectionData,
   loadSectionDataFromJSON,
   convertSectionDataToJSON,
   processRawSections,

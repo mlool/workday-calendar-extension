@@ -11,19 +11,17 @@ import {
   getNewSectionColor,
 } from "../Settings/Theme/courseColors"
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
-import {
-  sendProgressUpdateToAll,
-  versionOneFiveZeroUpdateNotification,
-} from "../utils"
+import { versionOneFiveZeroUpdateNotification } from "../utils"
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
-import {
-  processRawSections,
-  readSectionData,
-  writeSectionData,
-} from "../../storage/sectionStorage"
+import { processRawSections } from "../../storage/sectionStorage"
 import { ValidVersionData } from "../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
 import { postAlertIfHasErrors } from "../../storage/errors"
+import {
+  sendProgressUpdateToAll,
+  readSectionData,
+  writeSectionData,
+} from "../../storage/sectionDataBrowserClient"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)

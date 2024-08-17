@@ -9,7 +9,7 @@ import "./ExportImport.css"
 import { useState } from "react"
 import ExportCalendarPopup from "./ExportImportPopups/ExportCalendarPopup"
 import { convertVancouverDateStringToDate } from "../../../storage/helpers/vancouverDatetimeUtils"
-import { readSectionData } from "../../../storage/sectionStorage"
+import { readSectionData } from "../../../storage/sectionDataBrowserClient"
 import { postAlertIfHasErrors } from "../../../storage/errors"
 
 // Interface for formatting section details into calendar event

@@ -14,9 +14,9 @@ import { VersionWithNoNumber } from "../../../storage/helpers/unnumberedVersionT
 import {
   convertSectionDataToJSON,
   loadSectionDataFromJSON,
-  readSectionData,
 } from "../../../storage/sectionStorage"
 import { postAlertIfHasErrors } from "../../../storage/errors"
+import { readSectionData } from "../../../storage/sectionDataBrowserClient"
 
 const handleProgressUpdate = (newProgress: number) => {
   const progressEvent = new CustomEvent("progress", {

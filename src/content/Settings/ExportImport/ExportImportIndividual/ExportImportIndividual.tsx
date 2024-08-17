@@ -6,12 +6,10 @@ import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
 import { ModalDispatchContext } from "../../../ModalLayer"
 import { ValidVersionData } from "../../../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../../../storage/helpers/unnumberedVersionTypeGuards"
-import {
-  convertSectionDataToJSON,
-  readSectionData,
-} from "../../../../storage/sectionStorage"
+import { convertSectionDataToJSON } from "../../../../storage/sectionStorage"
 import { postAlertIfHasErrors } from "../../../../storage/errors"
 import { handleSectionImportFromJSON } from "../ExportImport"
+import { readSectionData } from "../../../../storage/sectionDataBrowserClient"
 
 interface IProps {
   handleImportSections: (
