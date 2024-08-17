@@ -3,7 +3,11 @@ import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { useContext } from "react"
-import { ModalDispatchContext, ModalPreset } from "../../ModalLayer"
+import {
+  ModalAction,
+  ModalDispatchContext,
+  ModalPreset,
+} from "../../ModalLayer"
 import ProgressBar from "../../ProgressBar/ProgressBar"
 import { ValidVersionData } from "../../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../../storage/helpers/unnumberedVersionTypeGuards"
@@ -13,6 +17,45 @@ import {
   readSectionData,
 } from "../../../storage/sectionStorage"
 import { postAlertIfHasErrors } from "../../../storage/errors"
+
+const handleProgressUpdate = (newProgress: number) => {
+  const progressEvent = new CustomEvent("progress", {
+    detail: {
+      progress: newProgress,
+    },
+  })
+
+  document.dispatchEvent(progressEvent)
+}
+
+const handleSectionImportFromJSON = async (
+  inputData: File | undefined,
+  modalDispatcher: React.Dispatch<ModalAction>,
+  importer: (
+    data: ValidVersionData | VersionWithNoNumber,
+    worklistNumber?: number
+  ) => Promise<void>,
+  worklistNumber?: number
+) => {
+  if (inputData === undefined) return
+  const loadingMesage = <ProgressBar message={"Loading Progress: "} />
+  modalDispatcher({
+    preset: ModalPreset.ImportStatus,
+    additionalData: loadingMesage,
+  })
+  const fileContent = await inputData.text()
+  try {
+    const rawSections = loadSectionDataFromJSON(fileContent)
+    await importer(rawSections, worklistNumber)
+  } catch (error) {
+    console.error("Failed to parse JSON file", error)
+  }
+  modalDispatcher({
+    preset: ModalPreset.ImportStatus,
+    additionalData:
+      "Import Successful! Your courses should now be viewable in your worklist",
+  })
+}
 
 interface IProps {
   handleImportSections: (
@@ -37,47 +80,6 @@ const ExportImport = ({ handleImportSections }: IProps) => {
     URL.revokeObjectURL(url)
   }
 
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const loadingMesage = <ProgressBar message={"Loading Progress: "} />
-    dispatchModal({
-      preset: ModalPreset.ImportStatus,
-      additionalData: loadingMesage,
-    })
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      try {
-        const rawSections = loadSectionDataFromJSON(e.target?.result as string)
-        handleImportSections(rawSections)
-      } catch (error) {
-        console.error("Failed to parse JSON file", error)
-      }
-    }
-    reader.readAsText(file)
-    dispatchExportImportModal(
-      "Import Successful! Your courses should now be viewable in your worklist"
-    )
-  }
-
-  const handleProgressUpdate = (newProgress: number) => {
-    const progressEvent = new CustomEvent("progress", {
-      detail: {
-        progress: newProgress,
-      },
-    })
-
-    document.dispatchEvent(progressEvent)
-  }
-
-  const dispatchExportImportModal = (message: string | Element) => {
-    dispatchModal({
-      preset: ModalPreset.ImportStatus,
-      additionalData: message,
-    })
-  }
-
   return (
     <div>
       <div className="SettingsHeader">Export/Import</div>
@@ -88,11 +90,17 @@ const ExportImport = ({ handleImportSections }: IProps) => {
           <div className="ExportImportButton" onClick={handleExport}>
             Export All Worklists
           </div>
-          <div className="ExportImportButton" onClick={() => handleImport}>
+          <div className="ExportImportButton">
             <input
               type="file"
               accept="application/json"
-              onChange={handleImport}
+              onChange={(e) =>
+                handleSectionImportFromJSON(
+                  e.target.files?.[0],
+                  dispatchModal,
+                  handleImportSections
+                )
+              }
               style={{ display: "none" }}
               id="import-file"
             />
@@ -105,4 +113,4 @@ const ExportImport = ({ handleImportSections }: IProps) => {
   )
 }
 
-export default ExportImport
+export { ExportImport, handleProgressUpdate, handleSectionImportFromJSON }

@@ -12,6 +12,7 @@ import {
   VersionWithNoNumber,
 } from "./helpers/unnumberedVersionTypeGuards"
 import { DataErrors, Result, wrapInResult } from "./errors"
+import { sendProgressUpdateToAll } from "../content/utils"
 
 const readSectionData = async (): Promise<
   Result<ISectionData[], DataErrors[]>
@@ -28,11 +29,12 @@ const readSectionData = async (): Promise<
     | ValidVersionData
     | VersionWithNoNumber
     | undefined
-  return processRawSections(rawSections)
+  return processRawSections(rawSections, sendProgressUpdateToAll)
 }
 
 const processRawSections = async (
-  rawSections: ValidVersionData | VersionWithNoNumber | undefined
+  rawSections: ValidVersionData | VersionWithNoNumber | undefined,
+  progressUpdater: (x: number) => void
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
   if (rawSections === undefined) return { ok: true, data: [] }
   if (Array.isArray(rawSections) && rawSections.length === 0)
@@ -43,7 +45,7 @@ const processRawSections = async (
     : manuallyDetermineVersion(rawSections)
 
   if (extractedSections.data.length === 0) return { ok: true, data: [] }
-  return await sectionDataAutoMigrator(extractedSections, [])
+  return await sectionDataAutoMigrator(extractedSections, [], progressUpdater)
 }
 
 /**
@@ -53,40 +55,44 @@ const processRawSections = async (
  */
 const sectionDataAutoMigrator = async (
   input: ValidVersionData,
-  accumulatedErrors: DataErrors[]
+  accumulatedErrors: DataErrors[],
+  progressUpdater: (x: number) => void
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
   switch (input.version) {
     case "2.0.1":
       return wrapInResult(input.data, accumulatedErrors)
     case "1.6.0":
     case "2.0.0": {
-      const res = v2_0_0(input.data)
+      const res = v2_0_0(input.data, progressUpdater)
       return sectionDataAutoMigrator(
         {
           version: "2.0.1",
           data: res.data,
         },
-        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors)
+        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors),
+        progressUpdater
       )
     }
     case "1.5.0": {
-      const res = await v1_5_0(input.data)
+      const res = await v1_5_0(input.data, progressUpdater)
       return sectionDataAutoMigrator(
         {
           version: "2.0.0",
           data: res.data,
         },
-        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors)
+        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors),
+        progressUpdater
       )
     }
     case "1.4.1": {
-      const res = await v1_4_1(input.data)
+      const res = await v1_4_1(input.data, progressUpdater)
       return sectionDataAutoMigrator(
         {
           version: "2.0.0",
           data: res.data,
         },
-        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors)
+        res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors),
+        progressUpdater
       )
     }
     default:
@@ -98,7 +104,7 @@ const sectionDataAutoMigrator = async (
           // @ts-expect-error this case shouldn't ever be possible, but on
           // the off chance that it actually is, i'd like to get a runtime
           // error for it
-          { errorCode: 0, errorData: { version: input.version } }
+          { errorCode: 0, errorData: { version: input.version } },
         ],
       }
   }

@@ -11,7 +11,10 @@ import {
   getNewSectionColor,
 } from "../Settings/Theme/courseColors"
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
-import { versionOneFiveZeroUpdateNotification } from "../utils"
+import {
+  sendProgressUpdateToAll,
+  versionOneFiveZeroUpdateNotification,
+} from "../utils"
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 import {
   processRawSections,
@@ -182,7 +185,10 @@ function App() {
     newData: ValidVersionData | VersionWithNoNumber,
     worklistNumber?: number
   ) => {
-    const importedSections = await processRawSections(newData)
+    const importedSections = await processRawSections(
+      newData,
+      sendProgressUpdateToAll
+    )
     const allSections = worklistNumber
       ? [
           ...sections,

@@ -3,16 +3,15 @@ import "../ExportImport.css"
 import { useState, useContext } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
-import { ModalDispatchContext, ModalPreset } from "../../../ModalLayer"
-import ProgressBar from "../../../ProgressBar/ProgressBar"
+import { ModalDispatchContext } from "../../../ModalLayer"
 import { ValidVersionData } from "../../../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../../../storage/helpers/unnumberedVersionTypeGuards"
 import {
   convertSectionDataToJSON,
-  loadSectionDataFromJSON,
   readSectionData,
 } from "../../../../storage/sectionStorage"
 import { postAlertIfHasErrors } from "../../../../storage/errors"
+import { handleSectionImportFromJSON } from "../ExportImport"
 
 interface IProps {
   handleImportSections: (
@@ -101,30 +100,6 @@ const ExportImportIndividual = ({ handleImportSections }: IProps) => {
     }
   }
 
-  const handleImport = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    worklistNumber: number
-  ) => {
-    const loadingMesage = <ProgressBar message={"Loading Progress: "} />
-    dispatchModal({
-      preset: ModalPreset.ImportStatus,
-      additionalData: loadingMesage,
-    })
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      try {
-        const rawSections = loadSectionDataFromJSON(e.target?.result as string)
-        handleImportSections(rawSections, worklistNumber)
-      } catch (error) {
-        console.error("Failed to parse JSON file", error)
-      }
-    }
-    reader.readAsText(file)
-  }
-
   return (
     <div>
       {showExportPopup && (
@@ -136,7 +111,14 @@ const ExportImportIndividual = ({ handleImportSections }: IProps) => {
       {showImportPopup && (
         <ImportCalendarPopup
           onCancel={() => setShowImportPopup(false)}
-          handleImport={handleImport}
+          handleImport={(file, worklistNumber) =>
+            handleSectionImportFromJSON(
+              file,
+              dispatchModal,
+              handleImportSections,
+              worklistNumber
+            )
+          }
         />
       )}
       <div className="ExportImportRow">

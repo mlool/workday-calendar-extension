@@ -2,6 +2,8 @@ import { ISectionData, Term } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import { fetchWorkdayData } from "../backends/workday/idSearchApi"
 import { handleCourseLoading } from "."
+import { handleProgressUpdate as modalProgressUpdater } from "../content/Settings/ExportImport/ExportImport"
+import { handleProgressUpdate as mainProgressUpdater } from "../backends/scheduler/nameSearchHelpers"
 
 // bypassDetailsCheck is for reskin extension compat
 async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
@@ -100,4 +102,14 @@ const versionOneFiveZeroUpdateNotification = () => {
     .catch((error) => console.error("Error retrieving flag:", error))
 }
 
-export { versionOneFiveZeroUpdateNotification, filterSections, extractSection }
+const sendProgressUpdateToAll = (update: number) => {
+  modalProgressUpdater(update)
+  mainProgressUpdater(update)
+}
+
+export {
+  versionOneFiveZeroUpdateNotification,
+  filterSections,
+  extractSection,
+  sendProgressUpdateToAll,
+}
