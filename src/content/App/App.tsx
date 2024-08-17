@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import CalendarContainer from "../CalendarContainer/CalendarContainer"
 import { ISectionData, Term, Views } from "./App.types"
@@ -10,9 +10,8 @@ import {
   ColorTheme,
   getNewSectionColor,
 } from "../Settings/Theme/courseColors"
-import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
+import { ModalLayer } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
-import { findCourseId } from "../../backends/scheduler/nameSearchApi"
 import { processRawSections } from "../../storage/sectionStorage"
 import { ValidVersionData } from "../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
@@ -32,50 +31,11 @@ function App() {
   const [currentView, setCurrentView] = useState<Views>(Views.calendar)
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
 
-  const dispatchModal = useContext(ModalDispatchContext)
-
-  const handleSectionImport = async (sections: ISectionData[]) => {
-    dispatchModal({
-      preset: ModalPreset.ImportStatus,
-      additionalData: "Loading...",
-    })
-    const fetchedCourseIDs: string[] = []
-    await sections.reduce(async (promise, section) => {
-      await promise
-      if (!section.courseID) {
-        const courseID = await findCourseId(section.code)
-        if (!courseID) {
-          return
-        }
-        fetchedCourseIDs.push(courseID)
-      }
-    }, Promise.resolve())
-
-    const newSections = sections.map((s) => {
-      if (s.courseID) return s
-      return {
-        ...s,
-        courseID: fetchedCourseIDs.shift(),
-      }
-    })
-
-    setSections(newSections)
-  }
-
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
-      chrome.storage.sync.get("sections", (result) => {
-        if (result.sections !== undefined) {
-          handleSectionImport(assignColors(result.sections, ColorTheme.Green))
-          chrome.storage.sync.remove("sections", function () {
-            console.log("Sections reset to empty.")
-          })
-        }
-      })
-
       // we used to persist this, but no longer need to
       chrome.storage.local.remove("currentTerm")
 

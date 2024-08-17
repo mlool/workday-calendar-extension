@@ -10,14 +10,6 @@ import { handleProgressUpdate as mainProgressUpdater } from "../backends/schedul
 const readSectionData = async (): Promise<
   Result<ISectionData[], DataErrors[]>
 > => {
-  // versions <= v1.4 used the sync storagearea
-  const oldSections = await Browser.storage.sync.get("sections")
-  if (oldSections.sections !== undefined) {
-    console.log("Importing sections from sync storagearea...")
-    await Browser.storage.sync.remove("sections")
-    await Browser.storage.local.set({ sections: oldSections })
-  }
-
   const rawSections = (await Browser.storage.local.get("sections")).sections as
     | ValidVersionData
     | VersionWithNoNumber
