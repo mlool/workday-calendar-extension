@@ -13,6 +13,7 @@ import {
 import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
 import { findCourseId } from "../../backends/scheduler/nameSearchApi"
+import { deserializeSectionData, serializeSectionData } from "../../storage/helpers/serializeUtils"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -79,7 +80,7 @@ function App() {
           if (result.sections !== undefined) {
             setSections(
               assignColors(
-                result.sections,
+                result.sections.map(deserializeSectionData),
                 result.colorTheme || ColorTheme.Green
               )
             )
@@ -95,7 +96,7 @@ function App() {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal: ISectionData = changes.newSection.newValue
+        const newVal: ISectionData = deserializeSectionData(changes.newSection.newValue);
         if (newVal === null) return
         setNewSection(newVal)
         if (newVal.terms.size <= 1) {
@@ -115,7 +116,8 @@ function App() {
 
   // Update chrome storage whenever relevant state changes
   useEffect(() => {
-    chrome.storage.local.set({ sections })
+    const serializedSections = sections.map(serializeSectionData);
+    chrome.storage.local.set({ serializedSections })
     // alert(JSON.stringify(sections, null, 2))
   }, [sections])
 
@@ -131,7 +133,7 @@ function App() {
     // Check if there is a real change to trigger the update
     // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
     const newSections = assignColors(sections, colorTheme)
-
+    
     if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
       setSections(newSections)
     }

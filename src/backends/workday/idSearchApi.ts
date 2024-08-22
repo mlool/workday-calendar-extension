@@ -31,8 +31,12 @@ export async function fetchWorkdayData(
   )
   const detailsPath = possibleDetailsPath[meetingPatternIndex]["instances"]
   const rawDetails: string[] = []
-  for (const detail of detailsPath) {
-    rawDetails.push(detail["text"])
+  if (detailsPath) {
+    for (const detail of detailsPath) {
+      rawDetails.push(detail["text"])
+    }
+  } else {//no meeting pattern
+    
   }
   const instructorsIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["widget"] === "panel"
@@ -43,7 +47,7 @@ export async function fetchWorkdayData(
     try {
       const instructorsPath =
         possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
-          "instances"
+        "instances"
         ]
       for (const instructor of instructorsPath) {
         instructors.push(instructor["text"])
@@ -54,7 +58,7 @@ export async function fetchWorkdayData(
   }
   handleProgressUpdate(75)
 
-  const { session, terms } = parseSessionAndTerms(rawDetails)
+  const { session, terms } = parseSessionAndTerms(rawDetails);
 
   const formattedData: ISectionData = {
     code: code,
@@ -67,5 +71,5 @@ export async function fetchWorkdayData(
     color: defaultColorList[0],
     courseID: courseId,
   }
-  return formattedData
+  return formattedData;
 }

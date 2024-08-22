@@ -2,6 +2,7 @@ import "../Form/Form.css"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { findCourseInfo } from "../../backends/scheduler/nameSearchApi"
+import { serializeSectionData } from "../../storage/helpers/serializeUtils"
 
 const ManualCourseEntry = () => {
   const dispatchModal = useContext(ModalDispatchContext)
@@ -15,7 +16,7 @@ const ManualCourseEntry = () => {
 
   const handleManualEntrySubmit = async (manualUrl: string) => {
     const selectedSection = await findCourseInfo("MANUAL_ENTRY", manualUrl)
-    await chrome.storage.local.set({ newSection: selectedSection })
+    await chrome.storage.local.set({ newSection: selectedSection===null? null:serializeSectionData(selectedSection) })
   }
 
   return (
