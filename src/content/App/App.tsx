@@ -12,7 +12,10 @@ import {
 } from "../Settings/Theme/courseColors"
 import { ModalLayer } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
-import { processRawSections } from "../../storage/sectionStorage"
+import {
+  processRawSections,
+  loadSectionDataFromJSON,
+} from "../../storage/sectionStorage"
 import { ValidVersionData } from "../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
 import { postAlertIfHasErrors } from "../../storage/errors"
@@ -61,12 +64,13 @@ function App() {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal: ISectionData = changes.newSection.newValue
+        const newVal: string | null = changes.newSection.newValue
         if (newVal === null) return
-        setNewSection(newVal)
-        if (newVal.terms.size <= 1) {
+        const newData = loadSectionDataFromJSON<ISectionData>(newVal)
+        setNewSection(newData)
+        if (newData.terms.size <= 1) {
           //Don't set the term to WF, just keep the term to what is selected
-          setCurrentTerm(newVal.terms.values().next().value)
+          setCurrentTerm(newData.terms.values().next().value)
         }
       }
     }

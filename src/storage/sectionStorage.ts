@@ -4,6 +4,7 @@ import {
   v1_5_0,
   v2_0_0,
   ValidVersionData,
+  CurrentFormat,
 } from "./legacyStorageMigrators"
 import {
   isVersionWithNumber,
@@ -13,16 +14,24 @@ import {
 import { DataErrors, Result, wrapInResult } from "./errors"
 
 /**
+ * Wrap the given `sections` data in a
+ * {@link SerializedDataFormat} with the current version number.
+ */
+const packageCurrentData = (sections: ISectionData[]): CurrentFormat => ({
+  version: "2.0.1",
+  data: sections,
+})
+
+/**
  * Given section data from any version, determines which format
  * it's in and converts data to the latest version. Takes an
  * optional callback for progress updates, to be used in loading
  * bars, etc.
  */
 const processRawSections = async (
-  rawSections: ValidVersionData | VersionWithNoNumber | undefined,
+  rawSections: ValidVersionData | VersionWithNoNumber,
   progressUpdater?: (x: number) => void
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
-  if (rawSections === undefined) return { ok: true, data: [] }
   if (Array.isArray(rawSections) && rawSections.length === 0)
     return { ok: true, data: [] }
 
@@ -102,15 +111,15 @@ const sectionDataAutoMigrator = async (
 
 /**
  * Convenience function to deserialize sections from JSON, using a
- * custom reviver to convert JSONified `Set`s represented as arrays
- * back to actual `Set`s.
+ * custom reviver to convert JSONified `Set`s represented as
+ * `["_isSet", ...set contents]` back to actual `Set`s.
  */
-const loadSectionDataFromJSON = (
+const loadSectionDataFromJSON = <T = undefined>(
   input: string
-): VersionWithNoNumber | ValidVersionData => {
+): T extends undefined ? VersionWithNoNumber | ValidVersionData : T => {
   return JSON.parse(input, (key: string, value: unknown) => {
-    if (key === "terms") {
-      return new Set((value as []).slice(1))
+    if (Array.isArray(value) && value[0] === "_isSet") {
+      return new Set(value.slice(1))
     }
     return value
   })
@@ -118,9 +127,16 @@ const loadSectionDataFromJSON = (
 
 /**
  * Convenience function to serialize sections to JSON, using a custom
- * replacer since `Set`s aren't JSON-able on their own.
+ * replacer since `Set`s aren't JSON-ifiable on their own.
+ *
+ * We convert `Set`s to `Array`s with the first element being
+ * `"_isSet"` - the matching {@link loadSectionDataFromJSON} function
+ * uses this to correctly detect serialized `Set`s and restore them
+ * accordingly.
  */
-const convertSectionDataToJSON = (input: ISectionData[]): string => {
+const convertSectionDataToJSON = (
+  input: CurrentFormat | ISectionData
+): string => {
   return JSON.stringify(
     input,
     (key: unknown, value: unknown) => {
@@ -138,4 +154,5 @@ export {
   convertSectionDataToJSON,
   processRawSections,
   sectionDataAutoMigrator,
+  packageCurrentData,
 }

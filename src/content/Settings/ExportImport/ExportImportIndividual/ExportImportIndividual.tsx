@@ -5,7 +5,10 @@ import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
 import { ModalDispatchContext } from "../../../ModalLayer"
 import { ValidVersionData } from "../../../../storage/legacyStorageMigrators"
 import { VersionWithNoNumber } from "../../../../storage/helpers/unnumberedVersionTypeGuards"
-import { convertSectionDataToJSON } from "../../../../storage/sectionStorage"
+import {
+  convertSectionDataToJSON,
+  packageCurrentData,
+} from "../../../../storage/sectionStorage"
 import { postAlertIfHasErrors } from "../../../../storage/errors"
 import { handleSectionImportFromJSON } from "../ExportImport"
 import { readSectionData } from "../../../../storage/sectionDataBrowserClient"
@@ -29,7 +32,7 @@ const ExportImportIndividual = ({ handleImportSections }: IProps) => {
       (section) => section.worklistNumber === worklistNumber
     )
     if (sections.length !== 0) {
-      const json = convertSectionDataToJSON(sections)
+      const json = convertSectionDataToJSON(packageCurrentData(res.data))
       const blob = new Blob([json], { type: "application/json" })
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")

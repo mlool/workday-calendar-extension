@@ -14,6 +14,7 @@ import { VersionWithNoNumber } from "../../../storage/helpers/unnumberedVersionT
 import {
   convertSectionDataToJSON,
   loadSectionDataFromJSON,
+  packageCurrentData,
 } from "../../../storage/sectionStorage"
 import { postAlertIfHasErrors } from "../../../storage/errors"
 import { readSectionData } from "../../../storage/sectionDataBrowserClient"
@@ -70,7 +71,7 @@ const ExportImport = ({ handleImportSections }: IProps) => {
   const handleExport = async () => {
     const res = await readSectionData()
     postAlertIfHasErrors(res)
-    const json = convertSectionDataToJSON(res.data)
+    const json = convertSectionDataToJSON(packageCurrentData(res.data))
     const blob = new Blob([json], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
