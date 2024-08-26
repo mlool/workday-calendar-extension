@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"
 import { observeDOMAndAddCopyScheduleButtons } from "../domManipulators/copySchedules"
-import { convertSectionDataToJSON } from "../storage/sectionStorage"
+import { writeNewSection } from "../storage/sectionDataBrowserClient"
 
 // Function to apply visibility based on stored settings
 function applyVisibility(hide: boolean): void {
@@ -257,10 +257,7 @@ async function handleButtonClick(
   )
   if (!selectedSection) return
   // Getting existing sections from Chrome storage and adding the new section
-  const serializedSection = convertSectionDataToJSON(selectedSection)
-  // clear any previous values to avoid silent errors
-  await chrome.storage.local.remove("newSection")
-  await chrome.storage.local.set({ newSection: serializedSection })
+  await writeNewSection(selectedSection)
   handleCourseLoading(false)
 }
 

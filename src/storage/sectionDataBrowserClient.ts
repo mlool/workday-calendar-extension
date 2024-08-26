@@ -27,9 +27,21 @@ const writeSectionData = async (newSections: ISectionData[]) => {
   await Browser.storage.local.set({ sections: serializedData })
 }
 
+const writeNewSection = async (selectedSection: ISectionData) => {
+  const serializedSection = convertSectionDataToJSON(selectedSection)
+  // clear any previous values to avoid silent errors
+  await chrome.storage.local.set({ newSection: null })
+  await chrome.storage.local.set({ newSection: serializedSection })
+}
+
 const sendProgressUpdateToAll = (update: number) => {
   modalProgressUpdater(update)
   mainProgressUpdater(update)
 }
 
-export { readSectionData, writeSectionData, sendProgressUpdateToAll }
+export {
+  readSectionData,
+  writeSectionData,
+  writeNewSection,
+  sendProgressUpdateToAll,
+}
