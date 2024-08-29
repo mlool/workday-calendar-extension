@@ -16,6 +16,10 @@ const ManualCourseEntry = () => {
 
   const handleManualEntrySubmit = async (manualUrl: string) => {
     const selectedSection = await findCourseInfo("MANUAL_ENTRY", manualUrl)
+    if (selectedSection === null)
+      return alert(
+        "Something has gone wrong. Please report to the developers using the contact info in Settings."
+      )
     writeNewSection(selectedSection)
   }
 

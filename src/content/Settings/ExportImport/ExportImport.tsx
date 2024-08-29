@@ -58,6 +58,26 @@ const handleSectionImportFromJSON = async (
   })
 }
 
+const handleExport = async (worklistNumber?: number) => {
+  const res = await readSectionData()
+  postAlertIfHasErrors(res)
+  const sections =
+    worklistNumber !== undefined
+      ? res.data.filter((section) => section.worklistNumber === worklistNumber)
+      : res.data
+  if (sections.length === 0) {
+    return alert("Please Select A Worklist That Is Not Empty!")
+  }
+  const json = convertSectionDataToJSON(packageCurrentData(res.data))
+  const blob = new Blob([json], { type: "application/json" })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = "schedule.json"
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
 interface IProps {
   handleImportSections: (
     data: ValidVersionData | VersionWithNoNumber,
@@ -68,19 +88,6 @@ interface IProps {
 const ExportImport = ({ handleImportSections }: IProps) => {
   const dispatchModal = useContext(ModalDispatchContext)
 
-  const handleExport = async () => {
-    const res = await readSectionData()
-    postAlertIfHasErrors(res)
-    const json = convertSectionDataToJSON(packageCurrentData(res.data))
-    const blob = new Blob([json], { type: "application/json" })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = "schedule.json"
-    link.click()
-    URL.revokeObjectURL(url)
-  }
-
   return (
     <div>
       <div className="SettingsHeader">Export/Import</div>
@@ -88,7 +95,7 @@ const ExportImport = ({ handleImportSections }: IProps) => {
       <ExportImportIndividual handleImportSections={handleImportSections} />
       <div className="ExportImportButtonContainer">
         <div className="ExportImportRow">
-          <div className="ExportImportButton" onClick={handleExport}>
+          <div className="ExportImportButton" onClick={() => handleExport()}>
             Export All Worklists
           </div>
           <div className="ExportImportButton">
@@ -114,4 +121,9 @@ const ExportImport = ({ handleImportSections }: IProps) => {
   )
 }
 
-export { ExportImport, handleProgressUpdate, handleSectionImportFromJSON }
+export {
+  ExportImport,
+  handleProgressUpdate,
+  handleSectionImportFromJSON,
+  handleExport,
+}
