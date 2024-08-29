@@ -9,6 +9,8 @@ import {
 } from "./sectionStorage"
 import { handleProgressUpdate as modalProgressUpdater } from "../content/Settings/ExportImport/ExportImport"
 import { handleProgressUpdate as mainProgressUpdater } from "../backends/scheduler/nameSearchHelpers"
+import { VersionWithNoNumber } from "./helpers/unnumberedVersionTypeGuards"
+import { ValidVersionData } from "./legacyStorageMigrators"
 
 const readSectionData = async (): Promise<
   Result<ISectionData[], DataErrors[]>
@@ -16,8 +18,17 @@ const readSectionData = async (): Promise<
   const rawSections = (await Browser.storage.local.get("sections")).sections as
     | string
     | undefined
+    // note: eventually when all supported versions store their data
+    // as a JSON string (so versions 2.1+), we can drop these.
+    | VersionWithNoNumber
+    | ValidVersionData
   if (rawSections === undefined) return { ok: true, data: [] }
-  const deserializedSections = loadSectionDataFromJSON(rawSections)
+  const deserializedSections =
+    typeof rawSections === "string"
+      ? loadSectionDataFromJSON(rawSections)
+      : // note: eventually when all supported versions store their data
+        // as a JSON string (so versions 2.1+), we can drop this condition.
+        rawSections
   return processRawSections(deserializedSections, sendProgressUpdateToAll)
 }
 
