@@ -29,7 +29,9 @@ const ExternalCalendarExport = () => {
   const handleExternalCalendarExport = async (worklistNumber: number) => {
     const res = await readSectionData()
     postAlertIfHasErrors(res)
-    const sections = res.data
+    const sections = res.data.filter(
+      (section) => section.worklistNumber === worklistNumber
+    )
     // Dictionary to store formatted events grouped by worklist
     const formattedEventsByWorklist: { [worklist: number]: Event[] } = {}
 

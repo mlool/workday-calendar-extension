@@ -4,7 +4,7 @@ import { useState } from "react"
 
 interface IProps {
   onCancel: () => void
-  handleImport: (inputData: File | undefined, worklistNumber: number) => void
+  handleImport: (inputData: string | undefined, worklistNumber: number) => void
 }
 
 const ImportCalendarPopup = ({ onCancel, handleImport }: IProps) => {
@@ -45,8 +45,11 @@ const ImportCalendarPopup = ({ onCancel, handleImport }: IProps) => {
               <input
                 type="file"
                 accept="application/json"
-                onChange={(e) => {
-                  handleImport(e.target.files?.[0], selectedWorklist)
+                onChange={async (e) => {
+                  handleImport(
+                    await e.target.files?.[0].text(),
+                    selectedWorklist
+                  )
                   onCancel()
                 }}
                 style={{ display: "none" }}

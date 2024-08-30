@@ -1,10 +1,17 @@
 import { ISectionData } from "../content/App/App.types"
 import { LegacySectionDetail, LegacyTerm } from "./legacyStorageMigrators"
 
-interface DataError<T extends number, K extends Record<string, unknown>> {
-  errorCode: T
-  errorData: K
-}
+type DataError<
+  T extends number,
+  K extends Record<string, unknown> | undefined
+> = K extends undefined
+  ? {
+      errorCode: T
+    }
+  : {
+      errorCode: T
+      errorData: K
+    }
 
 type InvalidVersionErr = DataError<0, { version: string }>
 type ConvertLegacyTermErr = DataError<
@@ -17,6 +24,7 @@ type ConvertLegacyDetailErr = DataError<
 >
 type FetchWorkdayDataErr = DataError<3, { sectionCode: string }>
 type FetchCourseIdErr = DataError<4, { sectionCode: string }>
+type UndefinedImportErr = DataError<5, undefined>
 
 /**
  * All recoverable errors generated from the section data layer. Should
@@ -30,8 +38,9 @@ type DataErrors =
   | ConvertLegacyDetailErr
   | FetchWorkdayDataErr
   | FetchCourseIdErr
+  | UndefinedImportErr
 
-const defaultErrorProcessor = (err: DataErrors) => {
+const defaultErrorProcessor = (err: DataErrors): string => {
   switch (err.errorCode) {
     case 0: {
       return `Version ${err.errorData.version} could not be properly migrated! Are you sure this version of the extension supports this format?`
@@ -49,6 +58,9 @@ const defaultErrorProcessor = (err: DataErrors) => {
     }
     case 4: {
       return `${err.errorData.sectionCode}: Could not retrieve course ID.`
+    }
+    case 5: {
+      return "Sections to import could not be read!"
     }
   }
 }

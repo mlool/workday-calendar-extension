@@ -149,10 +149,42 @@ const convertSectionDataToJSON = (
   )
 }
 
+type ProgressUpdater = (x: number) => void
+
+const appendNewSections = async (
+  existingSections: ISectionData[],
+  newSections: ISectionData[] | string | undefined,
+  progressUpdater: ProgressUpdater,
+  worklistNumber?: number
+): Promise<Result<ISectionData[], DataErrors[]>> => {
+  const importErrors: DataErrors[] = []
+  if (newSections === undefined) return wrapInResult([], [{ errorCode: 5 }])
+  const rawSections =
+    typeof newSections === "string"
+      ? loadSectionDataFromJSON(newSections)
+      : packageCurrentData(newSections)
+  const importedSections = await processRawSections(
+    rawSections,
+    progressUpdater
+  )
+  if (!importedSections.ok) importErrors.push(...importedSections.errors)
+  const filteredImportData = worklistNumber
+    ? importedSections.data.filter((x) => x.worklistNumber === worklistNumber)
+    : importedSections.data
+  const allSections = [...existingSections]
+  for (const section of filteredImportData) {
+    // TODO: check for conflicts here.
+    allSections.push(section)
+  }
+  return wrapInResult(allSections, importErrors)
+}
+
 export {
   loadSectionDataFromJSON,
   convertSectionDataToJSON,
   processRawSections,
   sectionDataAutoMigrator,
   packageCurrentData,
+  type ProgressUpdater,
+  appendNewSections,
 }

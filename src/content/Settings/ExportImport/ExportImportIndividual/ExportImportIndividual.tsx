@@ -3,15 +3,11 @@ import { useState, useContext } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
 import { ModalDispatchContext } from "../../../ModalLayer"
-import { ValidVersionData } from "../../../../storage/legacyStorageMigrators"
-import { VersionWithNoNumber } from "../../../../storage/helpers/unnumberedVersionTypeGuards"
-import { handleExport, handleSectionImportFromJSON } from "../ExportImport"
+import { SectionImporter } from "../../../../storage/sectionDataBrowserClient"
+import { handleExport } from "../ExportImport"
 
 interface IProps {
-  handleImportSections: (
-    data: ValidVersionData | VersionWithNoNumber,
-    worklistNumber?: number
-  ) => Promise<void>
+  handleImportSections: SectionImporter
 }
 
 const ExportImportIndividual = ({ handleImportSections }: IProps) => {
@@ -30,13 +26,8 @@ const ExportImportIndividual = ({ handleImportSections }: IProps) => {
       {showImportPopup && (
         <ImportCalendarPopup
           onCancel={() => setShowImportPopup(false)}
-          handleImport={(file, worklistNumber) =>
-            handleSectionImportFromJSON(
-              file,
-              dispatchModal,
-              handleImportSections,
-              worklistNumber
-            )
+          handleImport={(newSections, worklistNumber) =>
+            handleImportSections(newSections, dispatchModal, worklistNumber)
           }
         />
       )}

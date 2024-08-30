@@ -6,17 +6,13 @@ import Theme from "./Theme/Theme"
 import { ExportImport } from "./ExportImport/ExportImport"
 import Contact from "./Contact/Contact"
 import WorklistActions from "./WorklistActions/WorklistActions"
-import { ValidVersionData } from "../../storage/legacyStorageMigrators"
-import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
+import { SectionImporter } from "../../storage/sectionDataBrowserClient"
 
 interface ISettingsProps {
   colorTheme: ColorTheme
   sections: ISectionData[]
   setColorTheme: (theme: ColorTheme) => void
-  handleImportSections: (
-    data: ValidVersionData | VersionWithNoNumber,
-    worklistNumber?: number
-  ) => Promise<void>
+  handleImportSections: SectionImporter
 }
 
 const Settings = ({

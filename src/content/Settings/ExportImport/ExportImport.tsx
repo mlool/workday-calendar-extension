@@ -3,21 +3,13 @@ import "./ExportImport.css"
 import ExternalCalendarExport from "./ExternalCalendarExport"
 import ExportImportIndividual from "./ExportImportIndividual/ExportImportIndividual"
 import { useContext } from "react"
-import {
-  ModalAction,
-  ModalDispatchContext,
-  ModalPreset,
-} from "../../ModalLayer"
-import ProgressBar from "../../ProgressBar/ProgressBar"
-import { ValidVersionData } from "../../../storage/legacyStorageMigrators"
-import { VersionWithNoNumber } from "../../../storage/helpers/unnumberedVersionTypeGuards"
-import {
-  convertSectionDataToJSON,
-  loadSectionDataFromJSON,
-  packageCurrentData,
-} from "../../../storage/sectionStorage"
+import { ModalDispatchContext } from "../../ModalLayer"
 import { postAlertIfHasErrors } from "../../../storage/errors"
-import { readSectionData } from "../../../storage/sectionDataBrowserClient"
+import {
+  downloadSectionsAsJSON,
+  readSectionData,
+  SectionImporter,
+} from "../../../storage/sectionDataBrowserClient"
 
 const handleProgressUpdate = (newProgress: number) => {
   const progressEvent = new CustomEvent("progress", {
@@ -29,60 +21,14 @@ const handleProgressUpdate = (newProgress: number) => {
   document.dispatchEvent(progressEvent)
 }
 
-const handleSectionImportFromJSON = async (
-  inputData: File | undefined,
-  modalDispatcher: React.Dispatch<ModalAction>,
-  importer: (
-    data: ValidVersionData | VersionWithNoNumber,
-    worklistNumber?: number
-  ) => Promise<void>,
-  worklistNumber?: number
-) => {
-  if (inputData === undefined) return
-  const loadingMesage = <ProgressBar message={"Loading Progress: "} />
-  modalDispatcher({
-    preset: ModalPreset.ImportStatus,
-    additionalData: loadingMesage,
-  })
-  const fileContent = await inputData.text()
-  try {
-    const rawSections = loadSectionDataFromJSON(fileContent)
-    await importer(rawSections, worklistNumber)
-  } catch (error) {
-    console.error("Failed to parse JSON file", error)
-  }
-  modalDispatcher({
-    preset: ModalPreset.ImportStatus,
-    additionalData:
-      "Import Successful! Your courses should now be viewable in your worklist",
-  })
-}
-
 const handleExport = async (worklistNumber?: number) => {
   const res = await readSectionData()
   postAlertIfHasErrors(res)
-  const sections =
-    worklistNumber !== undefined
-      ? res.data.filter((section) => section.worklistNumber === worklistNumber)
-      : res.data
-  if (sections.length === 0) {
-    return alert("Please Select A Worklist That Is Not Empty!")
-  }
-  const json = convertSectionDataToJSON(packageCurrentData(res.data))
-  const blob = new Blob([json], { type: "application/json" })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement("a")
-  link.href = url
-  link.download = "schedule.json"
-  link.click()
-  URL.revokeObjectURL(url)
+  downloadSectionsAsJSON(res.data, worklistNumber)
 }
 
 interface IProps {
-  handleImportSections: (
-    data: ValidVersionData | VersionWithNoNumber,
-    worklistNumber?: number
-  ) => Promise<void>
+  handleImportSections: SectionImporter
 }
 
 const ExportImport = ({ handleImportSections }: IProps) => {
@@ -102,11 +48,10 @@ const ExportImport = ({ handleImportSections }: IProps) => {
             <input
               type="file"
               accept="application/json"
-              onChange={(e) =>
-                handleSectionImportFromJSON(
-                  e.target.files?.[0],
-                  dispatchModal,
-                  handleImportSections
+              onChange={async (e) =>
+                handleImportSections(
+                  await e.target.files?.[0].text(),
+                  dispatchModal
                 )
               }
               style={{ display: "none" }}
@@ -121,9 +66,4 @@ const ExportImport = ({ handleImportSections }: IProps) => {
   )
 }
 
-export {
-  ExportImport,
-  handleProgressUpdate,
-  handleSectionImportFromJSON,
-  handleExport,
-}
+export { ExportImport, handleProgressUpdate, handleExport }

@@ -11,6 +11,13 @@ import { handleProgressUpdate as modalProgressUpdater } from "../content/Setting
 import { handleProgressUpdate as mainProgressUpdater } from "../backends/scheduler/nameSearchHelpers"
 import { VersionWithNoNumber } from "./helpers/unnumberedVersionTypeGuards"
 import { ValidVersionData } from "./legacyStorageMigrators"
+import { ModalAction } from "../content/ModalLayer"
+
+type SectionImporter = (
+  newData: string | undefined,
+  modalDispatcher: React.Dispatch<ModalAction>,
+  worklistNumber?: number
+) => Promise<void>
 
 const readSectionData = async (): Promise<
   Result<ISectionData[], DataErrors[]>
@@ -50,9 +57,32 @@ const sendProgressUpdateToAll = (update: number) => {
   mainProgressUpdater(update)
 }
 
+const downloadSectionsAsJSON = async (
+  sections: ISectionData[],
+  worklistNumber?: number
+) => {
+  const finalSections =
+    worklistNumber !== undefined
+      ? sections.filter((section) => section.worklistNumber === worklistNumber)
+      : sections
+  if (finalSections.length === 0) {
+    return alert("Please Select A Worklist That Is Not Empty!")
+  }
+  const json = convertSectionDataToJSON(packageCurrentData(finalSections))
+  const blob = new Blob([json], { type: "application/json" })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = "schedule.json"
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
 export {
+  type SectionImporter,
   readSectionData,
   writeSectionData,
   writeNewSection,
   sendProgressUpdateToAll,
+  downloadSectionsAsJSON,
 }

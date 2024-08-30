@@ -10,20 +10,19 @@ import {
   ColorTheme,
   getNewSectionColor,
 } from "../Settings/Theme/courseColors"
-import { ModalLayer } from "../ModalLayer"
+import { ModalAction, ModalLayer, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
 import {
-  processRawSections,
   loadSectionDataFromJSON,
+  appendNewSections,
 } from "../../storage/sectionStorage"
-import { ValidVersionData } from "../../storage/legacyStorageMigrators"
-import { VersionWithNoNumber } from "../../storage/helpers/unnumberedVersionTypeGuards"
 import { postAlertIfHasErrors } from "../../storage/errors"
 import {
   sendProgressUpdateToAll,
   readSectionData,
   writeSectionData,
 } from "../../storage/sectionDataBrowserClient"
+import ProgressBar from "../ProgressBar/ProgressBar"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -144,25 +143,29 @@ function App() {
   }
 
   const handleImportSections = async (
-    newData: ValidVersionData | VersionWithNoNumber,
+    newData: string | undefined,
+    modalDispatcher: React.Dispatch<ModalAction>,
     worklistNumber?: number
   ) => {
-    const importedSections = await processRawSections(
+    modalDispatcher({
+      preset: ModalPreset.ImportStatus,
+      additionalData: <ProgressBar message={"Loading Progress: "} />,
+    })
+    const allSections = await appendNewSections(
+      sections,
       newData,
-      sendProgressUpdateToAll
+      sendProgressUpdateToAll,
+      worklistNumber
     )
-    const allSections = worklistNumber
-      ? [
-          ...sections,
-          ...importedSections.data.filter(
-            (x) => x.worklistNumber === worklistNumber
-          ),
-        ]
-      : [...sections, ...importedSections.data]
-    const finalSections = assignColors(allSections, colorTheme)
+    const finalSections = assignColors(allSections.data, colorTheme)
     setSections(finalSections)
-    postAlertIfHasErrors(importedSections)
+    postAlertIfHasErrors(allSections)
     await writeSectionData(finalSections)
+    modalDispatcher({
+      preset: ModalPreset.ImportStatus,
+      additionalData:
+        "Import Successful! Your courses should now be viewable in your worklist",
+    })
   }
 
   return (
