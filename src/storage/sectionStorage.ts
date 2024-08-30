@@ -13,6 +13,8 @@ import {
 } from "./helpers/unnumberedVersionTypeGuards"
 import { DataErrors, Result, wrapInResult } from "./errors"
 
+type ProgressUpdateCallback = (x: number) => void
+
 /**
  * Wrap the given `sections` data in a
  * {@link SerializedDataFormat} with the current version number.
@@ -30,7 +32,7 @@ const packageCurrentData = (sections: ISectionData[]): CurrentFormat => ({
  */
 const processRawSections = async (
   rawSections: ValidVersionData | VersionWithNoNumber,
-  progressUpdater?: (x: number) => void
+  progressUpdateCallback?: ProgressUpdateCallback
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
   if (Array.isArray(rawSections) && rawSections.length === 0)
     return { ok: true, data: [] }
@@ -43,7 +45,7 @@ const processRawSections = async (
   return await sectionDataAutoMigrator(
     extractedSections,
     [],
-    progressUpdater !== undefined ? progressUpdater : () => {}
+    progressUpdateCallback !== undefined ? progressUpdateCallback : () => {}
   )
 }
 
@@ -55,43 +57,43 @@ const processRawSections = async (
 const sectionDataAutoMigrator = async (
   input: ValidVersionData,
   accumulatedErrors: DataErrors[],
-  progressUpdater: (x: number) => void
+  progressUpdateCallback: ProgressUpdateCallback
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
   switch (input.version) {
     case "2.0.1":
       return wrapInResult(input.data, accumulatedErrors)
     case "1.6.0":
     case "2.0.0": {
-      const res = v2_0_0(input.data, progressUpdater)
+      const res = v2_0_0(input.data, progressUpdateCallback)
       return sectionDataAutoMigrator(
         {
           version: "2.0.1",
           data: res.data,
         },
         res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors),
-        progressUpdater
+        progressUpdateCallback
       )
     }
     case "1.5.0": {
-      const res = await v1_5_0(input.data, progressUpdater)
+      const res = await v1_5_0(input.data, progressUpdateCallback)
       return sectionDataAutoMigrator(
         {
           version: "2.0.0",
           data: res.data,
         },
         res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors),
-        progressUpdater
+        progressUpdateCallback
       )
     }
     case "1.4.1": {
-      const res = await v1_4_1(input.data, progressUpdater)
+      const res = await v1_4_1(input.data, progressUpdateCallback)
       return sectionDataAutoMigrator(
         {
           version: "2.0.0",
           data: res.data,
         },
         res.ok ? accumulatedErrors : accumulatedErrors.concat(res.errors),
-        progressUpdater
+        progressUpdateCallback
       )
     }
     default:
@@ -149,12 +151,10 @@ const convertSectionDataToJSON = (
   )
 }
 
-type ProgressUpdater = (x: number) => void
-
 const appendNewSections = async (
   existingSections: ISectionData[],
   newSections: ISectionData[] | string | undefined,
-  progressUpdater: ProgressUpdater,
+  progressUpdateCallback: ProgressUpdateCallback,
   worklistNumber?: number
 ): Promise<Result<ISectionData[], DataErrors[]>> => {
   const importErrors: DataErrors[] = []
@@ -165,7 +165,7 @@ const appendNewSections = async (
       : packageCurrentData(newSections)
   const importedSections = await processRawSections(
     rawSections,
-    progressUpdater
+    progressUpdateCallback
   )
   if (!importedSections.ok) importErrors.push(...importedSections.errors)
   const filteredImportData = worklistNumber
@@ -185,6 +185,6 @@ export {
   processRawSections,
   sectionDataAutoMigrator,
   packageCurrentData,
-  type ProgressUpdater,
+  type ProgressUpdateCallback,
   appendNewSections,
 }

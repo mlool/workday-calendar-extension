@@ -9,6 +9,7 @@ import {
   Result,
   wrapInResult,
 } from "./errors"
+import { ProgressUpdateCallback } from "./sectionStorage"
 
 type ValidVersionData =
   | SerializedDataFormat<"1.4.1", v1_4_1_SectionData[]>
@@ -51,7 +52,7 @@ type v1_4_1_PossibleErrors = FetchCourseIdErr[]
 // that was removed in 1.5.0 and then readded in 1.6.0
 const v1_4_1 = async (
   oldSections: v1_4_1_SectionData[],
-  progressUpdater: (x: number) => void
+  progressUpdateCallback: ProgressUpdateCallback
 ): Promise<Result<v2_0_0_SectionData[], v1_4_1_PossibleErrors>> => {
   const errors: v1_4_1_PossibleErrors = []
   const newSections: v2_0_0_SectionData[] = []
@@ -69,7 +70,7 @@ const v1_4_1 = async (
       courseID: newCourseId,
     }
     newSections.push(newSection)
-    progressUpdater(newSections.length / oldSections.length)
+    progressUpdateCallback(newSections.length / oldSections.length)
   }
   return wrapInResult(newSections, errors)
 }
@@ -85,7 +86,7 @@ type v1_5_0_PossibleErrors = FetchWorkdayDataErr[]
 // 1.5 -> 1.6: no instructors + location
 const v1_5_0 = async (
   oldSections: v1_5_0_SectionData[],
-  progressUpdater: (x: number) => void
+  progressUpdateCallback: ProgressUpdateCallback
 ): Promise<Result<v2_0_0_SectionData[], v1_5_0_PossibleErrors>> => {
   const errors: v1_5_0_PossibleErrors = []
   const newSections: v2_0_0_SectionData[] = []
@@ -108,7 +109,7 @@ const v1_5_0 = async (
       instructors: newData.instructors,
       sectionDetails: newSectionDetails,
     })
-    progressUpdater(newSections.length / oldSections.length)
+    progressUpdateCallback(newSections.length / oldSections.length)
   }
   return wrapInResult(newSections, errors)
 }
@@ -124,7 +125,7 @@ type v2_0_0_PossibleErrors = (ConvertLegacyTermErr | ConvertLegacyDetailErr)[]
 // 2.0 -> 2.0.1: no sessions prop, term are enum instead of set
 const v2_0_0 = (
   oldSections: v2_0_0_SectionData[],
-  progressUpdater: (x: number) => void
+  progressUpdateCallback: ProgressUpdateCallback
 ): Result<ISectionData[], v2_0_0_PossibleErrors> => {
   const errors: v2_0_0_PossibleErrors = []
   const legacyTermToTermSetMap = {
@@ -163,7 +164,7 @@ const v2_0_0 = (
         })
         .filter((x) => x !== undefined)
 
-      progressUpdater(index / oldSections.length)
+      progressUpdateCallback(index / oldSections.length)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { term, ...otherOldSectionParts } = oldSection
       return {
