@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import CalendarContainer from "../CalendarContainer/CalendarContainer"
 import { ISectionData, Term, Views } from "./App.types"
@@ -10,9 +10,19 @@ import {
   ColorTheme,
   getNewSectionColor,
 } from "../Settings/Theme/courseColors"
-import { ModalLayer, ModalDispatchContext, ModalPreset } from "../ModalLayer"
+import { ModalAction, ModalLayer, ModalPreset } from "../ModalLayer"
 import { versionOneFiveZeroUpdateNotification } from "../utils"
-import { findCourseId } from "../../backends/scheduler/nameSearchApi"
+import {
+  loadSectionDataFromJSON,
+  appendNewSections,
+} from "../../storage/sectionStorage"
+import { postAlertIfHasErrors } from "../../storage/errors"
+import {
+  sendProgressUpdateToAll,
+  readSectionData,
+  writeSectionData,
+} from "../../storage/sectionDataBrowserClient"
+import ProgressBar from "../ProgressBar/ProgressBar"
 
 function App() {
   const [newSection, setNewSection] = useState<ISectionData | null>(null)
@@ -23,66 +33,24 @@ function App() {
   const [currentView, setCurrentView] = useState<Views>(Views.calendar)
   const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
 
-  const dispatchModal = useContext(ModalDispatchContext)
-
-  const handleSectionImport = async (sections: ISectionData[]) => {
-    dispatchModal({
-      preset: ModalPreset.ImportStatus,
-      additionalData: "Loading...",
-    })
-    const fetchedCourseIDs: string[] = []
-    await sections.reduce(async (promise, section) => {
-      await promise
-      if (!section.courseID) {
-        const courseID = await findCourseId(section.code)
-        if (!courseID) {
-          return
-        }
-        fetchedCourseIDs.push(courseID)
-      }
-    }, Promise.resolve())
-
-    const newSections = sections.map((s) => {
-      if (s.courseID) return s
-      return {
-        ...s,
-        courseID: fetchedCourseIDs.shift(),
-      }
-    })
-
-    setSections(newSections)
-  }
-
   // const prevColorTheme = useRef(colorTheme);
   // const prevSections = useRef(sections);
   // Sync initial state with chrome storage on mount
   useEffect(() => {
     const syncInitialState = () => {
-      chrome.storage.sync.get("sections", (result) => {
-        if (result.sections !== undefined) {
-          handleSectionImport(assignColors(result.sections, ColorTheme.Green))
-          chrome.storage.sync.remove("sections", function () {
-            console.log("Sections reset to empty.")
-          })
-        }
-      })
-
       // we used to persist this, but no longer need to
       chrome.storage.local.remove("currentTerm")
 
+      readSectionData().then((x) => {
+        setSections(assignColors(x.data, colorTheme))
+        postAlertIfHasErrors(x)
+      })
+
       chrome.storage.local.get(
-        ["colorTheme", "sections", "currentWorklistNumber"],
+        ["colorTheme", "currentWorklistNumber"],
         (result) => {
           if (result.colorTheme !== undefined) {
             setColorTheme(result.colorTheme)
-          }
-          if (result.sections !== undefined) {
-            setSections(
-              assignColors(
-                result.sections,
-                result.colorTheme || ColorTheme.Green
-              )
-            )
           }
           if (result.currentWorklistNumber !== undefined) {
             setCurrentWorklistNumber(result.currentWorklistNumber)
@@ -95,12 +63,13 @@ function App() {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal: ISectionData = changes.newSection.newValue
+        const newVal: string | null = changes.newSection.newValue
         if (newVal === null) return
-        setNewSection(newVal)
-        if (newVal.terms.size <= 1) {
+        const newData = loadSectionDataFromJSON<ISectionData>(newVal)
+        setNewSection(newData)
+        if (newData.terms.size <= 1) {
           //Don't set the term to WF, just keep the term to what is selected
-          setCurrentTerm(newVal.terms.values().next().value)
+          setCurrentTerm(newData.terms.values().next().value)
         }
       }
     }
@@ -112,12 +81,6 @@ function App() {
       chrome.storage.onChanged.removeListener(handleStorageChange)
     }
   }, []) // Run only once on mount
-
-  // Update chrome storage whenever relevant state changes
-  useEffect(() => {
-    chrome.storage.local.set({ sections })
-    // alert(JSON.stringify(sections, null, 2))
-  }, [sections])
 
   useEffect(() => {
     chrome.storage.local.set({ currentWorklistNumber })
@@ -132,8 +95,10 @@ function App() {
     // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
     const newSections = assignColors(sections, colorTheme)
 
+    // TODO: this could be faulty, remove/change to deep comparison?
     if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
       setSections(newSections)
+      writeSectionData(newSections)
     }
 
     // Update refs
@@ -142,7 +107,7 @@ function App() {
     // }
   }, [colorTheme, sections]) // React only if these values change
 
-  const handleAddNewSection = () => {
+  const handleAddNewSection = async () => {
     const updatedNewSection = newSection!
     updatedNewSection.worklistNumber = currentWorklistNumber
     updatedNewSection.color = getNewSectionColor(
@@ -151,13 +116,17 @@ function App() {
       colorTheme
     )
 
-    setSections([...sections, updatedNewSection])
+    const updatedSections = [...sections, updatedNewSection]
+    setSections(updatedSections)
     setNewSection(null)
+    await writeSectionData(updatedSections)
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleDeleteSection = (sectionToDelete: ISectionData) => {
-    setSections(sections.filter((s) => s !== sectionToDelete))
+  const handleDeleteSection = async (sectionToDelete: ISectionData) => {
+    const updatedSections = sections.filter((s) => s !== sectionToDelete)
+    setSections(updatedSections)
+    await writeSectionData(updatedSections)
   }
 
   const handleCancelNewSection = () => {
@@ -165,11 +134,38 @@ function App() {
     chrome.storage.local.set({ newSection: null })
   }
 
-  const handleClearWorklist = () => {
+  const handleClearWorklist = async () => {
     const updatedSections = sections.filter(
       (x) => x.worklistNumber !== currentWorklistNumber
     )
     setSections(updatedSections)
+    await writeSectionData(updatedSections)
+  }
+
+  const handleImportSections = async (
+    newData: string | undefined,
+    modalDispatcher: React.Dispatch<ModalAction>,
+    worklistNumber?: number
+  ) => {
+    modalDispatcher({
+      preset: ModalPreset.ImportStatus,
+      additionalData: <ProgressBar message={"Loading Progress: "} />,
+    })
+    const allSections = await appendNewSections(
+      sections,
+      newData,
+      sendProgressUpdateToAll,
+      worklistNumber
+    )
+    const finalSections = assignColors(allSections.data, colorTheme)
+    setSections(finalSections)
+    postAlertIfHasErrors(allSections)
+    await writeSectionData(finalSections)
+    modalDispatcher({
+      preset: ModalPreset.ImportStatus,
+      additionalData:
+        "Import Successful! Your courses should now be viewable in your worklist",
+    })
   }
 
   return (
@@ -188,7 +184,6 @@ function App() {
           <div className="CalendarViewContainer">
             <CalendarContainer
               sections={sections}
-              setSections={setSections}
               newSection={newSection}
               setSectionConflict={setSectionConflict}
               currentWorklistNumber={currentWorklistNumber}
@@ -209,7 +204,7 @@ function App() {
             colorTheme={colorTheme}
             sections={sections}
             setColorTheme={setColorTheme}
-            setSections={setSections}
+            handleImportSections={handleImportSections}
           />
         )}
       </div>

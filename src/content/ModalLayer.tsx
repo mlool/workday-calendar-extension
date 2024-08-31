@@ -258,4 +258,4 @@ function ModalWindow({ modalConfig, bodyData }: ModalWindowProps) {
   )
 }
 
-export { ModalLayer, ModalPreset, ModalDispatchContext }
+export { ModalLayer, ModalPreset, ModalDispatchContext, type ModalAction }

@@ -1,6 +1,7 @@
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import { toggleContainer, handleCourseLoading } from "../content"
 import { handleProgressUpdate } from "../backends/scheduler/nameSearchHelpers"
+import { writeNewSection } from "../storage/sectionDataBrowserClient"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
 // Function to observe DOM changes and add buttons to matching elements
@@ -202,8 +203,12 @@ async function handleCopyScheduleButtonClick(
       console.error("Unable to retrieve selected section")
       continue
     }
-    // Getting existing sections from Chrome storage and adding the new section
-    chrome.storage.local.set({ newSection: selectedSection })
+    // has to be awaited because each section is added via consecutive
+    // button presses.
+    //
+    // TODO: refactor this to add sections more directly.
+    // eslint-disable-next-line no-await-in-loop
+    await writeNewSection(selectedSection)
     handleProgressUpdate(((i - 2) / (tableData.length - 2)) * 100)
 
     if (button) {

@@ -1,15 +1,10 @@
 import "./ExportImportPopup.css"
 import CloseIcon from "../../../Icons/CloseIcon"
-import { ISectionData } from "../../../App/App.types"
 import { useState } from "react"
 
 interface IProps {
   onCancel: () => void
-  sections: ISectionData[]
-  handleImport: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    worklistNumber: number
-  ) => void
+  handleImport: (inputData: string | undefined, worklistNumber: number) => void
 }
 
 const ImportCalendarPopup = ({ onCancel, handleImport }: IProps) => {
@@ -46,12 +41,15 @@ const ImportCalendarPopup = ({ onCancel, handleImport }: IProps) => {
             <div className="CalendarButtonCancel" onClick={onCancel}>
               Cancel
             </div>
-            <div className="CalendarButtonConfirm" onClick={() => handleImport}>
+            <div className="CalendarButtonConfirm">
               <input
                 type="file"
                 accept="application/json"
-                onChange={(e) => {
-                  handleImport(e, selectedWorklist)
+                onChange={async (e) => {
+                  handleImport(
+                    await e.target.files?.[0].text(),
+                    selectedWorklist
+                  )
                   onCancel()
                 }}
                 style={{ display: "none" }}
