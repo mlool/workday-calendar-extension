@@ -169,7 +169,10 @@ const appendNewSections = async (
   )
   if (!importedSections.ok) importErrors.push(...importedSections.errors)
   const filteredImportData = worklistNumber
-    ? importedSections.data.filter((x) => x.worklistNumber === worklistNumber)
+    ? importedSections.data.map((x) => ({
+        ...x,
+        worklistNumber: worklistNumber,
+      }))
     : importedSections.data
   const allSections = [...existingSections]
   for (const section of filteredImportData) {
