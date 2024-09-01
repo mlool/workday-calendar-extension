@@ -151,6 +151,8 @@ function App() {
       preset: ModalPreset.ImportStatus,
       additionalData: <ProgressBar message={"Loading Progress: "} />,
     })
+    const previousSectionsLength = sections.length
+
     const allSections = await appendNewSections(
       sections,
       newData,
@@ -158,14 +160,29 @@ function App() {
       worklistNumber
     )
     const finalSections = assignColors(allSections.data, colorTheme)
-    setSections(finalSections)
-    postAlertIfHasErrors(allSections)
-    await writeSectionData(finalSections)
-    modalDispatcher({
-      preset: ModalPreset.ImportStatus,
-      additionalData:
-        "Import Successful! Your courses should now be viewable in your worklist",
-    })
+
+    const newSections = finalSections.slice(previousSectionsLength);
+
+    const tempWlNum = newSections[0].worklistNumber
+    const hasMultipleWorklists = newSections.some(
+      (section) => section.worklistNumber !== tempWlNum
+    )
+    if (hasMultipleWorklists) {
+      modalDispatcher({
+        preset: ModalPreset.ImportStatus,
+        additionalData:
+          "Warning! You are attempting to import sections from multiple worklists into one worklist. This is not supported as it may cause unexpected behavior. Please use the 'Import All Worklists' button instead.",
+      })
+    } else {
+      setSections(finalSections)
+      postAlertIfHasErrors(allSections)
+      await writeSectionData(finalSections)
+      modalDispatcher({
+        preset: ModalPreset.ImportStatus,
+        additionalData:
+          "Import Successful! Your courses should now be viewable in your worklist",
+      })
+    }
   }
 
   return (
