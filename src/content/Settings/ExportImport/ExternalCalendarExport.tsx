@@ -94,6 +94,7 @@ const ExternalCalendarExport = () => {
         const event: Event = {
           title: sections[i].code,
           description: sections[i].name,
+          location: sections[i].sectionDetails[j].location,
           recurrenceRule:
             "FREQ=WEEKLY;BYDAY=" +
             formattedDays +
