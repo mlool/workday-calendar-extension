@@ -1,92 +1,34 @@
-import { ISectionData } from "../../../App/App.types"
 import "../ExportImport.css"
 import { useState, useContext } from "react"
 import ExportCalendarPopup from "../ExportImportPopups/ExportCalendarPopup"
 import ImportCalendarPopup from "../ExportImportPopups/ImportCalendarPopup"
-import { ModalDispatchContext, ModalPreset } from "../../../ModalLayer"
-import ProgressBar from "../../../ProgressBar/ProgressBar"
+import { ModalDispatchContext } from "../../../ModalLayer"
+import { SectionImporter } from "../../../../storage/sectionDataBrowserClient"
+import { handleExport } from "../ExportImport"
 
 interface IProps {
-  sections: ISectionData[]
-  setSections: (data: ISectionData[]) => void
-  handleSectionImport: (data: ISectionData[]) => void
+  handleImportSections: SectionImporter
 }
 
-const ExportImportIndividual = ({ sections, handleSectionImport }: IProps) => {
+const ExportImportIndividual = ({ handleImportSections }: IProps) => {
   const [showExportPopup, setShowExportPopup] = useState(false)
   const [showImportPopup, setShowImportPopup] = useState(false)
   const dispatchModal = useContext(ModalDispatchContext)
-
-  const handleExport = (sections: ISectionData[], worklistNumber: number) => {
-    sections = sections.filter(
-      (section) => section.worklistNumber === worklistNumber
-    )
-    if (sections.length !== 0) {
-      const json = JSON.stringify(sections, null, 2)
-      const blob = new Blob([json], { type: "application/json" })
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = url
-      link.download = "schedule.json"
-      link.click()
-      URL.revokeObjectURL(url)
-    } else {
-      alert("Please Select A Worklist That Is Not Empty!")
-    }
-  }
-
-  const handleImport = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    worklistNumber: number
-  ) => {
-    const loadingMesage = <ProgressBar message={"Loading Progress: "} />
-    dispatchModal({
-      preset: ModalPreset.ImportStatus,
-      additionalData: loadingMesage,
-    })
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      try {
-        let data: ISectionData[] = JSON.parse(e.target?.result as string)
-        let newSections = [...sections]
-        newSections = newSections.filter(
-          (section) => section.worklistNumber !== worklistNumber
-        )
-        data = data.map((section) => ({
-          code: section.code,
-          color: section.color,
-          name: section.name,
-          sectionDetails: section.sectionDetails,
-          worklistNumber: worklistNumber,
-          term: section.term,
-          instructors: section.instructors,
-        }))
-        newSections = newSections.concat(data)
-        handleSectionImport(newSections)
-      } catch (error) {
-        console.error("Failed to parse JSON file", error)
-      }
-    }
-    reader.readAsText(file)
-  }
 
   return (
     <div>
       {showExportPopup && (
         <ExportCalendarPopup
           onCancel={() => setShowExportPopup(false)}
-          sections={sections}
           exportFunction={handleExport}
         />
       )}
       {showImportPopup && (
         <ImportCalendarPopup
           onCancel={() => setShowImportPopup(false)}
-          sections={sections}
-          handleImport={handleImport}
+          handleImport={(newSections, worklistNumber) =>
+            handleImportSections(newSections, dispatchModal, worklistNumber)
+          }
         />
       )}
       <div className="ExportImportRow">

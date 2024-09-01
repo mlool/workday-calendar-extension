@@ -26,24 +26,25 @@ export function getAllSavedScheduleIDs() {
   }
 }
 
-export function savedScheduleTerm(): Term {
+export function savedScheduleTerm(): Set<Term> {
   const possibleTerms = document.querySelectorAll(
     "[data-automation-id=promptOption]"
   )
 
+  const allTerms = new Set([Term.One, Term.Two])
   if (!possibleTerms) {
-    return Term.winterFull
+    return allTerms
   }
 
   for (let i = 0; i < possibleTerms.length; i++) {
     const text = possibleTerms[i].textContent
 
     if (text && text.includes("Term 1")) {
-      return Term.winterOne
+      return new Set([Term.One])
     } else if (text && text.includes("Term 2")) {
-      return Term.winterTwo
+      return new Set([Term.Two])
     }
   }
 
-  return Term.winterFull
+  return allTerms
 }

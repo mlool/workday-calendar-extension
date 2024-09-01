@@ -16,6 +16,7 @@ rmSync(OUT_DIR, { recursive: true, force: true })
 
 const buildOptions = {
   entryPoints: ["src/content/index.tsx", "src/background/index.ts"],
+  target: ["es6"],
   bundle: true,
   minify: isProd,
   sourcemap: !isProd,

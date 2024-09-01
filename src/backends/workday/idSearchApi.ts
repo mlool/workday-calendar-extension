@@ -2,9 +2,9 @@ import { ISectionData } from "../../content/App/App.types"
 import { handleProgressUpdate } from "../scheduler/nameSearchHelpers"
 import {
   fetchSearchData,
-  parseTerm,
   parseSectionDetails,
   DetailsPath,
+  parseSessionAndTerms,
 } from "./idSearchHelpers"
 import { defaultColorList } from "../../content/Settings/Theme/courseColors"
 
@@ -54,12 +54,15 @@ export async function fetchWorkdayData(
   }
   handleProgressUpdate(75)
 
+  const { session, terms } = parseSessionAndTerms(rawDetails)
+
   const formattedData: ISectionData = {
     code: code,
     name: formattedName,
     instructors: instructors,
     sectionDetails: parseSectionDetails(rawDetails),
-    term: parseTerm(rawDetails),
+    terms: terms,
+    session: session,
     worklistNumber: 0,
     color: defaultColorList[0],
     courseID: courseId,

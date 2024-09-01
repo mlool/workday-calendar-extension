@@ -2,6 +2,7 @@ import "../Form/Form.css"
 import { useContext } from "react"
 import { ModalDispatchContext, ModalPreset } from "../ModalLayer"
 import { findCourseInfo } from "../../backends/scheduler/nameSearchApi"
+import { writeNewSection } from "../../storage/sectionDataBrowserClient"
 
 const ManualCourseEntry = () => {
   const dispatchModal = useContext(ModalDispatchContext)
@@ -15,7 +16,11 @@ const ManualCourseEntry = () => {
 
   const handleManualEntrySubmit = async (manualUrl: string) => {
     const selectedSection = await findCourseInfo("MANUAL_ENTRY", manualUrl)
-    await chrome.storage.local.set({ newSection: selectedSection })
+    if (selectedSection === null)
+      return alert(
+        "Something has gone wrong. Please report to the developers using the contact info in Settings."
+      )
+    writeNewSection(selectedSection)
   }
 
   return (

@@ -1,19 +1,13 @@
 import "./ExportImportPopup.css"
 import CloseIcon from "../../../Icons/CloseIcon"
-import { ISectionData } from "../../../App/App.types"
 import { useState } from "react"
 
 interface IProps {
   onCancel: () => void
-  sections: ISectionData[]
-  exportFunction: (sections: ISectionData[], worklist: number) => void
+  exportFunction: (worklist: number) => Promise<void>
 }
 
-const ExportCalendarPopup = ({
-  onCancel,
-  sections,
-  exportFunction,
-}: IProps) => {
+const ExportCalendarPopup = ({ onCancel, exportFunction }: IProps) => {
   const [selectedWorklist, setSelectedWorklist] = useState<number>(0)
   return (
     <div className="CalendarBackground">
@@ -49,7 +43,7 @@ const ExportCalendarPopup = ({
             </div>
             <div
               className="CalendarButtonConfirm"
-              onClick={() => exportFunction(sections, selectedWorklist)}
+              onClick={() => exportFunction(selectedWorklist)}
             >
               Confirm
             </div>

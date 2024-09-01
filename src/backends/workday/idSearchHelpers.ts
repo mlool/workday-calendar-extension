@@ -23,20 +23,70 @@ export async function fetchSearchData(url: string) {
   }
 }
 
-export function parseTerm(rawTerm: string[]): Term {
-  //If the string includes 2024, check if it includes 2025 also, if it does then it is both W1 and W2, if only 2024, W1, else W2
-  //@TODO: In future this also needs to work for summer terms. Perhaps switch from year based to month based to work for every year
-  let includes2024 = false
-  let includes2025 = false
-  rawTerm.forEach((detail) => {
-    includes2024 = includes2024 || detail.includes("2024")
-    includes2025 = includes2025 || detail.includes("2025")
-  })
-  if (includes2024 && includes2025) return Term.winterFull
-  if (includes2024) return Term.winterOne
-  return Term.winterTwo
+/**
+ * Expects a dateRange in format "YYYY-MM-DD - YYYY-MM-DD".
+ */
+const parseSessionAndTermFromDateRange = (
+  dateRange: string
+): { session: string; terms: Set<Term> } => {
+  const dates = dateRange.trim().split(" - ")
+  const finalSessions = new Set<string>()
+  const finalTerms = new Set<Term>()
+
+  // we need to check term for both dates because workday
+  // may give us a date range that spans multiple terms.
+  // EXAMPLE: MEDD_V 429, BIOC_V 301 labs
+  for (const date of dates) {
+    const [year, month] = date.split("-").map(Number)
+
+    switch (true) {
+      case month >= 1 && month <= 4:
+        finalSessions.add(`${year - 1}W`)
+        finalTerms.add(Term.Two)
+        break
+      case month >= 5 && month <= 6:
+        finalSessions.add(`${year}S`)
+        finalTerms.add(Term.One)
+        break
+      case month >= 7 && month <= 8:
+        finalSessions.add(`${year}S`)
+        finalTerms.add(Term.Two)
+        break
+      case month >= 9 && month <= 12:
+        finalSessions.add(`${year}W`)
+        finalTerms.add(Term.One)
+        break
+      default:
+        throw `Month ${month} parsed from Workday not valid!`
+    }
+  }
+
+  if (finalSessions.size !== 1)
+    throw `Illegal number of sessions found! ${finalSessions}`
+  return { session: finalSessions.values().next().value, terms: finalTerms }
 }
 
+export function parseSessionAndTerms(rawTerm: string[]): {
+  session: string
+  terms: Set<Term>
+} {
+  const finalSessions = new Set<string>()
+  const finalTerms = new Set<Term>()
+  rawTerm.forEach((detail) => {
+    const dateSegment = detail.split(" | ").at(-1)!
+    const { session, terms } = parseSessionAndTermFromDateRange(dateSegment)
+    finalSessions.add(session)
+    terms.forEach((x) => finalTerms.add(x))
+  })
+
+  if (finalSessions.size !== 1)
+    throw `Illegal number of sessions found! ${finalSessions}`
+  return { session: finalSessions.values().next().value, terms: finalTerms }
+}
+
+/**
+ * SCRF-Floor 1-Room 100 | Tue Thu | 11:00 a.m. - 12:30 p.m. | 2024-09-03 - 2024-12-05
+ */
 export const parseSectionDetails = (details: string[]): SectionDetail[] => {
   let detailsArr: SectionDetail[] = []
 
@@ -78,29 +128,17 @@ export const parseSectionDetails = (details: string[]): SectionDetail[] => {
       return acc
     }, [])
 
-    //@TODO: Change for summer term support
-    let term = dateRange.includes("2024") ? Term.winterOne : Term.winterTwo
-    if (dateRange.includes("2024") && dateRange.includes("2025")) {
-      // Case where only one section detail but two term course. Set this term to W1 and push a copy modified to be term 2
-      term = Term.winterOne
+    const termData = parseSessionAndTermFromDateRange(dateRange)
+    termData.terms.forEach((term) =>
       detailsArr.push({
-        term: Term.winterTwo,
+        term: term,
         days: days,
         startTime: startTime,
         endTime: endTime,
         dateRange: dateRange,
         location: location,
       })
-    }
-
-    detailsArr.push({
-      term: term,
-      days: days,
-      startTime: startTime,
-      endTime: endTime,
-      dateRange: dateRange,
-      location: location,
-    })
+    )
   })
 
   //Removing duplicates, some are from reading week split on workday
