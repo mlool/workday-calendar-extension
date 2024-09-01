@@ -203,12 +203,17 @@ async function handleCopyScheduleButtonClick(
         : tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
 
     let selectedSection = null
-    if (tableData[i][tableData[i].length - 1] !== '') {
-      // eslint-disable-next-line no-await-in-loop
-      selectedSection = await fetchWorkdayData(tableData[i][tableData[i].length - 1])
-    } else {
-      // eslint-disable-next-line no-await-in-loop
-      selectedSection = await findCourseInfo(code)
+    console.log(tableData[i][tableData[i].length - 1])
+    try {
+      if (tableData[i][tableData[i].length - 1] !== '') {
+        // eslint-disable-next-line no-await-in-loop
+        selectedSection = await fetchWorkdayData(tableData[i][tableData[i].length - 1])
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        selectedSection = await findCourseInfo(code)
+      }
+    } catch {
+      continue
     }
 
     if (!selectedSection) {
