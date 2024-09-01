@@ -48,7 +48,7 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   }
 }
 
-const extractIdFromDOM = (element: Element) => {
+export const extractIdFromDOM = (element: Element) => {
   const courseIdElement = element.querySelector(
     '[data-automation-id^="selectedItem_15194"]'
   )

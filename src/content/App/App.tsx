@@ -71,6 +71,12 @@ function App() {
           //Don't set the term to WF, just keep the term to what is selected
           setCurrentTerm(newData.terms.values().next().value)
         }
+      } else if (changes.sections) {
+        const newVal: string | null = changes.sections.newValue
+        if (newVal === null) return
+        readSectionData().then((sections) => {
+          setSections(assignColors(sections.data, colorTheme))
+        })
       }
     }
 

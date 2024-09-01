@@ -1,4 +1,4 @@
-import Browser from "webextension-polyfill"
+// import Browser from "webextension-polyfill"
 import { ISectionData } from "../content/App/App.types"
 import { DataErrors, Result } from "./errors"
 import {
@@ -22,7 +22,7 @@ type SectionImporter = (
 const readSectionData = async (): Promise<
   Result<ISectionData[], DataErrors[]>
 > => {
-  const rawSections = (await Browser.storage.local.get("sections")).sections as
+  const rawSections = (await chrome.storage.local.get("sections")).sections as
     | string
     | undefined
     // note: eventually when all supported versions store their data
@@ -42,7 +42,8 @@ const readSectionData = async (): Promise<
 const writeSectionData = async (newSections: ISectionData[]) => {
   const packagedData = packageCurrentData(newSections)
   const serializedData = convertSectionDataToJSON(packagedData)
-  await Browser.storage.local.set({ sections: serializedData })
+  // await Browser.storage.local.set({ sections: serializedData })
+  await chrome.storage.local.set({ sections: serializedData })
 }
 
 const writeNewSection = async (selectedSection: ISectionData) => {
