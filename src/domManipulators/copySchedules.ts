@@ -5,7 +5,10 @@ import { handleProgressUpdate } from "../backends/scheduler/nameSearchHelpers"
 import { fetchWorkdayData } from "../backends/workday/idSearchApi"
 import { extractIdFromDOM } from "../content/utils"
 import { ISectionData } from "../content/App/App.types"
-import { readSectionData, writeSectionData } from "../storage/sectionDataBrowserClient"
+import {
+  readSectionData,
+  writeSectionData,
+} from "../storage/sectionDataBrowserClient"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
 // Function to observe DOM changes and add buttons to matching elements
@@ -193,8 +196,10 @@ async function handleCopyScheduleButtonClick(
     }
   })
 
-  const selectedSections : ISectionData[] = []
-  const currentWorklistNumber = (await chrome.storage.local.get('currentWorklistNumber')).currentWorklistNumber
+  const selectedSections: ISectionData[] = []
+  const currentWorklistNumber = (
+    await chrome.storage.local.get("currentWorklistNumber")
+  ).currentWorklistNumber
   for (let i = 2; i < tableData.length; i++) {
     // Change column that course code is being taken from depending on button type
     const code =
@@ -205,9 +210,11 @@ async function handleCopyScheduleButtonClick(
     let selectedSection = null
     console.log(tableData[i][tableData[i].length - 1])
     try {
-      if (tableData[i][tableData[i].length - 1] !== '') {
+      if (tableData[i][tableData[i].length - 1] !== "") {
         // eslint-disable-next-line no-await-in-loop
-        selectedSection = await fetchWorkdayData(tableData[i][tableData[i].length - 1])
+        selectedSection = await fetchWorkdayData(
+          tableData[i][tableData[i].length - 1]
+        )
       } else {
         // eslint-disable-next-line no-await-in-loop
         selectedSection = await findCourseInfo(code)
@@ -226,7 +233,7 @@ async function handleCopyScheduleButtonClick(
     handleProgressUpdate(((i - 2) / (tableData.length - 2)) * 100)
   }
 
-  const currentSections:ISectionData[] = (await readSectionData()).data
+  const currentSections: ISectionData[] = (await readSectionData()).data
   await writeSectionData(currentSections.concat(selectedSections))
   handleCourseLoading(false)
 }
