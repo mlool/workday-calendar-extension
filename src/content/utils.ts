@@ -76,7 +76,7 @@ const filterSections = (
     (s) =>
       s.worklistNumber === worklist &&
       (term instanceof Set
-        ? s.terms.isSupersetOf(term)
+        ? isSupersetOf(s.terms, term)
         : s.terms.has(term as Term))
   )
 }
@@ -100,9 +100,21 @@ const versionOneFiveZeroUpdateNotification = () => {
     .catch((error) => console.error("Error retrieving flag:", error))
 }
 
+/**
+ * this is provided as a method on Set, but because it's
+ * quite new and we want to avoid compat issues, we're
+ * reimplementing it here.
+ * this is the only fn where we have this issue, hence the
+ * manual replacement instead of polyfilling it.
+ */
+const isSupersetOf = <T>(first: Set<T>, second: Set<T>): boolean => {
+  return Array.from(second.keys()).every((x) => first.has(x))
+}
+
 export {
   versionOneFiveZeroUpdateNotification,
   filterSections,
   extractSection,
   extractIdFromDOM,
+  isSupersetOf,
 }

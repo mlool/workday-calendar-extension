@@ -1,5 +1,6 @@
 import { ISectionData } from "../../App/App.types"
 import { getCourseCode } from "../../Calendar/calendarHelpers"
+import { isSupersetOf } from "../../utils"
 
 export enum ColorTheme {
   GreenBlue = "GREENBLUE",
@@ -108,7 +109,7 @@ export const getNewSectionColor = (
     new Set(
       sectionsInWorklist
         .filter(
-          (x) => x.color !== null && x.terms.isSupersetOf(addedSection.terms)
+          (x) => x.color !== null && isSupersetOf(x.terms, addedSection.terms)
         )
         .map((section) => section.color)
     )
