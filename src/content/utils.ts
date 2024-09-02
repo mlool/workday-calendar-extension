@@ -48,7 +48,7 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   }
 }
 
-export const extractIdFromDOM = (element: Element) => {
+const extractIdFromDOM = (element: Element) => {
   const courseIdElement = element.querySelector(
     '[data-automation-id^="selectedItem_15194"]'
   )
@@ -100,4 +100,9 @@ const versionOneFiveZeroUpdateNotification = () => {
     .catch((error) => console.error("Error retrieving flag:", error))
 }
 
-export { versionOneFiveZeroUpdateNotification, filterSections, extractSection }
+export {
+  versionOneFiveZeroUpdateNotification,
+  filterSections,
+  extractSection,
+  extractIdFromDOM,
+}

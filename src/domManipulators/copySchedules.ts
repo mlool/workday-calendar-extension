@@ -200,6 +200,7 @@ async function handleCopyScheduleButtonClick(
   const currentWorklistNumber = (
     await chrome.storage.local.get("currentWorklistNumber")
   ).currentWorklistNumber
+  const skippedCourses = []
   for (let i = 2; i < tableData.length; i++) {
     // Change column that course code is being taken from depending on button type
     const code =
@@ -208,7 +209,6 @@ async function handleCopyScheduleButtonClick(
         : tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
 
     let selectedSection = null
-    console.log(tableData[i][tableData[i].length - 1])
     try {
       if (tableData[i][tableData[i].length - 1] !== "") {
         // eslint-disable-next-line no-await-in-loop
@@ -220,6 +220,7 @@ async function handleCopyScheduleButtonClick(
         selectedSection = await findCourseInfo(code)
       }
     } catch {
+      skippedCourses.push(code)
       continue
     }
 
@@ -231,6 +232,17 @@ async function handleCopyScheduleButtonClick(
     selectedSection.worklistNumber = currentWorklistNumber
     selectedSections.push(selectedSection)
     handleProgressUpdate(((i - 2) / (tableData.length - 2)) * 100)
+  }
+
+  if (skippedCourses.length > 0) {
+    let message = ""
+    skippedCourses.forEach((course) => {
+      message = message + ", " + course
+    })
+    message =
+      message +
+      " are skipped. This could be due to the course being asynchronus, online, or an error has occured during import. If you think a mistake has happened, don't hesitate to reach out to us through discord. Which can be found in the settings page."
+    alert(message)
   }
 
   const currentSections: ISectionData[] = (await readSectionData()).data
