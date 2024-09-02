@@ -161,7 +161,7 @@ function App() {
     )
     const finalSections = assignColors(allSections.data, colorTheme)
 
-    const newSections = finalSections.slice(previousSectionsLength);
+    const newSections = finalSections.slice(previousSectionsLength)
 
     const tempWlNum = newSections[0].worklistNumber
     const hasMultipleWorklists = newSections.some(
