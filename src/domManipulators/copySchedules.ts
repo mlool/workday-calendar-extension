@@ -1,7 +1,14 @@
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import { toggleContainer, handleCourseLoading } from "../content"
 import { handleProgressUpdate } from "../backends/scheduler/nameSearchHelpers"
-import { writeNewSection } from "../storage/sectionDataBrowserClient"
+// import { writeNewSection } from "../storage/sectionDataBrowserClient"
+import { fetchWorkdayData } from "../backends/workday/idSearchApi"
+import { extractIdFromDOM } from "../content/utils"
+import { ISectionData } from "../content/App/App.types"
+import {
+  readSectionData,
+  writeSectionData,
+} from "../storage/sectionDataBrowserClient"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
 // Function to observe DOM changes and add buttons to matching elements
@@ -178,13 +185,22 @@ async function handleCopyScheduleButtonClick(
 
       rowData.push(cellText)
     })
-
     tableData.push(rowData)
-  })
-  const button = document.querySelector(
-    '.NewSectionButton[title="Add Section"]'
-  ) as HTMLElement
 
+    for (const cell of rowCells) {
+      const courseId = extractIdFromDOM(cell)
+      if (courseId) {
+        rowData.push(courseId)
+        break
+      }
+    }
+  })
+
+  const selectedSections: ISectionData[] = []
+  const currentWorklistNumber = (
+    await chrome.storage.local.get("currentWorklistNumber")
+  ).currentWorklistNumber
+  const skippedCourses = []
   for (let i = 2; i < tableData.length; i++) {
     // Change column that course code is being taken from depending on button type
     const code =
@@ -192,34 +208,44 @@ async function handleCopyScheduleButtonClick(
         ? tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
         : tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
 
-    // The following await-in-loop is not currently parallelizable as
-    // each course is manually loaded in by clicking the NewSectionButton.
-    //
-    // TODO: refactor this to add sections more directly.
-    // eslint-disable-next-line no-await-in-loop
-    const selectedSection = await findCourseInfo(code)
+    let selectedSection = null
+    try {
+      if (tableData[i][tableData[i].length - 1] !== "") {
+        // eslint-disable-next-line no-await-in-loop
+        selectedSection = await fetchWorkdayData(
+          tableData[i][tableData[i].length - 1]
+        )
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        selectedSection = await findCourseInfo(code)
+      }
+    } catch {
+      skippedCourses.push(code)
+      continue
+    }
 
     if (!selectedSection) {
       console.error("Unable to retrieve selected section")
       continue
     }
-    // has to be awaited because each section is added via consecutive
-    // button presses.
-    //
-    // TODO: refactor this to add sections more directly.
-    // eslint-disable-next-line no-await-in-loop
-    await writeNewSection(selectedSection)
+
+    selectedSection.worklistNumber = currentWorklistNumber
+    selectedSections.push(selectedSection)
     handleProgressUpdate(((i - 2) / (tableData.length - 2)) * 100)
-
-    if (button) {
-      button.click()
-    }
   }
 
-  if (button) {
-    setTimeout(function () {
-      button.click()
-    }, 500)
+  if (skippedCourses.length > 0) {
+    let message = ""
+    skippedCourses.forEach((course) => {
+      message = message + ", " + course
+    })
+    message =
+      message +
+      " are skipped. This could be due to the course being asynchronus, online, or an error has occured during import. If you think a mistake has happened, don't hesitate to reach out to us through discord. Which can be found in the settings page."
+    alert(message)
   }
+
+  const currentSections: ISectionData[] = (await readSectionData()).data
+  await writeSectionData(currentSections.concat(selectedSections))
   handleCourseLoading(false)
 }
