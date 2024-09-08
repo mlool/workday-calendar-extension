@@ -7,18 +7,14 @@ import { writeNewSection } from "../storage/sectionDataBrowserClient"
 
 // Function to apply visibility based on stored settings
 function applyVisibility(hide: boolean): void {
-  //console.log('hide? ', hide);
+  const images = document.querySelectorAll("img")
+  const regex = /\b\d{8}\b/; // Regular expression to match an 8-digit number (i.e. a student ID)
 
-  const selectors = [
-    "img.wdappchrome-aax",
-    "img.wdappchrome-aaam",
-    "img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW",
-  ]
-
-  const profilePictures = document.querySelectorAll(selectors.join(", "))
-  profilePictures.forEach((img) => {
-    ;(img as HTMLImageElement).style.visibility = hide ? "hidden" : "visible"
-  })
+  images.forEach((img) => {
+    if (regex.test(img.alt)) {
+      img.style.visibility = hide ? "hidden" : "visible";
+    }
+  });
 }
 
 // Function to set up a MutationObserver
@@ -28,23 +24,17 @@ function observeMutations(hide: boolean): void {
       mutation.addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const element = node as HTMLElement
-          if (
-            element.matches(
-              "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
-            )
-          ) {
+          if (element.tagName === "IMG" && /\b\d{8}\b/.test((element as HTMLImageElement).alt)) {
             ;(element as HTMLImageElement).style.visibility = hide
               ? "hidden"
               : "visible"
           }
-          const nestedImages = element.querySelectorAll(
-            "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
-          )
+          const nestedImages = element.querySelectorAll("img");
           nestedImages.forEach((img) => {
-            ;(img as HTMLImageElement).style.visibility = hide
-              ? "hidden"
-              : "visible"
-          })
+            if (/\b\d{8}\b/.test(img.alt)) {
+              img.style.visibility = hide ? "hidden" : "visible";
+            }
+          });
         }
       })
     })
