@@ -15,6 +15,17 @@ function applyVisibility(hide: boolean): void {
       img.style.visibility = hide ? "hidden" : "visible"
     }
   })
+
+  const selectors = [
+    "img.wdappchrome-aax",
+    "img.wdappchrome-aaam",
+    "img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW",
+  ]
+
+  const profilePictures = document.querySelectorAll(selectors.join(", "))
+  profilePictures.forEach((img) => {
+    ;(img as HTMLImageElement).style.visibility = hide ? "hidden" : "visible"
+  })
 }
 
 // Function to set up a MutationObserver
@@ -25,8 +36,11 @@ function observeMutations(hide: boolean): void {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const element = node as HTMLElement
           if (
-            element.tagName === "IMG" &&
-            /\b\d{8}\b/.test((element as HTMLImageElement).alt)
+            (element.tagName === "IMG" &&
+              /\b\d{8}\b/.test((element as HTMLImageElement).alt)) ||
+            element.matches(
+              "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
+            )
           ) {
             ;(element as HTMLImageElement).style.visibility = hide
               ? "hidden"
@@ -37,6 +51,14 @@ function observeMutations(hide: boolean): void {
             if (/\b\d{8}\b/.test(img.alt)) {
               img.style.visibility = hide ? "hidden" : "visible"
             }
+          })
+          const nestedImages2 = element.querySelectorAll(
+            "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
+          )
+          nestedImages2.forEach((img) => {
+            ;(img as HTMLImageElement).style.visibility = hide
+              ? "hidden"
+              : "visible"
           })
         }
       })
