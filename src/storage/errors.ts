@@ -25,6 +25,7 @@ type ConvertLegacyDetailErr = DataError<
 type FetchWorkdayDataErr = DataError<3, { sectionCode: string }>
 type FetchCourseIdErr = DataError<4, { sectionCode: string }>
 type UndefinedImportErr = DataError<5, undefined>
+type MultipleWorklistInIndividualImportErr = DataError<6, undefined>
 
 /**
  * All recoverable errors generated from the section data layer. Should
@@ -39,6 +40,7 @@ type DataErrors =
   | FetchWorkdayDataErr
   | FetchCourseIdErr
   | UndefinedImportErr
+  | MultipleWorklistInIndividualImportErr
 
 const defaultErrorProcessor = (err: DataErrors): string => {
   switch (err.errorCode) {
@@ -61,6 +63,9 @@ const defaultErrorProcessor = (err: DataErrors): string => {
     }
     case 5: {
       return "Sections to import could not be read!"
+    }
+    case 6: {
+      return "Warning! You are attempting to import sections from multiple worklists into one worklist. This may cause unexpected behavior - please use the 'Import All Worklists' button instead."
     }
   }
 }

@@ -151,7 +151,7 @@ const convertSectionDataToJSON = (
   )
 }
 
-const appendNewSections = async (
+const replaceWithNewSections = async (
   existingSections: ISectionData[],
   newSections: ISectionData[] | string | undefined,
   progressUpdateCallback: ProgressUpdateCallback,
@@ -168,13 +168,25 @@ const appendNewSections = async (
     progressUpdateCallback
   )
   if (!importedSections.ok) importErrors.push(...importedSections.errors)
-  const filteredImportData = worklistNumber
-    ? importedSections.data.map((x) => ({
-        ...x,
-        worklistNumber: worklistNumber,
-      }))
-    : importedSections.data
-  const allSections = [...existingSections]
+
+  const worklistsInImport = [
+    ...new Set(importedSections.data.map((x) => x.worklistNumber)),
+  ]
+  if (worklistNumber !== undefined && worklistsInImport.length > 1) {
+    return wrapInResult([], [...importErrors, { errorCode: 6 }])
+  }
+
+  const filteredImportData =
+    worklistNumber !== undefined
+      ? importedSections.data.map((x) => ({
+          ...x,
+          worklistNumber: worklistNumber,
+        }))
+      : importedSections.data
+  const allSections =
+    worklistNumber !== undefined
+      ? [...existingSections.filter((x) => x.worklistNumber !== worklistNumber)]
+      : []
   for (const section of filteredImportData) {
     // TODO: check for conflicts here.
     allSections.push(section)
@@ -189,5 +201,5 @@ export {
   sectionDataAutoMigrator,
   packageCurrentData,
   type ProgressUpdateCallback,
-  appendNewSections,
+  replaceWithNewSections,
 }
