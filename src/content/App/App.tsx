@@ -174,8 +174,8 @@ function App() {
         preset: ModalPreset.ImportStatus,
         additionalData: (
           <ul style={{ fontSize: "1.2em", padding: "10px" }}>
-            {allSections.errors.map((x) => (
-              <li>{defaultErrorProcessor(x)}</li>
+            {allSections.errors.map((x, index) => (
+              <li key={index}>{defaultErrorProcessor(x)}</li>
             ))}
           </ul>
         ),
