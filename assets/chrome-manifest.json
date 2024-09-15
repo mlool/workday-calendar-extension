@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "UBC Workday Side by Side Calendar",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Calendar for the new UBC Workday course selection.",
   "icons": {
     "16": "logo16.png",
