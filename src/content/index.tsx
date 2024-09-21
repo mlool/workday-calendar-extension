@@ -6,65 +6,59 @@ import { observeDOMAndAddCopyScheduleButtons } from "../domManipulators/copySche
 import { writeNewSection } from "../storage/sectionDataBrowserClient"
 
 // Function to apply visibility based on stored settings
+// Utility function to check if an image is a PNG and apply the visibility
+function checkAndApplyImageVisibility(
+  img: HTMLImageElement,
+  hide: boolean
+): void {
+  const imageElement = new Image()
+  imageElement.src = img.src
+
+  imageElement.onload = function () {
+    fetch(img.src)
+      .then((response) => response.blob())
+      .then((blob) => {
+        if (blob.type === "image/png") {
+          img.style.visibility = hide ? "hidden" : "visible"
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error)
+      })
+  }
+}
+
+// Function to apply visibility to all images on the page
 function applyVisibility(hide: boolean): void {
   const images = document.querySelectorAll("img")
-  const regex = /\b\d{8}\b/ // Regular expression to match an 8-digit number (i.e. a student ID)
-
   images.forEach((img) => {
-    if (regex.test(img.alt)) {
-      img.style.visibility = hide ? "hidden" : "visible"
-    }
-  })
-
-  const selectors = [
-    "img.wdappchrome-aax",
-    "img.wdappchrome-aaam",
-    "img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW",
-  ]
-
-  const profilePictures = document.querySelectorAll(selectors.join(", "))
-  profilePictures.forEach((img) => {
-    ;(img as HTMLImageElement).style.visibility = hide ? "hidden" : "visible"
+    checkAndApplyImageVisibility(img as HTMLImageElement, hide)
   })
 }
 
-// Function to set up a MutationObserver
+// Function to observe changes to the DOM and handle new images
 function observeMutations(hide: boolean): void {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           const element = node as HTMLElement
-          if (
-            (element.tagName === "IMG" &&
-              /\b\d{8}\b/.test((element as HTMLImageElement).alt)) ||
-            element.matches(
-              "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
+
+          // Check if the added node is an <img> tag or contains <img> tags
+          if (element.tagName === "IMG") {
+            checkAndApplyImageVisibility(element as HTMLImageElement, hide)
+          } else {
+            const nestedImages = element.querySelectorAll("img")
+            nestedImages.forEach((img) =>
+              checkAndApplyImageVisibility(img as HTMLImageElement, hide)
             )
-          ) {
-            ;(element as HTMLImageElement).style.visibility = hide
-              ? "hidden"
-              : "visible"
           }
-          const nestedImages = element.querySelectorAll("img")
-          nestedImages.forEach((img) => {
-            if (/\b\d{8}\b/.test(img.alt)) {
-              img.style.visibility = hide ? "hidden" : "visible"
-            }
-          })
-          const nestedImages2 = element.querySelectorAll(
-            "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
-          )
-          nestedImages2.forEach((img) => {
-            ;(img as HTMLImageElement).style.visibility = hide
-              ? "hidden"
-              : "visible"
-          })
         }
       })
     })
   })
 
+  // Start observing for changes in the document body
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
@@ -243,7 +237,7 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   })
 
   // Inserting the button before the given element
-  if (reskinButton && reskinButton === true) {
+  if (reskinButton) {
     element.appendChild(button)
     return
   }
