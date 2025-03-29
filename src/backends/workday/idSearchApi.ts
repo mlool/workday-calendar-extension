@@ -15,16 +15,18 @@ export async function fetchWorkdayData(
 ): Promise<ISectionData | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
   handleProgressUpdate(65)
-
-  const path = rawData["body"]["children"][0]["children"][0]["children"]
-  const rawName = path[0]["instances"][0]["text"]
+  const path = rawData["body"]["children"][0]["sections"][0]["children"]
+  const rawName = path[0]["children"][0]["instances"][0]["text"]
   const formattedName = rawName.split(" - ")[1]
   const code =
-    rawData["body"]["children"][1]["children"][0]["values"]["0"]["label"].split(
-      " - "
-    )[0]
+    rawData["body"]["children"][0]["sections"][2]["children"][0]["children"][0][
+      "values"
+    ]["0"]["label"].split(" - ")[0]
+
   const possibleDetailsPath =
-    rawData["body"]["children"][0]["children"][1]["children"]
+    rawData["body"]["children"][0]["sections"][1]["children"][0]["children"][0][
+      "children"
+    ][0]["children"]
 
   const meetingPatternIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["label"] === "Meeting Patterns"
