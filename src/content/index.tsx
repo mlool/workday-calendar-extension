@@ -103,19 +103,19 @@ function waitAndClick(selector: string, index: number = 0): Promise<void> {
 async function startAutoFill() {
   console.log("Starting autofill...")
 
-  waitAndClick('[data-uxi-widget-type="selectinputicon"]', 0) // open start date dropdown
+  waitAndClick('[data-uxi-widget-type="selectinput"]', 0) // open start date dropdown
     .then(() => waitAndClick('[data-automation-label="Future Periods"]')) // select future periods
     .then(() =>
-      waitAndClick('[data-automation-label="2024-25 UBC-V Academic Year"]')
+      waitAndClick('[data-automation-label="2025-26 UBC-V Academic Year"]')
     ) // select UBC V
     .then(() =>
       waitAndClick(
-        '[data-automation-label="2024-25 Winter Term 1 (UBC-V) (2024-09-03-2024-12-06)"]'
+        '[data-automation-label="2025-26 Winter Term 1 (UBC-V) (2025-09-02-2025-12-05)"]'
       )
     ) // select Winter Term 1
     .then(() =>
       waitAndClick(
-        '[data-automation-label="2024-25 Winter Term 2 (UBC-V) (2025-01-06-2025-04-08)"]'
+        '[data-automation-label="2025-26 Winter Term 2 (UBC-V) (2026-01-05-2026-04-10)"]'
       )
     ) // select Winter Term 2
     .then(() => waitAndClick('[data-automation-id="promptSearchButton"]', 0)) // close start date dropdown

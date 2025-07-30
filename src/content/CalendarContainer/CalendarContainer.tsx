@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useMemo, useEffect } from "react"
 import TabBar from "../../components/TabBar"
 import { ISectionData, Term_String_Map, Term } from "../App/App.types"
 import Calendar from "../Calendar/Calendar"
@@ -28,7 +28,7 @@ const CalendarContainer = ({
   const WORKLISTCOUNT = [0, 1, 2, 3]
   const TERMS = [Term.One, Term.Two]
 
-  const getSectionMatrix = (term: Term) => {
+  const { sectionsToRender, conflict } = useMemo(() => {
     const calendarSectionsTermOne = filterSections(
       sections,
       currentWorklistNumber,
@@ -45,22 +45,27 @@ const CalendarContainer = ({
       newSection,
       Term.One
     )
-
     const sectionsToRenderTermTwo = convertToMatrix(
       calendarSectionsTermTwo,
       newSection,
       Term.Two
     )
 
-    setSectionConflict(sectionsToRenderTermOne[0] || sectionsToRenderTermTwo[0])
-    return term === Term.One
-      ? sectionsToRenderTermOne[1]
-      : sectionsToRenderTermTwo[1]
-  }
+    return {
+      conflict: sectionsToRenderTermOne[0] || sectionsToRenderTermTwo[0],
+      sectionsToRender:
+        currentTerm === Term.One
+          ? sectionsToRenderTermOne[1]
+          : sectionsToRenderTermTwo[1],
+    }
+  }, [sections, newSection, currentWorklistNumber, currentTerm])
+
+  useEffect(() => {
+    setSectionConflict(conflict)
+  }, [conflict, setSectionConflict])
 
   const canSwitchTerms = (): boolean => {
-    if (newSection !== null && newSection.terms.size <= 1) return false
-    return true
+    return !(newSection !== null && newSection.terms.size <= 1)
   }
 
   return (
@@ -85,7 +90,7 @@ const CalendarContainer = ({
         />
       </div>
 
-      <Calendar sectionsToRender={getSectionMatrix(currentTerm)} />
+      <Calendar sectionsToRender={sectionsToRender} />
     </div>
   )
 }

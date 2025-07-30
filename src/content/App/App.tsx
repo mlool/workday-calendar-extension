@@ -72,7 +72,7 @@ function App() {
         setNewSection(newData)
         if (newData.terms.size <= 1) {
           //Don't set the term to WF, just keep the term to what is selected
-          setCurrentTerm(newData.terms.values().next().value)
+          setCurrentTerm(newData.terms.values().next().value ?? Term.One)
         }
       } else if (changes.sections) {
         const newVal: string | null = changes.sections.newValue
