@@ -1,4 +1,3 @@
-/* eslint-disable */
 interface IProps {
   size: number
 }
@@ -12,7 +11,7 @@ const QuestionIcon = ({ size }: IProps) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_429_11043)">
+      <g clipPath="url(#clip0_429_11043)">
         <circle
           cx="12"
           cy="11.9999"
