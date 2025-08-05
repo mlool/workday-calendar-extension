@@ -92,7 +92,8 @@ export const parseSectionDetails = (details: string[]): SectionDetail[] => {
 
   details.forEach((detail) => {
     const detailParts = detail.split(" | ")
-    if (detailParts.length !== 3 && detailParts.length !== 4) {
+
+    if (detailParts.length !== 7) {
       alert(JSON.stringify(detailParts))
       alert("Invalid section details format")
     }
@@ -101,13 +102,8 @@ export const parseSectionDetails = (details: string[]): SectionDetail[] => {
     let timeRange = ""
     let dateRange = ""
 
-    if (detailParts.length === 3) {
-      // Without location
-      ;[daysString, timeRange, dateRange] = detailParts
-    } else {
-      // With location
-      ;[location, daysString, timeRange, dateRange] = detailParts
-    }
+    ;[dateRange, timeRange, daysString, location] = detailParts.reverse()
+    location = location.slice(1, 4)
 
     let days = daysString.split(" ")
     let [startTime, endTime] = timeRange.split(" - ")
