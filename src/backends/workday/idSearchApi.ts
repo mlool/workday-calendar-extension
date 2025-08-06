@@ -15,12 +15,15 @@ export async function fetchWorkdayData(
 ): Promise<ISectionData | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
   handleProgressUpdate(65)
-  const rawName = rawData['body']['children'][0]['children'][0]['children'][0]['instances'][0]['text']
+  const rawName =
+    rawData["body"]["children"][0]["children"][0]["children"][0][
+      "instances"
+    ][0]["text"]
   const formattedName = rawName.split(" - ")[1]
   const code = rawName.split(" - ")[0]
 
   const possibleDetailsPath =
-    rawData['body']['children'][0]['children'][1]['children'][0]['children']
+    rawData["body"]["children"][0]["children"][1]["children"][0]["children"]
 
   const meetingPatternIndex = possibleDetailsPath.findIndex(
     (item: DetailsPath) => item["label"] === "Meeting Patterns"
