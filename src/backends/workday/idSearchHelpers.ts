@@ -84,26 +84,45 @@ export function parseSessionAndTerms(rawTerm: string[]): {
   return { session: finalSessions.values().next().value, terms: finalTerms }
 }
 
-/**
- * SCRF-Floor 1-Room 100 | Tue Thu | 11:00 a.m. - 12:30 p.m. | 2024-09-03 - 2024-12-05
- */
 export const parseSectionDetails = (details: string[]): SectionDetail[] => {
   let detailsArr: SectionDetail[] = []
 
   details.forEach((detail) => {
     const detailParts = detail.split(" | ")
 
-    if (detailParts.length !== 7) {
+    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+
+    let location,
+      daysString,
+      timeRange,
+      dateRange,
+      buildingName,
+      floorNumber,
+      roomNumber = ""
+
+    // Handle edge case for lab sections that may hide some details
+    // E.g. ["Fri | 2:00 p.m. - 5:00 p.m. | 2026-01-09 - 2026-02-13"]
+    if (detailParts.length === 3) {
+      ;[daysString, timeRange, dateRange] = detailParts
+
+      location = "TBA"
+
+      // E.g. ["UBCV","Buchanan Building (BUCH)","Floor: 2","Room: D222","Tue Thu","9:30 a.m. - 11:00 a.m.","2026-02-24 - 2026-04-09"]
+    } else if (detailParts.length === 7) {
+      ;[
+        dateRange,
+        timeRange,
+        daysString,
+        roomNumber,
+        floorNumber,
+        buildingName,
+      ] = detailParts.reverse()
+
+      location = `${buildingName} - ${floorNumber} - ${roomNumber}`
+    } else {
       alert(JSON.stringify(detailParts))
       alert("Invalid section details format")
     }
-    let location = ""
-    let daysString = ""
-    let timeRange = ""
-    let dateRange = ""
-
-    ;[dateRange, timeRange, daysString, location] = detailParts.reverse()
-    location = location.slice(1, 4)
 
     let days = daysString.split(" ")
     let [startTime, endTime] = timeRange.split(" - ")
@@ -112,8 +131,6 @@ export const parseSectionDetails = (details: string[]): SectionDetail[] => {
     endTime = convertTo24HourFormat(endTime)
 
     //Handle the "Fri (Alternate Weeks)" case, or any text that isn't a valid day
-    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"]
-
     days = days.reduce<string[]>((acc, str) => {
       const firstThreeChars = str.substring(0, 3)
 
