@@ -33,7 +33,11 @@ export async function fetchWorkdayData(
   for (const detail of detailsPath) {
     rawDetails.push(detail["text"])
   }
-  const instructorsIndex = possibleDetailsPath.findIndex(
+
+  const instructorDetailsPath =
+    rawData["body"]["children"][0]["children"][0]["children"]
+
+  const instructorsIndex = instructorDetailsPath.findIndex(
     (item: DetailsPath) => item["widget"] === "panel"
   )
 
@@ -41,9 +45,7 @@ export async function fetchWorkdayData(
   if (instructorsIndex !== -1) {
     try {
       const instructorsPath =
-        possibleDetailsPath[instructorsIndex]["children"][0]["children"][0][
-          "instances"
-        ]
+        instructorDetailsPath[instructorsIndex]["children"][0]["instances"]
       for (const instructor of instructorsPath) {
         instructors.push(instructor["text"])
       }
