@@ -1,0 +1,49 @@
+.calendar-controls {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    margin-bottom: 2px;
+    gap: 3px;
+}
+
+.control-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 60px;
+}
+
+.button-group {
+    display: flex;
+    gap: 5px;
+}
+
+.control-button {
+    padding: 3px 16px;
+    border: 1px solid var(--border-secondary);
+    background-color: var(--control-button-bg);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-dark);
+}
+
+.control-button:hover {
+    background-color: var(--control-button-hover);
+    border-color: var(--border-hover);
+}
+
+.control-button.active {
+    background-color: var(--primary-color);
+    color: var(--text-white);
+    border-color: var(--primary-color);
+}

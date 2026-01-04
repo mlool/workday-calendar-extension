@@ -1,0 +1,875 @@
+{
+    "widget": "root",
+    "accountTasks": [
+        {
+            "label": "Change Preferences",
+            "uri": "/ubc/task/2998$2725"
+        }
+    ],
+    "autoCompleteSearch": true,
+    "body": {
+        "widget": "vbox",
+        "iid": "6$97082",
+        "enabled": false,
+        "children": [
+            {
+                "widget": "hbox",
+                "children": [
+                    {
+                        "widget": "fieldSet",
+                        "children": [
+                            {
+                                "widget": "monikerList",
+                                "ecid": "56$445880",
+                                "iid": "15$363613",
+                                "enabled": false,
+                                "label": "Course",
+                                "instances": [
+                                    {
+                                        "widget": "moniker",
+                                        "instanceId": "14847$38387",
+                                        "text": "ACAM_V 100 - Introduction to Asian Canadian Studies",
+                                        "rt": true,
+                                        "pv": true,
+                                        "v": true
+                                    }
+                                ],
+                                "selfUriTemplate": "/ubc/inst/15$363613/14847$38387",
+                                "relatedTasksUriTemplate": "/ubc/inst/14847$38387/rel-tasks",
+                                "propertyName": "wd:Course_Listing__Singular_--IS",
+                                "singular": true
+                            },
+                            {
+                                "widget": "richTextArea",
+                                "ecid": "56$548797",
+                                "iid": "2737$527",
+                                "enabled": false,
+                                "label": "Description",
+                                "value": "<p>Asian Canadian identity, communities, histories, politics, and cultural production, with attention to the diverse approaches and methods that animate Asian Canadian Studies.</p>",
+                                "enableNewUX": true,
+                                "propertyName": "wd:Course_Section_Definition_Description"
+                            },
+                            {
+                                "widget": "monikerList",
+                                "ecid": "56$445881",
+                                "iid": "15$169230",
+                                "enabled": false,
+                                "label": "Academic Period",
+                                "instances": [
+                                    {
+                                        "widget": "moniker",
+                                        "instanceId": "6100$198",
+                                        "text": "2025-26 Winter Term 2 (UBC-V)",
+                                        "rt": true
+                                    }
+                                ],
+                                "selfUriTemplate": "/ubc/inst/15$169230/6100$198",
+                                "relatedTasksUriTemplate": "/ubc/inst/6100$198/rel-tasks",
+                                "propertyName": "wd:Academic_Period__Singular_--IS",
+                                "singular": true
+                            },
+                            {
+                                "widget": "panel",
+                                "ecid": "56$501342",
+                                "iid": "6$108866",
+                                "enabled": false,
+                                "children": [
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$501340",
+                                        "iid": "15$373199",
+                                        "enabled": false,
+                                        "label": "Instructor Teaching",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "247$38835",
+                                                "text": "Alifa Bandali",
+                                                "action": "person",
+                                                "rt": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$373199/247$38835",
+                                        "relatedTasksUriTemplate": "/ubc/inst/247$38835/rel-tasks",
+                                        "propertyName": "wd:Academic_Appointee_Enabled__Nonsingular_--IS"
+                                    }
+                                ],
+                                "propertyName": "wd:Course_Section_Instruction_Roles_View",
+                                "doNotWrapInTab": true
+                            },
+                            {
+                                "widget": "text",
+                                "ecid": "56$498506",
+                                "iid": "4$32920",
+                                "enabled": false,
+                                "label": "Start/End Date",
+                                "value": "2026-01-06 - 2026-04-09",
+                                "propertyName": "wd:Activity_Offering_Date_Range"
+                            },
+                            {
+                                "widget": "monikerList",
+                                "ecid": "56$445878",
+                                "iid": "15$356486",
+                                "enabled": false,
+                                "label": "Status",
+                                "instances": [
+                                    {
+                                        "widget": "moniker",
+                                        "instanceId": "13654$3",
+                                        "text": "Closed",
+                                        "rt": true
+                                    }
+                                ],
+                                "selfUriTemplate": "/ubc/inst/15$356486/13654$3",
+                                "relatedTasksUriTemplate": "/ubc/inst/13654$3/rel-tasks",
+                                "propertyName": "wd:Activity_Offering_Status__Singular_--IS",
+                                "singular": true
+                            },
+                            {
+                                "widget": "text",
+                                "ecid": "56$785209",
+                                "iid": "4$123792",
+                                "enabled": false,
+                                "label": "Total Section Capacity",
+                                "value": "55",
+                                "propertyName": "wd:Section_Capacity"
+                            },
+                            {
+                                "widget": "text",
+                                "ecid": "56$765114",
+                                "iid": "4$98721",
+                                "enabled": false,
+                                "label": "Seats Available",
+                                "value": "0 of 55",
+                                "propertyName": "wd:Unreserved_Seats_Available"
+                            }
+                        ],
+                        "label": "General Information",
+                        "showBorder": true,
+                        "layoutInstanceId": "1599$36055"
+                    },
+                    {
+                        "widget": "vbox",
+                        "children": [
+                            {
+                                "widget": "fieldSet",
+                                "children": [
+                                    {
+                                        "widget": "text",
+                                        "ecid": "56$445879",
+                                        "iid": "4$27784",
+                                        "enabled": false,
+                                        "label": "Credits",
+                                        "value": "3 Credits",
+                                        "propertyName": "wd:Student_Course_Min_Max_Unit_Types"
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$445884",
+                                        "iid": "15$405949",
+                                        "enabled": false,
+                                        "label": "Grading Basis",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "25405$2",
+                                                "text": "Credit/D/Fail",
+                                                "rt": true
+                                            },
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "25405$5",
+                                                "text": "Graded",
+                                                "rt": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$405949/[IID]",
+                                        "relatedTasksUriTemplate": "/ubc/inst/[IID]/rel-tasks",
+                                        "propertyName": "wd:Grading_Basis__Nonsingular_--IS"
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$495990",
+                                        "iid": "15$174706",
+                                        "enabled": false,
+                                        "label": "Instructional Formats",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "12837$4",
+                                                "text": "Lecture",
+                                                "rt": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$174706/12837$4",
+                                        "relatedTasksUriTemplate": "/ubc/inst/12837$4/rel-tasks",
+                                        "propertyName": "wd:Instructional_Format__Nonsingular_--IS"
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$629575",
+                                        "iid": "15$370262",
+                                        "enabled": false,
+                                        "label": "Delivery Mode",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "12844$2",
+                                                "text": "In Person Learning",
+                                                "rt": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$370262/12844$2",
+                                        "relatedTasksUriTemplate": "/ubc/inst/12844$2/rel-tasks",
+                                        "propertyName": "wd:Student_Delivery_Mode__Singular_--IS",
+                                        "singular": true
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$636885",
+                                        "iid": "15$177816",
+                                        "enabled": false,
+                                        "label": "Campus",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "216$24345",
+                                                "text": "UBC Vancouver Campus",
+                                                "action": "location",
+                                                "rt": true,
+                                                "uxiTags": "instance-id=216$24345;class-id=1$216;ml-feedback-id="
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$177816/216$24345",
+                                        "relatedTasksUriTemplate": "/ubc/inst/216$24345/rel-tasks",
+                                        "propertyName": "wd:Campus_Location__Nonsingular_--IS"
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$498892",
+                                        "iid": "15$178362",
+                                        "enabled": false,
+                                        "label": "Meeting Patterns",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "13229$850582",
+                                                "text": "UBCV | Buchanan Building (BUCH) | Floor: 2 | Room: D222 | Tue Thu | 9:30 a.m. - 11:00 a.m. | 2026-01-06 - 2026-02-12",
+                                                "rt": true,
+                                                "pv": true,
+                                                "v": true
+                                            },
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "13229$850683",
+                                                "text": "UBCV | Buchanan Building (BUCH) | Floor: 2 | Room: D222 | Tue Thu | 9:30 a.m. - 11:00 a.m. | 2026-02-24 - 2026-04-09",
+                                                "rt": true,
+                                                "pv": true,
+                                                "v": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$178362/[IID]",
+                                        "relatedTasksUriTemplate": "/ubc/inst/[IID]/rel-tasks",
+                                        "propertyName": "wd:Student_Course_Section_Component__Nonsingular_--IS"
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$741335",
+                                        "iid": "15$358755",
+                                        "enabled": false,
+                                        "label": "Course Tags",
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "14096$8",
+                                                "text": "Course Level :: 100 Level",
+                                                "rt": true
+                                            },
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "14096$24",
+                                                "text": "Course Standing Type :: Credit/D/Fail",
+                                                "rt": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$358755/[IID]",
+                                        "relatedTasksUriTemplate": "/ubc/inst/[IID]/rel-tasks",
+                                        "propertyName": "wd:Student_Course_Tag__Nonsingular_--IS"
+                                    },
+                                    {
+                                        "widget": "monikerList",
+                                        "ecid": "56$455725",
+                                        "iid": "15$81500",
+                                        "enabled": false,
+                                        "instances": [
+                                            {
+                                                "widget": "moniker",
+                                                "instanceId": "5470!CN4qEk0KBAgEEAgSRWh0dHBzOi8vdGhlLmJvb2tzdG9yZS51YmMuY2EvYm9va3MvcGVyc29uYWxpemUtbXktYm9vay1saXN0LXVzaW5nLWN3bBIkCgUIBBDgdRIbVmlldyBtYXRlcmlhbHMgaW4gYm9va3N0b3Jl*je6iwhIaPyU~",
+                                                "text": "View materials in bookstore",
+                                                "action": "URL",
+                                                "target": "https://the.bookstore.ubc.ca/books/personalize-my-book-list-using-cwl",
+                                                "rt": true
+                                            }
+                                        ],
+                                        "selfUriTemplate": "/ubc/inst/15$81500/5470!CN4qEk0KBAgEEAgSRWh0dHBzOi8vdGhlLmJvb2tzdG9yZS51YmMuY2EvYm9va3MvcGVyc29uYWxpemUtbXktYm9vay1saXN0LXVzaW5nLWN3bBIkCgUIBBDgdRIbVmlldyBtYXRlcmlhbHMgaW4gYm9va3N0b3Jl*je6iwhIaPyU~",
+                                        "relatedTasksUriTemplate": "/ubc/inst/5470!CN4qEk0KBAgEEAgSRWh0dHBzOi8vdGhlLmJvb2tzdG9yZS51YmMuY2EvYm9va3MvcGVyc29uYWxpemUtbXktYm9vay1saXN0LXVzaW5nLWN3bBIkCgUIBBDgdRIbVmlldyBtYXRlcmlhbHMgaW4gYm9va3N0b3Jl*je6iwhIaPyU~/rel-tasks",
+                                        "propertyName": "wd:One_Derived_URL--IS",
+                                        "singular": true
+                                    }
+                                ],
+                                "label": "Additional Details",
+                                "showBorder": true,
+                                "layoutInstanceId": "1599$34876"
+                            }
+                        ],
+                        "layoutInstanceId": "2094$7241"
+                    }
+                ],
+                "layoutInstanceId": "2094$5041"
+            },
+            {
+                "widget": "structureLayout",
+                "structureLayoutWID": "71fc479d509b1000093dd33bac2b0000",
+                "modulrTemplate": {
+                    "widget": "modulrTemplate",
+                    "name": "Course Section View - Build Mode",
+                    "type": "Build Mode",
+                    "root": {
+                        "id": "container_0",
+                        "type": "ModulR_container",
+                        "properties": {
+                            "margin": [
+                                {
+                                    "top": "zero",
+                                    "right": "zero",
+                                    "bottom": "zero",
+                                    "left": "zero"
+                                },
+                                {
+                                    "top": "zero",
+                                    "right": "zero",
+                                    "bottom": "zero",
+                                    "left": "zero"
+                                },
+                                {
+                                    "top": "zero",
+                                    "right": "zero",
+                                    "bottom": "zero",
+                                    "left": "xs"
+                                }
+                            ],
+                            "maxWidth": "100%"
+                        },
+                        "nodes": [
+                            {
+                                "id": "container_1",
+                                "type": "ModulR_container",
+                                "order": "00000",
+                                "properties": {
+                                    "margin": [
+                                        {
+                                            "top": "m",
+                                            "right": "m",
+                                            "left": "m",
+                                            "bottom": "m"
+                                        },
+                                        {
+                                            "top": "m",
+                                            "right": "m",
+                                            "left": "m",
+                                            "bottom": "m"
+                                        },
+                                        {
+                                            "top": "m",
+                                            "right": "m",
+                                            "left": "xl",
+                                            "bottom": "m"
+                                        }
+                                    ],
+                                    "maxWidth": "100%"
+                                },
+                                "nodes": [
+                                    {
+                                        "id": "grid_0",
+                                        "type": "ModulR_grid",
+                                        "order": "00000",
+                                        "properties": {
+                                            "columnGap": [
+                                                "zero",
+                                                "zero",
+                                                "zero"
+                                            ],
+                                            "rowGap": [
+                                                "m",
+                                                "m",
+                                                "xxs"
+                                            ]
+                                        },
+                                        "nodes": [
+                                            {
+                                                "id": "gridItem_0",
+                                                "type": "ModulR_gridItem",
+                                                "order": "00000",
+                                                "properties": {
+                                                    "width": [
+                                                        12,
+                                                        12,
+                                                        4
+                                                    ],
+                                                    "startPosition": [
+                                                        1,
+                                                        1,
+                                                        1
+                                                    ]
+                                                },
+                                                "nodes": [
+                                                    {
+                                                        "id": "card_0",
+                                                        "type": "ModulR_card",
+                                                        "order": "00000",
+                                                        "properties": {
+                                                            "padding": [
+                                                                {
+                                                                    "top": "l",
+                                                                    "right": "l",
+                                                                    "bottom": "l",
+                                                                    "left": "l"
+                                                                },
+                                                                {
+                                                                    "top": "l",
+                                                                    "right": "l",
+                                                                    "bottom": "l",
+                                                                    "left": "l"
+                                                                },
+                                                                {
+                                                                    "top": "l",
+                                                                    "right": "l",
+                                                                    "bottom": "l",
+                                                                    "left": "l"
+                                                                }
+                                                            ],
+                                                            "showCard": false
+                                                        },
+                                                        "nodes": [
+                                                            {
+                                                                "id": "section_0",
+                                                                "type": "ModulR_section",
+                                                                "order": "00000",
+                                                                "properties": {
+                                                                    "sectionId": "section_0"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "ModulR_gridItem_3",
+                                                "type": "ModulR_gridItem",
+                                                "order": "00001",
+                                                "properties": {
+                                                    "width": [
+                                                        12,
+                                                        12,
+                                                        5
+                                                    ],
+                                                    "startPosition": [
+                                                        1,
+                                                        1,
+                                                        7
+                                                    ]
+                                                },
+                                                "nodes": [
+                                                    {
+                                                        "id": "ModulR_card_1",
+                                                        "type": "ModulR_card",
+                                                        "order": "00000",
+                                                        "properties": {
+                                                            "padding": [
+                                                                {
+                                                                    "top": "l",
+                                                                    "right": "l",
+                                                                    "bottom": "l",
+                                                                    "left": "l"
+                                                                },
+                                                                {
+                                                                    "top": "l",
+                                                                    "right": "l",
+                                                                    "bottom": "l",
+                                                                    "left": "l"
+                                                                },
+                                                                {
+                                                                    "top": "l",
+                                                                    "right": "l",
+                                                                    "bottom": "l",
+                                                                    "left": "l"
+                                                                }
+                                                            ],
+                                                            "showCard": false
+                                                        },
+                                                        "nodes": [
+                                                            {
+                                                                "id": "ModulR_section_1",
+                                                                "type": "ModulR_section",
+                                                                "order": "00000",
+                                                                "properties": {
+                                                                    "sectionId": "ModulR_section_1"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "ModulR_container_3",
+                                "type": "ModulR_container",
+                                "order": "00001",
+                                "properties": {
+                                    "color": "var(--cnvs-sys-color-bg-transparent)",
+                                    "margin": [
+                                        {
+                                            "top": "zero",
+                                            "right": "zero",
+                                            "bottom": "zero",
+                                            "left": "zero"
+                                        },
+                                        {
+                                            "top": "zero",
+                                            "right": "zero",
+                                            "bottom": "zero",
+                                            "left": "zero"
+                                        },
+                                        {
+                                            "top": "m",
+                                            "right": "m",
+                                            "bottom": "m",
+                                            "left": "xl"
+                                        }
+                                    ],
+                                    "maxWidth": "100%"
+                                },
+                                "nodes": [
+                                    {
+                                        "id": "ModulR_grid_2",
+                                        "type": "ModulR_grid",
+                                        "order": "00000",
+                                        "properties": {
+                                            "columnGap": [
+                                                "zero",
+                                                "zero",
+                                                "zero"
+                                            ],
+                                            "rowGap": [
+                                                "zero",
+                                                "zero",
+                                                "zero"
+                                            ]
+                                        },
+                                        "nodes": [
+                                            {
+                                                "id": "ModulR_gridItem_5",
+                                                "type": "ModulR_gridItem",
+                                                "order": "00000",
+                                                "properties": {
+                                                    "width": [
+                                                        12,
+                                                        12,
+                                                        12
+                                                    ],
+                                                    "startPosition": [
+                                                        1,
+                                                        1,
+                                                        1
+                                                    ]
+                                                },
+                                                "nodes": [
+                                                    {
+                                                        "id": "ModulR_section_3",
+                                                        "type": "ModulR_section",
+                                                        "order": "00000",
+                                                        "properties": {
+                                                            "sectionId": "ModulR_section_3"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "layoutInstanceId": "36067$541",
+                "sections": [
+                    {
+                        "widget": "structureLayoutSection",
+                        "order": "00000",
+                        "sectionId": "section_0",
+                        "layoutInstanceId": "36067$541"
+                    },
+                    {
+                        "widget": "structureLayoutSection",
+                        "order": "00001",
+                        "sectionId": "ModulR_section_1",
+                        "layoutInstanceId": "36067$541"
+                    },
+                    {
+                        "widget": "structureLayoutSection",
+                        "children": [
+                            {
+                                "widget": "fieldSet",
+                                "children": [
+                                    {
+                                        "widget": "commandButton",
+                                        "ecid": "56$581960",
+                                        "iid": "15194$458290",
+                                        "label": "Troubleshoot",
+                                        "values": [
+                                            {
+                                                "label": "ACAM_V 100-001 - Introduction to Asian Canadian Studies",
+                                                "uri": "/ubc/inst/15194$458290/rel-task/2997$16031",
+                                                "iid": "15194$458290",
+                                                "taskId": "2997$16031",
+                                                "httpMethod": "GET"
+                                            }
+                                        ],
+                                        "uri": "/ubc/inst/15194$458290/rel-task/2997$16031",
+                                        "taskId": "2997$16031",
+                                        "httpMethod": "GET",
+                                        "actionId": "view",
+                                        "rule": 1,
+                                        "footerOrder": 0,
+                                        "layoutInstanceId": "3009$7088",
+                                        "propertyName": "wd:Troubleshoot_Label",
+                                        "layoutId": "3009$7088"
+                                    }
+                                ],
+                                "horizontal": true,
+                                "showBorder": true,
+                                "layoutInstanceId": "1599$24794"
+                            }
+                        ],
+                        "order": "00002",
+                        "sectionId": "ModulR_section_3",
+                        "layoutInstanceId": "36067$541"
+                    }
+                ]
+            }
+        ],
+        "propertyName": "wd:Course_Section_View"
+    },
+    "brandingData": {
+        "banner": {
+            "uri": "/ubc/attachment/17214$16/Tm9rMFdOcHcyY2MzYlI1cEN1UlFDTTZZZ01ENGNrRzFzY2N4MkxaTXM3REZMN05NSXpGS0doQW9DVXNTOE4vSWhZWWRSb0tGRmlHRUxNSXNSWlNURUdGOWJHL1FWZmxVQ1U4V2VIbGFWZ2tzQWhMNzhhcDZ0Y0RNZEpBQVY4NUFTZDhPWGZHNkJobEQ2dWYxMW51Mk1XU1Y5bmFyaHd5bGF0dzZoYUVnbDZ3NmZUbERKb0xuWUtNRnZWOWFpZkU1TUFnY1kvd1BwRmtWQ3dTT0hNVE1qKzgyY0JJTm52cDcrc1h5SEUzbFE2ZVlQUmU2YnpNZnVJTUhxenRkTzR3RDF5enhKZ3BFc1B3dzJwRUFZVXpOSCtlY2t5OVVCbzlwNm5SMmJTUExyM0xrVDgzWEF3NXlaQzg2WlRJTWcvcmMxU2ozV3VvMjhHVVNWeDBicHVzeUhRPT0_b21zLWF0dGFjaG1lbnRzLzE3NGY0MzJhLTU2NmQtNGMzMy0yYjQyLTI1MTMwNzBiNDkxND8xNzY3NDcyMjAwMDAwPz9VQkNfV29ya2RheV9Ib21lcGFnZV9WYW5jb3V2ZXItMTQ0MHgzNjYuanBn"
+        },
+        "logo": {
+            "uri": "/ubc/attachment/17213$17/bTVyWEhGQkR6WFNNdlgveVhvOWZiQzlrVFBUNllnMW1hTU5rSHozT1M5WlBYaXhManlxNUY2RkVSV0Uwb0R3MktnT3Uxd3N2YnF4S05TZmxQdUlGdEJ5Wm16SU9ZTzFkdTJjRk9hMVJFWlMreHYrMlBoeG4rOXg5RTN3bjkxQkhNZWZLOE9rZElwYUJjMm9idmhNYXdSeFRXekhpL2tVZGVwL1hhU0wzelpXbEZaWGt0emVSNUVQQkxndCtJTThVVW1KL0dhV3U4UmRlc0JqcE1nekNMWkwvTHFvR3NESk9obnFVVk05c0pIWmFCUVRLMmlEUkJiV3h4Y1c1LzJ5Q0h6TjdQQnFXWWF6VVlmMTF6cTZFQ3JFNDRqSks3MnN1dTNwNHZETzFkV1gxZVd5V2M2TE9VakVOeGYxNW1CNHBxRG9ESldOUUxRRGs4NFlmYVJPQWtnPT0_b21zLWF0dGFjaG1lbnRzLzMzN2I2NjU4LTY4NzgtNDg2ZS0xYjQ5LTQzMjI0MzQwNjQ1Mj8xNzY3NDcyMjAwMDAwPz9DcmVzdF9XRC5wbmc"
+        },
+        "canvasColor": {
+            "widget": "color",
+            "instanceId": "21484$116",
+            "text": "Blueberry 500",
+            "action": "color-picker",
+            "target": "#005cb9,#0875e1",
+            "rt": true
+        },
+        "canvasColorSource": "#002145",
+        "arrCanvasColorShades": [
+            "#F6F6F8",
+            "#E7EAED",
+            "#B8BFC7",
+            "#A1A9B3",
+            "#5E6975",
+            "#1F262E"
+        ],
+        "defaultBrandingColor": false
+    },
+    "clearPageContextUri": "/ubc/clear-page-context/c372",
+    "commandLinkTemplate": "/ubc/task/[IID]",
+    "currentMajorVersionNumber": "2026",
+    "currentTime": 1767484887676,
+    "currentUser": {
+        "widget": "currentUser",
+        "iid": "10089$100772",
+        "label": "Martin Lou (35042712)",
+        "relatedTasksLink": {
+            "widget": "link",
+            "rel": "related-tasks",
+            "uri": "/ubc/inst/10089$100772/rel-tasks",
+            "pv": true,
+            "rt": true
+        },
+        "selfLink": {
+            "widget": "link",
+            "rel": "self",
+            "uri": "/ubc/inst/1$37/10089$100772",
+            "v": true
+        },
+        "userImageUrl": "/ubc/attachment/1055$101777/V1o2ZStqeTkreDIwYkkvMGNFRGV3czRWSHVqcHNZSlRtb0ZYd1daM1dlOW5Lbm92NlRtYlpOazZGeFFUcHh3c0kvWStVTTJqa0laSFVsa1pOeHpHdjhSTU8waXRQM01EelNtSHVob2FUOGNISCt5bUhkWUdaL2JDUC9JcWUreU93NzJNNUxZcUZNVkZFbGVjdFdTMTE4NVo5UXdCWFgxTUpvclRqbUt1UHdkQTR3QTNoZ1dpdzRpUm8rMExDUGFFZUVNQ0hSZ2NVb3YwWW5xcUUxNEpYYjlzWkRYcTU5MlZ4ZFE1Y1F1SGJCcUdOa0tFUFdEeVlPOVNjOWRSYVJ1YVM5V1lsVkpURnpUWlVWK09IcU1vU3hESU1zVytscktsUEx3c3lham80ckpLMDJ3QU1CVmowRjhSQmpwd2xySU90RVBQSmR6SlJIN1ROSmFVdjkzTWtBPT0_b21zLWF0dGFjaG1lbnRzLzZjN2UwYTIxLTdlODItNDAyNi04NTViLTdiMGQ3MTA0NDVlYT8xNzY3NDcyMjAwMDAwPz8"
+    },
+    "enableApnsNotifications": true,
+    "enableBluePrimaryButtons": true,
+    "enableContentDeliveryNetwork": true,
+    "enablePdfAndExcel": true,
+    "enableSpInitiatedSamlAuthentication": true,
+    "failedSignonCount": 0,
+    "globalHelpUrl": "/ubc/help/helpHome.xml?langcode=en_US",
+    "header": {
+        "widget": "header",
+        "excelLink": {
+            "widget": "link",
+            "label": "Excel",
+            "httpMethod": "GET",
+            "type": "EXPORT_EXCEL",
+            "uri": "/ubc/export/c372.xlsx",
+            "requestParameters": [
+                {
+                    "widget": "requestParameter",
+                    "key": "page-title",
+                    "value": "ACAM_V 100-001 - Introduction to Asian Canadian Studies"
+                }
+            ]
+        },
+        "pdfLink": {
+            "widget": "link",
+            "httpMethod": "POST",
+            "type": "PRINT_PDF",
+            "uri": "/ubc/print/c372",
+            "requestParameters": [
+                {
+                    "widget": "requestParameter",
+                    "key": "page-title",
+                    "value": "ACAM_V 100-001 - Introduction to Asian Canadian Studies"
+                }
+            ]
+        }
+    },
+    "homePages": [
+        {
+            "label": "Home",
+            "rule": "2997$6670",
+            "uri": "/ubc/home/2997$6670",
+            "default": true
+        }
+    ],
+    "homeUri": "/ubc/d/home.htmld",
+    "languageFromOms": "en_US",
+    "locale": "en_CA",
+    "localeAttributes": {
+        "amPmPrefixPosition": "0",
+        "amString": "a.m.",
+        "dateOrder": "yyyy-MM-dd",
+        "dateToolTip": "YYYY-MM-DD",
+        "decimalSeparator": ".",
+        "firstDayOfWeek": "sun",
+        "hourClock": "12",
+        "percentSymbolLeft": "0",
+        "percentSymbolSpace": "0",
+        "pmString": "p.m.",
+        "thousandsSeparator": ",",
+        "userLocale": "en_CA",
+        "workdayMonthRange": "LLLL1 - LLLL2",
+        "workdayYearMonthFormat": "LLLL y"
+    },
+    "loginRedirectUrl": "https://wd10.myworkday.com/ubc/login-saml2.htmld",
+    "logoutRedirectUrl": "https://authentication.ubc.ca/idp/profile/Logout",
+    "logoutUri": "https://wd10.myworkday.com/wday/authgwy/ubc/logout.htmld",
+    "mediaMarkingText": "",
+    "micro": true,
+    "navigationLinks": [
+        {
+            "label": "Favorites",
+            "rule": "Nav.Favorites",
+            "uri": "/ubc/task/2997$83"
+        },
+        {
+            "label": "My Reports",
+            "rule": "W Drive",
+            "uri": "/ubc/task/2997$1605"
+        }
+    ],
+    "omsEnvironmentType": "PROD",
+    "pageAutomationIid": "15$365714",
+    "processingUser": "9d34d9897c8a40d1aabf18cf99f5d9e7",
+    "promptUriTemplate": "/ubc/prompt/[CONTEXT_ID]/[PROMPT_IID]",
+    "enabled": false,
+    "requestUri": "/ubc/inst/1$15194/15194$458290.htmld",
+    "searchScopesUri": "/ubc/search-scopes.xml",
+    "searchUri": "/ubc/search.htmld",
+    "sessionSecureToken": "18302cfc-1b4d-4930-97c6-fca5170e348d",
+    "sessionTimeoutMinutes": 60,
+    "sessionUserClickable": true,
+    "sizeAdvice": "large",
+    "systemStatusMessage": "Your system will be undergoing maintenance starting on Saturday, January 10, 2026 at 12:00 AM Eastern Time (Toronto) (GMT-5) until Saturday, January 10, 2026 at 7:00 AM Eastern Time (Toronto) (GMT-5). During that time, your users can continue to access the system.",
+    "taskId": "2998$25437",
+    "teaserTasks": [
+        {
+            "label": "Unified Inbox Action Items count",
+            "type": "action_items_count",
+            "uri": "/ubc/unifiedinbox/actioncount/2998$18348"
+        },
+        {
+            "label": "My Tasks (All Items)",
+            "type": "skeleton",
+            "uri": "/ubc/unifiedinbox/initialinbox/2998$44084"
+        },
+        {
+            "label": "Notifications",
+            "type": "Notification_Inbox_Preview_Skeleton_Task--IS",
+            "uri": "/ubc/task/2998$34445"
+        },
+        {
+            "label": "Notifications",
+            "type": "Notification_Inbox_Skeleton_Task--IS",
+            "uri": "/ubc/unifiedinbox/initialinbox/2998$23221"
+        }
+    ],
+    "tenant": "ubc",
+    "timeoutRedirectUrl": "https://wd10.myworkday.com/wday/authgwy/ubc/timeout.htmld",
+    "timeZoneExternalName": "GMT-12:00",
+    "timeZoneInternalName": "TZ001",
+    "timeZoneName": "Canada/Pacific",
+    "timeZoneOffset": "-480",
+    "timeZoneUrl": "/ubc/timezones.xml",
+    "title": {
+        "widget": "titleMonikerList",
+        "ecid": "56$445877",
+        "iid": "15$365714",
+        "enabled": false,
+        "label": "View Course Section",
+        "instances": [
+            {
+                "widget": "moniker",
+                "instanceId": "15194$458290",
+                "text": "ACAM_V 100-001 - Introduction to Asian Canadian Studies",
+                "rt": true,
+                "pv": true,
+                "v": true
+            }
+        ],
+        "selfUriTemplate": "/ubc/inst/15$365714/15194$458290",
+        "relatedTasksUriTemplate": "/ubc/inst/15194$458290/rel-tasks",
+        "text": "View Course Section",
+        "propertyName": "wd:Course_Section__Singular_--IS",
+        "singular": true
+    },
+    "alwaysShowProductTours": true,
+    "userLanguageCode": "en_US",
+    "xmlName": "Course_Section_View",
+    "instanceSelfLinkTemplate": "/ubc/inst/[CONTEXT_ID]/[IID]",
+    "instanceTaskLinkTemplate": "/ubc/inst/[IID]/rel-task/[Task_IID]",
+    "relatedTasksLinkTemplate": "/ubc/inst/[IID]/rel-tasks",
+    "taskLinkTemplate": "/ubc/task/[Task_IID]",
+    "stepUpSecondsRemaining": 0,
+    "pageContextId": "c372",
+    "enableModalEnhancements": true,
+    "localeCode": "en_CA",
+    "viewPage": true,
+    "pexEnabledForUser": true,
+    "mode": "VIEW"
+}

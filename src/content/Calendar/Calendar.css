@@ -1,55 +1,119 @@
 .calendar {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: calc(100% - 50px); /*to account for the header */
-  font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 50vh;
+    width: 99.2%;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
-.calendar .header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: grid;
-  grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
-  background-color: #f0f0f0;
-  text-align: center;
+.calendar-header {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
 }
 
-.calendar .header-cell {
-  padding: 5px;
-  font-weight: bold;
-  border: 1px solid #ddd;
+.time-gutter-header {
+    width: 50px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-color);
 }
 
-.calendar .body {
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: 50px repeat(5, 1fr); /* Adjusted to 5 columns for the days */
-  grid-auto-rows: 15px;
-  border: 1px solid #ddd;
+.day-header {
+    flex: 1;
+    text-align: center;
+    padding: 5px 0;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.7rem;
+    border-right: 1px solid var(--bg-tertiary);
 }
 
-.calendar .time-markers {
-  display: grid;
-  grid-auto-rows: 15px;
+.day-header:last-child {
+    border-right: none;
 }
 
-.calendar .time-marker {
-  border: 1px solid #ddd;
-  text-align: center;
-  font-weight: bold;
-  z-index: 10;
+.calendar-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    padding: 10px 0;
+    position: relative;
 }
 
-.calendar .body-column {
-  display: grid;
-  grid-auto-rows: 15px;
+.time-gutter {
+    width: 50px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border-color);
+    position: relative;
 }
 
-.calendar .body-cell {
-  border: 1px solid #ddd;
-  /* position: relative; */
-  font-size: 9px;
-  text-align: center;
-  cursor: pointer;
+.time-label {
+    position: absolute;
+    width: 100%;
+    text-align: right;
+    padding-right: 5px;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    transform: translateY(-50%);
+    box-sizing: border-box;
+    /* top will be set via inline style or implicit calculation */
+}
+
+.days-container {
+    display: flex;
+    flex: 1;
+    position: relative;
+}
+
+.day-column {
+    flex: 1;
+    position: relative;
+    border-right: 1px solid var(--bg-tertiary);
+    background-color: var(--bg-color);
+}
+
+.day-column:last-child {
+    border-right: none;
+}
+
+/* Horizontal lines for hours */
+.grid-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--border-light);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.event-block {
+    position: absolute;
+    z-index: 7;
+    left: 1px;
+    right: 1px;
+    border-radius: 2px;
+    padding: 0px;
+    color: var(--calendar-event-text);
+    font-size: 0.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
+}
+
+.event-block:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px var(--calendar-event-hover-shadow);
+    z-index: 10;
+}
+
+.event-code {
+    font-size: 0.6rem;
 }

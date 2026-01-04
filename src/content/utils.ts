@@ -1,6 +1,5 @@
-import { ISectionData, Term } from "./App/App.types"
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
-import { fetchWorkdayData } from "../backends/workday/idSearchApi"
+import { fetchSectionFromID, fetchWorkdayData } from "../backends/workday/idSearchApi"
 import { handleCourseLoading } from "."
 
 // bypassDetailsCheck is for reskin extension compat
@@ -36,7 +35,8 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
   // If courseId is found, fetch the data from Workday dirctly
   // Otherwise, find the course info from the course code using scheduler API
   if (courseId) {
-    return await fetchWorkdayData(courseId)
+    console.log(courseId)
+    return await fetchSectionFromID(courseId)
   } else {
     const code = title.slice(0, title.indexOf(" - "))
 
@@ -67,54 +67,7 @@ const extractIdFromDOM = (element: Element) => {
   }
 }
 
-const filterSections = (
-  sections: ISectionData[],
-  worklist: number,
-  term: Term | Set<Term>
-): ISectionData[] => {
-  return sections.filter(
-    (s) =>
-      s.worklistNumber === worklist &&
-      (term instanceof Set
-        ? isSupersetOf(s.terms, term)
-        : s.terms.has(term as Term))
-  )
-}
-
-const versionOneFiveZeroUpdateNotification = () => {
-  const currentVersion = chrome.runtime.getManifest().version
-  chrome.storage.local
-    .get("versionOneFiveZeroNotificationDisplayed")
-    .then((retrievedFlag) => {
-      const flag =
-        retrievedFlag?.versionOneFiveZeroNotificationDisplayed ?? false
-      if (!flag && currentVersion === "1.6.0") {
-        alert(
-          "Welcome to version 1.6.0! This update includes many changes and a full changelog can be viewed on our communication platforms. Please note that for the best results, it is recommended to sign out and then sign back in as well as exporting all of your worklists and them importing them back in to ensure all features are working correctly. Thank you for using the Workday Extension!"
-        )
-        chrome.storage.local.set({
-          versionOneFiveZeroNotificationDisplayed: true,
-        })
-      }
-    })
-    .catch((error) => console.error("Error retrieving flag:", error))
-}
-
-/**
- * this is provided as a method on Set, but because it's
- * quite new and we want to avoid compat issues, we're
- * reimplementing it here.
- * this is the only fn where we have this issue, hence the
- * manual replacement instead of polyfilling it.
- */
-const isSupersetOf = <T>(first: Set<T>, second: Set<T>): boolean => {
-  return Array.from(second.keys()).every((x) => first.has(x))
-}
-
 export {
-  versionOneFiveZeroUpdateNotification,
-  filterSections,
   extractSection,
   extractIdFromDOM,
-  isSupersetOf,
 }

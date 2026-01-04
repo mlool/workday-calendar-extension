@@ -1,0 +1,28 @@
+:root {
+    /* Colors */
+    --primary-color: #3f51b5;
+    --bg-color: #ffffff;
+    --bg-secondary: #f9f9f9;
+    --bg-tertiary: #f0f0f0;
+
+    /* Text Colors */
+    --text-primary: #222222;
+    --text-secondary: #555555;
+    --text-tertiary: #888888;
+    --text-white: #ffffff;
+    --text-dark: #333333;
+
+    /* Borders */
+    --border-color: #e0e0e0;
+    --border-secondary: #d0d0d0;
+    --border-light: #f8f8f8;
+    --border-hover: #bbb;
+
+    /* Calendar Specific */
+    --conflict-color: #ff5845ff;
+    --new-section-color: #ffe787ff;
+    --calendar-event-text: #222222;
+    --calendar-event-hover-shadow: rgba(0, 0, 0, 0.15);
+    --control-button-bg: #fff;
+    --control-button-hover: #f0f0f0;
+}

@@ -1,4 +1,5 @@
 import { extractSection } from "./utils"
+import "./variables.css"
 import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"
@@ -17,7 +18,7 @@ function applyVisibility(hide: boolean): void {
 
   const profilePictures = document.querySelectorAll(selectors.join(", "))
   profilePictures.forEach((img) => {
-    ;(img as HTMLImageElement).style.visibility = hide ? "hidden" : "visible"
+    ; (img as HTMLImageElement).style.visibility = hide ? "hidden" : "visible"
   })
 }
 
@@ -33,7 +34,7 @@ function observeMutations(hide: boolean): void {
               "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
             )
           ) {
-            ;(element as HTMLImageElement).style.visibility = hide
+            ; (element as HTMLImageElement).style.visibility = hide
               ? "hidden"
               : "visible"
           }
@@ -41,7 +42,7 @@ function observeMutations(hide: boolean): void {
             "img.wdappchrome-aax, img.wdappchrome-aaam, img.gwt-Image.WN0P.WF5.WO0P.WJ0P.WK0P.WIEW"
           )
           nestedImages.forEach((img) => {
-            ;(img as HTMLImageElement).style.visibility = hide
+            ; (img as HTMLImageElement).style.visibility = hide
               ? "hidden"
               : "visible"
           })
@@ -95,7 +96,7 @@ function waitForElm(selector: string, index: number) {
 
 function waitAndClick(selector: string, index: number = 0): Promise<void> {
   return waitForElm(selector, index).then((element) => {
-    ;(element as HTMLElement).click()
+    ; (element as HTMLElement).click()
   })
 }
 
@@ -199,7 +200,7 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   if (
     element.previousElementSibling &&
     element.previousElementSibling.getAttribute("data-automation-id") ===
-      "checkbox"
+    "checkbox"
   ) {
     button.style.marginLeft = "24px"
   }
