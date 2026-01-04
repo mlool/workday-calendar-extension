@@ -4,7 +4,7 @@ import './Calendar.css';
 
 interface IProps {
     schedule: SectionSchedule[];
-    newSection?: SectionSchedule;
+    newSection?: SectionSchedule[];
 }
 
 const START_HOUR = 7;
@@ -94,27 +94,28 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection }) => {
                         const daySchedule = schedule.filter(s => s.day.includes(day));
 
                         // Check for newSection
-                        let newSectionElement = null;
-                        if (newSection && newSection.day.includes(day)) {
-                            // Check collisions with ANY event on this day
-                            const hasConflict = daySchedule.some(existing => checkConflict(newSection, existing));
-                            const style = getPositionStyle(newSection.startTime, newSection.endTime);
+                        const newSectionElements = (newSection || [])
+                            .filter(sec => sec.day.includes(day))
+                            .map((sec, i) => {
+                                // Check collisions with ANY event on this day
+                                const hasConflict = daySchedule.some(existing => checkConflict(sec, existing));
+                                const style = getPositionStyle(sec.startTime, sec.endTime);
 
-                            newSectionElement = (
-                                <div
-                                    key="new-section"
-                                    className="event-block"
-                                    style={{
-                                        ...style,
-                                        backgroundColor: hasConflict ? CONFLICT_COLOR : NEW_SECTION_COLOR,
-                                        zIndex: 20,
-                                    }}
-                                    title={`${newSection.code} - ${newSection.name} (New)`}
-                                >
-                                    <div className="event-code">{newSection.code}</div>
-                                </div>
-                            );
-                        }
+                                return (
+                                    <div
+                                        key={`new-section-${i}`}
+                                        className="event-block"
+                                        style={{
+                                            ...style,
+                                            backgroundColor: hasConflict ? CONFLICT_COLOR : NEW_SECTION_COLOR,
+                                            zIndex: 20,
+                                        }}
+                                        title={`${sec.code} - ${sec.name} (New)`}
+                                    >
+                                        <div className="event-code">{sec.code}</div>
+                                    </div>
+                                );
+                            });
 
                         return (
                             <div key={day} className="day-column">
@@ -135,7 +136,7 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection }) => {
                                             </div>
                                         );
                                     })}
-                                {newSectionElement}
+                                {newSectionElements}
                             </div>
                         )
                     })}

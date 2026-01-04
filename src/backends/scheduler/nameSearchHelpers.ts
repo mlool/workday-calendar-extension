@@ -21,7 +21,7 @@ interface rawSchedule {
   term: string
 }
 
-export const handleProgressUpdate = (newProgress: number) => {
+export function handleProgressUpdate(newProgress: number) {
   const courseAddingProgressEvent = new CustomEvent("courseAddingProgress", {
     detail: {
       progress: newProgress,

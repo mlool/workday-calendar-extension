@@ -1,5 +1,5 @@
 import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
-import { fetchSectionFromID, fetchWorkdayData } from "../backends/workday/idSearchApi"
+import { fetchSectionFromID } from "../backends/workday/idSearchApi"
 import { handleCourseLoading } from "."
 
 // bypassDetailsCheck is for reskin extension compat
@@ -8,44 +8,28 @@ async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
     return await findCourseInfo(element.id)
   }
 
-  const courseLabels = element.parentElement?.querySelectorAll(
-    '[data-automation-id="promptOption"]'
-  ) // The div with the raw text of the course section data.
-  // Checking if course labels exist and there are at least two of them
-
-  if (!courseLabels || courseLabels.length < 2) {
-    handleCourseLoading(false)
-    alert("Title or section details not found")
-    return Promise.reject(new Error("Title or section details not found"))
-  }
-
-  // Extracting title
-  const titleElement = courseLabels[0]
-  const title = titleElement.textContent
-
-  // Checking if title is missing
-  if (!title) {
-    handleCourseLoading(false)
-    alert("Title not found")
-    return Promise.reject(new Error("Title not found"))
-  }
-
   const courseId = extractIdFromDOM(element)
 
-  // If courseId is found, fetch the data from Workday dirctly
-  // Otherwise, find the course info from the course code using scheduler API
-  if (courseId) {
-    console.log(courseId)
-    return await fetchSectionFromID(courseId)
-  } else {
-    const code = title.slice(0, title.indexOf(" - "))
-
-    const newSectionPromise = findCourseInfo(code)
-
-    return Promise.all([newSectionPromise]).then(([newSection]) => {
-      return newSection
-    })
+  if (!courseId) {
+    handleCourseLoading(false)
+    alert("Course ID not found, please manually add the section by url")
+    return;
   }
+
+  const fetchedSection = await fetchSectionFromID(courseId)
+
+  if (!fetchedSection) {
+    handleCourseLoading(false)
+    alert("Section failed to be fetched")
+    return;
+  }
+
+  if (!(await fetchedSection.saveToStorage())) {
+    alert("Failed to Sync to Storage")
+    return;
+  }
+
+  handleCourseLoading(false)
 }
 
 const extractIdFromDOM = (element: Element) => {

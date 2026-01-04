@@ -34,8 +34,8 @@ const readSectionData = async (): Promise<
     typeof rawSections === "string"
       ? loadSectionDataFromJSON(rawSections)
       : // note: eventually when all supported versions store their data
-        // as a JSON string (so versions 2.1+), we can drop this condition.
-        rawSections
+      // as a JSON string (so versions 2.1+), we can drop this condition.
+      rawSections
   return processRawSections(deserializedSections, sendProgressUpdateToAll)
 }
 

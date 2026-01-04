@@ -121,7 +121,7 @@ export default class Section {
             session: this.session,
             worklistNumber: this.worklistNumber,
             color: this.color,
-            section: this.sectionCode,
+            sectionCode: this.sectionCode,
             format: this.format,
             name: this.name
         }
@@ -152,5 +152,19 @@ export default class Section {
                 })
             ).values()
         );
+    }
+
+    // Returns a set of terms that the section is offered in
+    getTerms(): Set<number> {
+        return this.sectionDetails.reduce((acc: Set<number>, sectionDetail: SectionDetail) => {
+            sectionDetail.getTerms().forEach((term: number) => acc.add(term));
+            return acc;
+        }, new Set<number>());
+    }
+
+    async saveToStorage() {
+        await chrome.storage.local.set({ newSection: null })
+        await chrome.storage.local.set({ newSection: JSON.stringify(this.exportToJSON()) });
+        return true;
     }
 }

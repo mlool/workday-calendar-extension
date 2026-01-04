@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react"
-interface IProps {
-  message: string
-}
 
 interface EventDetail {
   progress: number
 }
 
-const ProgressBar = (props: IProps) => {
+const ProgressBar = () => {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -21,7 +18,6 @@ const ProgressBar = (props: IProps) => {
   }
   return (
     <div className="ProgressContainer">
-      {props.message}
       <progress className="ProgressBar" value={progress} max={1}></progress>
     </div>
   )
