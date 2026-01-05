@@ -34,6 +34,7 @@ export default class Schedule {
         if (rawSections === undefined) {
             return new Schedule(Schedule.currVersion, []);
         }
+        console.log(rawSections)
         const sections = JSON.parse(rawSections)['data'];
         const version = JSON.parse(rawSections)['version'];
         const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));

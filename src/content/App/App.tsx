@@ -21,7 +21,6 @@ function App() {
         if (newVal === null) return
         const newSection = Section.getSectionFromJSON(JSON.parse(newVal))
         setNewSection(newSection)
-        console.log(newSection)
         if (newSection.getTerms().size <= 1) {
           setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
         }
@@ -35,7 +34,6 @@ function App() {
     }
 
     schedule.importFromChromeStorage().then((newSchedule) => {
-      console.log(newSchedule.getSectionSchedule(0, "2025W"))
       setSchedule(newSchedule);
     });
 

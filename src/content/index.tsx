@@ -3,8 +3,6 @@ import "./variables.css"
 import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"
-import { observeDOMAndAddCopyScheduleButtons } from "../domManipulators/copySchedules"
-import { writeNewSection } from "../storage/sectionDataBrowserClient"
 
 // Function to apply visibility based on stored settings
 function applyVisibility(hide: boolean): void {
@@ -174,22 +172,12 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   // Add custom button id
   button.id = "add-section-button"
   // Adding an event listener for when the button is clicked
-  if (reskinButton) {
-    button.addEventListener("click", () => {
-      handleButtonClick(element, true)
-    })
-  } else {
-    button.addEventListener("click", () => {
-      handleButtonClick(element)
-    })
-  }
+  button.addEventListener("click", () => {
+    handleButtonClick(element)
+  })
 
   // Styling the button
-  if (reskinButton) {
-    button.style.padding = "5px 10px"
-  } else {
-    button.style.padding = "10px 20px"
-  }
+  button.style.padding = "5px 10px"
 
   button.style.fontSize = "16px"
   button.style.color = "#333"
@@ -248,17 +236,10 @@ export const handleCourseLoading = (isLoading: boolean) => {
 // Function to handle button click event
 async function handleButtonClick(
   element: Element,
-  isReskinButton?: boolean
 ): Promise<void> {
   toggleContainer(true)
   handleCourseLoading(true)
-  const selectedSection = await extractSection(
-    element,
-    isReskinButton !== null && isReskinButton === true
-  )
-  if (!selectedSection) return
-  // Getting existing sections from Chrome storage and adding the new section
-  await writeNewSection(selectedSection)
+  await extractSection(element)
   handleCourseLoading(false)
 }
 
@@ -321,14 +302,9 @@ function setupObserver(): void {
   // If the document is still loading, add an event listener to observe DOM changes
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", observeDOMAndAddButtons)
-    document.addEventListener(
-      "DOMContentLoaded",
-      observeDOMAndAddCopyScheduleButtons
-    )
   } else {
     // Directly observe DOM changes
     observeDOMAndAddButtons()
-    observeDOMAndAddCopyScheduleButtons()
   }
 }
 

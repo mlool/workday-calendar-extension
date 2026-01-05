@@ -1,13 +1,7 @@
-import { findCourseInfo } from "../backends/scheduler/nameSearchApi"
 import { fetchSectionFromID } from "../backends/workday/idSearchApi"
 import { handleCourseLoading } from "."
 
-// bypassDetailsCheck is for reskin extension compat
-async function extractSection(element: Element, bypassDetailsCheck?: boolean) {
-  if (bypassDetailsCheck && bypassDetailsCheck === true) {
-    return await findCourseInfo(element.id)
-  }
-
+async function extractSection(element: Element) {
   const courseId = extractIdFromDOM(element)
 
   if (!courseId) {
