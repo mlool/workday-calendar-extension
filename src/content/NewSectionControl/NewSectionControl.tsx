@@ -4,16 +4,18 @@ import Section from "../../objects/Section"
 interface IProps {
     newSection: Section | null
     schedule: Schedule
+    worklist: number
     setNewSection: (section: Section | null) => void
     setSchedule: (schedule: Schedule) => void
 }
 
 import "./NewSectionControl.css"
 
-const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSection, setSchedule }) => {
+const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSection, setSchedule, worklist }) => {
 
     const onClickAddSection = () => {
         if (newSection) {
+            newSection.setWorklistNumber(worklist)
             const newSchedule = schedule.addSection(newSection)
             setSchedule(newSchedule)
             newSection.removeFromStorage();

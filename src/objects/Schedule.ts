@@ -11,50 +11,33 @@ export default class Schedule {
         this.data = data;
     }
 
-    exportToJSON(): any {
-        return {
-            version: this.version,
-            data: this.data.map((section: Section) => section.exportToJSON())
-        }
-    }
-
-    importFromJSON(json: any): void {
-        if (json.version == "2.0.1") {
-            this.version = Schedule.currVersion;
-        } else {
-            this.version = json.version;
-        }
-        this.data = json.data;
-    }
-
-    async importFromChromeStorage(): Promise<Schedule> {
-        const rawSections = (await chrome.storage.local.get("sections")).sections as
-            | string
-            | undefined;
-        if (rawSections === undefined) {
-            return new Schedule(Schedule.currVersion, []);
-        }
-        const sections = JSON.parse(rawSections)['data'];
-        const version = JSON.parse(rawSections)['version'];
-        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
-
-        return new Schedule(Schedule.currVersion, sectionObjects);
-    }
-
-    async exportToChromeStorage(): Promise<void> {
-        if (this.data.length == 0) {
-            return;
-        }
-        await chrome.storage.local.set({ sections: JSON.stringify(this.exportToJSON()) });
-    }
-
     // Return a new class for React Hooks
     addSection(section: Section): Schedule {
         return new Schedule(this.version, [...this.data, section]);
     }
 
-    removeSection(section: Section): Schedule {
-        return new Schedule(this.version, this.data.filter((x) => x !== section));
+    removeSection(worklistNumber: number, sectionId: string): Schedule {
+        return new Schedule(
+            this.version,
+            this.data.filter(
+                (section: Section) => {
+                    if (section.getWorklistNumber() !== worklistNumber) return true;
+                    if (section.getCourseID() !== sectionId) return true;
+                    return false;
+                }
+            )
+        );
+    }
+
+    updateSection(section: Section): Schedule {
+        return new Schedule(
+            this.version,
+            this.data.map(
+                (x: Section) =>
+                    x.getWorklistNumber() === section.getWorklistNumber() &&
+                        x.getCourseID() === section.getCourseID() ? section : x
+            )
+        );
     }
 
     getSections(): Section[] {
@@ -95,5 +78,52 @@ export default class Schedule {
             });
         });
         return conflicts;
+    }
+
+    getSessions(): string[] {
+        const sessions = this.data.map((section: Section) => section.getSession());
+        const uniqueSessions = [...new Set(sessions)];
+        return uniqueSessions;
+    }
+
+
+    /*
+    Chrome storage helpers
+    */
+    exportToJSON(): any {
+        return {
+            version: this.version,
+            data: this.data.map((section: Section) => section.exportToJSON())
+        }
+    }
+
+    importFromJSON(json: any): void {
+        if (json.version == "2.0.1") {
+            this.version = Schedule.currVersion;
+        } else {
+            this.version = json.version;
+        }
+        this.data = json.data;
+    }
+
+    async importFromChromeStorage(): Promise<Schedule> {
+        const rawSections = (await chrome.storage.local.get("sections")).sections as
+            | string
+            | undefined;
+        if (rawSections === undefined) {
+            return new Schedule(Schedule.currVersion, []);
+        }
+        const sections = JSON.parse(rawSections)['data'];
+        const version = JSON.parse(rawSections)['version'];
+        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
+
+        return new Schedule(Schedule.currVersion, sectionObjects);
+    }
+
+    async exportToChromeStorage(): Promise<void> {
+        if (this.data.length == 0) {
+            return;
+        }
+        await chrome.storage.local.set({ sections: JSON.stringify(this.exportToJSON()) });
     }
 }

@@ -40,10 +40,10 @@ export function extractWorkdaySectionInfo(selectedNodes: WorkdayNode[]) {
     const meetingPatternsNode = selectedNodes.find(node => node.label === "Meeting Patterns");
 
     const rawName = courseNode?.instances?.[0]?.text;
-    const instructors = instructorNode?.instances?.map((instance: any) => instance.text);
+    const instructors = instructorNode?.instances?.map((instance: any) => instance.text) || [];
     // const dateRange = dateRangeNode?.value;
     const format = instructionalFormatsNode?.instances?.[0]?.text;
-    const meetingPatterns = meetingPatternsNode?.instances?.map((instance: any) => instance.text);
+    const meetingPatterns = meetingPatternsNode?.instances?.map((instance: any) => instance.text) || [];
 
     const [code, name] = rawName?.split(" - ") || ["", ""];
 

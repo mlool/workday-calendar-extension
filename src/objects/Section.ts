@@ -1,23 +1,22 @@
 import SectionDetail from "./SectionDetail";
 
 export interface SectionSchedule {
-    code: string;
-    courseID: string;
-    section?: string;
-    format?: string;
-    name?: string;
-    instructors: string[];
     day: string[];
     startTime: string;
     endTime: string;
     terms: number[];
-    location?: string;
     color: string;
+    section: Section;
+}
+
+interface IGradesAPIData {
+    average: number | null
+    averageFiveYears: number | null
 }
 
 export default class Section {
     private code: string; // Course Code, eg. CPSC_V 100
-    private courseID: string; // Workday Course ID, eg "458290"
+    private courseID: string; // Workday Course ID, eg "458290", if custom a random guid string
 
     private instructors: string[];
     private sectionDetails: SectionDetail[];
@@ -98,6 +97,10 @@ export default class Section {
         return this.worklistNumber;
     }
 
+    setWorklistNumber(worklistNumber: number) {
+        this.worklistNumber = worklistNumber;
+    }
+
     getColor(): string {
         return this.color;
     }
@@ -136,18 +139,12 @@ export default class Section {
                     })
                     .map((sectionDetail: SectionDetail) => {
                         const item = {
-                            code: this.code,
-                            courseID: this.courseID,
-                            section: this.sectionCode,
-                            format: this.format,
-                            name: this.name,
-                            instructors: this.instructors,
                             day: sectionDetail.getDays(),
                             startTime: sectionDetail.getStartTime(),
                             endTime: sectionDetail.getEndTime(),
                             terms: sectionDetail.getTerms(),
-                            location: sectionDetail.getLocation(),
-                            color: this.color
+                            color: this.color,
+                            section: this
                         };
 
                         const key = `${item.day.sort().join(",")}|${item.startTime}|${item.endTime}|${item.terms?.sort().join(",")}`;
@@ -185,5 +182,40 @@ export default class Section {
     async removeFromStorage() {
         await chrome.storage.local.set({ newSection: null })
         return true;
+    }
+
+
+
+
+    async getHistoricalGrades(): Promise<IGradesAPIData> {
+        if (this.isCustom) {
+            return {
+                average: null,
+                averageFiveYears: null
+            }
+        }
+
+        const isVancouver = this.getCode().includes("_V")
+        const campus = isVancouver ? "UBCV" : "UBCO"
+        const courseCode = this.getCode().split("_")[0] // Eg. CPSC
+        const courseNum = this.getCode().split(" ")[1].split("-")[0] // Eg. 110
+
+        const reqURL = `https://ubcgrades.com//api/v3/course-statistics/${campus}/${courseCode}/${courseNum}`
+        const response = await fetch(reqURL)
+        if (response.ok) {
+            const data = await response.json()
+            return {
+                average: data["average"] === "" ? null : Number(data["average"]),
+                averageFiveYears:
+                    data["average_past_5_yrs"] === ""
+                        ? null
+                        : Number(data["average_past_5_yrs"]),
+            }
+        } else {
+            return {
+                average: null,
+                averageFiveYears: null
+            }
+        }
     }
 }

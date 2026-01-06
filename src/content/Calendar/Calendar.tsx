@@ -9,6 +9,7 @@ interface IProps {
     worklist: number;
     term: number;
     session: string;
+    setSelectedSection: (section: Section | null) => void;
 }
 
 const START_HOUR = 7;
@@ -20,7 +21,7 @@ const NEW_SECTION_COLOR = "var(--new-section-color)";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, session }) => {
+const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, session, setSelectedSection }) => {
     const [scheduleSectionSchedules, setScheduleSectionSchedules] = React.useState(schedule.getSectionSchedule(worklist, session, [term]));
     const [newSectionSchedules, setNewSectionSchedules] = React.useState(newSection ? newSection.getSectionSchedule([term]) : []);
 
@@ -121,9 +122,9 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
                                             backgroundColor: hasConflict ? CONFLICT_COLOR : NEW_SECTION_COLOR,
                                             zIndex: 20,
                                         }}
-                                        title={`${sec.code} - ${sec.name} (New)`}
+                                        title={`${sec.section.getCode()} - ${sec.section.getName()} (New)`}
                                     >
-                                        <div className="event-code">{sec.code}</div>
+                                        <div className="event-code">{sec.section.getCode()}</div>
                                     </div>
                                 );
                             });
@@ -135,15 +136,16 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
                                         const style = getPositionStyle(section.startTime, section.endTime);
                                         return (
                                             <div
-                                                key={`${section.courseID}-${day}-${idx}`}
+                                                key={`${section.section.getCode()}-${day}-${idx}`}
                                                 className="event-block"
                                                 style={{
                                                     ...style,
                                                     backgroundColor: section.color || 'var(--primary-color)'
                                                 }}
-                                                title={`${section.code} - ${section.name}`}
+                                                title={`${section.section.getCode()} - ${section.section.getName()}`}
+                                                onClick={() => setSelectedSection(section.section)}
                                             >
-                                                <div className="event-code">{section.code}</div>
+                                                <div className="event-code">{section.section.getCode()}</div>
                                             </div>
                                         );
                                     })}

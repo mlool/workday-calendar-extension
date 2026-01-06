@@ -5,12 +5,14 @@ import { useState, useEffect } from "react"
 import Calendar from "../Calendar/Calendar"
 import CalendarControls from "../CalendarControls/CalendarControls";
 import NewSectionControl from "../NewSectionControl/NewSectionControl";
+import SectionDetails from "../SectionDetails/SectionDetails";
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
   const [currentTerm, setCurrentTerm] = useState<number>(1);
   const [schedule, setSchedule] = useState<Schedule>(new Schedule())
   const [newSection, setNewSection] = useState<Section | null>(null)
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null)
 
   useEffect(() => {
     const syncInitialStorage = async () => {
@@ -61,8 +63,29 @@ function App() {
   return (
     <div>
       <CalendarControls worklist={currWorklist} term={currentTerm} setWorklist={setCurrWorklist} setTerm={setCurrentTerm} />
-      <Calendar schedule={schedule} newSection={newSection} worklist={currWorklist} term={currentTerm} session={"2025W"} />
-      <NewSectionControl newSection={newSection} schedule={schedule} setNewSection={setNewSection} setSchedule={setSchedule} />
+      <Calendar
+        schedule={schedule}
+        newSection={newSection}
+        worklist={currWorklist}
+        term={currentTerm}
+        session={"2025W"}
+        setSelectedSection={setSelectedSection}
+      />
+      <NewSectionControl
+        newSection={newSection}
+        schedule={schedule}
+        setNewSection={setNewSection}
+        setSchedule={setSchedule}
+        worklist={currWorklist}
+      />
+      {selectedSection && <SectionDetails
+        section={selectedSection}
+        onClose={() => setSelectedSection(null)}
+        onDelete={(section: Section) => {
+          setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
+          setSelectedSection(null)
+        }}
+      />}
     </div>
   )
 }
