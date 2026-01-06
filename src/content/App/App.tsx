@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 import Calendar from "../Calendar/Calendar"
 import CalendarControls from "../CalendarControls/CalendarControls";
-import ProgressBar from "../ProgressBar/ProgressBar";
+import NewSectionControl from "../NewSectionControl/NewSectionControl";
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
@@ -13,6 +13,17 @@ function App() {
   const [newSection, setNewSection] = useState<Section | null>(null)
 
   useEffect(() => {
+    const syncInitialStorage = async () => {
+      const fetchedNewSection = await chrome.storage.local.get("newSection")
+      if (fetchedNewSection.newSection) {
+        const newSection = Section.getSectionFromJSON(JSON.parse(fetchedNewSection.newSection))
+        setNewSection(newSection)
+      }
+      schedule.importFromChromeStorage().then((newSchedule) => {
+        setSchedule(newSchedule);
+      });
+    }
+
     const handleStorageChange = (changes: {
       [key: string]: chrome.storage.StorageChange
     }) => {
@@ -33,9 +44,7 @@ function App() {
       }
     }
 
-    schedule.importFromChromeStorage().then((newSchedule) => {
-      setSchedule(newSchedule);
-    });
+    syncInitialStorage()
 
     chrome.storage.onChanged.addListener(handleStorageChange);
     return () => {
@@ -43,13 +52,18 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    console.log("Exporting to chrome storage")
+    schedule.exportToChromeStorage()
+  }, [schedule])
+
   const sectionSchedules = schedule.getSections().flatMap(section => section.getSectionSchedule());
 
   return (
     <div>
       <CalendarControls worklist={currWorklist} term={currentTerm} setWorklist={setCurrWorklist} setTerm={setCurrentTerm} />
       <Calendar schedule={sectionSchedules} newSection={newSection?.getSectionSchedule()} />
-      <ProgressBar />
+      <NewSectionControl newSection={newSection} schedule={schedule} setNewSection={setNewSection} setSchedule={setSchedule} />
     </div>
   )
 }

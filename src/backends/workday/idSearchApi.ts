@@ -51,6 +51,7 @@ export async function fetchSectionFromID(courseId: string): Promise<Section | nu
     sectionCode,
     format,
     name,
+    false,
   )
 }
 

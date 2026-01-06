@@ -16,18 +16,19 @@ export interface SectionSchedule {
 }
 
 export default class Section {
-    code: string; // Course Code, eg. CPSC_V 100
-    courseID: string; // Workday Course ID, eg "458290"
+    private code: string; // Course Code, eg. CPSC_V 100
+    private courseID: string; // Workday Course ID, eg "458290"
 
-    instructors: string[];
-    sectionDetails: SectionDetail[];
-    session: string; // Session, eg. "2025W"
-    worklistNumber: number; // Worklist Number
-    color: string; // Displayed Color
+    private instructors: string[];
+    private sectionDetails: SectionDetail[];
+    private session: string; // Session, eg. "2025W"
+    private worklistNumber: number; // Worklist Number
+    private color: string; // Displayed Color
 
-    sectionCode?: string; // Section Number, eg. "202", "L22"
-    format?: string; // Course Format, eg. "Lecture"
-    name?: string; // Course Name, eg. "Models of Computation"
+    private sectionCode?: string; // Section Number, eg. "202", "L22"
+    private format?: string; // Course Format, eg. "Lecture"
+    private name?: string; // Course Name, eg. "Models of Computation"
+    private isCustom?: boolean; // Whether the section is a custom section
 
     constructor(
         code: string,
@@ -40,12 +41,14 @@ export default class Section {
         sectionCode?: string,
         format?: string,
         name?: string,
+        isCustom?: boolean,
     ) {
         this.code = code;
         this.courseID = courseID;
         this.sectionCode = sectionCode;
         this.format = format;
         this.name = name;
+        this.isCustom = isCustom;
         this.instructors = instructors;
         this.sectionDetails = sectionDetails;
         this.session = session;
@@ -112,6 +115,10 @@ export default class Section {
         return this.name;
     }
 
+    getIsCustom(): boolean | undefined {
+        return this.isCustom;
+    }
+
     exportToJSON(): any {
         return {
             code: this.code,
@@ -165,6 +172,11 @@ export default class Section {
     async saveToStorage() {
         await chrome.storage.local.set({ newSection: null })
         await chrome.storage.local.set({ newSection: JSON.stringify(this.exportToJSON()) });
+        return true;
+    }
+
+    async removeFromStorage() {
+        await chrome.storage.local.set({ newSection: null })
         return true;
     }
 }
