@@ -57,12 +57,11 @@ function App() {
     schedule.exportToChromeStorage()
   }, [schedule])
 
-  const sectionSchedules = schedule.getSections().flatMap(section => section.getSectionSchedule());
 
   return (
     <div>
       <CalendarControls worklist={currWorklist} term={currentTerm} setWorklist={setCurrWorklist} setTerm={setCurrentTerm} />
-      <Calendar schedule={sectionSchedules} newSection={newSection?.getSectionSchedule()} />
+      <Calendar schedule={schedule} newSection={newSection} worklist={currWorklist} term={currentTerm} session={"2025W"} />
       <NewSectionControl newSection={newSection} schedule={schedule} setNewSection={setNewSection} setSchedule={setSchedule} />
     </div>
   )

@@ -1,10 +1,14 @@
-import React from 'react';
-import { SectionSchedule } from '../../objects/Section';
+import React, { useEffect } from 'react';
+import Section, { SectionSchedule } from '../../objects/Section';
 import './Calendar.css';
+import Schedule from '../../objects/Schedule';
 
 interface IProps {
-    schedule: SectionSchedule[];
-    newSection?: SectionSchedule[];
+    schedule: Schedule;
+    newSection: Section | null;
+    worklist: number;
+    term: number;
+    session: string;
 }
 
 const START_HOUR = 7;
@@ -16,7 +20,14 @@ const NEW_SECTION_COLOR = "var(--new-section-color)";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-const Calendar: React.FC<IProps> = ({ schedule, newSection }) => {
+const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, session }) => {
+    const [scheduleSectionSchedules, setScheduleSectionSchedules] = React.useState(schedule.getSectionSchedule(worklist, session, [term]));
+    const [newSectionSchedules, setNewSectionSchedules] = React.useState(newSection ? newSection.getSectionSchedule([term]) : []);
+
+    useEffect(() => {
+        setScheduleSectionSchedules(schedule.getSectionSchedule(worklist, session, [term]));
+        setNewSectionSchedules(newSection ? newSection.getSectionSchedule([term]) : []);
+    }, [schedule, newSection, worklist, term, session]);
 
     const timeToMinutes = (time: string): number => {
         const [hours, minutes] = time.split(':').map(Number);
@@ -91,10 +102,10 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection }) => {
                     </div>
 
                     {DAYS.map(day => {
-                        const daySchedule = schedule.filter(s => s.day.includes(day));
+                        const daySchedule = scheduleSectionSchedules.filter(s => s.day.includes(day));
 
                         // Check for newSection
-                        const newSectionElements = (newSection || [])
+                        const newSectionElements = (newSectionSchedules || [])
                             .filter(sec => sec.day.includes(day))
                             .map((sec, i) => {
                                 // Check collisions with ANY event on this day

@@ -61,13 +61,39 @@ export default class Schedule {
         return this.data;
     }
 
-    getSectionSchedule(worklistNumber: number, session: string): SectionSchedule[] {
+    getSectionSchedule(worklistNumber: number, session: string, term?: number[]): SectionSchedule[] {
         const schedules: SectionSchedule[] = [];
         this.data.forEach((section: Section) => {
             if (section.getWorklistNumber() !== worklistNumber) return;
             if (section.getSession() !== session) return;
-            schedules.push(...section.getSectionSchedule())
+
+            const sectionSchedules = section.getSectionSchedule(term);
+
+            schedules.push(...sectionSchedules)
         });
         return schedules;
+    }
+
+    getConflictSections(newSection: Section): Section[] {
+        const conflicts: Section[] = [];
+        this.data.forEach((section: Section) => {
+            if (section.getWorklistNumber() !== newSection.getWorklistNumber()) return;
+            if (section.getSession() !== newSection.getSession()) return;
+
+            const sectionSchedules = section.getSectionSchedule();
+            const newSectionSchedules = newSection.getSectionSchedule();
+
+            sectionSchedules.forEach((schedule: SectionSchedule) => {
+                newSectionSchedules.forEach((newSchedule: SectionSchedule) => {
+                    const termsMatch = schedule.terms.some((term: number) => newSchedule.terms.includes(term));
+                    if (!termsMatch) return;
+                    if (schedule.day.sort().join(",") !== newSchedule.day.sort().join(",")) return;
+                    if (schedule.startTime !== newSchedule.startTime) return;
+                    if (schedule.endTime !== newSchedule.endTime) return;
+                    conflicts.push(section);
+                });
+            });
+        });
+        return conflicts;
     }
 }

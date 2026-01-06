@@ -57,7 +57,6 @@ export default class Section {
     }
 
     static getSectionFromJSON(data: any, version?: string): Section {
-
         const sectionDetails = data.sectionDetails.map(
             (sectionDetail: any) => SectionDetail.getSectionDetailFromJSON(sectionDetail, version));
 
@@ -119,6 +118,49 @@ export default class Section {
         return this.isCustom;
     }
 
+    // Returns a set of terms that the section is offered in
+    getTerms(): Set<number> {
+        return this.sectionDetails.reduce((acc: Set<number>, sectionDetail: SectionDetail) => {
+            sectionDetail.getTerms().forEach((term: number) => acc.add(term));
+            return acc;
+        }, new Set<number>());
+    }
+
+    getSectionSchedule(term?: number[]): SectionSchedule[] {
+        return Array.from(
+            new Map(
+                this.sectionDetails
+                    .filter((sectionDetail: SectionDetail) => {
+                        if (!term || term.length === 0) return true;
+                        return sectionDetail.getTerms().some((t: number) => term.includes(t));
+                    })
+                    .map((sectionDetail: SectionDetail) => {
+                        const item = {
+                            code: this.code,
+                            courseID: this.courseID,
+                            section: this.sectionCode,
+                            format: this.format,
+                            name: this.name,
+                            instructors: this.instructors,
+                            day: sectionDetail.getDays(),
+                            startTime: sectionDetail.getStartTime(),
+                            endTime: sectionDetail.getEndTime(),
+                            terms: sectionDetail.getTerms(),
+                            location: sectionDetail.getLocation(),
+                            color: this.color
+                        };
+
+                        const key = `${item.day.sort().join(",")}|${item.startTime}|${item.endTime}|${item.terms?.sort().join(",")}`;
+                        return [key, item];
+                    })
+            ).values()
+        );
+    }
+
+
+    /*
+    Interactions with chrome storage
+    */
     exportToJSON(): any {
         return {
             code: this.code,
@@ -132,41 +174,6 @@ export default class Section {
             format: this.format,
             name: this.name
         }
-    }
-
-
-    getSectionSchedule(): SectionSchedule[] {
-        return Array.from(
-            new Map(
-                this.sectionDetails.map((sectionDetail: SectionDetail) => {
-                    const item = {
-                        code: this.code,
-                        courseID: this.courseID,
-                        section: this.sectionCode,
-                        format: this.format,
-                        name: this.name,
-                        instructors: this.instructors,
-                        day: sectionDetail.getDays(),
-                        startTime: sectionDetail.getStartTime(),
-                        endTime: sectionDetail.getEndTime(),
-                        terms: sectionDetail.getTerms(),
-                        location: sectionDetail.getLocation(),
-                        color: this.color
-                    };
-
-                    const key = `${item.day.sort().join(",")}|${item.startTime}|${item.endTime}|${item.terms?.sort().join(",")}`;
-                    return [key, item];
-                })
-            ).values()
-        );
-    }
-
-    // Returns a set of terms that the section is offered in
-    getTerms(): Set<number> {
-        return this.sectionDetails.reduce((acc: Set<number>, sectionDetail: SectionDetail) => {
-            sectionDetail.getTerms().forEach((term: number) => acc.add(term));
-            return acc;
-        }, new Set<number>());
     }
 
     async saveToStorage() {
