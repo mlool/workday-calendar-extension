@@ -35,7 +35,7 @@
 }
 
 .section-control-button {
-    padding: 8px 16px;
+    padding: 4px 16px;
     border-radius: 6px;
     border: none;
     font-weight: 500;
@@ -45,7 +45,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9em;
+    font-size: 0.7rem;
 }
 
 .section-control-button:disabled {

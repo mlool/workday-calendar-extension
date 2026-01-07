@@ -136,6 +136,13 @@ export default class Section {
         return this.isCustom;
     }
 
+    getSectionLink(): string {
+        if (this.isCustom) {
+            return "";
+        }
+        return `https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${this.courseID}.htmld`;
+    }
+
     // Returns a set of terms that the section is offered in
     getTerms(): Set<number> {
         return this.sectionDetails.reduce((acc: Set<number>, sectionDetail: SectionDetail) => {

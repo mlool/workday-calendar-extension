@@ -7,6 +7,8 @@ import CalendarControls from "../CalendarControls/CalendarControls";
 import NewSectionControl from "../NewSectionControl/NewSectionControl";
 import SectionDetails from "../SectionDetails/SectionDetails";
 
+import "./App.css"
+
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
   const [currentTerm, setCurrentTerm] = useState<number>(1);
@@ -62,6 +64,7 @@ function App() {
 
   return (
     <div>
+      <div className="top-bar"></div>
       <CalendarControls
         worklist={currWorklist}
         term={currentTerm}

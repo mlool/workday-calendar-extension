@@ -27,7 +27,7 @@
 }
 
 .control-button {
-    padding: 3px 16px;
+    padding: 1px 16px;
     border: 1px solid var(--border-secondary);
     background-color: var(--control-button-bg);
     border-radius: 4px;

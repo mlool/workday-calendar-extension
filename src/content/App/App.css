@@ -1,0 +1,6 @@
+.top-bar {
+    height: 25px;
+    background-color: var(--primary-color);
+    width: 100%;
+    margin-bottom: 2px;
+}

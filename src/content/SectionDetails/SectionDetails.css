@@ -23,7 +23,7 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
 }
 
@@ -33,40 +33,28 @@
     align-items: center;
     margin-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     flex-shrink: 0;
 }
 
 .popup-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
 }
 
-.close-btn {
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-}
-
-.close-btn:hover {
-    color: var(--text-primary);
-}
-
 .popup-content {
     flex: 1;
     overflow-y: auto;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--text-dark);
 }
 
 .popup-footer {
     display: flex;
     justify-content: center;
-    padding-top: 10px;
+    padding-top: 5px;
     border-top: 1px solid var(--border-color);
     margin-top: 10px;
     flex-shrink: 0;

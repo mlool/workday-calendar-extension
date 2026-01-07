@@ -56,7 +56,7 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
                         </button>
                     </div>
                 ) : (
-                    <div>
+                    <div className="button-row">
                         <button
                             className="section-control-button btn-primary"
                             onClick={() => onClickAddSection()}

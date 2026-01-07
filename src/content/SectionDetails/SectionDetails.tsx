@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Section from "../../objects/Section"
 import { IGradesAPIData } from "../../objects/Section"
 import "./SectionDetails.css"
+import CloseIcon from "../Icons/CloseIcon";
+import ExternalLinkIcon from "../Icons/ExternalLinkIcon";
 
 interface IProps {
     section: Section;
@@ -14,8 +16,11 @@ const SectionDetails = ({ section, onClose, onDelete }: IProps) => {
         <div className="section-details-overlay" onClick={onClose}>
             <div className="section-details-popup" onClick={(e) => e.stopPropagation()}>
                 <div className="popup-header">
-                    <h2 className="popup-title">{section.getCode() + (section.getSectionCode() ? " - " + section.getSectionCode() : "")}</h2>
-                    <div className="close-btn" onClick={onClose}>&times;</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                        <h2 className="popup-title">{section.getCode() + (section.getSectionCode() ? " - " + section.getSectionCode() : "")}</h2>
+                        {section.getSectionLink() !== "" && <ExternalLinkIcon size={16} href={section.getSectionLink()} />}
+                    </div>
+                    <CloseIcon size={16} onClose={onClose} />
                 </div>
                 <div className="popup-content">
                     <div className="detail-row">
