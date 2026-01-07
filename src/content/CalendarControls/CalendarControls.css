@@ -1,3 +1,5 @@
+/* ... existing styles ... */
+
 .calendar-controls {
     display: flex;
     flex-direction: column;
@@ -5,13 +7,20 @@
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
     margin-bottom: 2px;
-    gap: 3px;
+    gap: 5px;
 }
 
 .control-row {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%;
+    /* Ensure full width for spacing */
+}
+
+/* Specific styling for the second row to split content */
+.control-row.split {
+    justify-content: space-between;
 }
 
 .control-label {
@@ -24,6 +33,7 @@
 .button-group {
     display: flex;
     gap: 5px;
+    align-items: center;
 }
 
 .control-button {
@@ -45,5 +55,26 @@
 .control-button.active {
     background-color: var(--primary-color);
     color: var(--text-white);
+    border-color: var(--primary-color);
+}
+
+.session-select {
+    padding: 1px 8px;
+    border: 1px solid var(--border-secondary);
+    background-color: var(--control-button-bg);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--text-dark);
+    outline: none;
+    min-width: 80px;
+}
+
+.session-select:hover {
+    background-color: var(--control-button-hover);
+    border-color: var(--border-hover);
+}
+
+.session-select:focus {
     border-color: var(--primary-color);
 }

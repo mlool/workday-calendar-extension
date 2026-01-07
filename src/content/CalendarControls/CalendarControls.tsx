@@ -14,7 +14,7 @@ interface IProps {
 const WORKLISTS = [0, 1, 2, 3];
 const TERMS = [1, 2];
 
-const CalendarControls: React.FC<IProps> = ({ worklist, term, setWorklist, setTerm }) => {
+const CalendarControls: React.FC<IProps> = ({ worklist, term, currentSession, availableSessions, setCurrentSession, setWorklist, setTerm }) => {
     return (
         <div className="calendar-controls">
             <div className="control-row">
@@ -23,7 +23,7 @@ const CalendarControls: React.FC<IProps> = ({ worklist, term, setWorklist, setTe
                     {WORKLISTS.map((wl) => (
                         <button
                             key={wl}
-                            className={`control-button ${worklist === wl ? 'active' : ''}`}
+                            className={`control-button ${worklist === wl ? "active" : ""}`}
                             onClick={() => setWorklist(wl)}
                         >
                             {wl}
@@ -31,13 +31,27 @@ const CalendarControls: React.FC<IProps> = ({ worklist, term, setWorklist, setTe
                     ))}
                 </div>
             </div>
-            <div className="control-row">
-                <span className="control-label">Term:</span>
+
+            <div className="control-row split">
+                <span className="control-label" style={{ minWidth: "auto" }}>Session:</span>
                 <div className="button-group">
+                    <select
+                        className="session-select"
+                        value={currentSession}
+                        onChange={(e) => setCurrentSession(e.target.value)}
+                    >
+                        {availableSessions.map(s => (
+                            <option key={s} value={s}>{s}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="button-group">
+                    <span className="control-label" style={{ minWidth: "auto" }}>Term:</span>
                     {TERMS.map((t) => (
                         <button
                             key={t}
-                            className={`control-button ${term === t ? 'active' : ''}`}
+                            className={`control-button ${term === t ? "active" : ""}`}
                             onClick={() => setTerm(t)}
                         >
                             T{t}
@@ -46,8 +60,7 @@ const CalendarControls: React.FC<IProps> = ({ worklist, term, setWorklist, setTe
                 </div>
             </div>
         </div>
-    );
+    )
 };
 
 export default CalendarControls;
-
