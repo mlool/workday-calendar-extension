@@ -55,7 +55,6 @@ function App() {
   }, [])
 
   useEffect(() => {
-    console.log("Exporting to chrome storage")
     schedule.exportToChromeStorage()
   }, [schedule])
 

@@ -9,7 +9,7 @@ export interface SectionSchedule {
     section: Section;
 }
 
-interface IGradesAPIData {
+export interface IGradesAPIData {
     average: number | null
     averageFiveYears: number | null
 }
@@ -93,6 +93,17 @@ export default class Section {
         return this.session;
     }
 
+    getLocations(): string[] {
+        const locations = new Set<string>();
+        this.sectionDetails.forEach((sectionDetail: SectionDetail) => {
+            const location = sectionDetail.getLocation();
+            if (location) {
+                locations.add(location);
+            }
+        });
+        return Array.from(locations);
+    }
+
     getWorklistNumber(): number {
         return this.worklistNumber;
     }
@@ -103,6 +114,10 @@ export default class Section {
 
     getColor(): string {
         return this.color;
+    }
+
+    setColor(color: string) {
+        this.color = color;
     }
 
     getSectionCode(): string | undefined {
@@ -217,5 +232,15 @@ export default class Section {
                 averageFiveYears: null
             }
         }
+    }
+
+    getGradesUrl(): string {
+        const isVancouver = this.getCode().includes("_V")
+        const campus = isVancouver ? "UBCV" : "UBCO"
+        const courseCode = this.getCode().split("_")[0] // Eg. CPSC
+        const courseNum = this.getCode().split(" ")[1].split("-")[0] // Eg. 110
+
+        const url = `https://ubcgrades.com/statistics-by-course#${campus}-${courseCode}-${courseNum}`
+        return url
     }
 }

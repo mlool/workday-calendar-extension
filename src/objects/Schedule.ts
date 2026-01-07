@@ -1,3 +1,4 @@
+import { SECTION_COLORS } from "../content/theme";
 import Section, { SectionSchedule } from "./Section";
 
 export default class Schedule {
@@ -13,6 +14,7 @@ export default class Schedule {
 
     // Return a new class for React Hooks
     addSection(section: Section): Schedule {
+        section.setColor(this.getCourseColor(section.getWorklistNumber(), section.getCode()));
         return new Schedule(this.version, [...this.data, section]);
     }
 
@@ -84,6 +86,28 @@ export default class Schedule {
         const sessions = this.data.map((section: Section) => section.getSession());
         const uniqueSessions = [...new Set(sessions)];
         return uniqueSessions;
+    }
+
+    getColors(worklistNumber: number): string[] {
+        const colors = this.data.map((section: Section) => section.getColor());
+        const uniqueColors = [...new Set(colors)];
+        return uniqueColors;
+    }
+
+    // Course code: CPSC_V 110
+    getCourseColor(worklistNumber: number, courseCode: string): string {
+        let courseColor = ""
+        this.getSections().forEach((section) => {
+            if (section.getWorklistNumber() !== worklistNumber) return;
+            if (section.getCode() !== courseCode) return;
+            courseColor = section.getColor();
+        })
+        if (courseColor !== "") return courseColor;
+
+        const usedColors = this.getColors(worklistNumber);
+        const colors = SECTION_COLORS.filter((color) => !usedColors.includes(color));
+        if (colors.length == 0) return SECTION_COLORS[0];
+        return colors[0];
     }
 
 

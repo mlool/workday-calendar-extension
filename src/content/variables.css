@@ -19,7 +19,7 @@
     --border-hover: #bbb;
 
     /* Calendar Specific */
-    --conflict-color: #ff5845ff;
+    --conflict-color: rgb(254, 56, 34);
     --new-section-color: #ffe787ff;
     --calendar-event-text: #222222;
     --calendar-event-hover-shadow: rgba(0, 0, 0, 0.15);
@@ -35,7 +35,7 @@
     --button-secondary-hover: #d5d5d5;
     --button-secondary-disabled: #f5f5f5;
 
-    --button-warning: #ff5845;
-    --button-warning-hover: #e04e3d;
+    --button-warning: #fd3924;
+    --button-warning-hover: #d33928;
     --button-warning-disabled: #ffccc6;
 }

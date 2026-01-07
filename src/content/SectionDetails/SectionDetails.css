@@ -31,9 +31,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
+    flex-shrink: 0;
 }
 
 .popup-title {
@@ -62,6 +63,15 @@
     color: var(--text-dark);
 }
 
+.popup-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+    flex-shrink: 0;
+}
+
 .detail-row {
     margin-bottom: 12px;
     display: flex;
@@ -77,4 +87,20 @@
 
 .detail-value {
     flex: 1;
+}
+
+.section-delete-button {
+    background-color: var(--button-warning);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.section-delete-button:hover {
+    background-color: var(--button-warning-hover);
 }
