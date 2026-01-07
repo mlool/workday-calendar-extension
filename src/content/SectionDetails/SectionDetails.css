@@ -49,6 +49,10 @@
     overflow-y: auto;
     font-size: 0.8rem;
     color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Spacing between major sections */
 }
 
 .popup-footer {
@@ -60,21 +64,34 @@
     flex-shrink: 0;
 }
 
-.detail-row {
-    margin-bottom: 12px;
+/* New Layout Styles */
+
+.detail-section {
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
 }
 
-.detail-label {
-    font-weight: 600;
-    width: 100px;
-    flex-shrink: 0;
-    color: var(--text-secondary);
+.detail-header {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
 }
 
 .detail-value {
-    flex: 1;
+    color: var(--text-primary);
+}
+
+.detail-link {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .section-delete-button {
