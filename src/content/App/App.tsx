@@ -10,6 +10,7 @@ import SectionDetails from "../SectionDetails/SectionDetails";
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
   const [currentTerm, setCurrentTerm] = useState<number>(1);
+  const [currentSession, setCurrentSession] = useState<string>("2025W");
   const [schedule, setSchedule] = useState<Schedule>(new Schedule())
   const [newSection, setNewSection] = useState<Section | null>(null)
   const [selectedSection, setSelectedSection] = useState<Section | null>(null)
@@ -61,13 +62,18 @@ function App() {
 
   return (
     <div>
-      <CalendarControls worklist={currWorklist} term={currentTerm} setWorklist={setCurrWorklist} setTerm={setCurrentTerm} />
+      <CalendarControls
+        worklist={currWorklist}
+        term={currentTerm}
+        setWorklist={setCurrWorklist}
+        setTerm={setCurrentTerm}
+      />
       <Calendar
         schedule={schedule}
         newSection={newSection}
         worklist={currWorklist}
         term={currentTerm}
-        session={"2025W"}
+        session={currentSession}
         setSelectedSection={setSelectedSection}
       />
       <NewSectionControl

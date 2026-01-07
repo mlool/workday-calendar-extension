@@ -82,19 +82,38 @@ export default class Schedule {
         return conflicts;
     }
 
+    // Gets all available sessions (2025W, etc) in the schedule
     getSessions(): string[] {
         const sessions = this.data.map((section: Section) => section.getSession());
         const uniqueSessions = [...new Set(sessions)];
         return uniqueSessions;
     }
 
-    getColors(worklistNumber: number): string[] {
-        const colors = this.data.map((section: Section) => section.getColor());
-        const uniqueColors = [...new Set(colors)];
-        return uniqueColors;
+    // Gets the latest session available in the schedule
+    getLatestSession(): string {
+        const sessions = this.getSessions();
+        if (sessions.length === 0) return "2025W"
+        const score = (s: string) => {
+            const year = Number(s.slice(0, 4));
+            const term = s[4]; // 'S' or 'W'
+            const termRank = term === "W" ? 1 : 0; // W more recent than S
+            return year * 10 + termRank;
+        };
+
+        return sessions.reduce((best, cur) => (score(cur) > score(best) ? cur : best));
     }
 
-    // Course code: CPSC_V 110
+    // Gets all colors already used in the given worklist
+    getColors(worklistNumber: number): string[] {
+        let colors: string[] = [];
+        this.data.forEach((section: Section) => {
+            if (section.getWorklistNumber() !== worklistNumber) return;
+            colors.push(section.getColor());
+        })
+        return colors;
+    }
+
+    // Returns the color associated with the given course code (CPSC_V 110) if such course already exist, else returns a new color
     getCourseColor(worklistNumber: number, courseCode: string): string {
         let courseColor = ""
         this.getSections().forEach((section) => {

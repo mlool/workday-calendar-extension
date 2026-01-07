@@ -37,22 +37,34 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
                 </div>
             )}
 
-            <div className="button-row">
-                <button
-                    className="section-control-button btn-primary"
-                    disabled={!newSection}
-                    onClick={() => onClickAddSection()}
-                >
-                    Add Section
-                </button>
-                <button
-                    className="section-control-button btn-secondary"
-                    disabled={!newSection}
-                    onClick={() => setNewSection(null)}
-                >
-                    Cancel
-                </button>
-            </div>
+            {newSection ?
+                (
+                    <div className="button-row">
+                        <button
+                            className="section-control-button btn-primary"
+                            disabled={!newSection}
+                            onClick={() => onClickAddSection()}
+                        >
+                            Add Section
+                        </button>
+                        <button
+                            className="section-control-button btn-secondary"
+                            disabled={!newSection}
+                            onClick={() => setNewSection(null)}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                ) : (
+                    <div>
+                        <button
+                            className="section-control-button btn-primary"
+                            onClick={() => onClickAddSection()}
+                        >
+                            Custom Section
+                        </button>
+                    </div>
+                )}
 
             {/* <button className="section-control-button btn-custom">
                 New Custom Section
