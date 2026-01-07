@@ -55,12 +55,69 @@ export async function fetchSectionFromID(courseId: string): Promise<Section | nu
   )
 }
 
+const isCampus = (s: string) => /^[A-Z]{2,6}$/.test(s); // e.g., UBCV
+const isFloor = (s: string) => /^Floor:\s*\w+$/i.test(s); // Floor: 1, Floor: G
+const isRoom = (s: string) => /^Room:\s*[\w-]+$/i.test(s); // Room: 1005, Room: A-123
+const isDays = (s: string) =>
+  /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)(\s+(Mon|Tue|Wed|Thu|Fri|Sat|Sun))*$/i.test(s); // "Tue Thu"
+const isTimeRange = (s: string) =>
+  /^\d{1,2}:\d{2}\s*(a\.m\.|p\.m\.)\s*-\s*\d{1,2}:\d{2}\s*(a\.m\.|p\.m\.)$/i.test(s);
+const isDateRange = (s: string) =>
+  /^\d{4}-\d{2}-\d{2}\s*-\s*\d{4}-\d{2}-\d{2}$/.test(s);
+
+type MeetingParts = {
+  campus?: string;
+  building?: string;     // built from leftovers
+  floor?: string;
+  room?: string;
+  daysString?: string;
+  timeRange?: string;
+  dateRange?: string;
+  extras?: string[]; // Kept for debugging
+};
+
 function getSectionDetailFromMeetingPattern(meetingPattern: string): { session: string, sectionDetail: SectionDetail } {
-  const [_, building, floor, room, daysString, timeRange, dateRange] = meetingPattern.split(" | ");
-  const [startTime, endTime] = timeRange.split(" - ").map(convertTo24HourFormat);
-  const [startDate, endDate] = dateRange.split(" - ");
-  const { session, terms } = parseSessionAndTermFromDateRange(dateRange);
-  const days = daysString.split(" ").map((day: string) => day.trim());
+  const tokens = meetingPattern.split("|").map(t => t.trim()).filter(Boolean);
+
+  const result: MeetingParts = { extras: [] };
+  const buildingBits: string[] = [];
+
+  for (const token of tokens) {
+    if (!result.campus && isCampus(token)) {
+      result.campus = token;
+      continue;
+    }
+    if (!result.floor && isFloor(token)) {
+      // keep raw "Floor: 1" or just store "1"
+      result.floor = token.replace(/^Floor:\s*/i, "").trim();
+      continue;
+    }
+    if (!result.room && isRoom(token)) {
+      result.room = token.replace(/^Room:\s*/i, "").trim();
+      continue;
+    }
+    if (!result.daysString && isDays(token)) {
+      result.daysString = token;
+      continue;
+    }
+    if (!result.timeRange && isTimeRange(token)) {
+      result.timeRange = token;
+      continue;
+    }
+    if (!result.dateRange && isDateRange(token)) {
+      result.dateRange = token;
+      continue;
+    }
+    // If it doesn't match anything, treat as building
+    buildingBits.push(token);
+  }
+
+  const [startTime, endTime] = result.timeRange?.split(" - ").map(convertTo24HourFormat) ?? [];
+  const [startDate, endDate] = result.dateRange?.split(" - ") ?? [];
+  const { session, terms } = parseSessionAndTermFromDateRange(result.dateRange ?? "");
+  const days = result.daysString?.split(" ").map((day: string) => day.trim()) ?? [];
+
+  const building = buildingBits.join(" ");
 
   return {
     session: session,
@@ -71,11 +128,50 @@ function getSectionDetailFromMeetingPattern(meetingPattern: string): { session: 
       endTime,
       startDate,
       endDate,
-      `${building} | ${floor} | ${room}`
+      `${building} | Floor: ${result.floor} | Room: ${result.room}`
     )
   }
 }
 
+export async function extractSection(element: Element) {
+  const courseId = extractIdFromDOM(element)
 
+  if (!courseId) {
+    alert("Course ID not found, please manually add the section by url")
+    return;
+  }
+
+  const fetchedSection = await fetchSectionFromID(courseId)
+
+  if (!fetchedSection) {
+    alert("Section failed to be fetched")
+    return;
+  }
+
+  if (!(await fetchedSection.saveToStorage())) {
+    alert("Failed to Sync to Storage")
+    return;
+  }
+
+}
+
+const extractIdFromDOM = (element: Element) => {
+  const courseIdElement = element.querySelector(
+    '[data-automation-id^="selectedItem_15194"]'
+  )
+
+  if (
+    courseIdElement &&
+    courseIdElement instanceof HTMLElement &&
+    courseIdElement.dataset.automationId
+  ) {
+    const automationIdParts = courseIdElement.dataset.automationId.split("_")
+    const courseId = automationIdParts[1].split("$")[1]
+
+    return courseId
+  } else {
+    return null
+  }
+}
 
 

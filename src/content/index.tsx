@@ -1,8 +1,8 @@
-import { extractSection } from "./utils"
 import "./variables.css"
 import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"
+import { extractSection } from "../backends/workday/idSearchApi"
 
 // Function to apply visibility based on stored settings
 function applyVisibility(hide: boolean): void {
