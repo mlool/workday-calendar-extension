@@ -1,5 +1,5 @@
 import Schedule from "../../objects/Schedule"
-import Section, { SectionSchedule } from "../../objects/Section"
+import Section from "../../objects/Section"
 import { useState, useEffect } from "react"
 
 import Calendar from "../Calendar/Calendar"
@@ -8,11 +8,15 @@ import NewSectionControl from "../NewSectionControl/NewSectionControl";
 import SectionDetails from "../SectionDetails/SectionDetails";
 
 import "./App.css"
+import WorklistControl from "../WorklistControl/WorklistControl";
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
   const [currentTerm, setCurrentTerm] = useState<number>(1);
+
   const [currentSession, setCurrentSession] = useState<string>("2025W");
+  const [availableSessions, setAvailableSessions] = useState<string[]>([]);
+
   const [schedule, setSchedule] = useState<Schedule>(new Schedule())
   const [newSection, setNewSection] = useState<Section | null>(null)
   const [selectedSection, setSelectedSection] = useState<Section | null>(null)
@@ -26,6 +30,8 @@ function App() {
       }
       schedule.importFromChromeStorage().then((newSchedule) => {
         setSchedule(newSchedule);
+        setAvailableSessions(newSchedule.getSessions());
+        setCurrentSession(newSchedule.getLatestSession());
       });
     }
 
@@ -39,6 +45,7 @@ function App() {
         setNewSection(newSection)
         if (newSection.getTerms().size <= 1) {
           setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
+          setCurrentSession(newSection.getSession())
         }
       } else if (changes.sections) {
         const newSchedule: string | null = changes.sections.newValue
@@ -68,6 +75,9 @@ function App() {
       <CalendarControls
         worklist={currWorklist}
         term={currentTerm}
+        currentSession={currentSession}
+        availableSessions={availableSessions}
+        setCurrentSession={setCurrentSession}
         setWorklist={setCurrWorklist}
         setTerm={setCurrentTerm}
       />
@@ -95,6 +105,7 @@ function App() {
           setSelectedSection(null)
         }}
       />}
+      <WorklistControl />
     </div>
   )
 }

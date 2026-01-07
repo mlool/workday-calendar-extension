@@ -1,0 +1,15 @@
+.worklist-delete-button {
+    background-color: var(--button-warning);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    margin: 0px 4px;
+}
+
+.worklist-delete-button:hover {
+    background-color: var(--button-warning-hover);
+}

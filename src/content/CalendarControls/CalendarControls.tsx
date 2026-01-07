@@ -4,6 +4,9 @@ import './CalendarControls.css';
 interface IProps {
     worklist: number;
     term: number;
+    currentSession: string;
+    availableSessions: string[];
+    setCurrentSession: (session: string) => void;
     setWorklist: (worklist: number) => void;
     setTerm: (term: number) => void;
 }

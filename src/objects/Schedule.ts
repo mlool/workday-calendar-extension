@@ -129,6 +129,20 @@ export default class Schedule {
         return colors[0];
     }
 
+    clearSession(session: string): Schedule {
+        return new Schedule(
+            this.version,
+            this.data.filter((section: Section) => section.getSession() !== session)
+        );
+    }
+
+    clearWorklist(worklistNumber: number, session: string): Schedule {
+        return new Schedule(
+            this.version,
+            this.data.filter((section: Section) => section.getWorklistNumber() !== worklistNumber && section.getSession() !== session)
+        );
+    }
+
 
     /*
     Chrome storage helpers
