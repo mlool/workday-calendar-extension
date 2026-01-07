@@ -88,6 +88,7 @@ function App() {
       />
       {selectedSection && <SectionDetails
         section={selectedSection}
+        term={currentTerm}
         onClose={() => setSelectedSection(null)}
         onDelete={(section: Section) => {
           setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))

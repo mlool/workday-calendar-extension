@@ -7,11 +7,12 @@ import ExternalLinkIcon from "../Icons/ExternalLinkIcon";
 
 interface IProps {
     section: Section;
+    term: number;
     onClose: () => void;
     onDelete: (section: Section) => void;
 }
 
-const SectionDetails = ({ section, onClose, onDelete }: IProps) => {
+const SectionDetails = ({ section, term, onClose, onDelete }: IProps) => {
     return (
         <div className="section-details-overlay" onClick={onClose}>
             <div className="section-details-popup" onClick={(e) => e.stopPropagation()}>
@@ -33,7 +34,7 @@ const SectionDetails = ({ section, onClose, onDelete }: IProps) => {
                     </div>
                     {!section.getIsCustom() && <InstructorComponent section={section} />}
                     {!section.getIsCustom() && <GradeComponent section={section} />}
-                    {!section.getIsCustom() && <LocationComponent section={section} />}
+                    {!section.getIsCustom() && <LocationComponent section={section} term={term} />}
                 </div>
                 <div className="popup-footer">
                     <div className="section-delete-button" onClick={() => { onDelete(section); onClose() }}>Delete</div>
@@ -83,12 +84,12 @@ const GradeComponent = ({ section }: { section: Section }) => {
     )
 }
 
-const LocationComponent = ({ section }: { section: Section }) => {
+const LocationComponent = ({ section, term }: { section: Section; term: number }) => {
     return (
         <div className="detail-row">
             <span className="detail-label">Location:</span>
             <span className="detail-value">
-                {section.getLocations().length > 0 ? section.getLocations().join(", ") : "No location found."}
+                {section.getLocations([term]).length > 0 ? section.getLocations([term]).join(", ") : "No location found."}
             </span>
         </div>
     )

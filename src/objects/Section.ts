@@ -93,9 +93,10 @@ export default class Section {
         return this.session;
     }
 
-    getLocations(): string[] {
+    getLocations(term?: number[]): string[] {
         const locations = new Set<string>();
         this.sectionDetails.forEach((sectionDetail: SectionDetail) => {
+            if (term && !sectionDetail.getTerms().some((t: number) => term.includes(t))) return;
             const location = sectionDetail.getLocation();
             if (location) {
                 locations.add(location);

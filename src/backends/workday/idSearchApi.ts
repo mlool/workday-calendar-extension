@@ -56,7 +56,7 @@ export async function fetchSectionFromID(courseId: string): Promise<Section | nu
 }
 
 const isCampus = (s: string) => /^[A-Z]{2,6}$/.test(s); // e.g., UBCV
-const isFloor = (s: string) => /^Floor:\s*\w+$/i.test(s); // Floor: 1, Floor: G
+const isFloor = (s: string) => /^Floor:\s*-?\w+$/i.test(s); // Floor: 1, Floor: G, Floor: -1
 const isRoom = (s: string) => /^Room:\s*[\w-]+$/i.test(s); // Room: 1005, Room: A-123
 const isDays = (s: string) =>
   /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)(\s+(Mon|Tue|Wed|Thu|Fri|Sat|Sun))*$/i.test(s); // "Tue Thu"
@@ -88,7 +88,6 @@ function getSectionDetailFromMeetingPattern(meetingPattern: string): { session: 
       continue;
     }
     if (!result.floor && isFloor(token)) {
-      // keep raw "Floor: 1" or just store "1"
       result.floor = token.replace(/^Floor:\s*/i, "").trim();
       continue;
     }
@@ -118,6 +117,7 @@ function getSectionDetailFromMeetingPattern(meetingPattern: string): { session: 
   const days = result.daysString?.split(" ").map((day: string) => day.trim()) ?? [];
 
   const building = buildingBits.join(" ");
+  const location = (building || result.floor || result.room) ? `${building} | Floor: ${result.floor} | Room: ${result.room}` : ""
 
   return {
     session: session,
@@ -128,7 +128,7 @@ function getSectionDetailFromMeetingPattern(meetingPattern: string): { session: 
       endTime,
       startDate,
       endDate,
-      `${building} | Floor: ${result.floor} | Room: ${result.room}`
+      location
     )
   }
 }
