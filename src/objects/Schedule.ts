@@ -85,7 +85,7 @@ export default class Schedule {
     // Gets all available sessions (2025W, etc) in the schedule
     getSessions(): string[] {
         const sessions = this.data.map((section: Section) => section.getSession());
-        const uniqueSessions = [...new Set(sessions)];
+        const uniqueSessions = [...new Set(sessions)].sort();
         return uniqueSessions;
     }
 
@@ -96,7 +96,7 @@ export default class Schedule {
         const score = (s: string) => {
             const year = Number(s.slice(0, 4));
             const term = s[4]; // 'S' or 'W'
-            const termRank = term === "W" ? 1 : 0; // W more recent than S
+            const termRank = term === "W" ? 1 : 0; // 2025W more recent than 2025S
             return year * 10 + termRank;
         };
 

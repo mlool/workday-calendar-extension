@@ -45,6 +45,9 @@ function App() {
         setNewSection(newSection)
         if (newSection.getTerms().size <= 1) {
           setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
+          if (!availableSessions.includes(newSection.getSession())) {
+            setAvailableSessions([...availableSessions, newSection.getSession()].sort())
+          }
           setCurrentSession(newSection.getSession())
         }
       } else if (changes.sections) {

@@ -1,4 +1,6 @@
 import Schedule from "../../objects/Schedule";
+import ExportIcon from "../Icons/ExportIcon";
+import InputIcon from "../Icons/InputIcon";
 import "./WorklistControl.css"
 
 interface IProps {
@@ -15,6 +17,8 @@ const WorklistControl: React.FC<IProps> = ({ schedule, worklist, currentSession,
             setSchedule(newSchedule)
         }}>
             Clear Worklist {worklist} for {currentSession}
+            <InputIcon size={24} onClick={() => { }} />
+            <ExportIcon size={24} onClick={() => { }} />
         </div>
     )
 }
