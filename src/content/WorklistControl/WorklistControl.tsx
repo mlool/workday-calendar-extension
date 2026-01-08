@@ -12,13 +12,24 @@ interface IProps {
 
 const WorklistControl: React.FC<IProps> = ({ schedule, worklist, currentSession, setSchedule }) => {
     return (
-        <div className="worklist-delete-button" onClick={() => {
-            const newSchedule = schedule.clearWorklist(worklist, currentSession)
-            setSchedule(newSchedule)
-        }}>
-            Clear Worklist {worklist} for {currentSession}
-            <InputIcon size={24} onClick={() => { }} />
-            <ExportIcon size={24} onClick={() => { }} />
+        <div className="worklist-control-container">
+            <div
+                className="worklist-delete-button"
+                onClick={() => {
+                    const newSchedule = schedule.clearWorklist(worklist, currentSession)
+                    setSchedule(newSchedule)
+                }}
+            >
+                Clear Worklist {worklist} for {currentSession}
+            </div>
+
+            <div className="icon-button" title="Import Worklist">
+                <InputIcon size={20} />
+            </div>
+
+            <div className="icon-button" title="Export Worklist">
+                <ExportIcon size={20} />
+            </div>
         </div>
     )
 }
