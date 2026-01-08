@@ -195,13 +195,14 @@ export default class Schedule {
      If only worklistNum is provided, it is invalid.
      */
     downloadScheduleAsJSON(worklist?: number, session?: string): void {
-        if (worklist && !session) {
+        if (worklist !== undefined && !session) {
             console.error("Invalid downloadJSON call: worklist provided without session");
             return;
         }
         let jsonName = ""
+        console.log(worklist, session)
         const selectedSections = this.data.filter((section: Section) => {
-            if (worklist && session) {
+            if (worklist !== undefined && session) {
                 jsonName = `schedule-${worklist}-${session}.json`
                 return section.getWorklistNumber() === worklist && section.getSession() === session;
             } else if (session) {

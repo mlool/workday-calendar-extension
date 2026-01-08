@@ -32,9 +32,12 @@ const WorklistControl: React.FC<IProps> = ({ schedule, worklist, currentSession,
                     type="file"
                     accept="application/json"
                     onChange={async (e) => {
-                        console.log(await e.target.files?.[0].text())
-                        const newSchedule = schedule.getScheduleFromExternalJSON(await e.target.files?.[0].text() ?? "", currentSession, worklist)
-                        setSchedule(newSchedule)
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const text = await file.text();
+                        const newSchedule = schedule.getScheduleFromExternalJSON(text, currentSession, worklist);
+                        setSchedule(newSchedule);
+                        e.target.value = "";
                     }}
                     style={{ display: "none" }}
                     id="import-file"
