@@ -23,12 +23,25 @@ const WorklistControl: React.FC<IProps> = ({ schedule, worklist, currentSession,
                 Clear Worklist {worklist} for {currentSession}
             </div>
 
-            <div className="icon-button" title="Import Worklist">
-                <InputIcon size={20} />
+            <div className="icon-button" title="Export Worklist" onClick={() => schedule.downloadScheduleAsJSON(worklist, currentSession)}>
+                <ExportIcon size={20} />
             </div>
 
-            <div className="icon-button" title="Export Worklist">
-                <ExportIcon size={20} />
+            <div className="icon-button" title="Import Worklist">
+                <input
+                    type="file"
+                    accept="application/json"
+                    onChange={async (e) => {
+                        console.log(await e.target.files?.[0].text())
+                        const newSchedule = schedule.getScheduleFromExternalJSON(await e.target.files?.[0].text() ?? "", currentSession, worklist)
+                        setSchedule(newSchedule)
+                    }}
+                    style={{ display: "none" }}
+                    id="import-file"
+                />
+                <label htmlFor="import-file">
+                    <InputIcon size={20} />
+                </label>
             </div>
         </div>
     )

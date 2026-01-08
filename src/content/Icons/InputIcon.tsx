@@ -19,7 +19,7 @@ const InputIcon = ({ size }: IProps) => {
             />
             <path d="M5 16L5 17C5 18.1046 5.89543 19 7 19L17 19C18.1046 19 19 18.1046 19 17V16"
                 stroke={color}
-                stroke-width="2"
+                strokeWidth="2"
             />
         </svg>
     )

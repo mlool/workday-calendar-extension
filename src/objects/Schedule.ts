@@ -186,4 +186,65 @@ export default class Schedule {
         }
         await chrome.storage.local.set({ sections: JSON.stringify(this.exportToJSON()) });
     }
+
+    // Export Import JSON functionality
+
+    /*
+     Download JSON file, if worklistNum and Session is null, download the entire schedule
+     If only session is provided, download all worklists for that session
+     If only worklistNum is provided, it is invalid.
+     */
+    downloadScheduleAsJSON(worklist?: number, session?: string): void {
+        if (worklist && !session) {
+            console.error("Invalid downloadJSON call: worklist provided without session");
+            return;
+        }
+        let jsonName = ""
+        const selectedSections = this.data.filter((section: Section) => {
+            if (worklist && session) {
+                jsonName = `schedule-${worklist}-${session}.json`
+                return section.getWorklistNumber() === worklist && section.getSession() === session;
+            } else if (session) {
+                jsonName = `schedule-${session}.json`
+                return section.getSession() === session;
+            }
+            jsonName = `schedule.json`
+            return true;
+        });
+        const json = {
+            version: this.version,
+            data: selectedSections.map((section: Section) => section.exportToJSON())
+        }
+        const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = jsonName;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    getScheduleFromExternalJSON(json: string, session?: string, worklist?: number): Schedule {
+        if (worklist && !session) {
+            console.error("Invalid importJSON call: worklist provided without session");
+            return this;
+        }
+        if (!json || json === "") return new Schedule(this.version, this.data);
+
+        const newSections = JSON.parse(json).data.map((section: any) => {
+            const newSection = Section.getSectionFromJSON(section, JSON.parse(json).version)
+            if (worklist) newSection.setWorklistNumber(worklist)
+            return newSection
+        }) ?? [];
+
+        this.data.forEach((section: Section) => {
+            if (session && worklist && (section.getWorklistNumber() !== worklist || section.getSession() !== session)) {
+                newSections.push(section);
+            } else if (session && section.getSession() !== session) {
+                newSections.push(section);
+            }
+        })
+
+        return new Schedule(this.version, newSections);
+    }
 }
