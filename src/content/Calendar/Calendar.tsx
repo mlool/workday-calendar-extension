@@ -26,6 +26,8 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
     const [newSectionSchedules, setNewSectionSchedules] = React.useState(newSection ? newSection.getSectionSchedule([term]) : []);
 
     useEffect(() => {
+        console.log("RENDERING CALENDAR")
+        console.log(session)
         setScheduleSectionSchedules(schedule.getSectionSchedule(worklist, session, [term]));
         setNewSectionSchedules(newSection ? newSection.getSectionSchedule([term]) : []);
     }, [schedule, newSection, worklist, term, session]);

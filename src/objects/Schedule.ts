@@ -85,7 +85,7 @@ export default class Schedule {
     // Gets all available sessions (2025W, etc) in the schedule
     getSessions(): string[] {
         const sessions = this.data.map((section: Section) => section.getSession());
-        const uniqueSessions = [...new Set(sessions)].sort();
+        const uniqueSessions = [...new Set(sessions)].sort().reverse();
         return uniqueSessions;
     }
 

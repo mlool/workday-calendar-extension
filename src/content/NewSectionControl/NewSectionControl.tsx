@@ -18,9 +18,12 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
             newSection.setWorklistNumber(worklist)
             const newSchedule = schedule.addSection(newSection)
             setSchedule(newSchedule)
-            newSection.removeFromStorage();
             setNewSection(null)
         }
+    }
+
+    const onClickCancel = () => {
+        setNewSection(null)
     }
 
     return (
@@ -43,14 +46,14 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
                         <button
                             className="section-control-button btn-primary"
                             disabled={!newSection}
-                            onClick={() => onClickAddSection()}
+                            onClick={onClickAddSection}
                         >
                             Add Section
                         </button>
                         <button
                             className="section-control-button btn-secondary"
                             disabled={!newSection}
-                            onClick={() => setNewSection(null)}
+                            onClick={onClickCancel}
                         >
                             Cancel
                         </button>
@@ -64,12 +67,13 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
                             Custom Section
                         </button>
                     </div>
-                )}
+                )
+            }
 
             {/* <button className="section-control-button btn-custom">
                 New Custom Section
             </button> */}
-        </div>
+        </div >
     )
 }
 

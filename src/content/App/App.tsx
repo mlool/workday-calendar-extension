@@ -43,13 +43,6 @@ function App() {
         if (newVal === null) return
         const newSection = Section.getSectionFromJSON(JSON.parse(newVal))
         setNewSection(newSection)
-        if (newSection.getTerms().size <= 1) {
-          setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
-          if (!availableSessions.includes(newSection.getSession())) {
-            setAvailableSessions([...availableSessions, newSection.getSession()].sort())
-          }
-          setCurrentSession(newSection.getSession())
-        }
       } else if (changes.sections) {
         const newSchedule: string | null = changes.sections.newValue
         if (newSchedule === null) return
@@ -69,7 +62,23 @@ function App() {
 
   useEffect(() => {
     schedule.exportToChromeStorage()
+    setAvailableSessions(schedule.getSessions());
+    if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
   }, [schedule])
+
+  useEffect(() => {
+    if (newSection) {
+      if (newSection.getTerms().size <= 1) {
+        setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
+      }
+      setAvailableSessions([newSection.getSession()])
+      setCurrentSession(newSection.getSession())
+    } else {
+      Section.removeFromStorage()
+      setAvailableSessions(schedule.getSessions())
+      if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
+    }
+  }, [newSection])
 
 
   return (

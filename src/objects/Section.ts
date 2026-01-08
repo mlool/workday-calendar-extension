@@ -202,7 +202,7 @@ export default class Section {
         return true;
     }
 
-    async removeFromStorage() {
+    static async removeFromStorage() {
         await chrome.storage.local.set({ newSection: null })
         return true;
     }
