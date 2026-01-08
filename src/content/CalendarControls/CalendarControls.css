@@ -13,7 +13,7 @@
 .control-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     width: 100%;
     /* Ensure full width for spacing */
 }
@@ -23,11 +23,17 @@
     justify-content: space-between;
 }
 
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .control-label {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
-    min-width: 60px;
+    min-width: 50px;
 }
 
 .button-group {

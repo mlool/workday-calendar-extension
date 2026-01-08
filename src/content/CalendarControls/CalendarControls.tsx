@@ -33,17 +33,19 @@ const CalendarControls: React.FC<IProps> = ({ worklist, term, currentSession, av
             </div>
 
             <div className="control-row split">
-                <span className="control-label" style={{ minWidth: "auto" }}>Session:</span>
-                <div className="button-group">
-                    <select
-                        className="session-select"
-                        value={currentSession}
-                        onChange={(e) => setCurrentSession(e.target.value)}
-                    >
-                        {availableSessions.map(s => (
-                            <option key={s} value={s}>{s}</option>
-                        ))}
-                    </select>
+                <div className="control-group">
+                    <span className="control-label">Session:</span>
+                    <div className="button-group">
+                        <select
+                            className="session-select"
+                            value={currentSession}
+                            onChange={(e) => setCurrentSession(e.target.value)}
+                        >
+                            {availableSessions.map(s => (
+                                <option key={s} value={s}>{s}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
 
                 <div className="button-group">

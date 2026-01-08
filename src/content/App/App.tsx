@@ -105,7 +105,12 @@ function App() {
           setSelectedSection(null)
         }}
       />}
-      <WorklistControl />
+      <WorklistControl
+        schedule={schedule}
+        worklist={currWorklist}
+        currentSession={currentSession}
+        setSchedule={setSchedule}
+      />
     </div>
   )
 }

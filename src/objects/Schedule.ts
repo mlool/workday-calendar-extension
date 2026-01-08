@@ -139,7 +139,10 @@ export default class Schedule {
     clearWorklist(worklistNumber: number, session: string): Schedule {
         return new Schedule(
             this.version,
-            this.data.filter((section: Section) => section.getWorklistNumber() !== worklistNumber && section.getSession() !== session)
+            this.data.filter((section: Section) => {
+                if (section.getWorklistNumber() === worklistNumber && section.getSession() === session) return false;
+                return true;
+            })
         );
     }
 
