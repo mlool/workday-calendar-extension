@@ -200,7 +200,6 @@ export default class Schedule {
             return;
         }
         let jsonName = ""
-        console.log(worklist, session)
         const selectedSections = this.data.filter((section: Section) => {
             if (worklist !== undefined && session) {
                 jsonName = `schedule-${worklist}-${session}.json`
