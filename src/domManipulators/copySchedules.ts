@@ -1,7 +1,6 @@
 import { fetchSectionFromID } from "../backends/workday/idSearchApi"
 import { toggleContainer, handleCourseLoading } from "../content"
 import LocalStorage from "../objects/LocalStorage"
-import Schedule from "../objects/Schedule"
 import Section from "../objects/Section"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
