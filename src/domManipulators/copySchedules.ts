@@ -1,5 +1,5 @@
 import { fetchSectionFromID } from "../backends/workday/idSearchApi"
-import { toggleContainer, handleCourseLoading } from "../content"
+import { toggleContainer } from "../content"
 import LocalStorage from "../objects/LocalStorage"
 import Section from "../objects/Section"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
@@ -164,7 +164,6 @@ async function handleCopyScheduleButtonClick(
 ): Promise<void> {
     // Ensure the drawer opens when a button is clicked
     toggleContainer(true)
-    handleCourseLoading(true)
     const tables = document.querySelectorAll('[data-automation-id="table"]')
 
     // Check if table exists
@@ -265,6 +264,4 @@ async function handleCopyScheduleButtonClick(
         await LocalStorage.setCurrentTerm(1)
     }
     await LocalStorage.setCurrentSession(selectedSession)
-
-    handleCourseLoading(false)
 }
