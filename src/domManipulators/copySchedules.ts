@@ -249,9 +249,9 @@ async function handleCopyScheduleButtonClick(
         alert(message)
     }
 
-    const currentSchedule = await Schedule.importFromChromeStorage()
+    const currentSchedule = await LocalStorage.getSchedule()
     const newSchedule = currentSchedule.bulkAddSections(selectedSections)
-    newSchedule.exportToChromeStorage();
+    await LocalStorage.setSchedule(newSchedule)
 
     handleCourseLoading(false)
 }

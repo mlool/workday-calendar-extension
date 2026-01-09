@@ -2,6 +2,7 @@ import { defaultColorList } from "../../content/Settings/Theme/courseColors"
 import Section from "../../objects/Section"
 import { collectNodesWithLabel, convertTo24HourFormat, extractWorkdaySectionInfo, parseSessionAndTermFromDateRange } from "./nodeSearchHelpers"
 import SectionDetail from "../../objects/SectionDetail"
+import LocalStorage from "../../objects/LocalStorage"
 
 const searchEndpoint = "https://wd10.myworkday.com/ubc/inst/1$15194/15194$"
 
@@ -147,11 +148,7 @@ export async function extractSection(element: Element) {
     alert("Section failed to be fetched")
     return;
   }
-
-  if (!(await fetchedSection.saveToStorage())) {
-    alert("Failed to Sync to Storage")
-    return;
-  }
+  await LocalStorage.setNewSection(fetchedSection)
 
 }
 

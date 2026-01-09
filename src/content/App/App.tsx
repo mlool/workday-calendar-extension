@@ -24,12 +24,11 @@ function App() {
 
   useEffect(() => {
     const syncInitialStorage = async () => {
-      const fetchedNewSection = await chrome.storage.local.get("newSection")
-      if (fetchedNewSection.newSection) {
-        const newSection = Section.getSectionFromJSON(JSON.parse(fetchedNewSection.newSection))
-        setNewSection(newSection)
+      const fetchedNewSection = await LocalStorage.getNewSection()
+      if (fetchedNewSection) {
+        setNewSection(fetchedNewSection)
       }
-      Schedule.importFromChromeStorage().then((newSchedule) => {
+      LocalStorage.getSchedule().then((newSchedule) => {
         setSchedule(newSchedule);
         setAvailableSessions(newSchedule.getSessions());
         setCurrentSession(newSchedule.getLatestSession());
@@ -47,7 +46,7 @@ function App() {
       } else if (changes.sections) {
         const newSchedule: string | null = changes.sections.newValue
         if (newSchedule === null) return
-        Schedule.importFromChromeStorage().then((newSchedule) => {
+        LocalStorage.getSchedule().then((newSchedule) => {
           setSchedule(newSchedule);
         });
       }
@@ -62,7 +61,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    schedule.exportToChromeStorage()
+    LocalStorage.setSchedule(schedule)
     setAvailableSessions(schedule.getSessions());
     if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
   }, [schedule])
@@ -75,7 +74,7 @@ function App() {
       setAvailableSessions([newSection.getSession()])
       setCurrentSession(newSection.getSession())
     } else {
-      Section.removeFromStorage()
+      LocalStorage.setNewSection(null)
       setAvailableSessions(schedule.getSessions())
       if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
     }

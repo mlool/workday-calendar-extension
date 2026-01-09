@@ -12,6 +12,10 @@ export default class Schedule {
         this.data = data;
     }
 
+    static getVersion(): string {
+        return Schedule.currVersion;
+    }
+
     // Return a new class for React Hooks
     addSection(section: Section): Schedule {
         section.setColor(this.getCourseColor(section.getSession(), section.getWorklistNumber(), section.getCode()));
@@ -178,27 +182,6 @@ export default class Schedule {
             this.version = json.version;
         }
         this.data = json.data;
-    }
-
-    static async importFromChromeStorage(): Promise<Schedule> {
-        const rawSections = (await chrome.storage.local.get("sections")).sections as
-            | string
-            | undefined;
-        if (rawSections === undefined) {
-            return new Schedule(Schedule.currVersion, []);
-        }
-        const sections = JSON.parse(rawSections)['data'];
-        const version = JSON.parse(rawSections)['version'];
-        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
-
-        return new Schedule(Schedule.currVersion, sectionObjects);
-    }
-
-    async exportToChromeStorage(): Promise<void> {
-        if (this.data.length == 0) {
-            return;
-        }
-        await chrome.storage.local.set({ sections: JSON.stringify(this.exportToJSON()) });
     }
 
     // Export Import JSON functionality

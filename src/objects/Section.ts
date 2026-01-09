@@ -196,20 +196,6 @@ export default class Section {
         }
     }
 
-    async saveToStorage() {
-        await chrome.storage.local.set({ newSection: null })
-        await chrome.storage.local.set({ newSection: JSON.stringify(this.exportToJSON()) });
-        return true;
-    }
-
-    static async removeFromStorage() {
-        await chrome.storage.local.set({ newSection: null })
-        return true;
-    }
-
-
-
-
     async getHistoricalGrades(): Promise<IGradesAPIData> {
         if (this.isCustom) {
             return {

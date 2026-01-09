@@ -1,3 +1,6 @@
+import Schedule from "./Schedule";
+import Section from "./Section";
+
 export default class LocalStorage {
     static async getCurrentTerm(): Promise<number> {
         const currentTerm = (await chrome.storage.local.get("currentTerm")).currentTerm;
@@ -27,5 +30,42 @@ export default class LocalStorage {
 
     static async setCurrentWorklistNumber(worklistNumber: number): Promise<void> {
         await chrome.storage.local.set({ currentWorklistNumber: worklistNumber });
+    }
+
+    // Schedule Operations
+    static async getSchedule(): Promise<Schedule> {
+        const rawSections = (await chrome.storage.local.get("sections")).sections as
+            | string
+            | undefined;
+        if (rawSections === undefined) {
+            return new Schedule(Schedule.getVersion(), []);
+        }
+        const sections = JSON.parse(rawSections)['data'];
+        const version = JSON.parse(rawSections)['version'];
+        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
+
+        return new Schedule(Schedule.getVersion(), sectionObjects);
+    }
+
+    static async setSchedule(schedule: Schedule): Promise<void> {
+        if (schedule.getSections().length === 0) return;
+        await chrome.storage.local.set({ sections: JSON.stringify(schedule.exportToJSON()) });
+    }
+
+    // New Section
+    static async getNewSection(): Promise<Section | null> {
+        const newSection = (await chrome.storage.local.get("newSection")).newSection as
+            | string
+            | undefined;
+        if (newSection === undefined) return null;
+        return Section.getSectionFromJSON(JSON.parse(newSection));
+    }
+
+    static async setNewSection(newSection: Section | null): Promise<void> {
+        if (newSection === null) {
+            await chrome.storage.local.remove("newSection");
+            return;
+        }
+        await chrome.storage.local.set({ newSection: JSON.stringify(newSection.exportToJSON()) });
     }
 }
