@@ -56,16 +56,13 @@ function App() {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal: string | null = changes.newSection.newValue
-        if (newVal === null) return
-        const updatedNewSection = Section.getSectionFromJSON(JSON.parse(newVal))
-        if (updatedNewSection.getCourseID() === newSection?.getCourseID()) return;
-        setNewSection(updatedNewSection)
+        LocalStorage.getNewSection().then((updatedNewSection) => {
+          if (!updatedNewSection || updatedNewSection.getCourseID() === newSection?.getCourseID()) return;
+          setNewSection(updatedNewSection)
+        })
       } else if (changes.schedule) {
-        const newSchedule: string | null = changes.schedule.newValue
-        if (newSchedule === null) return
         LocalStorage.getSchedule().then((newSchedule) => {
-          if (newSchedule.getId() === schedule.getId()) return;
+          if (!newSchedule || newSchedule.getId() === schedule.getId()) return;
           setSchedule(newSchedule);
         });
       } else if (changes.currentSession) {
