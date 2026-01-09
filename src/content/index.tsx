@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client"
 import "../index.css"
 import App from "./App/App"
 import { extractSection } from "../backends/workday/idSearchApi"
+import { observeDOMAndAddCopyScheduleButtons } from "../domManipulators/copySchedules"
+
 
 function waitForElm(selector: string, index: number) {
   return new Promise((resolve) => {
@@ -234,9 +236,14 @@ function setupObserver(): void {
   // If the document is still loading, add an event listener to observe DOM changes
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", observeDOMAndAddButtons)
+    document.addEventListener(
+      "DOMContentLoaded",
+      observeDOMAndAddCopyScheduleButtons
+    )
   } else {
     // Directly observe DOM changes
     observeDOMAndAddButtons()
+    observeDOMAndAddCopyScheduleButtons()
   }
 }
 

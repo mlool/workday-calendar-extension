@@ -14,8 +14,20 @@ export default class Schedule {
 
     // Return a new class for React Hooks
     addSection(section: Section): Schedule {
-        section.setColor(this.getCourseColor(section.getWorklistNumber(), section.getCode()));
+        section.setColor(this.getCourseColor(section.getSession(), section.getWorklistNumber(), section.getCode()));
         return new Schedule(this.version, [...this.data, section]);
+    }
+
+    bulkAddSections(sections: Section[]): Schedule {
+        if (sections.length == 0) return new Schedule(this.version, this.data);
+
+        const existingColors = this.getColors(sections[0].getSession(), sections[0].getWorklistNumber());
+        const availableColors = SECTION_COLORS.filter((color) => !existingColors.includes(color));
+
+        sections.forEach((section: Section) => {
+            section.setColor(availableColors.shift() || SECTION_COLORS[0]);
+        })
+        return new Schedule(this.version, [...this.data, ...sections]);
     }
 
     removeSection(worklistNumber: number, sectionId: string): Schedule {
@@ -104,9 +116,10 @@ export default class Schedule {
     }
 
     // Gets all colors already used in the given worklist
-    getColors(worklistNumber: number): string[] {
+    getColors(session: string, worklistNumber: number): string[] {
         let colors: string[] = [];
         this.data.forEach((section: Section) => {
+            if (section.getSession() !== session) return;
             if (section.getWorklistNumber() !== worklistNumber) return;
             colors.push(section.getColor());
         })
@@ -114,16 +127,17 @@ export default class Schedule {
     }
 
     // Returns the color associated with the given course code (CPSC_V 110) if such course already exist, else returns a new color
-    getCourseColor(worklistNumber: number, courseCode: string): string {
+    getCourseColor(session: string, worklistNumber: number, courseCode: string): string {
         let courseColor = ""
         this.getSections().forEach((section) => {
+            if (section.getSession() !== session) return;
             if (section.getWorklistNumber() !== worklistNumber) return;
             if (section.getCode() !== courseCode) return;
             courseColor = section.getColor();
         })
         if (courseColor !== "") return courseColor;
 
-        const usedColors = this.getColors(worklistNumber);
+        const usedColors = this.getColors(session, worklistNumber);
         const colors = SECTION_COLORS.filter((color) => !usedColors.includes(color));
         if (colors.length == 0) return SECTION_COLORS[0];
         return colors[0];
@@ -166,7 +180,7 @@ export default class Schedule {
         this.data = json.data;
     }
 
-    async importFromChromeStorage(): Promise<Schedule> {
+    static async importFromChromeStorage(): Promise<Schedule> {
         const rawSections = (await chrome.storage.local.get("sections")).sections as
             | string
             | undefined;

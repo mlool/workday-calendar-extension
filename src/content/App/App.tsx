@@ -9,6 +9,7 @@ import SectionDetails from "../SectionDetails/SectionDetails";
 
 import "./App.css"
 import WorklistControl from "../WorklistControl/WorklistControl";
+import LocalStorage from "../../objects/LocalStorage";
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
@@ -28,7 +29,7 @@ function App() {
         const newSection = Section.getSectionFromJSON(JSON.parse(fetchedNewSection.newSection))
         setNewSection(newSection)
       }
-      schedule.importFromChromeStorage().then((newSchedule) => {
+      Schedule.importFromChromeStorage().then((newSchedule) => {
         setSchedule(newSchedule);
         setAvailableSessions(newSchedule.getSessions());
         setCurrentSession(newSchedule.getLatestSession());
@@ -46,7 +47,7 @@ function App() {
       } else if (changes.sections) {
         const newSchedule: string | null = changes.sections.newValue
         if (newSchedule === null) return
-        schedule.importFromChromeStorage().then((newSchedule) => {
+        Schedule.importFromChromeStorage().then((newSchedule) => {
           setSchedule(newSchedule);
         });
       }
@@ -80,6 +81,17 @@ function App() {
     }
   }, [newSection])
 
+  useEffect(() => {
+    LocalStorage.setCurrentSession(currentSession)
+  }, [currentSession])
+
+  useEffect(() => {
+    LocalStorage.setCurrentTerm(currentTerm)
+  }, [currentTerm])
+
+  useEffect(() => {
+    LocalStorage.setCurrentWorklistNumber(currWorklist)
+  }, [currWorklist])
 
   return (
     <div>
