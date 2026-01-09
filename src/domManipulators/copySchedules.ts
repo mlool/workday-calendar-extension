@@ -208,6 +208,9 @@ async function handleCopyScheduleButtonClick(
     })
 
     const selectedSections: Section[] = []
+    let selectedSession: string = ""
+    const selectedTerms: Set<number> = new Set()
+
     const currentWorklistNumber = await LocalStorage.getCurrentWorklistNumber()
     const skippedCourses = []
     for (let i = 2; i < tableData.length; i++) {
@@ -229,6 +232,11 @@ async function handleCopyScheduleButtonClick(
                 console.error("Failed to Retrieve Section Info for section " + code)
                 continue
             }
+            selectedSession = selectedSection.getSession()
+            const terms = selectedSection.getTerms()
+            terms.forEach((term) => {
+                selectedTerms.add(term)
+            })
             selectedSection.setWorklistNumber(currentWorklistNumber)
             selectedSections.push(selectedSection)
         } catch {
@@ -251,6 +259,12 @@ async function handleCopyScheduleButtonClick(
     const currentSchedule = await LocalStorage.getSchedule()
     const newSchedule = currentSchedule.bulkAddSections(selectedSections)
     await LocalStorage.setSchedule(newSchedule)
+    if (selectedTerms.size === 1) {
+        await LocalStorage.setCurrentTerm(selectedTerms.values().next().value ?? 1)
+    } else {
+        await LocalStorage.setCurrentTerm(1)
+    }
+    await LocalStorage.setCurrentSession(selectedSession)
 
     handleCourseLoading(false)
 }

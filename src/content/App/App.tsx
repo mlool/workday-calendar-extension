@@ -113,6 +113,9 @@ function App() {
 
   useEffect(() => {
     LocalStorage.setCurrentSession(currentSession)
+    if (!availableSessions.includes(currentSession)) {
+      setAvailableSessions([...availableSessions, currentSession].sort().reverse());
+    }
   }, [currentSession])
 
   useEffect(() => {
