@@ -28,11 +28,28 @@ function App() {
       if (fetchedNewSection) {
         setNewSection(fetchedNewSection)
       }
-      LocalStorage.getSchedule().then((newSchedule) => {
-        setSchedule(newSchedule);
-        setAvailableSessions(newSchedule.getSessions());
-        setCurrentSession(newSchedule.getLatestSession());
-      });
+
+      const fetchedSchedule = await LocalStorage.getSchedule()
+      if (fetchedSchedule) {
+        setSchedule(fetchedSchedule)
+        setAvailableSessions(fetchedSchedule.getSessions());
+        setCurrentSession(fetchedSchedule.getLatestSession());
+      }
+
+      const fetchedCurrentTerm = await LocalStorage.getCurrentTerm()
+      if (fetchedCurrentTerm) {
+        setCurrentTerm(fetchedCurrentTerm)
+      }
+
+      const fetchedCurrentSession = await LocalStorage.getCurrentSession()
+      if (fetchedCurrentSession) {
+        setCurrentSession(fetchedCurrentSession)
+      }
+
+      const fetchedCurrentWorklist = await LocalStorage.getCurrentWorklistNumber()
+      if (fetchedCurrentWorklist) {
+        setCurrWorklist(fetchedCurrentWorklist)
+      }
     }
 
     const handleStorageChange = (changes: {
@@ -41,14 +58,28 @@ function App() {
       if (changes.newSection) {
         const newVal: string | null = changes.newSection.newValue
         if (newVal === null) return
-        const newSection = Section.getSectionFromJSON(JSON.parse(newVal))
-        setNewSection(newSection)
-      } else if (changes.sections) {
-        const newSchedule: string | null = changes.sections.newValue
+        const updatedNewSection = Section.getSectionFromJSON(JSON.parse(newVal))
+        if (updatedNewSection.getCourseID() === newSection?.getCourseID()) return;
+        setNewSection(updatedNewSection)
+      } else if (changes.schedule) {
+        const newSchedule: string | null = changes.schedule.newValue
         if (newSchedule === null) return
         LocalStorage.getSchedule().then((newSchedule) => {
+          if (newSchedule.getId() === schedule.getId()) return;
           setSchedule(newSchedule);
         });
+      } else if (changes.currentSession) {
+        const newVal: string | null = changes.currentSession.newValue
+        if (newVal === null) return
+        setCurrentSession(newVal)
+      } else if (changes.currentTerm) {
+        const newVal: number | null = changes.currentTerm.newValue
+        if (newVal === null) return
+        setCurrentTerm(newVal)
+      } else if (changes.currentWorklist) {
+        const newVal: number | null = changes.currentWorklist.newValue
+        if (newVal === null) return
+        setCurrWorklist(newVal)
       }
     }
 

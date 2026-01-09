@@ -34,22 +34,24 @@ export default class LocalStorage {
 
     // Schedule Operations
     static async getSchedule(): Promise<Schedule> {
-        const rawSections = (await chrome.storage.local.get("sections")).sections as
+        const rawSchedule = (await chrome.storage.local.get("schedule")).schedule as
             | string
             | undefined;
-        if (rawSections === undefined) {
+        if (rawSchedule === undefined) {
             return new Schedule(Schedule.getVersion(), []);
         }
-        const sections = JSON.parse(rawSections)['data'];
-        const version = JSON.parse(rawSections)['version'];
+        const validJSON = JSON.parse(rawSchedule);
+        const sections = validJSON['data'];
+        const version = validJSON['version'];
+        const id = validJSON['id'];
         const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
 
-        return new Schedule(Schedule.getVersion(), sectionObjects);
+        return new Schedule(Schedule.getVersion(), sectionObjects, id);
     }
 
     static async setSchedule(schedule: Schedule): Promise<void> {
         if (schedule.getSections().length === 0) return;
-        await chrome.storage.local.set({ sections: JSON.stringify(schedule.exportToJSON()) });
+        await chrome.storage.local.set({ schedule: JSON.stringify(schedule.exportToJSON()) });
     }
 
     // New Section

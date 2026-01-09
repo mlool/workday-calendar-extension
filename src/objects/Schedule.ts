@@ -6,14 +6,20 @@ export default class Schedule {
 
     private version: string;
     private data: Section[];
+    private id: string; // id generated to check if schedule has changed
 
-    constructor(version: string = Schedule.currVersion, data: Section[] = []) {
+    constructor(version: string = Schedule.currVersion, data: Section[] = [], id: string = crypto.randomUUID()) {
         this.version = version;
         this.data = data;
+        this.id = id;
     }
 
     static getVersion(): string {
         return Schedule.currVersion;
+    }
+
+    getId(): string {
+        return this.id;
     }
 
     // Return a new class for React Hooks
@@ -171,6 +177,7 @@ export default class Schedule {
     exportToJSON(): any {
         return {
             version: this.version,
+            id: this.id,
             data: this.data.map((section: Section) => section.exportToJSON())
         }
     }
