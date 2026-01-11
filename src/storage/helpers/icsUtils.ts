@@ -6,7 +6,7 @@ export const generateICal = (events: Event[]): string => {
   let iCalString = `BEGIN:VCALENDAR\r\n`
   iCalString += `VERSION:2.0\r\n`
   iCalString += `PRODID:-//WorkdayCalendarExtension//EN\r\n`
-  iCalString += `METHOD:INFO\r\n`
+  iCalString += `METHOD:PUBLISH\r\n`
 
   // Loop through events and build iCal strings
   events.forEach((event) => {
