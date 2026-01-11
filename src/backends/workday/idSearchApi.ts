@@ -1,8 +1,8 @@
-import { defaultColorList } from "../../content/Settings/Theme/courseColors"
 import Section from "../../objects/Section"
 import { collectNodesWithLabel, convertTo24HourFormat, extractWorkdaySectionInfo, parseSessionAndTermFromDateRange } from "./nodeSearchHelpers"
 import SectionDetail from "../../objects/SectionDetail"
 import ExtensionStorage from "../../objects/ExtensionStorage"
+import { SECTION_COLORS } from "../../content/theme"
 
 const searchEndpoint = "https://wd10.myworkday.com/ubc/inst/1$15194/15194$"
 
@@ -48,7 +48,7 @@ export async function fetchSectionFromID(courseId: string): Promise<Section | nu
     sectionDetails,
     session,
     0,
-    defaultColorList[0],
+    SECTION_COLORS[0],
     sectionCode,
     format,
     name,
