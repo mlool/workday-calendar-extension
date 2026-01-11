@@ -1,6 +1,6 @@
 import { fetchSectionFromID } from "../backends/workday/idSearchApi"
 import { toggleContainer } from "../content"
-import LocalStorage from "../objects/LocalStorage"
+import ExtensionStorage from "../objects/ExtensionStorage"
 import Section from "../objects/Section"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
 
@@ -210,7 +210,7 @@ async function handleCopyScheduleButtonClick(
     let selectedSession: string = ""
     const selectedTerms: Set<number> = new Set()
 
-    const currentWorklistNumber = await LocalStorage.getCurrentWorklistNumber()
+    const currentWorklistNumber = await ExtensionStorage.getCurrentWorklistNumber()
     const skippedCourses = []
     for (let i = 2; i < tableData.length; i++) {
         // Change column that course code is being taken from depending on button type
@@ -255,13 +255,13 @@ async function handleCopyScheduleButtonClick(
         alert(message)
     }
 
-    const currentSchedule = await LocalStorage.getSchedule()
+    const currentSchedule = await ExtensionStorage.getSchedule()
     const newSchedule = currentSchedule.bulkAddSections(selectedSections)
-    await LocalStorage.setSchedule(newSchedule)
+    await ExtensionStorage.setSchedule(newSchedule)
     if (selectedTerms.size === 1) {
-        await LocalStorage.setCurrentTerm(selectedTerms.values().next().value ?? 1)
+        await ExtensionStorage.setCurrentTerm(selectedTerms.values().next().value ?? 1)
     } else {
-        await LocalStorage.setCurrentTerm(1)
+        await ExtensionStorage.setCurrentTerm(1)
     }
-    await LocalStorage.setCurrentSession(selectedSession)
+    await ExtensionStorage.setCurrentSession(selectedSession)
 }

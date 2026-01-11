@@ -1,7 +1,14 @@
 import Schedule from "./Schedule";
 import Section from "./Section";
 
-export default class LocalStorage {
+
+// Provides a centralized interface for reading and writing persistent data
+// using chrome.storage.local. This class acts as the single source of truth
+// for all extension state that should persist across reloads and tabs.
+
+// App.tsx contains listeners for changes to the this storage and the frontend
+// components will be modified accordingly.
+export default class ExtensionStorage {
     static async getCurrentTerm(): Promise<number> {
         const currentTerm = (await chrome.storage.local.get("currentTerm")).currentTerm;
         if (currentTerm === undefined) return 1;

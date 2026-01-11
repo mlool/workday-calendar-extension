@@ -9,7 +9,7 @@ import SectionDetails from "../SectionDetails/SectionDetails";
 
 import "./App.css"
 import WorklistControl from "../WorklistControl/WorklistControl";
-import LocalStorage from "../../objects/LocalStorage";
+import ExtensionStorage from "../../objects/ExtensionStorage";
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
@@ -24,29 +24,29 @@ function App() {
 
   useEffect(() => {
     const syncInitialStorage = async () => {
-      const fetchedNewSection = await LocalStorage.getNewSection()
+      const fetchedNewSection = await ExtensionStorage.getNewSection()
       if (fetchedNewSection) {
         setNewSection(fetchedNewSection)
       }
 
-      const fetchedSchedule = await LocalStorage.getSchedule()
+      const fetchedSchedule = await ExtensionStorage.getSchedule()
       if (fetchedSchedule) {
         setSchedule(fetchedSchedule)
         setAvailableSessions(fetchedSchedule.getSessions());
         setCurrentSession(fetchedSchedule.getLatestSession());
       }
 
-      const fetchedCurrentTerm = await LocalStorage.getCurrentTerm()
+      const fetchedCurrentTerm = await ExtensionStorage.getCurrentTerm()
       if (fetchedCurrentTerm) {
         setCurrentTerm(fetchedCurrentTerm)
       }
 
-      const fetchedCurrentSession = await LocalStorage.getCurrentSession()
+      const fetchedCurrentSession = await ExtensionStorage.getCurrentSession()
       if (fetchedCurrentSession) {
         setCurrentSession(fetchedCurrentSession)
       }
 
-      const fetchedCurrentWorklist = await LocalStorage.getCurrentWorklistNumber()
+      const fetchedCurrentWorklist = await ExtensionStorage.getCurrentWorklistNumber()
       if (fetchedCurrentWorklist) {
         setCurrWorklist(fetchedCurrentWorklist)
       }
@@ -56,12 +56,12 @@ function App() {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        LocalStorage.getNewSection().then((updatedNewSection) => {
+        ExtensionStorage.getNewSection().then((updatedNewSection) => {
           if (!updatedNewSection || updatedNewSection.getCourseID() === newSection?.getCourseID()) return;
           setNewSection(updatedNewSection)
         })
       } else if (changes.schedule) {
-        LocalStorage.getSchedule().then((newSchedule) => {
+        ExtensionStorage.getSchedule().then((newSchedule) => {
           if (!newSchedule || newSchedule.getId() === schedule.getId()) return;
           setSchedule(newSchedule);
         });
@@ -89,7 +89,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    LocalStorage.setSchedule(schedule)
+    ExtensionStorage.setSchedule(schedule)
     setAvailableSessions(schedule.getSessions());
     if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
   }, [schedule])
@@ -102,25 +102,25 @@ function App() {
       setAvailableSessions([newSection.getSession()])
       setCurrentSession(newSection.getSession())
     } else {
-      LocalStorage.setNewSection(null)
+      ExtensionStorage.setNewSection(null)
       setAvailableSessions(schedule.getSessions())
       if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
     }
   }, [newSection])
 
   useEffect(() => {
-    LocalStorage.setCurrentSession(currentSession)
+    ExtensionStorage.setCurrentSession(currentSession)
     if (!availableSessions.includes(currentSession)) {
       setAvailableSessions([...availableSessions, currentSession].sort().reverse());
     }
   }, [currentSession])
 
   useEffect(() => {
-    LocalStorage.setCurrentTerm(currentTerm)
+    ExtensionStorage.setCurrentTerm(currentTerm)
   }, [currentTerm])
 
   useEffect(() => {
-    LocalStorage.setCurrentWorklistNumber(currWorklist)
+    ExtensionStorage.setCurrentWorklistNumber(currWorklist)
   }, [currWorklist])
 
   return (
