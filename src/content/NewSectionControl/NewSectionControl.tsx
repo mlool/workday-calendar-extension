@@ -7,11 +7,12 @@ interface IProps {
     worklist: number
     setNewSection: (section: Section | null) => void
     setSchedule: (schedule: Schedule) => void
+    onStartCreateCustom: () => void
 }
 
 import "./NewSectionControl.css"
 
-const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSection, setSchedule, worklist }) => {
+const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSection, setSchedule, worklist, onStartCreateCustom }) => {
 
     const onClickAddSection = () => {
         if (newSection) {
@@ -62,7 +63,7 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
                     <div className="button-row">
                         <button
                             className="section-control-button btn-primary"
-                            onClick={() => onClickAddSection()}
+                            onClick={() => onStartCreateCustom()}
                         >
                             Custom Section
                         </button>

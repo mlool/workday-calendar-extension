@@ -7,6 +7,8 @@ import CalendarControls from "../CalendarControls/CalendarControls";
 import NewSectionControl from "../NewSectionControl/NewSectionControl";
 import SectionDetails from "../SectionDetails/SectionDetails";
 
+import CustomSectionDetails from "../CustomSectionDetails/CustomSectionDetails";
+
 import "./App.css"
 import WorklistControl from "../WorklistControl/WorklistControl";
 import ExtensionStorage from "../../objects/ExtensionStorage";
@@ -22,6 +24,7 @@ function App() {
   const [schedule, setSchedule] = useState<Schedule>(new Schedule())
   const [newSection, setNewSection] = useState<Section | null>(null)
   const [selectedSection, setSelectedSection] = useState<Section | null>(null)
+  const [creatingCustomSection, setCreatingCustomSection] = useState<boolean>(false)
 
   useEffect(() => {
     const syncInitialStorage = async () => {
@@ -151,8 +154,24 @@ function App() {
         setNewSection={setNewSection}
         setSchedule={setSchedule}
         worklist={currWorklist}
+        onStartCreateCustom={() => setCreatingCustomSection(true)}
       />
-      {selectedSection && <SectionDetails
+      {(selectedSection?.getIsCustom() || creatingCustomSection) && <CustomSectionDetails
+        section={creatingCustomSection ? null : selectedSection}
+        term={currentTerm}
+        schedule={schedule}
+        onClose={() => {
+          setSelectedSection(null)
+          setCreatingCustomSection(false)
+        }}
+        onDelete={(section: Section) => {
+          setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
+          setSelectedSection(null)
+        }}
+        setNewSection={setNewSection}
+        setSchedule={setSchedule}
+      />}
+      {selectedSection && !selectedSection.getIsCustom() && <SectionDetails
         section={selectedSection}
         term={currentTerm}
         onClose={() => setSelectedSection(null)}

@@ -69,7 +69,8 @@ export default class Section {
             data.color,
             data.sectionCode,
             data.format,
-            data.name
+            data.name,
+            data.isCustom
         );
     }
 
@@ -192,7 +193,8 @@ export default class Section {
             color: this.color,
             sectionCode: this.sectionCode,
             format: this.format,
-            name: this.name
+            name: this.name,
+            isCustom: this.isCustom
         }
     }
 
