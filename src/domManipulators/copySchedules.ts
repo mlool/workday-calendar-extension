@@ -1,5 +1,6 @@
 import { fetchSectionFromID } from "../backends/workday/idSearchApi"
 import { toggleContainer } from "../content"
+import ExtensionEventChannel from "../objects/ExtensionEventChannel"
 import ExtensionStorage from "../objects/ExtensionStorage"
 import Section from "../objects/Section"
 //-------------------- Copy Saved Schedule and Course Schedule Buttons --------------------
@@ -168,21 +169,17 @@ async function handleCopyScheduleButtonClick(
 
     // Check if table exists
     if (!tables.length) {
-        console.error("Tables not found.")
+        alert("Failed to find Course Schedule Table, if you believe this is an error please contact developers through Discord.")
         return
     }
 
     if (counter < 0 || counter >= tables.length) {
-        console.error(
-            `Invalid counter value. Valid range: 0 to ${tables.length - 1}`
-        )
+        alert(`Button does not seem to be associated with a valid table. Valid range should be between 0 to ${tables.length - 1}, please contact developers through Discord.`)
         return
     }
 
     const table = tables[counter]
-
     const tableData: string[][] = []
-
     const tableRows = table.querySelectorAll("tr")
 
     tableRows.forEach((row) => {
@@ -206,62 +203,72 @@ async function handleCopyScheduleButtonClick(
         }
     })
 
-    const selectedSections: Section[] = []
-    let selectedSession: string = ""
-    const selectedTerms: Set<number> = new Set()
+    ExtensionEventChannel.setIsLoading(true, "Copying Schedule, please wait...")
 
-    const currentWorklistNumber = await ExtensionStorage.getCurrentWorklistNumber()
-    const skippedCourses = []
-    for (let i = 2; i < tableData.length; i++) {
-        // Change column that course code is being taken from depending on button type
-        const code =
-            buttonType === "saved"
-                ? tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
-                : tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
+    try {
+        const selectedSections: Section[] = []
+        let selectedSession: string = ""
+        const selectedTerms: Set<number> = new Set()
 
-        let selectedSection = null
-        try {
-            const sectionId = tableData[i][tableData[i].length - 1]
-            if (sectionId === "") {
-                alert("Section ID not found for section " + code)
+        const currentWorklistNumber = await ExtensionStorage.getCurrentWorklistNumber()
+        const skippedCourses = []
+        for (let i = 2; i < tableData.length; i++) {
+            // Change column that course code is being taken from depending on button type
+            const code =
+                buttonType === "saved"
+                    ? tableData[i][3].slice(0, tableData[i][3].indexOf(" - "))
+                    : tableData[i][4].slice(0, tableData[i][4].indexOf(" - "))
+
+            let selectedSection = null
+            try {
+                const sectionId = tableData[i][tableData[i].length - 1]
+                if (sectionId === "") {
+                    alert("Section ID not found for section " + code)
+                    continue
+                }
+                selectedSection = await fetchSectionFromID(sectionId)
+                if (!selectedSection) {
+                    console.error("Failed to Retrieve Section Info for section " + code)
+                    continue
+                }
+                selectedSession = selectedSection.getSession()
+                const terms = selectedSection.getTerms()
+                terms.forEach((term) => {
+                    selectedTerms.add(term)
+                })
+                selectedSection.setWorklistNumber(currentWorklistNumber)
+                selectedSections.push(selectedSection)
+            } catch {
+                skippedCourses.push(code)
                 continue
             }
-            selectedSection = await fetchSectionFromID(sectionId)
-            if (!selectedSection) {
-                console.error("Failed to Retrieve Section Info for section " + code)
-                continue
-            }
-            selectedSession = selectedSection.getSession()
-            const terms = selectedSection.getTerms()
-            terms.forEach((term) => {
-                selectedTerms.add(term)
-            })
-            selectedSection.setWorklistNumber(currentWorklistNumber)
-            selectedSections.push(selectedSection)
-        } catch {
-            skippedCourses.push(code)
-            continue
+            ExtensionEventChannel.setLoadingProgress((i / tableData.length) * 100)
         }
-    }
 
-    if (skippedCourses.length > 0) {
-        let message = ""
-        skippedCourses.forEach((course) => {
-            message = message + ", " + course
-        })
-        message =
-            message +
-            " are skipped. This could be due to the course being asynchronus, online, or an error has occured during import. If you think a mistake has happened, don't hesitate to reach out to us through discord. Which can be found in the settings page."
-        alert(message)
-    }
+        if (skippedCourses.length > 0) {
+            let message = ""
+            skippedCourses.forEach((course) => {
+                message = message + ", " + course
+            })
+            message =
+                message +
+                " are skipped. This could be due to the course being asynchronus, online, or an error has occured during import. If you think a mistake has happened, don't hesitate to reach out to us through discord. Which can be found in the settings page."
+            alert(message)
+        }
 
-    const currentSchedule = await ExtensionStorage.getSchedule()
-    const newSchedule = currentSchedule.bulkAddSections(selectedSections)
-    await ExtensionStorage.setSchedule(newSchedule)
-    if (selectedTerms.size === 1) {
-        await ExtensionStorage.setCurrentTerm(selectedTerms.values().next().value ?? 1)
-    } else {
-        await ExtensionStorage.setCurrentTerm(1)
+        const currentSchedule = await ExtensionStorage.getSchedule()
+        const newSchedule = currentSchedule.bulkAddSections(selectedSections)
+        await ExtensionStorage.setSchedule(newSchedule)
+        if (selectedTerms.size === 1) {
+            await ExtensionStorage.setCurrentTerm(selectedTerms.values().next().value ?? 1)
+        } else {
+            await ExtensionStorage.setCurrentTerm(1)
+        }
+        await ExtensionStorage.setCurrentSession(selectedSession)
+    } catch (error) {
+        console.error("Failed to copy schedule", error)
+        alert("An error has occured while copying the schedule, you may try an alernative method of adding the sections individually and contact developers through discord.")
+    } finally {
+        ExtensionEventChannel.setIsLoading(false)
     }
-    await ExtensionStorage.setCurrentSession(selectedSession)
 }

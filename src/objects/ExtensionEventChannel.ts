@@ -1,23 +1,18 @@
 export type LoadingEventDetail = {
     isLoading: boolean;
     progress?: number; // 0-100
-    message?: string;  // used for errors or feedback
+    message?: string;  // used for heading / errors depending on isLoading
 };
 
 // Provides a centralized channel for frequent communication using CustomEvent.
 // Events sent through this channel are ephemeral (not persisted) and are used
 // to notify the UI of frequent changes such as progress updates.
 export default class ExtensionEventChannel {
-
-
-
     /*
     For Loading Events such as importing schedules, loading section data, etc.
     */
     static readonly LOADING_EVENT_NAME = "extensionLoadingState";
 
-    static setIsLoading(isLoading: true): void;
-    static setIsLoading(isLoading: false, message?: string): void;
     static setIsLoading(isLoading: boolean, message?: string): void {
         const detail: LoadingEventDetail = isLoading
             ? { isLoading: true, progress: 0, message: undefined }
