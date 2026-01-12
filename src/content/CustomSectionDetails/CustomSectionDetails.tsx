@@ -30,8 +30,8 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
     const [notes, setNotes] = useState("");
     const [selectedTerms, setSelectedTerms] = useState<Set<number>>(new Set([term]));
     const [selectedDays, setSelectedDays] = useState<Set<string>>(new Set());
-    const [startTime, setStartTime] = useState("08:00");
-    const [endTime, setEndTime] = useState("09:00");
+    const [startTime, setStartTime] = useState("8:00");
+    const [endTime, setEndTime] = useState("9:00");
 
     const [isExisting, setIsExisting] = useState(false);
 
@@ -136,48 +136,23 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
 
         if (scheduleChanged) {
             // Treat as NEW section (Pending confirmation)
-
-            // If it was an existing persistent section, REMOVE it first
             if (isExisting && section) {
                 const newSchedule = schedule.removeSection(section.getWorklistNumber(), section.getCourseID());
                 setSchedule(newSchedule);
                 await ExtensionStorage.setSchedule(newSchedule);
             }
-
-            // Set as the Pending New Section
             setNewSection(newSectionObj);
             await ExtensionStorage.setNewSection(newSectionObj);
-
         } else {
             // Metadata Only Change (In-Place)
             if (isExisting && section) {
-                // Update in schedule
-                // We need to implement an 'updateSection' or just remove and add (but keeping it confirmed)
-                // Since our Schedule object is immutable-ish or complex, simplest is remove & add back 
-                // BUT we want to keep it "Confirmed" (blue), not "Pending" (orange).
-                // Schedule.addSection might add it to storage. 
-
-                // Workaround: Remove old, Add new, but DO NOT set as newSection. Directly set to schedule.
                 let newSchedule = schedule.removeSection(section.getWorklistNumber(), section.getCourseID());
-                // Preserve worklist number
                 newSectionObj.setWorklistNumber(section.getWorklistNumber());
-                // Ensure color is preserved or set to valid color
-                if (section.getColor() === "var(--new-section-color)") {
-                    // If it was somehow stored with new color, give it a real color
-                    // For now, let Schedule.addSection handle coloring if possible, or copy old color
-                    newSectionObj.setColor("var(--primary-color)"); // Fallback
-                } else {
-                    newSectionObj.setColor(section.getColor());
-                }
+                newSchedule = newSchedule.addSection(newSectionObj);
 
-                newSchedule = newSchedule.bulkAddSections([newSectionObj]); // Re-add
                 setSchedule(newSchedule);
                 await ExtensionStorage.setSchedule(newSchedule);
 
-            } else {
-                // It was already pending (orange), just update the pending section
-                setNewSection(newSectionObj);
-                await ExtensionStorage.setNewSection(newSectionObj);
             }
         }
 
@@ -277,13 +252,13 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
                         <label className="input-label">Time</label>
                         <div className="time-selector">
                             <div className="input-wrapper" style={{ width: '48%' }}>
-                                <label style={{ fontSize: '0.75rem', marginBottom: '2px', display: 'block' }}>Start</label>
+                                <label style={{ fontSize: '0.7rem', marginBottom: '2px', display: 'block' }}>Start</label>
                                 <select className="input-field" value={startTime} onChange={(e) => setStartTime(e.target.value)} style={{ width: '100%' }}>
                                     {TIME_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
                                 </select>
                             </div>
                             <div className="input-wrapper" style={{ width: '48%' }}>
-                                <label style={{ fontSize: '0.75rem', marginBottom: '2px', display: 'block' }}>End</label>
+                                <label style={{ fontSize: '0.7rem', marginBottom: '2px', display: 'block' }}>End</label>
                                 <select className="input-field" value={endTime} onChange={(e) => setEndTime(e.target.value)} style={{ width: '100%' }}>
                                     {TIME_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
                                 </select>

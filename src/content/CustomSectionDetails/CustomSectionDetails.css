@@ -79,18 +79,18 @@
 }
 
 .input-label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 600;
     color: var(--text-color);
 }
 
 .input-field {
-    padding: 8px;
+    padding: 6px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-size: 0.9rem;
+    font-size: 0.75rem;
 }
 
 .radio-group {
