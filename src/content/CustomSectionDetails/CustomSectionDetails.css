@@ -38,7 +38,7 @@
 
 .popup-title {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--text-color);
     font-weight: 600;
 }
@@ -74,6 +74,7 @@
 .input-group {
     display: flex;
     flex-direction: column;
+    font-size: 0.7rem;
     gap: 5px;
 }
 
@@ -110,19 +111,19 @@
 }
 
 .custom-control-button {
-    padding: 4px 12px;
+    padding: 2px 12px;
     border: 1px solid var(--border-secondary);
-    background-color: var(--control-button-bg, #f0f0f0);
+    background-color: var(--control-button-bg);
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--text-dark);
 }
 
 .custom-control-button:hover {
-    background-color: var(--control-button-hover, #e0e0e0);
-    border-color: var(--border-hover, #ccc);
+    background-color: var(--control-button-hover);
+    border-color: var(--border-hover);
 }
 
 .custom-control-button.active {
@@ -148,9 +149,42 @@
     padding-top: 10px;
     border-top: 1px solid var(--border-color);
     flex-shrink: 0;
+    gap: 10px;
 }
 
-.btn {
+.custom-btn-save {
+    background-color: var(--button-primary);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.custom-btn-save:hover {
+    background-color: var(--button-primary-hover);
+}
+
+.custom-btn-delete {
+    background-color: var(--button-warning);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.custom-btn-delete:hover {
+    background-color: var(--button-warning-hover);
+}
+
+/* .btn {
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -178,4 +212,4 @@
 .btn-save:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-}
+} */

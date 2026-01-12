@@ -252,7 +252,7 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
                                     className={`custom-control-button ${isTermSelected(t) ? "active" : ""}`}
                                     onClick={() => toggleTerm(t)}
                                 >
-                                    Term {t}
+                                    T{t}
                                 </button>
                             ))}
                         </div>
@@ -294,11 +294,11 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
 
                 <div className="popup-footer">
                     {isExisting && section ? (
-                        <button className="btn btn-delete" onClick={() => { onDelete(section); onClose(); }}>Delete</button>
+                        <button className="custom-btn-delete" onClick={() => { onDelete(section); onClose(); }}>Delete</button>
                     ) : (
-                        <div></div> // Spacer
+                        <div></div>
                     )}
-                    <button className="btn btn-save" onClick={handleSave}>
+                    <button className="custom-btn-save" onClick={handleSave}>
                         {isExisting ? "Update" : "Done"}
                     </button>
                 </div>
