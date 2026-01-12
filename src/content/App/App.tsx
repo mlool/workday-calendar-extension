@@ -13,6 +13,14 @@ import "./App.css"
 import WorklistControl from "../WorklistControl/WorklistControl";
 import ExtensionStorage from "../../objects/ExtensionStorage";
 import ProgressModal from "../ProgressModal/ProgressModal";
+import SettingsIcon from "../Icons/SettingsIcon";
+import CalendarIcon from "../Icons/CalendarIcon";
+import Setting from "../Setting/Setting";
+
+enum ExtensionViews {
+  calendar,
+  setting,
+}
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
@@ -25,6 +33,8 @@ function App() {
   const [newSection, setNewSection] = useState<Section | null>(null)
   const [selectedSection, setSelectedSection] = useState<Section | null>(null)
   const [creatingCustomSection, setCreatingCustomSection] = useState<boolean>(false)
+
+  const [currentView, setCurrentView] = useState<ExtensionViews>(ExtensionViews.calendar)
 
   useEffect(() => {
     const syncInitialStorage = async () => {
@@ -129,63 +139,71 @@ function App() {
 
   return (
     <div>
-      <div className="top-bar"></div>
+      <div className="top-bar">
+        <div className="top-bar-icon">
+          <CalendarIcon size={22} onClick={() => setCurrentView(ExtensionViews.calendar)} />
+          <SettingsIcon size={22} onClick={() => setCurrentView(ExtensionViews.setting)} />
+        </div>
+      </div>
       <ProgressModal />
-      <CalendarControls
-        worklist={currWorklist}
-        term={currentTerm}
-        currentSession={currentSession}
-        availableSessions={availableSessions}
-        setCurrentSession={setCurrentSession}
-        setWorklist={setCurrWorklist}
-        setTerm={setCurrentTerm}
-      />
-      <Calendar
-        schedule={schedule}
-        newSection={newSection}
-        worklist={currWorklist}
-        term={currentTerm}
-        session={currentSession}
-        setSelectedSection={setSelectedSection}
-      />
-      <NewSectionControl
-        newSection={newSection}
-        schedule={schedule}
-        setNewSection={setNewSection}
-        setSchedule={setSchedule}
-        worklist={currWorklist}
-        onStartCreateCustom={() => setCreatingCustomSection(true)}
-      />
-      {(selectedSection?.getIsCustom() || creatingCustomSection) && <CustomSectionDetails
-        section={creatingCustomSection ? null : selectedSection}
-        term={currentTerm}
-        schedule={schedule}
-        onClose={() => {
-          setSelectedSection(null)
-          setCreatingCustomSection(false)
-        }}
-        onDelete={(section: Section) => {
-          setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
-          setSelectedSection(null)
-        }}
-        setNewSection={setNewSection}
-        setSchedule={setSchedule}
-      />}
-      {selectedSection && !selectedSection.getIsCustom() && <SectionDetails
-        section={selectedSection}
-        term={currentTerm}
-        onClose={() => setSelectedSection(null)}
-        onDelete={(section: Section) => {
-          setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
-          setSelectedSection(null)
-        }}
-      />}
-      <WorklistControl
-        schedule={schedule}
-        worklist={currWorklist}
-        currentSession={currentSession}
-        setSchedule={setSchedule}
-      />
+      {currentView === ExtensionViews.setting ? <Setting /> :
+        <>
+          <CalendarControls
+            worklist={currWorklist}
+            term={currentTerm}
+            currentSession={currentSession}
+            availableSessions={availableSessions}
+            setCurrentSession={setCurrentSession}
+            setWorklist={setCurrWorklist}
+            setTerm={setCurrentTerm}
+          />
+          <Calendar
+            schedule={schedule}
+            newSection={newSection}
+            worklist={currWorklist}
+            term={currentTerm}
+            session={currentSession}
+            setSelectedSection={setSelectedSection}
+          />
+          <NewSectionControl
+            newSection={newSection}
+            schedule={schedule}
+            setNewSection={setNewSection}
+            setSchedule={setSchedule}
+            worklist={currWorklist}
+            onStartCreateCustom={() => setCreatingCustomSection(true)}
+          />
+          {(selectedSection?.getIsCustom() || creatingCustomSection) && <CustomSectionDetails
+            section={creatingCustomSection ? null : selectedSection}
+            term={currentTerm}
+            schedule={schedule}
+            onClose={() => {
+              setSelectedSection(null)
+              setCreatingCustomSection(false)
+            }}
+            onDelete={(section: Section) => {
+              setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
+              setSelectedSection(null)
+            }}
+            setNewSection={setNewSection}
+            setSchedule={setSchedule}
+          />}
+          {selectedSection && !selectedSection.getIsCustom() && <SectionDetails
+            section={selectedSection}
+            term={currentTerm}
+            onClose={() => setSelectedSection(null)}
+            onDelete={(section: Section) => {
+              setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
+              setSelectedSection(null)
+            }}
+          />}
+          <WorklistControl
+            schedule={schedule}
+            worklist={currWorklist}
+            currentSession={currentSession}
+            setSchedule={setSchedule}
+          />
+        </>}
     </div>
   )
 }
