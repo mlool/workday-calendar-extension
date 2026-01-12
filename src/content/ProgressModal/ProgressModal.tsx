@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ExtensionEventChannel, { LoadingEventDetail } from "../../objects/ExtensionEventChannel";
+import "./ProgressModal.css";
 
 type LoadingState = {
     isLoading: boolean;
@@ -29,8 +30,17 @@ export default function ProgressBar() {
     }, []);
 
     if (state.isLoading) {
-        return <div>Loading... {state.progress}%</div>;
+        return <div className="progress-modal-overlay">
+            <div className="progress-modal-popup">
+                <div className="progress-modal-header">
+                    <h2>{state.message ?? 'Loading...'}</h2>
+                </div>
+                <div className="progress-modal-content">
+                    <progress value={state.progress} max="100"></progress>
+                </div>
+            </div>
+        </div>;
     }
 
-    return <div>{state.message ?? ""}</div>;
+    return <></>
 }

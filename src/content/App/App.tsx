@@ -10,7 +10,7 @@ import SectionDetails from "../SectionDetails/SectionDetails";
 import "./App.css"
 import WorklistControl from "../WorklistControl/WorklistControl";
 import ExtensionStorage from "../../objects/ExtensionStorage";
-import ProgressBarModal from "../ProgressBarModal/ProgressBarModal";
+import ProgressModal from "../ProgressModal/ProgressModal";
 
 function App() {
   const [currWorklist, setCurrWorklist] = useState<number>(0);
@@ -127,7 +127,7 @@ function App() {
   return (
     <div>
       <div className="top-bar"></div>
-      <ProgressBarModal />
+      <ProgressModal />
       <CalendarControls
         worklist={currWorklist}
         term={currentTerm}
