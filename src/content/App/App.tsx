@@ -146,7 +146,7 @@ function App() {
         </div>
       </div>
       <ProgressModal />
-      {currentView === ExtensionViews.setting ? <Setting /> :
+      {currentView === ExtensionViews.setting ? <Setting schedule={schedule} setSchedule={setSchedule} /> :
         <>
           <CalendarControls
             worklist={currWorklist}

@@ -77,4 +77,24 @@ export default class ExtensionStorage {
         }
         await chrome.storage.local.set({ newSection: JSON.stringify(newSection.exportToJSON()) });
     }
+
+    static async getIsAutoFillEnabled(): Promise<boolean> {
+        const isAutoFillEnabled = (await chrome.storage.local.get("isAutoFillEnabled")).isAutoFillEnabled;
+        if (isAutoFillEnabled === undefined) return false;
+        return Boolean(isAutoFillEnabled);
+    }
+
+    static async setIsAutoFillEnabled(isAutoFillEnabled: boolean): Promise<void> {
+        await chrome.storage.local.set({ isAutoFillEnabled });
+    }
+
+    static async getIsConflictAddingEnabled(): Promise<boolean> {
+        const isConflictAddingEnabled = (await chrome.storage.local.get("isConflictAddingEnabled")).isConflictAddingEnabled;
+        if (isConflictAddingEnabled === undefined) return false;
+        return Boolean(isConflictAddingEnabled);
+    }
+
+    static async setIsConflictAddingEnabled(isConflictAddingEnabled: boolean): Promise<void> {
+        await chrome.storage.local.set({ isConflictAddingEnabled });
+    }
 }

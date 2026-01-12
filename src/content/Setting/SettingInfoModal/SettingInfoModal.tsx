@@ -1,4 +1,4 @@
-import CloseIcon from '../Icons/CloseIcon'
+import CloseIcon from '../../Icons/CloseIcon'
 import './SettingInfoModal.css'
 
 interface IProps {

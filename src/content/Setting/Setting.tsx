@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Setting.css'
-import SettingInfoModal from './SettingInfoModal'
+import SettingInfoModal from './SettingInfoModal/SettingInfoModal'
 import InfoSquareIcon from '../Icons/InfoSquareIcon'
 import DiscordIcon from '../Icons/DiscordIcon'
+import ExtensionStorage from '../../objects/ExtensionStorage'
+import Schedule from '../../objects/Schedule'
 
 const autoFillInfo = <div>
     <p>Auto-fill automatically selects the "Start Date within" and "Academic Level" options in the "Find Course Sections" popup.</p>
@@ -16,31 +18,105 @@ const conflictAddingInfo = <div>
     <p>Warning: Conflicting sections can make your calendar harder to read and may increase storage usage. Use this option with care.</p>
 </div>
 
-const Setting = () => {
+const batchImportExportInfo = <div>
+    <p>Batch import and export allows you to import and export the entire schedule across all sessions.</p>
+    <br />
+    <p>Warning: Batch import will overwrite any and all existing schedules, use this as a backup functionality.</p>
+</div>
+
+interface IProps {
+    schedule: Schedule
+    setSchedule: (schedule: Schedule) => void
+}
+
+
+const Setting = ({ schedule, setSchedule }: IProps) => {
     const [showInfoModal, setShowInfoModal] = useState<JSX.Element | null>(null)
+    const [isAutoFill, setIsAutoFill] = useState(false)
+    const [isConflictAdding, setIsConflictAdding] = useState(false)
+
+    useEffect(() => {
+        ExtensionStorage.getIsAutoFillEnabled().then(setIsAutoFill)
+        ExtensionStorage.getIsConflictAddingEnabled().then(setIsConflictAdding)
+    }, [])
+
+    const toggleAutoFill = (checked: boolean) => {
+        setIsAutoFill(checked)
+        ExtensionStorage.setIsAutoFillEnabled(checked)
+    }
+
+    const toggleConflictAdding = (checked: boolean) => {
+        setIsConflictAdding(checked)
+        ExtensionStorage.setIsConflictAddingEnabled(checked)
+    }
+
     return (
-        <div>
+        <div className="setting-container">
             {showInfoModal && <SettingInfoModal onClose={() => { setShowInfoModal(null) }} content={showInfoModal} />}
-            <div>
-                <div>
-                    <label>Auto-fill</label>
-                    <input type="checkbox" />
+
+            <div className="setting-row">
+                <div className="setting-label-group">
+                    <label className="setting-label">Auto-fill</label>
+                    <InfoSquareIcon size={16} onClick={() => { setShowInfoModal(autoFillInfo) }} />
                 </div>
-                <InfoSquareIcon size={16} onClick={() => { setShowInfoModal(autoFillInfo) }} />
+                <label className="setting-toggle">
+                    <input
+                        type="checkbox"
+                        checked={isAutoFill}
+                        onChange={(e) => toggleAutoFill(e.target.checked)}
+                    />
+                    <span className="setting-slider"></span>
+                </label>
             </div>
-            <div>
-                <div>
-                    <label>Conflict Adding</label>
-                    <input type="checkbox" />
+
+            <div className="setting-row">
+                <div className="setting-label-group">
+                    <label className="setting-label">Conflict Adding</label>
+                    <InfoSquareIcon size={16} onClick={() => { setShowInfoModal(conflictAddingInfo) }} />
                 </div>
-                <InfoSquareIcon size={16} onClick={() => { setShowInfoModal(conflictAddingInfo) }} />
+                <label className="setting-toggle">
+                    <input
+                        type="checkbox"
+                        checked={isConflictAdding}
+                        onChange={(e) => toggleConflictAdding(e.target.checked)}
+                    />
+                    <span className="setting-slider"></span>
+                </label>
             </div>
-            <div>
-                <div>Support/Contact Us</div>
-                <DiscordIcon size={32} />
+
+            <div className="setting-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                <a href="https://discord.gg/CQQdZTc4xZ" target="_blank" rel="noreferrer" className="setting-btn-discord">
+                    <DiscordIcon size={20} />
+                    Join our Discord
+                </a>
             </div>
-            <div>
-                <div>Batch Export/Import</div>
+
+            <div className="setting-row" style={{ borderBottom: 'none', flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
+                <div className="setting-label-group">
+                    <label className="setting-label">Batch Export/Import</label>
+                    <InfoSquareIcon size={16} onClick={() => { setShowInfoModal(batchImportExportInfo) }} />
+                </div>
+                <div className="setting-btn-group">
+                    <label className="setting-btn-import" htmlFor="batch-import-file">
+                        <input
+                            type="file"
+                            accept="application/json"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                const text = await file.text();
+                                const newSchedule = schedule.getScheduleFromExternalJSON(text);
+                                setSchedule(newSchedule);
+                                e.target.value = "";
+                            }}
+                            style={{ display: "none" }}
+                            id="batch-import-file"
+                        />
+                        Import
+                    </label>
+
+                    <button className="setting-btn-export" onClick={() => { schedule.downloadScheduleAsJSON() }}>Export</button>
+                </div>
             </div>
         </div>
     )

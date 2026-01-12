@@ -233,6 +233,7 @@ export default class Schedule {
             console.error("Invalid importJSON call: worklist provided without session");
             return this;
         }
+        // if json is empty, return current schedule
         if (!json || json === "") return new Schedule(this.version, this.data);
 
         const newSections = JSON.parse(json).data.map((section: any) => {
@@ -241,12 +242,23 @@ export default class Schedule {
             return newSection
         }) ?? [];
 
+        if (newSections.length === 0) {
+            alert("No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists.")
+            return new Schedule(this.version, this.data);
+        }
+
         this.data.forEach((section: Section) => {
             if (session && worklist && (section.getWorklistNumber() !== worklist || section.getSession() !== session)) {
+                // If both session and worklist are specified, only add existing sections that does not match the specified session and worklist
+                // Meaning loaded schedule replaces all sections in the specified session and worklist.
                 newSections.push(section);
             } else if (session && section.getSession() !== session) {
+                // If only session is specified, only add existing sections that does not match the specified session.
+                // Meaning loaded schedule replaces all sections across all worklists in the specified session.
                 newSections.push(section);
             }
+            // If neither session or worklist is specified, do not add any existing sections, 
+            // meaning the entire schedule across all sessions and worklists is replaced.
         })
 
         return new Schedule(this.version, newSections);
