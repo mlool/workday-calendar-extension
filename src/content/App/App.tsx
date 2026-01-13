@@ -57,6 +57,7 @@ function App() {
 
       const fetchedCurrentSession = await ExtensionStorage.getCurrentSession()
       if (fetchedCurrentSession) {
+        console.log("Current session: " + fetchedCurrentSession)
         setCurrentSession(fetchedCurrentSession)
       }
 
