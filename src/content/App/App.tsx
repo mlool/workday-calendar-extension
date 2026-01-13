@@ -35,6 +35,7 @@ function App() {
   const [creatingCustomSection, setCreatingCustomSection] = useState<boolean>(false)
 
   const [currentView, setCurrentView] = useState<ExtensionViews>(ExtensionViews.calendar)
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
 
   useEffect(() => {
     const syncInitialStorage = async () => {
@@ -57,7 +58,6 @@ function App() {
 
       const fetchedCurrentSession = await ExtensionStorage.getCurrentSession()
       if (fetchedCurrentSession) {
-        console.log("Current session: " + fetchedCurrentSession)
         setCurrentSession(fetchedCurrentSession)
       }
 
@@ -65,6 +65,7 @@ function App() {
       if (fetchedCurrentWorklist) {
         setCurrWorklist(fetchedCurrentWorklist)
       }
+      setIsLoaded(true)
     }
 
     const handleStorageChange = (changes: {
@@ -104,12 +105,14 @@ function App() {
   }, [])
 
   useEffect(() => {
+    if (!isLoaded) return
     ExtensionStorage.setSchedule(schedule)
     setAvailableSessions(schedule.getSessions());
     if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
-  }, [schedule])
+  }, [schedule, isLoaded])
 
   useEffect(() => {
+    if (!isLoaded) return
     if (newSection) {
       if (newSection.getTerms().size <= 1) {
         setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
@@ -121,22 +124,25 @@ function App() {
       setAvailableSessions(schedule.getSessions())
       if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
     }
-  }, [newSection])
+  }, [newSection, isLoaded])
 
   useEffect(() => {
+    if (!isLoaded) return
     ExtensionStorage.setCurrentSession(currentSession)
     if (!availableSessions.includes(currentSession)) {
       setAvailableSessions([...availableSessions, currentSession].sort().reverse());
     }
-  }, [currentSession])
+  }, [currentSession, isLoaded])
 
   useEffect(() => {
+    if (!isLoaded) return
     ExtensionStorage.setCurrentTerm(currentTerm)
-  }, [currentTerm])
+  }, [currentTerm, isLoaded])
 
   useEffect(() => {
+    if (!isLoaded) return
     ExtensionStorage.setCurrentWorklistNumber(currWorklist)
-  }, [currWorklist])
+  }, [currWorklist, isLoaded])
 
   return (
     <div>

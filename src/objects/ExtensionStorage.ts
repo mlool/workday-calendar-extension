@@ -20,16 +20,13 @@ export default class ExtensionStorage {
     }
 
     static async getCurrentSession(): Promise<string> {
-        console.log((await chrome.storage.local.get("currentSession")))
         const currentSession = (await chrome.storage.local.get("currentSession")).currentSession;
         if (currentSession === undefined) return "2025W";
         return currentSession;
     }
 
     static async setCurrentSession(session: string): Promise<void> {
-        console.log("Setting current session to: " + session)
         await chrome.storage.local.set({ currentSession: session });
-        console.log((await chrome.storage.local.get("currentSession")))
     }
 
     static async getCurrentWorklistNumber(): Promise<number> {
