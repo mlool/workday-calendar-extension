@@ -1,4 +1,5 @@
 import { SECTION_COLORS } from "../content/theme";
+import ExtensionStorage from "./ExtensionStorage";
 import Section, { SectionSchedule } from "./Section";
 
 export default class Schedule {
@@ -23,18 +24,28 @@ export default class Schedule {
     }
 
     // Return a new class for React Hooks
-    addSection(section: Section): Schedule {
+    async addSection(section: Section): Promise<Schedule> {
+        const isConflictAddingEnabled = await ExtensionStorage.getIsConflictAddingEnabled();
+        if (!isConflictAddingEnabled && this.getConflictSections(section).length > 0) {
+            alert("This section conflicts with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
+            return new Schedule(this.version, this.data);
+        }
         section.setColor(this.getCourseColor(section.getSession(), section.getWorklistNumber(), section.getCode()));
         return new Schedule(this.version, [...this.data, section]);
     }
 
-    bulkAddSections(sections: Section[]): Schedule {
+    async bulkAddSections(sections: Section[]): Promise<Schedule> {
+        const isConflictAddingEnabled = await ExtensionStorage.getIsConflictAddingEnabled();
         if (sections.length == 0) return new Schedule(this.version, this.data);
 
         const existingColors = this.getColors(sections[0].getSession(), sections[0].getWorklistNumber());
         const availableColors = SECTION_COLORS.filter((color) => !existingColors.includes(color));
 
         sections.forEach((section: Section) => {
+            if (!isConflictAddingEnabled && this.getConflictSections(section).length > 0) {
+                alert("One or more sections conflict with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
+                return new Schedule(this.version, this.data);
+            }
             section.setColor(availableColors.shift() || SECTION_COLORS[0]);
         })
         return new Schedule(this.version, [...this.data, ...sections]);
@@ -81,6 +92,14 @@ export default class Schedule {
         return schedules;
     }
 
+    // This is used for comparing times since sometimes the time contains 0 and sometimes not, eg: 09:00 and 9:00
+    toMinutes(t: string) {
+        const [hStr, mStr] = t.split(":");
+        const h = Number(hStr);
+        const m = Number(mStr);
+        return h * 60 + m;
+    };
+
     getConflictSections(newSection: Section): Section[] {
         const conflicts: Section[] = [];
         this.data.forEach((section: Section) => {
@@ -94,9 +113,9 @@ export default class Schedule {
                 newSectionSchedules.forEach((newSchedule: SectionSchedule) => {
                     const termsMatch = schedule.terms.some((term: number) => newSchedule.terms.includes(term));
                     if (!termsMatch) return;
-                    if (schedule.day.sort().join(",") !== newSchedule.day.sort().join(",")) return;
-                    if (schedule.startTime !== newSchedule.startTime) return;
-                    if (schedule.endTime !== newSchedule.endTime) return;
+                    if (!schedule.day.some(day => newSchedule.day.includes(day))) return;
+                    if (this.toMinutes(schedule.startTime) >= this.toMinutes(newSchedule.endTime)) return;
+                    if (this.toMinutes(newSchedule.startTime) >= this.toMinutes(schedule.endTime)) return;
                     conflicts.push(section);
                 });
             });
@@ -228,6 +247,9 @@ export default class Schedule {
         URL.revokeObjectURL(url);
     }
 
+    // Used to importing schedule/worklist from external JSON file
+    // Note it will replace existing sections in the specified session and worklist
+    // If session and worklist are not specified, it will replace the entire schedule
     getScheduleFromExternalJSON(json: string, session?: string, worklist?: number): Schedule {
         if (worklist && !session) {
             console.error("Invalid importJSON call: worklist provided without session");

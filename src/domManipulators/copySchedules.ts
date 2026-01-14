@@ -257,7 +257,7 @@ async function handleCopyScheduleButtonClick(
         }
 
         const currentSchedule = await ExtensionStorage.getSchedule()
-        const newSchedule = currentSchedule.bulkAddSections(selectedSections)
+        const newSchedule = await currentSchedule.bulkAddSections(selectedSections)
         await ExtensionStorage.setSchedule(newSchedule)
         if (selectedTerms.size === 1) {
             await ExtensionStorage.setCurrentTerm(selectedTerms.values().next().value ?? 1)

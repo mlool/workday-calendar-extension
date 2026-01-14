@@ -14,10 +14,10 @@ import "./NewSectionControl.css"
 
 const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSection, setSchedule, worklist, onStartCreateCustom }) => {
 
-    const onClickAddSection = () => {
+    const onClickAddSection = async () => {
         if (newSection) {
             newSection.setWorklistNumber(worklist)
-            const newSchedule = schedule.addSection(newSection)
+            const newSchedule = await schedule.addSection(newSection)
             setSchedule(newSchedule)
             setNewSection(null)
         }
