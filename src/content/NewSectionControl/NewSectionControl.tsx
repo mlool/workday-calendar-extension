@@ -1,5 +1,6 @@
 import Schedule from "../../objects/Schedule"
 import Section from "../../objects/Section"
+import SectionFromURL from "./SectionFromURL"
 
 interface IProps {
     newSection: Section | null
@@ -11,8 +12,18 @@ interface IProps {
 }
 
 import "./NewSectionControl.css"
+import { useState } from "react"
 
-const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSection, setSchedule, worklist, onStartCreateCustom }) => {
+const NewSectionControl: React.FC<IProps> = ({
+    newSection,
+    schedule,
+    setNewSection,
+    setSchedule,
+    worklist,
+    onStartCreateCustom
+}: IProps) => {
+
+    const [showSectionFromURL, setShowSectionFromURL] = useState(false)
 
     const onClickAddSection = async () => {
         if (newSection) {
@@ -29,6 +40,7 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
 
     return (
         <div className="new-section-control-container">
+            {showSectionFromURL && <SectionFromURL onClose={() => setShowSectionFromURL(false)} />}
             {newSection ? (
                 <div className="section-info">
                     <div className="section-code">{newSection.getCode()} - {newSection.getSectionCode()}</div>
@@ -61,6 +73,12 @@ const NewSectionControl: React.FC<IProps> = ({ newSection, schedule, setNewSecti
                     </div>
                 ) : (
                     <div className="button-row">
+                        <button
+                            className="section-control-button btn-primary"
+                            onClick={() => setShowSectionFromURL(true)}
+                        >
+                            From URL
+                        </button>
                         <button
                             className="section-control-button btn-primary"
                             onClick={() => onStartCreateCustom()}

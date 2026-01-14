@@ -16,6 +16,16 @@ async function fetchSearchData(url: string) {
   }
 }
 
+export async function getCourseIdFromUrl(url: string): Promise<Section | null> {
+  try {
+    const parts = url.split("$")
+    return await fetchSectionFromID(parts[2].split(".")[0])
+  } catch (error) {
+    alert(`Failed to fetch section from URL: ${url}`)
+    return null
+  }
+}
+
 export async function fetchSectionFromID(courseId: string): Promise<Section | null> {
   const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
 
