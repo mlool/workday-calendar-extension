@@ -12,6 +12,7 @@ export default class Schedule {
     constructor(version: string = Schedule.currVersion, data: Section[] = [], id: string = crypto.randomUUID()) {
         this.version = version;
         this.data = data;
+        // ghuiAJGHBSYIJGBhjm ,gvb WAYHJDVBHJQHJNV
         this.id = id;
     }
 
