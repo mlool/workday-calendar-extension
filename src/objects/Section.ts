@@ -145,6 +145,14 @@ export default class Section {
         return `https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$${this.courseID}.htmld`;
     }
 
+    // Returns full section code, eg. "CPSC_V 100 202", if no section code, returns "CPSC_V 100"
+    getFullSectionCode(): string {
+        if (this.sectionCode) {
+            return `${this.code} ${this.sectionCode}`;
+        }
+        return this.code;
+    }
+
     // Returns a set of terms that the section is offered in
     getTerms(): Set<number> {
         return this.sectionDetails.reduce((acc: Set<number>, sectionDetail: SectionDetail) => {

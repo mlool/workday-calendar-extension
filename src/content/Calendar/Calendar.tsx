@@ -82,13 +82,6 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
         return lines;
     };
 
-    const getSectionFullCode = (section: SectionSchedule) => {
-        if (section.section.getSectionCode()) {
-            return `${section.section.getCode()} - ${section.section.getSectionCode()}`;
-        }
-        return `${section.section.getCode()}`;
-    };
-
     return (
         <div className="calendar">
             <div className="calendar-header">
@@ -131,7 +124,7 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
                                         }}
                                         title={`${sec.section.getCode()} - ${sec.section.getName()} (New)`}
                                     >
-                                        <div className="event-code">{getSectionFullCode(sec)}</div>
+                                        <div className="event-code">{sec.section.getFullSectionCode()}</div>
                                     </div>
                                 );
                             });
@@ -152,7 +145,7 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
                                                 title={`${section.section.getCode()} - ${section.section.getName()}`}
                                                 onClick={() => setSelectedSection(section.section)}
                                             >
-                                                <div className="event-code">{getSectionFullCode(section)}</div>
+                                                <div className="event-code">{section.section.getFullSectionCode()}</div>
                                             </div>
                                         );
                                     })}
