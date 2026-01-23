@@ -43,7 +43,7 @@ const NewSectionControl: React.FC<IProps> = ({
             {showSectionFromURL && <SectionFromURL onClose={() => setShowSectionFromURL(false)} />}
             {newSection ? (
                 <div className="section-info">
-                    <div className="section-code">{newSection.getCode()} - {newSection.getSectionCode()}</div>
+                    <div className="section-code">{newSection.getCode()} {newSection.getSectionCode() ? `- ${newSection.getSectionCode()}` : ""}</div>
                     <div className="section-name">{newSection.getName()}</div>
                 </div>
             ) : (
