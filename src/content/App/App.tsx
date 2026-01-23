@@ -149,7 +149,7 @@ function App() {
     <div>
       <div className="top-bar">
         <div className="top-bar-icon">
-          <DownloadICS schedule={schedule} currentSession={currentSession} currentTerm={currentTerm} disabled={currentView !== ExtensionViews.calendar} />
+          <DownloadICS schedule={schedule} currentSession={currentSession} currentTerm={currentTerm} currentWorklistNumber={currWorklist} disabled={currentView !== ExtensionViews.calendar} />
         </div>
         <div className="top-bar-icon">
           <CalendarIcon size={22} onClick={() => setCurrentView(ExtensionViews.calendar)} />
