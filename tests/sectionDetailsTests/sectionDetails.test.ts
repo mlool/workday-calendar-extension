@@ -15,7 +15,7 @@ describe("Section Details Tests", () => {
 
     });
 
-    test("constructor sets variables correct and also the optional variables with getter tests", () => {
+    test("constructor sets variables correct and also the optional variables with getters tests", () => {
 
         const sectionDetail = new SectionDetail([1, 2], ["Mon", "Wed", "Fri"],
             "03:30",
