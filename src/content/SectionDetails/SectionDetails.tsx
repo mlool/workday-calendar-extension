@@ -4,7 +4,7 @@ import { IGradesAPIData } from "../../objects/Section"
 import "./SectionDetails.css"
 import CloseIcon from "../Icons/CloseIcon";
 import ExternalLinkIcon from "../Icons/ExternalLinkIcon";
-import { RMPData } from "../../backends/rateMyProf";
+import { RMPData } from "../../backends/rateMyProf/rateMyProf";
 import Browser from "webextension-polyfill"
 
 
