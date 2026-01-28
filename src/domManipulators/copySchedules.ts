@@ -223,13 +223,13 @@ async function handleCopyScheduleButtonClick(
             try {
                 const sectionId = tableData[i][tableData[i].length - 1]
                 if (sectionId === "") {
-                    alert("Section ID not found for section " + code)
-                    continue
+                    console.error("Section ID not found for section " + code)
+                    throw new Error("Section ID not found")
                 }
                 selectedSection = await fetchSectionFromID(sectionId)
                 if (!selectedSection) {
                     console.error("Failed to Retrieve Section Info for section " + code)
-                    continue
+                    throw new Error("Failed to Retrieve Section Info")
                 }
                 selectedSession = selectedSection.getSession()
                 const terms = selectedSection.getTerms()
@@ -238,7 +238,7 @@ async function handleCopyScheduleButtonClick(
                 })
                 selectedSection.setWorklistNumber(currentWorklistNumber)
                 selectedSections.push(selectedSection)
-            } catch {
+            } catch (error) {
                 skippedCourses.push(code)
                 continue
             }

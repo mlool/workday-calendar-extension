@@ -21,8 +21,7 @@ export async function getCourseIdFromUrl(url: string): Promise<Section | null> {
     const parts = url.split("$")
     return await fetchSectionFromID(parts[2].split(".")[0])
   } catch (error) {
-    alert(`Failed to fetch section from URL: ${url}`)
-    return null
+    throw new Error(`Failed to fetch section from URL: ${url}`)
   }
 }
 
@@ -41,8 +40,7 @@ export async function fetchSectionFromID(courseId: string): Promise<Section | nu
   const sectionDetails: SectionDetail[] = [];
 
   if (!meetingPatterns || meetingPatterns.length === 0) {
-    alert("No meeting pattern found, this section does not have a meeting time set. If this is incorrect, please manually add the section time.")
-    return null;
+    throw new Error("No meeting pattern found, this section does not have a meeting time set. If this is incorrect, please manually add the section time.")
   }
 
   for (const meetingPattern of meetingPatterns) {
@@ -148,15 +146,13 @@ export async function extractSection(element: Element) {
   const courseId = extractIdFromDOM(element)
 
   if (!courseId) {
-    alert("Course ID not found, please manually add the section by url")
-    return;
+    throw new Error("Course ID not found, please manually add the section by url")
   }
 
   const fetchedSection = await fetchSectionFromID(courseId)
 
   if (!fetchedSection) {
-    alert("Section failed to be fetched")
-    return;
+    throw new Error("Section failed to be fetched")
   }
   await ExtensionStorage.setNewSection(fetchedSection)
 

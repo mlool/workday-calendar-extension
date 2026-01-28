@@ -148,10 +148,15 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
             if (isExisting && section) {
                 let newSchedule = schedule.removeSection(section.getWorklistNumber(), section.getCourseID());
                 newSectionObj.setWorklistNumber(section.getWorklistNumber());
-                newSchedule = await newSchedule.addSection(newSectionObj);
-
-                setSchedule(newSchedule);
-                await ExtensionStorage.setSchedule(newSchedule);
+                try {
+                    newSchedule = await newSchedule.addSection(newSectionObj);
+                    setSchedule(newSchedule);
+                    await ExtensionStorage.setSchedule(newSchedule);
+                } catch (error) {
+                    if (error instanceof Error) {
+                        alert(error.message)
+                    }
+                }
             }
         }
 

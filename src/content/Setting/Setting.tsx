@@ -105,8 +105,14 @@ const Setting = ({ schedule, setSchedule }: IProps) => {
                                 const file = e.target.files?.[0];
                                 if (!file) return;
                                 const text = await file.text();
-                                const newSchedule = schedule.getScheduleFromExternalJSON(text);
-                                setSchedule(newSchedule);
+                                try {
+                                    const newSchedule = schedule.getScheduleFromExternalJSON(text);
+                                    setSchedule(newSchedule);
+                                } catch (error) {
+                                    if (error instanceof Error) {
+                                        alert(error.message)
+                                    }
+                                }
                                 e.target.value = "";
                             }}
                             style={{ display: "none" }}

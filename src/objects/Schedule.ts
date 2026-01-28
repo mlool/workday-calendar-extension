@@ -27,8 +27,7 @@ export default class Schedule {
     async addSection(section: Section): Promise<Schedule> {
         const isConflictAddingEnabled = await ExtensionStorage.getIsConflictAddingEnabled();
         if (!isConflictAddingEnabled && this.getConflictSections(section).length > 0) {
-            alert("This section conflicts with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
-            return new Schedule(this.version, this.data);
+            throw new Error("This section conflicts with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
         }
         section.setColor(this.getCourseColor(section.getSession(), section.getWorklistNumber(), section.getCode()));
         return new Schedule(this.version, [...this.data, section]);
@@ -43,8 +42,7 @@ export default class Schedule {
 
         sections.forEach((section: Section) => {
             if (!isConflictAddingEnabled && this.getConflictSections(section).length > 0) {
-                alert("One or more sections conflict with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
-                return new Schedule(this.version, this.data);
+                throw new Error("One or more sections conflict with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
             }
             section.setColor(availableColors.shift() || SECTION_COLORS[0]);
         })
@@ -265,8 +263,7 @@ export default class Schedule {
         }) ?? [];
 
         if (newSections.length === 0) {
-            alert("No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists.")
-            return new Schedule(this.version, this.data);
+            throw new Error("No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists.")
         }
 
         this.data.forEach((section: Section) => {

@@ -28,9 +28,15 @@ const NewSectionControl: React.FC<IProps> = ({
     const onClickAddSection = async () => {
         if (newSection) {
             newSection.setWorklistNumber(worklist)
-            const newSchedule = await schedule.addSection(newSection)
-            setSchedule(newSchedule)
-            setNewSection(null)
+            try {
+                const newSchedule = await schedule.addSection(newSection)
+                setSchedule(newSchedule)
+                setNewSection(null)
+            } catch (error) {
+                if (error instanceof Error) {
+                    alert(error.message)
+                }
+            }
         }
     }
 

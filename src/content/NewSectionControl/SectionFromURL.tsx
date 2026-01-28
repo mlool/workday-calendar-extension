@@ -18,6 +18,10 @@ const SectionFromURL: React.FC<IProps> = ({ onClose }) => {
                 ExtensionStorage.setNewSection(section)
                 onClose()
             }
+        }).catch((error) => {
+            if (error instanceof Error) {
+                alert(error.message)
+            }
         })
     }
 
@@ -25,15 +29,15 @@ const SectionFromURL: React.FC<IProps> = ({ onClose }) => {
         <div className="url-popup-overlay" onClick={onClose}>
             <div className="url-popup" onClick={(e) => e.stopPropagation()}>
                 <h1>Right click on the course title, select "Copy URL" and paste it here:</h1>
-                <div className="input-group">
+                <div className="url-popup-input-group">
                     <input
-                        className="input-field"
+                        className="url-popup-input-field"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
                         placeholder="e.g. https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$458290.htmld"
                     />
                 </div>
-                <div className="button-row">
+                <div className="url-popup-button-row">
                     <button
                         className="section-control-button btn-primary"
                         onClick={onClick}
