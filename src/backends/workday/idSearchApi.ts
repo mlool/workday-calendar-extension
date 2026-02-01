@@ -4,35 +4,50 @@ import SectionDetail from "../../objects/SectionDetail"
 import ExtensionStorage from "../../objects/ExtensionStorage"
 import { SECTION_COLORS } from "../../content/theme"
 
-const searchEndpoint = "https://wd10.myworkday.com/ubc/inst/1$15194/15194$"
 
-async function fetchSearchData(url: string) {
+export async function fetchSectionFromID(courseId: string): Promise<Section | null> {
+  // Potential issue: the hardcoded path segment `1$15194/15194$` works for me
+  // and for most users, but there have been isolated reports where adding a
+  // course via the button fails.
+  //
+  // These cases are not yet fully understood. If we confirm that the automated
+  // button fails while a manually pasted URL works, a possible fallback is to
+  // store the manually added URL in extension storage and reuse it.
+  const url = `https://wd10.myworkday.com/ubc/inst/1$15194/15194$${courseId}.htmld`
+  return fetchSectionFromUrl(url)
+}
+
+export async function fetchSectionFromUrl(url: string): Promise<Section | null> {
+  // When pasting a URL manually, the "Copy URL" button produces links like:
+  // https://wd10.myworkday.com/ubc/d/inst/15$365714/15194$445563.htmld
+  // This endpoint returns a DOC response. We found that removing the `/d`
+  // segment causes the request to return the JSON response instead.
+  const updatedUrl = url.replace("/d/", "/")
   try {
-    const response = await fetch(url)
-    return await response.json()
+    const response = await fetch(updatedUrl)
+    const data = await response.json()
+    return fetchSectionFromJSON(data, getCourseIdFromUrl(updatedUrl))
   } catch (error) {
     console.error("Error fetching data:", error)
     return null
   }
 }
 
-export async function getCourseIdFromUrl(url: string): Promise<Section | null> {
-  try {
-    const parts = url.split("$")
-    return await fetchSectionFromID(parts[2].split(".")[0])
-  } catch (error) {
-    throw new Error(`Failed to fetch section from URL: ${url}`)
-  }
+function getCourseIdFromUrl(url: string): string {
+  const parts = url.split("$")
+  return parts[2].split(".")[0]
 }
 
-export async function fetchSectionFromID(courseId: string): Promise<Section | null> {
-  const rawData = await fetchSearchData(`${searchEndpoint}${courseId}.htmld`)
+export function fetchSectionFromJSON(data: any, courseId: string): Section | null {
+  if (!data) {
+    throw new Error("Failed to fetch section from JSON")
+  }
 
-  const selectedNodes = collectNodesWithLabel(rawData["body"]["children"][0]["children"]);
+  const selectedNodes = collectNodesWithLabel(data["body"]["children"][0]["children"]);
 
   const { code, name, instructors, format, meetingPatterns } = extractWorkdaySectionInfo(selectedNodes);
 
-  const courseFullName = rawData["title"].instances[0].text;
+  const courseFullName = data["title"].instances[0].text;
   const match = courseFullName.match(/^[^-]+-(\S+)/); // Matches section code, eg. "202", "L22"
   const sectionCode = match ? match[1] : undefined;
 
@@ -76,7 +91,7 @@ const isDateRange = (s: string) =>
 
 type MeetingParts = {
   campus?: string;
-  building?: string;     // built from leftovers
+  building?: string; // built from leftovers
   floor?: string;
   room?: string;
   daysString?: string;

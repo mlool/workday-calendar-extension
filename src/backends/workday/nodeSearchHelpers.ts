@@ -77,7 +77,7 @@ export const parseSessionAndTermFromDateRange = (
 ): { session: string; terms: number[] } => {
     const dates = dateRange.trim().split(" - ")
     const finalSessions = new Set<string>()
-    const finalTerms = []
+    const finalTerms = new Set<number>()
 
     // we need to check term for both dates because workday
     // may give us a date range that spans multiple terms.
@@ -88,19 +88,19 @@ export const parseSessionAndTermFromDateRange = (
         switch (true) {
             case month >= 1 && month <= 4:
                 finalSessions.add(`${year - 1}W`)
-                finalTerms.push(2)
+                finalTerms.add(2)
                 break
             case month >= 5 && month <= 6:
                 finalSessions.add(`${year}S`)
-                finalTerms.push(1)
+                finalTerms.add(1)
                 break
             case month >= 7 && month <= 8:
                 finalSessions.add(`${year}S`)
-                finalTerms.push(2)
+                finalTerms.add(2)
                 break
             case month >= 9 && month <= 12:
                 finalSessions.add(`${year}W`)
-                finalTerms.push(1)
+                finalTerms.add(1)
                 break
             default:
                 throw `Month ${month} parsed from Workday not valid!`
@@ -109,5 +109,5 @@ export const parseSessionAndTermFromDateRange = (
 
     if (finalSessions.size !== 1)
         throw `Illegal number of sessions found! ${finalSessions}`
-    return { session: finalSessions.values().next().value!, terms: finalTerms }
+    return { session: finalSessions.values().next().value!, terms: Array.from(finalTerms) }
 }

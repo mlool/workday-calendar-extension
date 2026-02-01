@@ -1,5 +1,5 @@
 
-import { getCourseIdFromUrl } from "../../backends/workday/idSearchApi"
+import { fetchSectionFromUrl } from "../../backends/workday/idSearchApi"
 import ExtensionStorage from "../../objects/ExtensionStorage"
 import "./SectionFromURL.css"
 import { useState } from "react"
@@ -13,7 +13,7 @@ const SectionFromURL: React.FC<IProps> = ({ onClose }) => {
     const [url, setUrl] = useState("")
 
     const onClick = () => {
-        getCourseIdFromUrl(url).then((section) => {
+        fetchSectionFromUrl(url).then((section) => {
             if (section) {
                 ExtensionStorage.setNewSection(section)
                 onClose()
