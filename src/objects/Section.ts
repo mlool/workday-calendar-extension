@@ -1,3 +1,4 @@
+import { fetchSectionFromID } from "../backends/workday/idSearchApi";
 import SectionDetail from "./SectionDetail";
 
 export interface SectionSchedule {
@@ -55,9 +56,18 @@ export default class Section {
         this.color = color;
     }
 
-    static getSectionFromJSON(data: any, version?: string): Section {
+    // For data formats that cannot be easily casted to the latest version (e.g., 2.0.1),
+    // collect course IDs from legacy JSON files and re-fetch the data.
+    static async getSectionFromOldJSON(data: any): Promise<Section | null> {
+        const courseId = data.courseID;
+        const section = await fetchSectionFromID(courseId);
+        if (!section) return null;
+        return section;
+    }
+
+    static getSectionFromJSON(data: any): Section {
         const sectionDetails = data.sectionDetails.map(
-            (sectionDetail: any) => SectionDetail.getSectionDetailFromJSON(sectionDetail, version));
+            (sectionDetail: any) => SectionDetail.getSectionDetailFromJSON(sectionDetail));
 
         return new Section(
             data.code,

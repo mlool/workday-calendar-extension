@@ -1,6 +1,12 @@
 import { SECTION_COLORS } from "../content/theme";
+import ExtensionEventChannel from "./ExtensionEventChannel";
 import ExtensionStorage from "./ExtensionStorage";
 import Section, { SectionSchedule } from "./Section";
+
+
+function wait(ms: number = 500): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export default class Schedule {
     private static currVersion = "3.0.0";
@@ -248,7 +254,7 @@ export default class Schedule {
     // Used to importing schedule/worklist from external JSON file
     // Note it will replace existing sections in the specified session and worklist
     // If session and worklist are not specified, it will replace the entire schedule
-    getScheduleFromExternalJSON(json: string, session?: string, worklist?: number): Schedule {
+    async getScheduleFromExternalJSON(json: string, session?: string, worklist?: number): Promise<Schedule> {
         if (worklist && !session) {
             console.error("Invalid importJSON call: worklist provided without session");
             return this;
@@ -256,14 +262,47 @@ export default class Schedule {
         // if json is empty, return current schedule
         if (!json || json === "") return new Schedule(this.version, this.data);
 
-        const newSections = JSON.parse(json).data.map((section: any) => {
-            const newSection = Section.getSectionFromJSON(section, JSON.parse(json).version)
-            if (worklist) newSection.setWorklistNumber(worklist)
-            return newSection
-        }) ?? [];
+        const rawData = JSON.parse(json);
+        const version = rawData['version'];
+        const data = rawData['data'];
+        let newSections: Section[] = [];
+        let failedCodes: string[] = [];
+
+        if (version === "2.0.1") {
+            ExtensionEventChannel.setIsLoading(true, `Importing Schedule from version ${version}`);
+            ExtensionEventChannel.setLoadingProgress(0);
+            const totalSections = data.length;
+
+            for (let i = 0; i < totalSections; i++) {
+                const section = data[i];
+                const newSection = await Section.getSectionFromOldJSON(section);
+                ExtensionEventChannel.setLoadingProgress((i + 1) / totalSections * 100);
+
+                if (!newSection) {
+                    failedCodes.push(section['code']);
+                    continue;
+                }
+
+                newSections.push(newSection);
+            }
+
+            ExtensionEventChannel.setIsLoading(false);
+        } else {
+            newSections = data.map((section: any) => {
+                const newSection = Section.getSectionFromJSON(section)
+                if (worklist) newSection.setWorklistNumber(worklist)
+                return newSection
+            }) ?? [];
+        }
+
+
 
         if (newSections.length === 0) {
             throw new Error("No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists.")
+        }
+
+        if (failedCodes.length > 0) {
+            console.error("Failed to import sections:", failedCodes);
         }
 
         this.data.forEach((section: Section) => {

@@ -106,7 +106,7 @@ const Setting = ({ schedule, setSchedule }: IProps) => {
                                 if (!file) return;
                                 const text = await file.text();
                                 try {
-                                    const newSchedule = schedule.getScheduleFromExternalJSON(text);
+                                    const newSchedule = await schedule.getScheduleFromExternalJSON(text);
                                     setSchedule(newSchedule);
                                 } catch (error) {
                                     if (error instanceof Error) {

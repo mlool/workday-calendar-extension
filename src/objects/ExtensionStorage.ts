@@ -1,3 +1,4 @@
+import ExtensionEventChannel from "./ExtensionEventChannel";
 import Schedule from "./Schedule";
 import Section from "./Section";
 
@@ -51,7 +52,35 @@ export default class ExtensionStorage {
         const sections = validJSON['data'];
         const version = validJSON['version'];
         const id = validJSON['id'];
-        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
+
+        if (version === "2.0.1") {
+            const failedCodes: string[] = [];
+            const newSections: Section[] = [];
+            ExtensionEventChannel.setIsLoading(true, `Importing Schedule from version ${version}`);
+            ExtensionEventChannel.setLoadingProgress(0);
+            const totalSections = sections.length;
+
+            for (let i = 0; i < totalSections; i++) {
+                const section = sections[i];
+                const newSection = await Section.getSectionFromOldJSON(section);
+                ExtensionEventChannel.setLoadingProgress((i + 1) / totalSections * 100);
+
+                if (!newSection) {
+                    failedCodes.push(section['code']);
+                    continue;
+                }
+
+                newSections.push(newSection);
+            }
+
+            ExtensionEventChannel.setIsLoading(false);
+            if (failedCodes.length > 0) {
+                console.error("Failed to import sections:", failedCodes);
+            }
+            return new Schedule(Schedule.getVersion(), newSections, id);
+        }
+
+        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section));
 
         return new Schedule(Schedule.getVersion(), sectionObjects, id);
     }
