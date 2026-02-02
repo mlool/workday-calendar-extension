@@ -53,6 +53,7 @@ export default class ExtensionStorage {
         const version = validJSON['version'];
         const id = validJSON['id'];
 
+        // Specifically for handling old JSON files from exports from versions 2.x.x, to remove in 2027
         if (version === "2.0.1") {
             const failedCodes: string[] = [];
             const newSections: Section[] = [];

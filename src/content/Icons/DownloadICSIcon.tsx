@@ -22,14 +22,14 @@ const DownloadICSIcon = ({ size, disabled, onClick }: IProps) => {
         >
             <path d="M20 10V7C20 5.89543 19.1046 5 18 5H6C4.89543 5 4 5.89543 4 7V10M20 10H4M20 10V11.75M4 10V19C4 20.1046 4.89543 21 6 21H12M8 3V7M16 3V7"
                 stroke={hovered ? colorHover : color}
-                stroke-width="2"
-                stroke-linecap="round"
+                strokeWidth="2"
+                strokeLinecap="round"
             />
             <path d="M18 15V21M18 21L15.5 18.5M18 21L20.5 18.5"
                 stroke={hovered ? colorHover : color}
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     )

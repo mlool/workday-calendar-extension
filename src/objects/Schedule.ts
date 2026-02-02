@@ -3,11 +3,6 @@ import ExtensionEventChannel from "./ExtensionEventChannel";
 import ExtensionStorage from "./ExtensionStorage";
 import Section, { SectionSchedule } from "./Section";
 
-
-function wait(ms: number = 500): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export default class Schedule {
     private static currVersion = "3.0.0";
 
@@ -268,6 +263,7 @@ export default class Schedule {
         let newSections: Section[] = [];
         let failedCodes: string[] = [];
 
+        // Specifically for handling old JSON files from exports from versions 2.x.x, to remove in 2027
         if (version === "2.0.1") {
             ExtensionEventChannel.setIsLoading(true, `Importing Schedule from version ${version}`);
             ExtensionEventChannel.setLoadingProgress(0);
@@ -283,6 +279,7 @@ export default class Schedule {
                     continue;
                 }
 
+                newSection.setColor(section.color ?? SECTION_COLORS[0]);
                 newSections.push(newSection);
             }
 
