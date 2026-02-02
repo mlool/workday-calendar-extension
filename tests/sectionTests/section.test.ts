@@ -1,6 +1,6 @@
 import Section from "../../src/objects/Section";
 import SectionDetail from "../../src/objects/SectionDetail";
-import sectionData from "./section_1.json";
+import sectionData from "./schedule_1.json";
 
 
 

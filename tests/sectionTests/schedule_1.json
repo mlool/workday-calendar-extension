@@ -2,27 +2,6 @@
   "version": "2.0.1",
   "data": [
     {
-      "code": "CPSC_V 121",
-      "name": "Models of Computation",
-      "instructors": [
-        "Jordon Johnson"
-      ],
-      "sectionDetails": [
-        {
-          "term": 1,
-          "days": ["Tue", "Thu"],
-          "startTime": "09:30",
-          "endTime": "11:00",
-          "dateRange": "2026-02-24 - 2026-04-09",
-          "location": "Gordon B. Shrum Building (SHRM) - Floor: -1 - Room: B1001"
-        }
-      ],
-      "session": "2025-26 Winter Term 2 (UBC-V)",
-      "worklistNumber": 0,
-      "color": "#EAFFD1",
-      "courseID": "445390"
-    },
-    {
       "code": "DSCI_V 200",
       "name": "Navigating Data: Acquisition, Exploration and Management",
       "instructors": [
@@ -31,11 +10,19 @@
       ],
       "sectionDetails": [
         {
-          "term": 1,
-          "days": ["Tue", "Thu"],
-          "startTime": "09:30",
-          "endTime": "11:00",
-          "dateRange": "2026-02-24 - 2026-04-09",
+          "term": 2,
+          "days": ["Mon", "Wed"],
+          "startTime": "09:00",
+          "endTime": "10:30",
+          "dateRange": "2026-01-05 - 2026-02-11",
+          "location": "Brock Commons South (BRCS) - Room 2070"
+        },
+        {
+          "term": 2,
+          "days": ["Mon", "Wed"],
+          "startTime": "09:00",
+          "endTime": "10:30",
+          "dateRange": "2026-02-23 - 2026-04-08",
           "location": "Brock Commons South (BRCS) - Room 2070"
         }
       ],
@@ -47,6 +34,7 @@
       "format": "Lecture",
       "isCustom": true
     },
+
     {
       "code": "CPSC_V 213",
       "name": "Introduction to Computer Systems",
