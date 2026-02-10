@@ -118,10 +118,14 @@ const Setting = ({ schedule, setSchedule }: IProps) => {
                             style={{ display: "none" }}
                             id="batch-import-file"
                         />
-                        Import
+                        Import All
                     </label>
 
-                    <button className="setting-btn-export" onClick={() => { schedule.downloadScheduleAsJSON() }}>Export</button>
+                    <button
+                        className="setting-btn-export"
+                        onClick={() => { schedule.downloadScheduleAsJSON() }}>
+                        Export All
+                    </button>
                 </div>
             </div>
         </div>

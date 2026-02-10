@@ -15,7 +15,7 @@ export default class ExtensionEventChannel {
 
     static setIsLoading(isLoading: boolean, message?: string): void {
         const detail: LoadingEventDetail = isLoading
-            ? { isLoading: true, progress: 0, message: undefined }
+            ? { isLoading: true, progress: 0, message: message }
             : { isLoading: false, progress: 100, message };
 
         document.dispatchEvent(new CustomEvent<LoadingEventDetail>(this.LOADING_EVENT_NAME, { detail }));

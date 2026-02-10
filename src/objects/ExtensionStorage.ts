@@ -1,3 +1,4 @@
+import { SECTION_COLORS } from "../content/theme";
 import ExtensionEventChannel from "./ExtensionEventChannel";
 import Schedule from "./Schedule";
 import Section from "./Section";
@@ -42,12 +43,22 @@ export default class ExtensionStorage {
 
     // Schedule Operations
     static async getSchedule(): Promise<Schedule> {
-        const rawSchedule = (await chrome.storage.local.get("schedule")).schedule as
+        let rawSchedule = (await chrome.storage.local.get("schedule")).schedule as
             | string
             | undefined;
+
         if (rawSchedule === undefined) {
-            return new Schedule(Schedule.getVersion(), []);
+            // Double check if the old sections key exists from previous versions
+            const rawSectionsOld = (await chrome.storage.local.get("sections")).sections as
+                | string
+                | undefined;
+
+            if (rawSectionsOld === undefined) {
+                return new Schedule(Schedule.getVersion(), []);
+            }
+            rawSchedule = rawSectionsOld;
         }
+
         const validJSON = JSON.parse(rawSchedule);
         const sections = validJSON['data'];
         const version = validJSON['version'];
@@ -71,6 +82,7 @@ export default class ExtensionStorage {
                     continue;
                 }
 
+                newSection.setColor(section.color ?? SECTION_COLORS[0]);
                 newSections.push(newSection);
             }
 
@@ -78,6 +90,7 @@ export default class ExtensionStorage {
             if (failedCodes.length > 0) {
                 console.error("Failed to import sections:", failedCodes);
             }
+            await chrome.storage.local.remove("sections");
             return new Schedule(Schedule.getVersion(), newSections, id);
         }
 

@@ -35,7 +35,7 @@ const WorklistControl: React.FC<IProps> = ({ schedule, worklist, currentSession,
                         const file = e.target.files?.[0];
                         if (!file) return;
                         const text = await file.text();
-                        const newSchedule = schedule.getScheduleFromExternalJSON(text, currentSession, worklist);
+                        const newSchedule = await schedule.getScheduleFromExternalJSON(text, currentSession, worklist);
                         setSchedule(newSchedule);
                         e.target.value = "";
                     }}
