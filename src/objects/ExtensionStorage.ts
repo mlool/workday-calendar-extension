@@ -83,6 +83,7 @@ export default class ExtensionStorage {
                 }
 
                 newSection.setColor(section.color ?? SECTION_COLORS[0]);
+                newSection.setWorklistNumber(section.worklistNumber ?? 0);
                 newSections.push(newSection);
             }
 
@@ -109,7 +110,8 @@ export default class ExtensionStorage {
         const newSection = (await chrome.storage.local.get("newSection")).newSection as
             | string
             | undefined;
-        if (newSection === undefined) return null;
+        // null check is required since in previous version, newSection is set to null instead of removed
+        if (newSection === undefined || newSection === "" || newSection === null) return null;
         return Section.getSectionFromJSON(JSON.parse(newSection));
     }
 
