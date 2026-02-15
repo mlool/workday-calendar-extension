@@ -188,6 +188,7 @@ function App() {
             section={creatingCustomSection ? null : selectedSection}
             term={currentTerm}
             schedule={schedule}
+            session={currentSession}
             onClose={() => {
               setSelectedSection(null)
               setCreatingCustomSection(false)

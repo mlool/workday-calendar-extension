@@ -10,6 +10,7 @@ interface IProps {
     section: Section | null;
     term: number;
     schedule: Schedule;
+    session: string;
     onClose: () => void;
     onDelete: (section: Section) => void;
     setNewSection: (section: Section | null) => void;
@@ -25,7 +26,7 @@ for (let h = 7; h <= 21; h++) {
     if (h !== 21) TIME_OPTIONS.push(`${h}:30`);
 }
 
-const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setNewSection, setSchedule }: IProps) => {
+const CustomSectionDetails = ({ section, term, schedule, session, onClose, onDelete, setNewSection, setSchedule }: IProps) => {
     const [title, setTitle] = useState("");
     const [notes, setNotes] = useState("");
     const [selectedTerms, setSelectedTerms] = useState<Set<number>>(new Set([term]));
@@ -105,7 +106,7 @@ const CustomSectionDetails = ({ section, term, schedule, onClose, onDelete, setN
             courseId,
             [], // instructors
             [detail],
-            "2025W",
+            session,
             0,
             color,
             undefined, // sectionCode
