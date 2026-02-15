@@ -81,8 +81,6 @@ describe("Section Details Tests", () => {
         expect(sectionDetail.getStartDate()).toBeUndefined();
         expect(sectionDetail.getEndDate()).toBeUndefined();
         expect(sectionDetail.getLocation()).toBeUndefined();
-
-
     });
 
     test("getting section detail from Json", () => {
@@ -98,33 +96,5 @@ describe("Section Details Tests", () => {
         const json1 = SectionDetail.getSectionDetailFromJSON(json);
 
         expect(json1.exportToJSON()).toEqual(json);
-
-
-    });
-
-    test("getting section detail from Json ver 2.0.1", () => {
-        const jsonMock = {
-            term: 1,
-            days: ["Tue"],
-            startTime: "10:00",
-            endTime: "12:00",
-            dateRange: "2026-01-06 - 2026-04-09"
-
-        };
-
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(jsonMock, "2.0.1");
-
-        expect(sectionDetail.getTerms()).toEqual([1]);
-        expect(sectionDetail.getDays()).toEqual(["Tue"]);
-        expect(sectionDetail.getStartTime()).toBe("10:00");
-        expect(sectionDetail.getEndTime()).toBe("12:00");
-        expect(sectionDetail.getStartDate()).toEqual("2026-01-06");
-        expect(sectionDetail.getEndDate()).toEqual("2026-04-09");
-
-        expect(sectionDetail.getLocation()).toBeUndefined();
-
-
-
     });
 });

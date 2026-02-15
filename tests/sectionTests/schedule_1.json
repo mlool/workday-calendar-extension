@@ -1,5 +1,5 @@
 {
-  "version": "2.0.1",
+  "version": "3.0.0",
   "data": [
     {
       "code": "DSCI_V 200",
@@ -10,23 +10,33 @@
       ],
       "sectionDetails": [
         {
-          "term": 2,
-          "days": ["Mon", "Wed"],
+          "terms": [
+            2
+          ],
+          "days": [
+            "Mon",
+            "Wed"
+          ],
           "startTime": "09:00",
           "endTime": "10:30",
           "dateRange": "2026-01-05 - 2026-02-11",
           "location": "Brock Commons South (BRCS) - Room 2070"
         },
         {
-          "term": 2,
-          "days": ["Mon", "Wed"],
+          "terms": [
+            2
+          ],
+          "days": [
+            "Mon",
+            "Wed"
+          ],
           "startTime": "09:00",
           "endTime": "10:30",
           "dateRange": "2026-02-23 - 2026-04-08",
           "location": "Brock Commons South (BRCS) - Room 2070"
         }
       ],
-      "session": "2025-26 Winter Term 2 (UBC-V)",
+      "session": "2025W",
       "worklistNumber": 0,
       "color": "red",
       "courseID": "458199",
@@ -34,7 +44,6 @@
       "format": "Lecture",
       "isCustom": true
     },
-
     {
       "code": "CPSC_V 213",
       "name": "Introduction to Computer Systems",
@@ -43,15 +52,20 @@
       ],
       "sectionDetails": [
         {
-          "term": 1,
-          "days": ["Tue", "Thu"],
+          "terms": [
+            1
+          ],
+          "days": [
+            "Tue",
+            "Thu"
+          ],
           "startTime": "12:30",
           "endTime": "14:00",
           "dateRange": "2025-09-02 - 2025-12-04",
           "location": "Forest Sciences Centre (FSC) - Floor: 1 - Room: 1005"
         }
       ],
-      "session": "2025-26 Winter Term 1 (UBC-V)",
+      "session": "2025W",
       "worklistNumber": 0,
       "color": "#EAFFD1",
       "courseID": "14847",
