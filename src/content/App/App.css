@@ -4,11 +4,12 @@
     width: 100%;
     margin-bottom: 2px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 }
 
 .top-bar-icon {
+    padding-left: 5px;
     padding-right: 5px;
     display: flex;
     align-items: center;

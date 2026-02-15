@@ -1,5 +1,5 @@
 import Browser from "webextension-polyfill"
-import fetchProfRating from "../backends/rateMyProf"
+import fetchProfRating from "../backends/rateMyProf/rateMyProf"
 
 let portFromContentScript: chrome.runtime.Port | null
 
@@ -30,8 +30,12 @@ chrome.action.onClicked.addListener((tab) => {
   }
 })
 
+// On Install/Reload: Manually ensure authentication cookies are attached to Workday requests.
+// This works around Manifest V3 Service Worker limitations where cookies might not be
+// automatically attached to fetch requests. By capturing existing cookies and forcing
+// them via declarativeNetRequest, we ensure the background script acts as the logged-in user.
 chrome.runtime.onInstalled.addListener(() => {
-  ;(async () => {
+  ; (async () => {
     // Get existing cookies
     const cookiePromise = new Promise<string | undefined>((resolve) => {
       chrome.cookies.getAll({ url: "https://*.myworkday.com/*" }, (cookies) => {
@@ -57,7 +61,9 @@ chrome.runtime.onInstalled.addListener(() => {
         return
       }
 
-      // Update dynamic rules with the retrieved cookie header
+      // Update dynamic rules with the retrieved cookie header.
+      // This instructs the browser's network layer to intercept requests to *.myworkday.com
+      // and forcefully set the 'Cookie' header to the captured string.
       chrome.declarativeNetRequest.updateDynamicRules({
         addRules: [
           {
@@ -90,4 +96,4 @@ chrome.runtime.onInstalled.addListener(() => {
   })()
 })
 
-export {}
+export { }

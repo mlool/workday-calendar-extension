@@ -28,9 +28,15 @@ const NewSectionControl: React.FC<IProps> = ({
     const onClickAddSection = async () => {
         if (newSection) {
             newSection.setWorklistNumber(worklist)
-            const newSchedule = await schedule.addSection(newSection)
-            setSchedule(newSchedule)
-            setNewSection(null)
+            try {
+                const newSchedule = await schedule.addSection(newSection)
+                setSchedule(newSchedule)
+                setNewSection(null)
+            } catch (error) {
+                if (error instanceof Error) {
+                    alert(error.message)
+                }
+            }
         }
     }
 
@@ -43,7 +49,7 @@ const NewSectionControl: React.FC<IProps> = ({
             {showSectionFromURL && <SectionFromURL onClose={() => setShowSectionFromURL(false)} />}
             {newSection ? (
                 <div className="section-info">
-                    <div className="section-code">{newSection.getCode()} - {newSection.getSectionCode()}</div>
+                    <div className="section-code">{newSection.getFullSectionCode()}</div>
                     <div className="section-name">{newSection.getName()}</div>
                 </div>
             ) : (

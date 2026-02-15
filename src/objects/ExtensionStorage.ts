@@ -1,3 +1,5 @@
+import { SECTION_COLORS } from "../content/theme";
+import ExtensionEventChannel from "./ExtensionEventChannel";
 import Schedule from "./Schedule";
 import Section from "./Section";
 
@@ -41,17 +43,59 @@ export default class ExtensionStorage {
 
     // Schedule Operations
     static async getSchedule(): Promise<Schedule> {
-        const rawSchedule = (await chrome.storage.local.get("schedule")).schedule as
+        let rawSchedule = (await chrome.storage.local.get("schedule")).schedule as
             | string
             | undefined;
+
         if (rawSchedule === undefined) {
-            return new Schedule(Schedule.getVersion(), []);
+            // Double check if the old sections key exists from previous versions
+            const rawSectionsOld = (await chrome.storage.local.get("sections")).sections as
+                | string
+                | undefined;
+
+            if (rawSectionsOld === undefined) {
+                return new Schedule(Schedule.getVersion(), []);
+            }
+            rawSchedule = rawSectionsOld;
         }
+
         const validJSON = JSON.parse(rawSchedule);
         const sections = validJSON['data'];
         const version = validJSON['version'];
         const id = validJSON['id'];
-        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section, version));
+
+        // Specifically for handling old JSON files from exports from versions 2.x.x, to remove in 2027
+        if (version === "2.0.1") {
+            const failedCodes: string[] = [];
+            const newSections: Section[] = [];
+            ExtensionEventChannel.setIsLoading(true, `Importing Schedule from version ${version}`);
+            ExtensionEventChannel.setLoadingProgress(0);
+            const totalSections = sections.length;
+
+            for (let i = 0; i < totalSections; i++) {
+                const section = sections[i];
+                const newSection = await Section.getSectionFromOldJSON(section);
+                ExtensionEventChannel.setLoadingProgress((i + 1) / totalSections * 100);
+
+                if (!newSection) {
+                    failedCodes.push(section['code']);
+                    continue;
+                }
+
+                newSection.setColor(section.color ?? SECTION_COLORS[0]);
+                newSection.setWorklistNumber(section.worklistNumber ?? 0);
+                newSections.push(newSection);
+            }
+
+            ExtensionEventChannel.setIsLoading(false);
+            if (failedCodes.length > 0) {
+                console.error("Failed to import sections:", failedCodes);
+            }
+            await chrome.storage.local.remove("sections");
+            return new Schedule(Schedule.getVersion(), newSections, id);
+        }
+
+        const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section));
 
         return new Schedule(Schedule.getVersion(), sectionObjects, id);
     }
@@ -66,7 +110,8 @@ export default class ExtensionStorage {
         const newSection = (await chrome.storage.local.get("newSection")).newSection as
             | string
             | undefined;
-        if (newSection === undefined) return null;
+        // null check is required since in previous version, newSection is set to null instead of removed
+        if (newSection === undefined || newSection === "" || newSection === null) return null;
         return Section.getSectionFromJSON(JSON.parse(newSection));
     }
 
