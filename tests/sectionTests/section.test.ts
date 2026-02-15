@@ -2,31 +2,19 @@ import Section from "../../src/objects/Section";
 import SectionDetail from "../../src/objects/SectionDetail";
 import sectionData from "./schedule_1.json";
 
-
+const VER = "2.0.1";
+const DSCI = "Navigating Data: Acquisition, Exploration and Management";
 
 describe("Section tests", () => {
+    let sectionDetail: SectionDetail;
+    let section: Section;
 
+    beforeEach(() => {
+        sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData.data[0].sectionDetails[0], VER);
+        section = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue", "Katie Burak"], [sectionDetail], "2025-26 Winter Term 2 (UBC-V)", 1, "blue", "001", "Lecture", DSCI, false);
+    });
 
     test("constructor tests with getters and set worklist and color", () => {
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            sectionData.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
         expect(section.getCode()).toBe("DSCI_V 200");
         expect(section.getCourseID()).toBe("458199");
         expect(section.getInstructors()).toStrictEqual([
@@ -39,18 +27,13 @@ describe("Section tests", () => {
         expect(section.getColor()).toBe("blue");
         expect(section.getSectionCode()).toBe("001");
         expect(section.getFormat()).toBe("Lecture");
-        expect(section.getName()).toBe(
-            "Navigating Data: Acquisition, Exploration and Management"
-        );
+        expect(section.getName()).toBe(DSCI);
         expect(section.getIsCustom()).toBe(false);
         const terms = new Set<number>;
         terms.add(2);
         expect(section.getTerms()).toEqual(terms);
 
-        const sectionCompared = Section.getSectionFromJSON(
-            sectionData.data[0],
-            "2.0.1"
-        );
+        const sectionCompared = Section.getSectionFromJSON(sectionData.data[0], VER);
         expect(sectionCompared.getCode()).toBe(section.getCode());
         expect(sectionCompared.getCourseID()).toBe("458199");
         expect(sectionCompared.getSectionDetails().length).toBeGreaterThan(0);
@@ -68,12 +51,6 @@ describe("Section tests", () => {
 
 
     test("getting terms offered and testing chrome storage interactions", () => {
-        // const sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData);
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData.data[0].sectionDetails[0], "2.0.1");
-
-        const section = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail], "2025-26 Winter Term 2 (UBC-V)", 1, "blue", "001", "Lecture", "Navigating Data: Acquisition, Exploration and Management", false);
-
         expect(section.getTerms().has(2)).toBe(true);
 
         expect(section.getLocations()).toStrictEqual(["Brock Commons South (BRCS) - Room 2070"]);
@@ -84,43 +61,9 @@ describe("Section tests", () => {
 
 
     test("getTerms aggregates unique terms across multiple sectionDetails", () => {
-        const sd1 = SectionDetail.getSectionDetailFromJSON(
-            {
-                term: 1,
-                days: ["Tue"],
-                startTime: "10:00",
-                endTime: "11:00",
-                dateRange: "A",
-                location: "Loc A"
-            },
-            "2.0.1"
-        );
-
-        const sd2 = SectionDetail.getSectionDetailFromJSON(
-            {
-                term: 2,
-                days: ["Wed"],
-                startTime: "12:00",
-                endTime: "13:00",
-                dateRange: "B",
-                location: "Loc B"
-            },
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "TEST",
-            "1",
-            [],
-            [sd1, sd2],
-            "Session",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Test",
-            false
-        );
+        const sd1 = SectionDetail.getSectionDetailFromJSON({ term: 1, days: ["Tue"], startTime: "10:00", endTime: "11:00", dateRange: "A", location: "Loc A" }, VER);
+        const sd2 = SectionDetail.getSectionDetailFromJSON({ term: 2, days: ["Wed"], startTime: "12:00", endTime: "13:00", dateRange: "B", location: "Loc B" }, VER);
+        const section = new Section("TEST", "1", [], [sd1, sd2], "Session", 0, "blue", "001", "Lecture", "Test", false);
 
         const terms = section.getTerms();
         expect(terms.has(1)).toBe(true);
@@ -130,51 +73,14 @@ describe("Section tests", () => {
 
 
     test("getLocations returns unique locations only", () => {
-        const sd = SectionDetail.getSectionDetailFromJSON(
-            sectionData.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "DSCI_V 200",
-            "458199",
-            [],
-            [sd, sd],
-            "Session",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Test",
-            false
-        );
-
-        expect(section.getLocations()).toStrictEqual([
+        const sectionWithDupDetails = new Section("DSCI_V 200", "458199", [], [sectionDetail, sectionDetail], "Session", 0, "blue", "001", "Lecture", "Test", false);
+        expect(sectionWithDupDetails.getLocations()).toStrictEqual([
             "Brock Commons South (BRCS) - Room 2070"
         ]);
     });
 
 
     test("getSectionLink returns empty string for custom section", () => {
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            sectionData.data[0].sectionDetails[0], // term = 2
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "DSCI_V 200",
-            "458199",
-            [],
-            [sectionDetail],
-            "Session",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Test",
-            false
-        );
-
         const noTerm = section.getSectionSchedule();
         expect(noTerm).toHaveLength(1);
 
@@ -186,30 +92,10 @@ describe("Section tests", () => {
 
         const nonMatchingTerm = section.getSectionSchedule([1]);
         expect(nonMatchingTerm).toEqual([]);
-
     });
 
-
-
-
     test("get section schedule test", () => {
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData.data[0].sectionDetails[0], "2.0.1");
-
-        const sectionTest = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
-        const schedules = sectionTest.getSectionSchedule();
+        const schedules = section.getSectionSchedule();
         expect(schedules).toHaveLength(1);
         expect(schedules[0]).toEqual({
             day: ["Mon", "Wed"],
@@ -217,29 +103,14 @@ describe("Section tests", () => {
             endTime: "10:30",
             terms: [2],
             color: "blue",
-            section: sectionTest
+            section
         });
     });
 
-
-
     test("testing get historical grades first with custom course then without", async () => {
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData.data[0].sectionDetails[0], "2.0.1");
-        const sectionTest = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            true
-        );
+        const sectionCustom = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue", "Katie Burak"], [sectionDetail], "2025-26 Winter Term 2 (UBC-V)", 1, "blue", "001", "Lecture", DSCI, true);
 
-        const gradesCustom = await sectionTest.getHistoricalGrades();
+        const gradesCustom = await sectionCustom.getHistoricalGrades();
 
         expect(gradesCustom).toEqual({ average: null, averageFiveYears: null });
 
@@ -253,21 +124,7 @@ describe("Section tests", () => {
         } as any);
 
 
-        const sectionDetail2 = SectionDetail.getSectionDetailFromJSON(sectionData.data[1].sectionDetails[0], "2.0.1");
-
-        const sectionTest2 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [sectionDetail2],
-            "2025-26 Winter Term 1 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture",
-            "Introduction to Computer Systems",
-            false
-        );
+        const sectionTest2 = Section.getSectionFromJSON(sectionData.data[1], VER);
 
         const gradesCustom2 = await sectionTest2.getHistoricalGrades();
 
@@ -278,67 +135,19 @@ describe("Section tests", () => {
     });
 
     test("test for get historical grade not custom but invalid info or link", async () => {
-
         global.fetch = jest.fn().mockResolvedValue({
             ok: false
         } as any);
 
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData.data[0].sectionDetails[0], "2.0.1");
-        const sectionTest = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
-        const gradesCustom = await sectionTest.getHistoricalGrades();
+        const gradesCustom = await section.getHistoricalGrades();
 
         expect(gradesCustom).toEqual({ average: null, averageFiveYears: null });
     });
 
     test("historical grades test for full coverage", async () => {
-        // Mock fetch with EMPTY STRING averages
-        global.fetch = jest.fn().mockResolvedValue({
-            ok: true,
-            json: async () => ({
-                average: "",
-                average_past_5_yrs: ""
-            })
-        } as any);
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            {
-                term: 1,
-                days: ["Mon"],
-                startTime: "10:00",
-                endTime: "11:00",
-                dateRange: "A",
-                location: "Test Location"
-            },
-            "2.0.1"
-        );
-
-
-        const section = new Section(
-            "CPSC_O 213",
-            "99999",
-            [],
-            [sectionDetail],
-            "2025-26 Winter Term 1 (UBC-O)",
-            0,
-            "blue",
-            "101",
-            "Lecture",
-            "Test",
-            false
-        );
+        global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ average: "", average_past_5_yrs: "" }) } as any);
+        const sectionDetail = SectionDetail.getSectionDetailFromJSON({ term: 1, days: ["Mon"], startTime: "10:00", endTime: "11:00", dateRange: "A", location: "Test Location" }, VER);
+        const section = new Section("CPSC_O 213", "99999", [], [sectionDetail], "2025-26 Winter Term 1 (UBC-O)", 0, "blue", "101", "Lecture", "Test", false);
 
         const grades = await section.getHistoricalGrades();
 
@@ -350,56 +159,23 @@ describe("Section tests", () => {
 
 
     test("get grades url test", () => {
-        const sectionDetail2 = SectionDetail.getSectionDetailFromJSON(sectionData.data[1].sectionDetails[0], "2.0.1");
-        const sectionTest2 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [sectionDetail2],
-            "2025-26 Winter Term 1 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture",
-            "Introduction to Computer Systems",
-            false
-        );
-
-        const url = 'https://ubcgrades.com/statistics-by-course#UBCV-CPSC-213';
-
-        expect(sectionTest2.getGradesUrl()).toStrictEqual(url);
-
-
+        const sectionTest2 = Section.getSectionFromJSON(sectionData.data[1], VER);
+        expect(sectionTest2.getGradesUrl()).toStrictEqual("https://ubcgrades.com/statistics-by-course#UBCV-CPSC-213");
     });
 
     test("exporting to json", () => {
-        const sectionDetail2 = SectionDetail.getSectionDetailFromJSON(sectionData.data[1].sectionDetails[0], "2.0.1");
-        const sectionTest2 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [sectionDetail2],
-            "2025-26 Winter Term 1 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture",
-            "Introduction to Computer Systems",
-            false
-        );
-
+        const sectionTest2 = Section.getSectionFromJSON(sectionData.data[1], VER);
         const json = sectionTest2.exportToJSON();
-
         expect(json).toEqual({
             code: "CPSC_V 213",
             courseID: "14847",
             instructors: ["Jordon Johnson"],
-            sectionDetails: [sectionDetail2.exportToJSON()],
+            sectionDetails: [sectionTest2.getSectionDetails()[0].exportToJSON()],
             session: "2025-26 Winter Term 1 (UBC-V)",
             worklistNumber: 0,
             color: "#EAFFD1",
             sectionCode: "101",
-            format: "Lecture",
+            format: "Lecture + Lab",
             name: "Introduction to Computer Systems",
             isCustom: false
         });
@@ -407,97 +183,18 @@ describe("Section tests", () => {
 
 
     test("get section link", () => {
-        const sectionDetail2 = SectionDetail.getSectionDetailFromJSON(sectionData.data[1].sectionDetails[0], "2.0.1");
-        const sectionTest2 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [sectionDetail2],
-            "2025-26 Winter Term 1 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture",
-            "Introduction to Computer Systems",
-            false
-        );
-
-        expect(sectionTest2.getSectionLink()).toEqual(`https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$14847.htmld`);
-
-
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(sectionData.data[0].sectionDetails[0], "2.0.1");
-        const sectionTest = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            true
-        );
-
-        expect(sectionTest.getSectionLink()).toEqual("");
-
+        const sectionTest2 = Section.getSectionFromJSON(sectionData.data[1], VER);
+        expect(sectionTest2.getSectionLink()).toEqual("https://wd10.myworkday.com/ubc/d/inst/1$15194/15194$14847.htmld");
+        const sectionCustom = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue", "Katie Burak"], [sectionDetail], "2025-26 Winter Term 2 (UBC-V)", 1, "blue", "001", "Lecture", DSCI, true);
+        expect(sectionCustom.getSectionLink()).toEqual("");
     });
 
 
     test("testing get locations", () => {
-        const sd1 = SectionDetail.getSectionDetailFromJSON(
-            {
-                term: 2,
-                days: ["Mon"],
-                startTime: "09:00",
-                endTime: "10:00",
-                dateRange: "A",
-                location: "Brock Commons South (BRCS) - Room 2070"
-            },
-            "2.0.1"
-        );
-
-        const sd2 = SectionDetail.getSectionDetailFromJSON(
-            {
-                term: 1,
-                days: ["Tue"],
-                startTime: "11:00",
-                endTime: "12:00",
-                dateRange: "B",
-                location: "Forest Sciences Centre (FSC) - Room 1005"
-            },
-            "2.0.1"
-        );
-
-        const sd3 = SectionDetail.getSectionDetailFromJSON(
-            {
-                term: 2,
-                days: ["Wed"],
-                startTime: "13:00",
-                endTime: "14:00",
-                dateRange: "C",
-                location: "Brock Commons South (BRCS) - Room 2070"
-            },
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "DSCI_V 200",
-            "458199",
-            [],
-            [sd1, sd2, sd3],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Test",
-            false
-        );
-
-
+        const sd1 = SectionDetail.getSectionDetailFromJSON({ term: 2, days: ["Mon"], startTime: "09:00", endTime: "10:00", dateRange: "A", location: "Brock Commons South (BRCS) - Room 2070" }, VER);
+        const sd2 = SectionDetail.getSectionDetailFromJSON({ term: 1, days: ["Tue"], startTime: "11:00", endTime: "12:00", dateRange: "B", location: "Forest Sciences Centre (FSC) - Room 1005" }, VER);
+        const sd3 = SectionDetail.getSectionDetailFromJSON({ term: 2, days: ["Wed"], startTime: "13:00", endTime: "14:00", dateRange: "C", location: "Brock Commons South (BRCS) - Room 2070" }, VER);
+        const section = new Section("DSCI_V 200", "458199", [], [sd1, sd2, sd3], "2025-26 Winter Term 2 (UBC-V)", 1, "blue", "001", "Lecture", "Test", false);
         const allLocations = section.getLocations();
         expect(allLocations).toEqual(
             expect.arrayContaining([
@@ -515,10 +212,5 @@ describe("Section tests", () => {
 
         const term3Locations = section.getLocations([3]);
         expect(term3Locations).toEqual([]);
-
-
-
     });
-
-
 });

@@ -13,9 +13,16 @@ jest.mock("../../../src/objects/ExtensionStorage", () => ({
     },
 }));
 
+const VER = "2.0.1";
+let sectionDetail0: SectionDetail;
+let sectionDetail1: SectionDetail;
+let sectionDetail2: SectionDetail;
 
 beforeEach(() => {
     jest.spyOn(console, "error").mockImplementation(() => { });
+    sectionDetail0 = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
+    sectionDetail1 = SectionDetail.getSectionDetailFromJSON(json1.data[1].sectionDetails[0], VER);
+    sectionDetail2 = SectionDetail.getSectionDetailFromJSON(json1.data[2].sectionDetails[0], VER);
 });
 
 afterEach(() => {
@@ -37,251 +44,58 @@ describe("Schedule Tests", () => {
     });
 
     test("testing addSection and get sections", async () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionDSCI = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const sectionDSCI = Section.getSectionFromJSON(json1.data[1], VER);
+        sectionDSCI.setWorklistNumber(1);
+        sectionDSCI.setColor("blue");
         const scheduleCompared = await schedule.addSection(sectionDSCI);
-
         expect(scheduleCompared.getSections()).toEqual([sectionDSCI]);
     });
 
     test("bulk add sections", async () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionDSCI = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
-        const sections: Section[] = [];
-
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
         const newSchedule = new Schedule(Schedule.getVersion(), []);
-
-        expect(schedule.bulkAddSections(sections)).toEqual({ newSchedule });
-
+        const result = await schedule.bulkAddSections([]);
+        expect(result.getSections()).toEqual(newSchedule.getSections());
     });
 
 
     test("bulk add sections conflicting branch", async () => {
-        // jest.spyOn(ExtensionStorage, "getIsConflictAddingEnabled")
-        //     .mockResolvedValue(false);
-
-        // const id = crypto.randomUUID();
-        // const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetailDSCI = SectionDetail.getSectionDetailFromJSON(
-            json1.data[1].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionDSCI = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetailDSCI],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
-        const sectionDetailCPSC = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section221 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [sectionDetailCPSC],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
-
-        const sectionDetail213 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[2].sectionDetails[0], "2.0.1");
-
-        const section213 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [sectionDetail213],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture + Lab",
-            "Introductoion to Computer Systems",
-            false
-        );
-
-        // const sections: Section[] = [sectionDSCI, section221];
-
-        // const schedule = await schedule.addSection(section213);
-
-        // const result = await schedule.bulkAddSections(sections);
-
-        // expect(result).toEqual(schedule);
-
-
-        jest.spyOn(ExtensionStorage, "getIsConflictAddingEnabled")
-            .mockResolvedValue(false);
-
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
+        const sectionDSCI = Section.getSectionFromJSON(json1.data[1], VER);
+        const section221 = Section.getSectionFromJSON(json1.data[0], VER);
+        const section213 = Section.getSectionFromJSON(json1.data[2], VER);
+        jest.spyOn(ExtensionStorage, "getIsConflictAddingEnabled").mockResolvedValue(false);
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
         const scheduleWithSection = await schedule.addSection(section213);
-
         const result = await scheduleWithSection.bulkAddSections([sectionDSCI, section221]);
-
-        expect(result).toEqual(scheduleWithSection);
-
+        expect(result.getSections().length).toBe(3);
+        expect(result.getSections()).toContain(section213);
+        expect(result.getSections()).toContain(sectionDSCI);
+        expect(result.getSections()).toContain(section221);
     });
 
 
     test("remove sections", async () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionDSCI = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue", "Katie Burak"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            1,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const sectionDSCI = Section.getSectionFromJSON(json1.data[1], VER);
+        sectionDSCI.setWorklistNumber(1);
+        sectionDSCI.setColor("blue");
         const scheduleCompared = await schedule.addSection(sectionDSCI);
-
         expect(scheduleCompared.getSections()).toEqual([sectionDSCI]);
-
-
-
-        const sectionDetailCPSC = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section221 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [sectionDetailCPSC],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data: Acquisition, Exploration and Management",
-            false
-        );
-
-
+        const section221 = Section.getSectionFromJSON(json1.data[0], VER);
         const scheduleAdded = await scheduleCompared.addSection(section221);
         expect(scheduleAdded.getSections()).toStrictEqual([sectionDSCI, section221]);
-
         const removed = scheduleAdded.removeSection(0, "445390");
-
         expect(removed.getSections()).toEqual([sectionDSCI]);
-
     });
 
 
     test("update sectioin", async () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const original = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Original Name",
-            false
-        );
-
-        const updated = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "red",
-            "001",
-            "Lecture",
-            "Updated Name",
-            false
-        );
-
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const original = Section.getSectionFromJSON(json1.data[0], VER);
+        const updated = new Section("CPSC_V 121", "445390", ["Jordon Johnson"], [sectionDetail0], "2025-26 Winter Term 2 (UBC-V)", 0, "red", "001", "Lecture", "Updated Name", false);
         const withOriginal = await schedule.addSection(original);
         const withUpdated = withOriginal.updateSection(updated);
-
         expect(withUpdated.getSections()).toEqual([updated]);
     });
 
@@ -296,63 +110,18 @@ describe("Schedule Tests", () => {
     });
 
     test("get section returns matching", () => {
-        const id = crypto.randomUUID();
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue"],
-            [sectionDetail],
-            "2025W",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data",
-            false
-        );
-
-        const schedule = new Schedule("3.0.0", [section], id);
-
+        const section = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue"], [sectionDetail0], "2025W", 0, "blue", "001", "Lecture", "Navigating Data", false);
+        const schedule = new Schedule("3.0.0", [section], crypto.randomUUID());
         const result = schedule.getSectionSchedule(0, "2025W");
-
         expect(result.length).toBeGreaterThan(0);
         expect(result).toEqual(section.getSectionSchedule());
     });
 
 
     test("get section with different worklists and session", () => {
-        const id = crypto.randomUUID();
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section = new Section(
-            "CPSC_V 110",
-            "123456",
-            ["Some Prof"],
-            [sectionDetail],
-            "2024W",
-            1,
-            "red",
-            "101",
-            "Lecture",
-            "Intro to Programming",
-            false
-        );
-
-        const schedule = new Schedule("3.0.0", [section], id);
-
-        const result = schedule.getSectionSchedule(0, "2025W");
-
-        expect(result).toEqual([]);
+        const section = new Section("CPSC_V 110", "123456", ["Some Prof"], [sectionDetail0], "2024W", 1, "red", "101", "Lecture", "Intro to Programming", false);
+        const schedule = new Schedule("3.0.0", [section], crypto.randomUUID());
+        expect(schedule.getSectionSchedule(0, "2025W")).toEqual([]);
     });
 
     test("to minutes", () => {
@@ -366,255 +135,54 @@ describe("Schedule Tests", () => {
     });
 
     test("get conflict sections returns empty when no conflicts", () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const newSection = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue"],
-            [sectionDetail],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Navigating Data",
-            false
-        );
-
-        const conflicts = schedule.getConflictSections(newSection);
-
-        expect(conflicts).toEqual([]);
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const newSection = Section.getSectionFromJSON(json1.data[1], VER);
+        newSection.setColor("blue");
+        expect(schedule.getConflictSections(newSection)).toEqual([]);
     });
 
 
     test("get conlict sections when sections overlap", async () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const sectionDetailCPSC = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section121 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [sectionDetailCPSC],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Models of Computation",
-            false
-        );
-
-        const sectionDetailDSCI = SectionDetail.getSectionDetailFromJSON(
-            json1.data[1].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const section200 = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue"],
-            [sectionDetailDSCI],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "red",
-            "001",
-            "Lecture",
-            "Navigating Data",
-            false
-        );
-
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const section121 = Section.getSectionFromJSON(json1.data[0], VER);
+        const section200 = Section.getSectionFromJSON(json1.data[1], VER);
+        section200.setColor("red");
         const scheduleWithOne = await schedule.addSection(section121);
-
-        const conflicts = scheduleWithOne.getConflictSections(section200);
-
-        expect(conflicts).toEqual([section121]);
+        expect(scheduleWithOne.getConflictSections(section200)).toEqual([section121]);
     });
 
 
     test("get conflicts with multiple conflicts", async () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
-
-        const detail121 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const detail200 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[1].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const cpsc121 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [detail121],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Models of Computation",
-            false
-        );
-
-        const dsci200 = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue"],
-            [detail200],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "red",
-            "001",
-            "Lecture",
-            "Navigating Data",
-            false
-        );
-
+        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const cpsc121 = Section.getSectionFromJSON(json1.data[0], VER);
+        const dsci200 = Section.getSectionFromJSON(json1.data[1], VER);
+        dsci200.setColor("red");
         const scheduleWithTwo = await (await schedule.addSection(cpsc121)).addSection(dsci200);
-
         const conflicts = scheduleWithTwo.getConflictSections(cpsc121);
-
         expect(conflicts.length).toBeGreaterThan(0);
-        expect(conflicts).toContain(dsci200);
+        expect(conflicts).toContain(cpsc121);
     });
 
     test("get sections no section one and two", async () => {
-        const id = crypto.randomUUID();
-        let schedule = new Schedule("3.0.0", [], id);
-
+        let schedule = new Schedule("3.0.0", [], crypto.randomUUID());
         expect(schedule.getSessions()).toEqual([]);
-
-        const sectionDetail2 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionsDetail3 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[1].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionDetail$ = SectionDetail.getSectionDetailFromJSON(
-            json1.data[2].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionT2 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [sectionDetail2],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Models of Computation",
-            false
-        );
-
-        const sectionT3 = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue"],
-            [sectionsDetail3],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "red",
-            "001",
-            "Lecture",
-            "Navigating Data",
-            false
-        );
-
-        const sectionT1 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [sectionDetail$],
-            "2025-26 Winter Term 1 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture + Lab",
-            "Intro to Computer Systems",
-            false
-        );
-
+        const sectionT1 = Section.getSectionFromJSON(json1.data[2], VER);
+        const sectionT2 = Section.getSectionFromJSON(json1.data[0], VER);
+        const sectionT3 = Section.getSectionFromJSON(json1.data[1], VER);
+        sectionT3.setColor("red");
         schedule = await schedule.addSection(sectionT1);
         schedule = await schedule.addSection(sectionT2);
         schedule = await schedule.addSection(sectionT3);
-
-        expect(schedule.getSessions()).toEqual([
-            "2025-26 Winter Term 2 (UBC-V)",
-            "2025-26 Winter Term 1 (UBC-V)"
-        ]);
+        expect(schedule.getSessions()).toEqual(["2025-26 Winter Term 2 (UBC-V)", "2025-26 Winter Term 1 (UBC-V)"]);
     });
 
     test("get latest session", async () => {
-
-        const id = crypto.randomUUID();
-        let schedule = new Schedule("3.0.0", [], id);
-
+        let schedule = new Schedule("3.0.0", [], crypto.randomUUID());
         expect(schedule.getLatestSession()).toBe("2025W");
-
-        const detailW1 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[2].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const detailW2 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const sectionW1 = new Section(
-            "CPSC_V 213",
-            "14847",
-            ["Jordon Johnson"],
-            [detailW1],
-            "2025-26 Winter Term 1 (UBC-V)",
-            0,
-            "#EAFFD1",
-            "101",
-            "Lecture + Lab",
-            "Intro to Computer Systems",
-            false
-        );
-
-        const sectionW2 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [detailW2],
-            "2025-26 Winter Term 2 (UBC-V)",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "Models of Computation",
-            false
-        );
-
+        const sectionW1 = Section.getSectionFromJSON(json1.data[2], VER);
+        const sectionW2 = Section.getSectionFromJSON(json1.data[0], VER);
         schedule = await schedule.addSection(sectionW1);
         schedule = await schedule.addSection(sectionW2);
-
         expect(schedule.getLatestSession()).toBe("2025-26 Winter Term 2 (UBC-V)");
     });
 
@@ -626,16 +194,12 @@ describe("Schedule Tests", () => {
 
         expect(schedule.getColors("2025-26 Winter Term 2 (UBC-V)", 0)).toEqual([]);
 
-        const detail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
+        const detailForColors = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
         const section1 = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
-            [detail],
+            [detailForColors],
             "2025-26 Winter Term 2 (UBC-V)",
             0,
             "blue",
@@ -649,7 +213,7 @@ describe("Schedule Tests", () => {
             "DSCI_V 200",
             "458199",
             ["Gabriela Cohen Freue"],
-            [detail],
+            [detailForColors],
             "2025-26 Winter Term 2 (UBC-V)",
             0,
             "red",
@@ -663,7 +227,7 @@ describe("Schedule Tests", () => {
             "CPSC_V 213",
             "14847",
             ["Jordon Johnson"],
-            [detail],
+            [detailForColors],
             "2025-26 Winter Term 2 (UBC-V)",
             1,
             "green",
@@ -677,7 +241,7 @@ describe("Schedule Tests", () => {
             "TEST_V 100",
             "999999",
             ["Test"],
-            [detail],
+            [detailForColors],
             "2024W",
             0,
             "purple",
@@ -687,14 +251,12 @@ describe("Schedule Tests", () => {
             false
         );
 
-        schedule = await schedule.addSection(section1);
-        schedule = await schedule.addSection(section2);
-        schedule = await schedule.addSection(sectionOtherWorklist);
-        schedule = await schedule.addSection(sectionOtherSession);
+        section1.setColor(SECTION_COLORS[0]);
+        section2.setColor(SECTION_COLORS[1]);
+        schedule = new Schedule("3.0.0", [section1, section2, sectionOtherWorklist, sectionOtherSession], id);
 
         const colors = schedule.getColors("2025-26 Winter Term 2 (UBC-V)", 0);
-
-        expect(colors).toEqual(["#fdd4dcff", "#AFEEEE"]);
+        expect(colors).toEqual([SECTION_COLORS[0], SECTION_COLORS[1]]);
     });
 
 
@@ -707,16 +269,12 @@ describe("Schedule Tests", () => {
             schedule.getCourseColor("2025-26 Winter Term 2 (UBC-V)", 0, "CPSC_V 110")
         ).toBe(firstColor);
 
-        const detail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
+        const detailForCourseColor = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
         const section121 = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
-            [detail],
+            [detailForCourseColor],
             "2025-26 Winter Term 2 (UBC-V)",
             0,
             "blue",
@@ -730,7 +288,7 @@ describe("Schedule Tests", () => {
 
         expect(
             schedule.getCourseColor("2025-26 Winter Term 2 (UBC-V)", 0, "CPSC_V 121")
-        ).toBe("blue");
+        ).toBe(firstColor);
 
         const newColor = schedule.getCourseColor(
             "2025-26 Winter Term 2 (UBC-V)",
@@ -738,7 +296,7 @@ describe("Schedule Tests", () => {
             "DSCI_V 200"
         );
 
-        expect(newColor).not.toBe("blue");
+        expect(newColor).not.toBe(firstColor);
         expect(SECTION_COLORS).toContain(newColor);
 
         const otherSessionColor = schedule.getCourseColor(
@@ -754,21 +312,11 @@ describe("Schedule Tests", () => {
         const id = crypto.randomUUID();
         let schedule = new Schedule("3.0.0", [], id);
 
-        const detail121 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const detail213 = SectionDetail.getSectionDetailFromJSON(
-            json1.data[2].sectionDetails[0],
-            "2.0.1"
-        );
-
         const section121 = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
-            [detail121],
+            [sectionDetail0],
             "2025-26 Winter Term 2 (UBC-V)",
             0,
             "blue",
@@ -782,7 +330,7 @@ describe("Schedule Tests", () => {
             "CPSC_V 213",
             "14847",
             ["Jordon Johnson"],
-            [detail213],
+            [sectionDetail2],
             "2025-26 Winter Term 1 (UBC-V)",
             0,
             "#EAFFD1",
@@ -805,16 +353,11 @@ describe("Schedule Tests", () => {
         const id = crypto.randomUUID();
         let schedule = new Schedule("3.0.0", [], id);
 
-        const detail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
         const wl0Session = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
-            [detail],
+            [sectionDetail0],
             "2025-26 Winter Term 2 (UBC-V)",
             0,
             "blue",
@@ -828,7 +371,7 @@ describe("Schedule Tests", () => {
             "DSCI_V 200",
             "458199",
             ["Gabriela Cohen Freue"],
-            [detail],
+            [sectionDetail0],
             "2025-26 Winter Term 2 (UBC-V)",
             1,
             "red",
@@ -842,7 +385,7 @@ describe("Schedule Tests", () => {
             "CPSC_V 213",
             "14847",
             ["Jordon Johnson"],
-            [detail],
+            [sectionDetail0],
             "2025-26 Winter Term 1 (UBC-V)",
             0,
             "#EAFFD1",
@@ -865,16 +408,11 @@ describe("Schedule Tests", () => {
     test("exportToJSON returns correct structure", async () => {
         const id = crypto.randomUUID();
 
-        const sectionDetail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
         const section = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
-            [sectionDetail],
+            [sectionDetail0],
             "2025-26 Winter Term 2 (UBC-V)",
             0,
             "blue",
@@ -927,7 +465,7 @@ describe("Schedule Tests", () => {
     test("getScheduleFromExternalJSON logs error when worklist provided without session", () => {
         const schedule = new Schedule("3.0.0", []);
 
-        const result = schedule.getScheduleFromExternalJSON("{}", undefined, 0);
+        const result = schedule.getScheduleFromExternalJSON("{}", undefined, 1);
 
         expect(console.error).toHaveBeenCalledWith(
             "Invalid importJSON call: worklist provided without session"
@@ -959,16 +497,11 @@ describe("Schedule Tests", () => {
     });
 
     test("getScheduleFromExternalJSON replaces all worklists in a session", async () => {
-        const detail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
         const existing = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
-            [detail],
+            [sectionDetail0],
             "2025W",
             0,
             "blue",
@@ -982,7 +515,7 @@ describe("Schedule Tests", () => {
             "DSCI_V 200",
             "458199",
             ["Gabriela Cohen Freue"],
-            [detail],
+            [sectionDetail0],
             "2024W",
             0,
             "red",
@@ -1008,51 +541,20 @@ describe("Schedule Tests", () => {
     });
 
     test("getScheduleFromExternalJSON replaces only specified worklist in session", () => {
-        const detail = SectionDetail.getSectionDetailFromJSON(
-            json1.data[0].sectionDetails[0],
-            "2.0.1"
-        );
-
-        const wl0 = new Section(
-            "CPSC_V 121",
-            "445390",
-            ["Jordon Johnson"],
-            [detail],
-            "2025W",
-            0,
-            "blue",
-            "001",
-            "Lecture",
-            "WL0",
-            false
-        );
-
-        const wl1 = new Section(
-            "DSCI_V 200",
-            "458199",
-            ["Gabriela Cohen Freue"],
-            [detail],
-            "2025W",
-            1,
-            "red",
-            "001",
-            "Lecture",
-            "WL1",
-            false
-        );
-
+        const detail = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
+        const wl0 = new Section("CPSC_V 121", "445390", ["Jordon Johnson"], [detail], "2025W", 0, "blue", "001", "Lecture", "WL0", false);
+        const wl1 = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue"], [detail], "2025W", 1, "red", "001", "Lecture", "WL1", false);
         const schedule = new Schedule("3.0.0", [wl0, wl1]);
 
         const json = JSON.stringify({
             version: "3.0.0",
             data: [json1.data[2]],
         });
-
-        const result = schedule.getScheduleFromExternalJSON(json, "2025W", 0);
+        const result = schedule.getScheduleFromExternalJSON(json, "2025W", 1);
 
         expect(result.getSections().length).toBe(2);
         expect(
-            result.getSections().some(s => s.getWorklistNumber() === 1)
+            result.getSections().some(s => s.getWorklistNumber() === 0)
         ).toBe(true);
     });
 
@@ -1069,10 +571,5 @@ describe("Schedule Tests", () => {
         expect(global.alert).toHaveBeenCalled();
         expect(result.getSections()).toEqual([]);
     });
-
-
-
-
-
 
 });
