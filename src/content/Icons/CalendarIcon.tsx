@@ -1,15 +1,15 @@
-import { useState } from "react"
+import { useState } from "react";
 
 interface IProps {
-  size: number,
-  onClick: () => void
+  size: number;
+  onClick: () => void;
 }
 
-const colorHover = "#ffffffff"
-const color = "#efefefff"
+const colorHover = "#ffffffff";
+const color = "#efefefff";
 
 const CalendarIcon = ({ size, onClick }: IProps) => {
-  const [hovered, setHovered] = useState(false)
+  const [hovered, setHovered] = useState(false);
   return (
     <svg
       width={`${size}px`}
@@ -30,7 +30,7 @@ const CalendarIcon = ({ size, onClick }: IProps) => {
         strokeLinejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default CalendarIcon
+export default CalendarIcon;

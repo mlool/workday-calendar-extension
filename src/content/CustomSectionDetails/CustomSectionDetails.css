@@ -1,187 +1,187 @@
 .custom-section-details-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .custom-section-details-popup {
-    background-color: var(--bg-color);
-    width: 90%;
-    max-width: 400px;
-    max-height: 90vh;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-    padding: 10px;
-    box-sizing: border-box;
+  background-color: var(--bg-color);
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 5px;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .popup-title {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--text-color);
-    font-weight: 600;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-color);
+  font-weight: 600;
 }
 
 .popup-content {
-    flex: 1;
-    overflow-y: auto;
-    font-size: 0.9rem;
-    color: var(--text-dark);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    /* Spacing between major sections */
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* Spacing between major sections */
 }
 
 .detail-section {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .detail-header {
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: var(--text-color);
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 2px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text-color);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2px;
 }
 
 /* Input Fields */
 .input-group {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.7rem;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7rem;
+  gap: 5px;
 }
 
 .input-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-color);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-color);
 }
 
 .input-field {
-    padding: 6px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-size: 0.75rem;
+  padding: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 0.75rem;
 }
 
 .radio-group {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .day-selector {
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 .button-group {
-    display: flex;
-    gap: 5px;
-    align-items: center;
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 
 .custom-control-button {
-    padding: 2px 12px;
-    border: 1px solid var(--border-secondary);
-    background-color: var(--control-button-bg);
-    border-radius: 4px;
-    font-size: 0.7rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-dark);
+  padding: 2px 12px;
+  border: 1px solid var(--border-secondary);
+  background-color: var(--control-button-bg);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-dark);
 }
 
 .custom-control-button:hover {
-    background-color: var(--control-button-hover);
-    border-color: var(--border-hover);
+  background-color: var(--control-button-hover);
+  border-color: var(--border-hover);
 }
 
 .custom-control-button.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
 }
 
 .time-selector {
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 .time-input {
-    width: 45%;
+  width: 45%;
 }
 
 .popup-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-color);
-    flex-shrink: 0;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  gap: 10px;
 }
 
 .custom-btn-save {
-    background-color: var(--button-primary);
-    color: var(--text-white);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    width: 100%;
-    text-align: center;
+  background-color: var(--button-primary);
+  color: var(--text-white);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  text-align: center;
 }
 
 .custom-btn-save:hover {
-    background-color: var(--button-primary-hover);
+  background-color: var(--button-primary-hover);
 }
 
 .custom-btn-delete {
-    background-color: var(--button-warning);
-    color: var(--text-white);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    width: 100%;
-    text-align: center;
+  background-color: var(--button-warning);
+  color: var(--text-white);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  text-align: center;
 }
 
 .custom-btn-delete:hover {
-    background-color: var(--button-warning-hover);
+  background-color: var(--button-warning-hover);
 }
 
 /* .btn {

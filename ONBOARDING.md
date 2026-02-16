@@ -110,3 +110,9 @@ These classes are the backbone of the application's logic.
   2.  Enable "Developer mode".
   3.  Click "Load unpacked".
   4.  Select the `build` directory (generated after running the build script).
+
+## Before Creating a PR
+
+- **Tests**: `yarn run test`
+- **Linter**: `yarn run lint`
+- **Formatter**: `yarn run fmt` to auto format code, run `yarn run fmt-fix`

@@ -1,64 +1,64 @@
-import Browser from "webextension-polyfill"
-import fetchProfRating from "../backends/rateMyProf/rateMyProf"
+import Browser from "webextension-polyfill";
+import fetchProfRating from "../backends/rateMyProf/rateMyProf";
 
-let portFromContentScript: chrome.runtime.Port | null
+let portFromContentScript: chrome.runtime.Port | null;
 
 chrome.runtime.onConnect.addListener((port) => {
-  console.assert(port.name === "courseHover")
-  portFromContentScript = port
+  console.assert(port.name === "courseHover");
+  portFromContentScript = port;
   portFromContentScript.onDisconnect.addListener(() => {
-    portFromContentScript = null
-  })
-})
+    portFromContentScript = null;
+  });
+});
 
 Browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "HOVER" && portFromContentScript) {
-    portFromContentScript.postMessage(message.course)
+    portFromContentScript.postMessage(message.course);
   }
   if (message.type === "RMP") {
-    fetchProfRating(message.prof, message.isVancouver).then(sendResponse)
-    return true
+    fetchProfRating(message.prof, message.isVancouver).then(sendResponse);
+    return true;
   }
-})
+});
 
 // When user clicks on extension button
 chrome.action.onClicked.addListener((tab) => {
   if (tab.id !== undefined) {
-    chrome.tabs.sendMessage(tab.id, { toggleContainer: true })
+    chrome.tabs.sendMessage(tab.id, { toggleContainer: true });
   } else {
-    console.error("Tab ID is undefined.")
+    console.error("Tab ID is undefined.");
   }
-})
+});
 
 // On Install/Reload: Manually ensure authentication cookies are attached to Workday requests.
 // This works around Manifest V3 Service Worker limitations where cookies might not be
 // automatically attached to fetch requests. By capturing existing cookies and forcing
 // them via declarativeNetRequest, we ensure the background script acts as the logged-in user.
 chrome.runtime.onInstalled.addListener(() => {
-  ; (async () => {
+  (async () => {
     // Get existing cookies
     const cookiePromise = new Promise<string | undefined>((resolve) => {
       chrome.cookies.getAll({ url: "https://*.myworkday.com/*" }, (cookies) => {
         if (!cookies) {
-          resolve(undefined)
-          return
+          resolve(undefined);
+          return;
         }
 
-        let cookieHeader = ""
+        let cookieHeader = "";
         for (const cookie of cookies) {
-          cookieHeader += `${cookie.name}=${cookie.value}; `
+          cookieHeader += `${cookie.name}=${cookie.value}; `;
         }
-        resolve(cookieHeader.trim())
-      })
-    })
+        resolve(cookieHeader.trim());
+      });
+    });
 
     try {
       // Wait for the cookie promise to resolve
-      const cookieHeader = await cookiePromise
+      const cookieHeader = await cookiePromise;
 
       if (!cookieHeader) {
         // Handle case where no cookies were retrieved (optional)
-        return
+        return;
       }
 
       // Update dynamic rules with the retrieved cookie header.
@@ -89,11 +89,11 @@ chrome.runtime.onInstalled.addListener(() => {
             },
           },
         ],
-      })
+      });
     } catch (error) {
-      console.error("Error retrieving cookies:", error)
+      console.error("Error retrieving cookies:", error);
     }
-  })()
-})
+  })();
+});
 
-export { }
+export {};

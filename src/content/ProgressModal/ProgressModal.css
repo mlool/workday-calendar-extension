@@ -1,66 +1,66 @@
 .progress-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .progress-modal-popup {
-    background-color: var(--bg-color);
-    width: 90%;
-    max-width: 600px;
-    height: 10%;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-    padding: 10px;
-    box-sizing: border-box;
+  background-color: var(--bg-color);
+  width: 90%;
+  max-width: 600px;
+  height: 10%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .progress-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 5px;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .progress-modal-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .progress-modal-content progress {
-    width: 90%;
-    height: 15px;
-    border-radius: 4px;
-    /* Remove default appearance to apply custom styles */
-    -webkit-appearance: none;
-    appearance: none;
+  width: 90%;
+  height: 15px;
+  border-radius: 4px;
+  /* Remove default appearance to apply custom styles */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .progress-modal-content progress::-webkit-progress-bar {
-    background-color: #e0e0e0;
-    border-radius: 4px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
 }
 
 .progress-modal-content progress::-webkit-progress-value {
-    background-color: #007bff;
-    border-radius: 4px;
+  background-color: #007bff;
+  border-radius: 4px;
 }

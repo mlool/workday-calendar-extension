@@ -1,15 +1,15 @@
-import { useState } from "react"
+import { useState } from "react";
 
 interface IProps {
-  size: number
-  href: string
+  size: number;
+  href: string;
 }
 
-const color = "#555555"
-const hoverColor = "#333333"
+const color = "#555555";
+const hoverColor = "#333333";
 
 const ExternalLinkIcon = ({ size, href }: IProps) => {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
   const handleClick = () => {
     window.open(href, "_blank");
   };
@@ -35,7 +35,7 @@ const ExternalLinkIcon = ({ size, href }: IProps) => {
         strokeLinejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default ExternalLinkIcon
+export default ExternalLinkIcon;

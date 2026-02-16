@@ -1,17 +1,17 @@
 .top-bar {
-    height: 27px;
-    background-color: var(--primary-color);
-    width: 100%;
-    margin-bottom: 2px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  height: 27px;
+  background-color: var(--primary-color);
+  width: 100%;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .top-bar-icon {
-    padding-left: 5px;
-    padding-right: 5px;
-    display: flex;
-    align-items: center;
-    gap: 3px
+  padding-left: 5px;
+  padding-right: 5px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }

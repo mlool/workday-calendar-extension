@@ -1,15 +1,15 @@
-import Schedule from "../../objects/Schedule"
-import Section from "../../objects/Section"
-import { useState, useEffect } from "react"
+import Schedule from "../../objects/Schedule";
+import Section from "../../objects/Section";
+import { useState, useEffect } from "react";
 
-import Calendar from "../Calendar/Calendar"
+import Calendar from "../Calendar/Calendar";
 import CalendarControls from "../CalendarControls/CalendarControls";
 import NewSectionControl from "../NewSectionControl/NewSectionControl";
 import SectionDetails from "../SectionDetails/SectionDetails";
 
 import CustomSectionDetails from "../CustomSectionDetails/CustomSectionDetails";
 
-import "./App.css"
+import "./App.css";
 import WorklistControl from "../WorklistControl/WorklistControl";
 import ExtensionStorage from "../../objects/ExtensionStorage";
 import ProgressModal from "../ProgressModal/ProgressModal";
@@ -30,134 +30,160 @@ function App() {
   const [currentSession, setCurrentSession] = useState<string>("2025W");
   const [availableSessions, setAvailableSessions] = useState<string[]>([]);
 
-  const [schedule, setSchedule] = useState<Schedule>(new Schedule())
-  const [newSection, setNewSection] = useState<Section | null>(null)
-  const [selectedSection, setSelectedSection] = useState<Section | null>(null)
-  const [creatingCustomSection, setCreatingCustomSection] = useState<boolean>(false)
+  const [schedule, setSchedule] = useState<Schedule>(new Schedule());
+  const [newSection, setNewSection] = useState<Section | null>(null);
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
+  const [creatingCustomSection, setCreatingCustomSection] =
+    useState<boolean>(false);
 
-  const [currentView, setCurrentView] = useState<ExtensionViews>(ExtensionViews.calendar)
-  const [isLoaded, setIsLoaded] = useState<boolean>(false)
+  const [currentView, setCurrentView] = useState<ExtensionViews>(
+    ExtensionViews.calendar
+  );
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const syncInitialStorage = async () => {
-      const fetchedNewSection = await ExtensionStorage.getNewSection()
+      const fetchedNewSection = await ExtensionStorage.getNewSection();
       if (fetchedNewSection) {
-        setNewSection(fetchedNewSection)
+        setNewSection(fetchedNewSection);
       }
 
-      const fetchedSchedule = await ExtensionStorage.getSchedule()
+      const fetchedSchedule = await ExtensionStorage.getSchedule();
       if (fetchedSchedule) {
-        setSchedule(fetchedSchedule)
+        setSchedule(fetchedSchedule);
         setAvailableSessions(fetchedSchedule.getSessions());
         setCurrentSession(fetchedSchedule.getLatestSession());
       }
 
-      const fetchedCurrentTerm = await ExtensionStorage.getCurrentTerm()
+      const fetchedCurrentTerm = await ExtensionStorage.getCurrentTerm();
       if (fetchedCurrentTerm) {
-        setCurrentTerm(fetchedCurrentTerm)
+        setCurrentTerm(fetchedCurrentTerm);
       }
 
-      const fetchedCurrentSession = await ExtensionStorage.getCurrentSession()
+      const fetchedCurrentSession = await ExtensionStorage.getCurrentSession();
       if (fetchedCurrentSession) {
-        setCurrentSession(fetchedCurrentSession)
+        setCurrentSession(fetchedCurrentSession);
       }
 
-      const fetchedCurrentWorklist = await ExtensionStorage.getCurrentWorklistNumber()
+      const fetchedCurrentWorklist =
+        await ExtensionStorage.getCurrentWorklistNumber();
       if (fetchedCurrentWorklist) {
-        setCurrWorklist(fetchedCurrentWorklist)
+        setCurrWorklist(fetchedCurrentWorklist);
       }
-      setIsLoaded(true)
-    }
+      setIsLoaded(true);
+    };
 
     const handleStorageChange = (changes: {
-      [key: string]: chrome.storage.StorageChange
+      [key: string]: chrome.storage.StorageChange;
     }) => {
       if (changes.newSection) {
         ExtensionStorage.getNewSection().then((updatedNewSection) => {
-          if (!updatedNewSection || updatedNewSection.getCourseID() === newSection?.getCourseID()) return;
-          setNewSection(updatedNewSection)
-        })
+          if (
+            !updatedNewSection ||
+            updatedNewSection.getCourseID() === newSection?.getCourseID()
+          )
+            return;
+          setNewSection(updatedNewSection);
+        });
       } else if (changes.schedule) {
         ExtensionStorage.getSchedule().then((newSchedule) => {
           if (!newSchedule || newSchedule.getId() === schedule.getId()) return;
           setSchedule(newSchedule);
         });
       } else if (changes.currentSession) {
-        const newVal: string | null = changes.currentSession.newValue
-        if (newVal === null) return
-        setCurrentSession(newVal)
+        const newVal: string | null = changes.currentSession.newValue;
+        if (newVal === null) return;
+        setCurrentSession(newVal);
       } else if (changes.currentTerm) {
-        const newVal: number | null = changes.currentTerm.newValue
-        if (newVal === null) return
-        setCurrentTerm(newVal)
+        const newVal: number | null = changes.currentTerm.newValue;
+        if (newVal === null) return;
+        setCurrentTerm(newVal);
       } else if (changes.currentWorklist) {
-        const newVal: number | null = changes.currentWorklist.newValue
-        if (newVal === null) return
-        setCurrWorklist(newVal)
+        const newVal: number | null = changes.currentWorklist.newValue;
+        if (newVal === null) return;
+        setCurrWorklist(newVal);
       }
-    }
+    };
 
-    syncInitialStorage()
+    syncInitialStorage();
 
     chrome.storage.onChanged.addListener(handleStorageChange);
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange)
-    }
-  }, [])
+      chrome.storage.onChanged.removeListener(handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!isLoaded) return
-    ExtensionStorage.setSchedule(schedule)
+    if (!isLoaded) return;
+    ExtensionStorage.setSchedule(schedule);
     setAvailableSessions(schedule.getSessions());
-    if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
-  }, [schedule, isLoaded])
+    if (!schedule.getSessions().includes(currentSession))
+      setCurrentSession(schedule.getLatestSession());
+  }, [schedule, isLoaded]);
 
   useEffect(() => {
-    if (!isLoaded) return
+    if (!isLoaded) return;
     if (newSection) {
       if (newSection.getTerms().size <= 1) {
-        setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
+        setCurrentTerm(newSection.getTerms().values().next().value ?? 1);
       }
-      setAvailableSessions([newSection.getSession()])
-      setCurrentSession(newSection.getSession())
+      setAvailableSessions([newSection.getSession()]);
+      setCurrentSession(newSection.getSession());
     } else {
-      ExtensionStorage.setNewSection(null)
-      setAvailableSessions(schedule.getSessions())
-      if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
+      ExtensionStorage.setNewSection(null);
+      setAvailableSessions(schedule.getSessions());
+      if (!schedule.getSessions().includes(currentSession))
+        setCurrentSession(schedule.getLatestSession());
     }
-  }, [newSection, isLoaded])
+  }, [newSection, isLoaded]);
 
   useEffect(() => {
-    if (!isLoaded) return
-    ExtensionStorage.setCurrentSession(currentSession)
+    if (!isLoaded) return;
+    ExtensionStorage.setCurrentSession(currentSession);
     if (!availableSessions.includes(currentSession)) {
-      setAvailableSessions([...availableSessions, currentSession].sort().reverse());
+      setAvailableSessions(
+        [...availableSessions, currentSession].sort().reverse()
+      );
     }
-  }, [currentSession, isLoaded])
+  }, [currentSession, isLoaded]);
 
   useEffect(() => {
-    if (!isLoaded) return
-    ExtensionStorage.setCurrentTerm(currentTerm)
-  }, [currentTerm, isLoaded])
+    if (!isLoaded) return;
+    ExtensionStorage.setCurrentTerm(currentTerm);
+  }, [currentTerm, isLoaded]);
 
   useEffect(() => {
-    if (!isLoaded) return
-    ExtensionStorage.setCurrentWorklistNumber(currWorklist)
-  }, [currWorklist, isLoaded])
+    if (!isLoaded) return;
+    ExtensionStorage.setCurrentWorklistNumber(currWorklist);
+  }, [currWorklist, isLoaded]);
 
   return (
     <div>
       <div className="top-bar">
         <div className="top-bar-icon">
-          <DownloadICS schedule={schedule} currentSession={currentSession} currentTerm={currentTerm} currentWorklistNumber={currWorklist} disabled={currentView !== ExtensionViews.calendar} />
+          <DownloadICS
+            schedule={schedule}
+            currentSession={currentSession}
+            currentTerm={currentTerm}
+            currentWorklistNumber={currWorklist}
+            disabled={currentView !== ExtensionViews.calendar}
+          />
         </div>
         <div className="top-bar-icon">
-          <CalendarIcon size={22} onClick={() => setCurrentView(ExtensionViews.calendar)} />
-          <SettingsIcon size={22} onClick={() => setCurrentView(ExtensionViews.setting)} />
+          <CalendarIcon
+            size={22}
+            onClick={() => setCurrentView(ExtensionViews.calendar)}
+          />
+          <SettingsIcon
+            size={22}
+            onClick={() => setCurrentView(ExtensionViews.setting)}
+          />
         </div>
       </div>
       <ProgressModal />
-      {currentView === ExtensionViews.setting ? <Setting schedule={schedule} setSchedule={setSchedule} /> :
+      {currentView === ExtensionViews.setting ? (
+        <Setting schedule={schedule} setSchedule={setSchedule} />
+      ) : (
         <>
           <CalendarControls
             worklist={currWorklist}
@@ -184,40 +210,55 @@ function App() {
             worklist={currWorklist}
             onStartCreateCustom={() => setCreatingCustomSection(true)}
           />
-          {(selectedSection?.getIsCustom() || creatingCustomSection) && <CustomSectionDetails
-            section={creatingCustomSection ? null : selectedSection}
-            term={currentTerm}
-            schedule={schedule}
-            session={currentSession}
-            onClose={() => {
-              setSelectedSection(null)
-              setCreatingCustomSection(false)
-            }}
-            onDelete={(section: Section) => {
-              setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
-              setSelectedSection(null)
-            }}
-            setNewSection={setNewSection}
-            setSchedule={setSchedule}
-          />}
-          {selectedSection && !selectedSection.getIsCustom() && <SectionDetails
-            section={selectedSection}
-            term={currentTerm}
-            onClose={() => setSelectedSection(null)}
-            onDelete={(section: Section) => {
-              setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
-              setSelectedSection(null)
-            }}
-          />}
+          {(selectedSection?.getIsCustom() || creatingCustomSection) && (
+            <CustomSectionDetails
+              section={creatingCustomSection ? null : selectedSection}
+              term={currentTerm}
+              schedule={schedule}
+              session={currentSession}
+              onClose={() => {
+                setSelectedSection(null);
+                setCreatingCustomSection(false);
+              }}
+              onDelete={(section: Section) => {
+                setSchedule(
+                  schedule.removeSection(
+                    section.getWorklistNumber(),
+                    section.getCourseID()
+                  )
+                );
+                setSelectedSection(null);
+              }}
+              setNewSection={setNewSection}
+              setSchedule={setSchedule}
+            />
+          )}
+          {selectedSection && !selectedSection.getIsCustom() && (
+            <SectionDetails
+              section={selectedSection}
+              term={currentTerm}
+              onClose={() => setSelectedSection(null)}
+              onDelete={(section: Section) => {
+                setSchedule(
+                  schedule.removeSection(
+                    section.getWorklistNumber(),
+                    section.getCourseID()
+                  )
+                );
+                setSelectedSection(null);
+              }}
+            />
+          )}
           <WorklistControl
             schedule={schedule}
             worklist={currWorklist}
             currentSession={currentSession}
             setSchedule={setSchedule}
           />
-        </>}
+        </>
+      )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

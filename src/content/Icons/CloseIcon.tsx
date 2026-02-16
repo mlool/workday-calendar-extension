@@ -1,15 +1,15 @@
-import { useState } from "react"
+import { useState } from "react";
 
 interface IProps {
-  size: number
-  onClose: () => void
+  size: number;
+  onClose: () => void;
 }
 
-const color = "#555555"
-const hoverColor = "#333333"
+const color = "#555555";
+const hoverColor = "#333333";
 
 const CloseIcon = ({ size, onClose }: IProps) => {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <svg
@@ -38,7 +38,7 @@ const CloseIcon = ({ size, onClose }: IProps) => {
         strokeLinejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default CloseIcon
+export default CloseIcon;
