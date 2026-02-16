@@ -28,7 +28,7 @@ const SectionFromURL: React.FC<IProps> = ({ onClose }) => {
     return (
         <div className="url-popup-overlay" onClick={onClose}>
             <div className="url-popup" onClick={(e) => e.stopPropagation()}>
-                <h1>Right click on the course title, select "Copy URL" and paste it here:</h1>
+                <h1>Right click on the course title, select &quot;Copy URL&quot; and paste it here:</h1>
                 <div className="url-popup-input-group">
                     <input
                         className="url-popup-input-field"

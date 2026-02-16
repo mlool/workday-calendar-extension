@@ -54,6 +54,7 @@ export default class SectionDetail {
         return this.location;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exportToJSON(): any {
         return {
             terms: this.terms,
@@ -66,14 +67,11 @@ export default class SectionDetail {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static getSectionDetailFromJSON(data: any): SectionDetail {
-        let startDate: string | undefined;
-        let endDate: string | undefined;
-        let terms: number[] = [];
-
-        startDate = data.startDate;
-        endDate = data.endDate;
-        terms = data.terms;
+        const startDate: string | undefined = data.startDate;
+        const endDate: string | undefined = data.endDate;
+        const terms: number[] = data.terms;
 
         return new SectionDetail(
             terms,

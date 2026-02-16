@@ -116,6 +116,7 @@ describe("Section tests", () => {
                 average: "78.5",
                 average_past_5_yrs: "76.2"
             })
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
 
 
@@ -132,6 +133,7 @@ describe("Section tests", () => {
     test("test for get historical grade not custom but invalid info or link", async () => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: false
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
 
         const gradesCustom = await section.getHistoricalGrades();
@@ -140,6 +142,7 @@ describe("Section tests", () => {
     });
 
     test("historical grades test for full coverage", async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ average: "", average_past_5_yrs: "" }) } as any);
         const sectionDetail = SectionDetail.getSectionDetailFromJSON({ terms: [1], days: ["Mon"], startTime: "10:00", endTime: "11:00", dateRange: "A", location: "Test Location" });
         const section = new Section("CPSC_O 213", "99999", [], [sectionDetail], "2025W", 0, "blue", "101", "Lecture", "Test", false);

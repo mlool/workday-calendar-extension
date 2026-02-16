@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import Section from "../../objects/Section"
-import { IGradesAPIData } from "../../objects/Section"
+import Section, { IGradesAPIData } from "../../objects/Section"
 import "./SectionDetails.css"
 import CloseIcon from "../Icons/CloseIcon";
 import ExternalLinkIcon from "../Icons/ExternalLinkIcon";

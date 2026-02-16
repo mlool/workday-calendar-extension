@@ -38,6 +38,7 @@ function getCourseIdFromUrl(url: string): string {
   return parts[2].split(".")[0]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function fetchSectionFromJSON(data: any, courseId: string): Section | null {
   if (!data) {
     throw new Error("Failed to fetch section from JSON")

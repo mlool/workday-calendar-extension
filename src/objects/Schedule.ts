@@ -36,7 +36,7 @@ export default class Schedule {
 
     async bulkAddSections(sections: Section[]): Promise<Schedule> {
         const isConflictAddingEnabled = await ExtensionStorage.getIsConflictAddingEnabled();
-        if (sections.length == 0) return new Schedule(this.version, this.data);
+        if (sections.length === 0) return new Schedule(this.version, this.data);
 
         const existingColors = this.getColors(sections[0].getSession(), sections[0].getWorklistNumber());
         const availableColors = SECTION_COLORS.filter((color) => !existingColors.includes(color));
@@ -145,7 +145,7 @@ export default class Schedule {
 
     // Gets all colors already used in the given worklist
     getColors(session: string, worklistNumber: number): string[] {
-        let colors: string[] = [];
+        const colors: string[] = [];
         this.data.forEach((section: Section) => {
             if (section.getSession() !== session) return;
             if (section.getWorklistNumber() !== worklistNumber) return;
@@ -167,7 +167,7 @@ export default class Schedule {
 
         const usedColors = this.getColors(session, worklistNumber);
         const colors = SECTION_COLORS.filter((color) => !usedColors.includes(color));
-        if (colors.length == 0) return SECTION_COLORS[0];
+        if (colors.length === 0) return SECTION_COLORS[0];
         return colors[0];
     }
 
@@ -192,6 +192,7 @@ export default class Schedule {
     /*
     Chrome storage helpers
     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exportToJSON(): any {
         return {
             version: this.version,
@@ -200,8 +201,9 @@ export default class Schedule {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     importFromJSON(json: any): void {
-        if (json.version == "2.0.1") {
+        if (json.version === "2.0.1") {
             this.version = Schedule.currVersion;
         } else {
             this.version = json.version;
@@ -261,7 +263,7 @@ export default class Schedule {
         const version = rawData['version'];
         const data = rawData['data'];
         let newSections: Section[] = [];
-        let failedCodes: string[] = [];
+        const failedCodes: string[] = [];
 
         // Specifically for handling old JSON files from exports from versions 2.x.x, to remove in 2027
         if (version === "2.0.1") {
@@ -271,6 +273,7 @@ export default class Schedule {
 
             for (let i = 0; i < totalSections; i++) {
                 const section = data[i];
+                // eslint-disable-next-line no-await-in-loop
                 const newSection = await Section.getSectionFromOldJSON(section);
                 ExtensionEventChannel.setLoadingProgress((i + 1) / totalSections * 100);
 
@@ -285,6 +288,7 @@ export default class Schedule {
 
             ExtensionEventChannel.setIsLoading(false);
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             newSections = data.map((section: any) => {
                 const newSection = Section.getSectionFromJSON(section)
                 if (worklist) newSection.setWorklistNumber(worklist)

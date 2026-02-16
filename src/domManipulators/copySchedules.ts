@@ -226,6 +226,7 @@ async function handleCopyScheduleButtonClick(
                     console.error("Section ID not found for section " + code)
                     throw new Error("Section ID not found")
                 }
+                // eslint-disable-next-line no-await-in-loop
                 selectedSection = await fetchSectionFromID(sectionId)
                 if (!selectedSection) {
                     console.error("Failed to Retrieve Section Info for section " + code)

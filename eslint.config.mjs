@@ -36,4 +36,10 @@ export default [
   },
   ...fixupConfigRules(pluginReactConfig),
   ...fixupConfigRules(pluginJSXRuntimeConfig),
+  {
+    rules: {
+      "react/prop-types": "off", // redundant with typescript already checking type at compile time
+      "@typescript-eslint/ban-ts-comment": "off",
+    },
+  },
 ]

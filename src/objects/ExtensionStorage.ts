@@ -74,6 +74,7 @@ export default class ExtensionStorage {
 
             for (let i = 0; i < totalSections; i++) {
                 const section = sections[i];
+                // eslint-disable-next-line no-await-in-loop
                 const newSection = await Section.getSectionFromOldJSON(section);
                 ExtensionEventChannel.setLoadingProgress((i + 1) / totalSections * 100);
 
@@ -95,6 +96,7 @@ export default class ExtensionStorage {
             return new Schedule(Schedule.getVersion(), newSections, id);
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sectionObjects = sections.map((section: any) => Section.getSectionFromJSON(section));
 
         return new Schedule(Schedule.getVersion(), sectionObjects, id);

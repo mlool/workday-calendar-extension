@@ -38,7 +38,7 @@ const DownloadICS = ({ disabled, schedule, currentSession, currentTerm, currentW
         const start = new Date(startDateStr + "T00:00:00");
         const dayIndices = days.map(d => getDayIndex(d));
 
-        let current = new Date(start);
+        const current = new Date(start);
         // Safety break after 14 days
         for (let i = 0; i < 14; i++) {
             if (dayIndices.includes(current.getDay())) {

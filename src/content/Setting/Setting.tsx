@@ -7,7 +7,7 @@ import ExtensionStorage from '../../objects/ExtensionStorage'
 import Schedule from '../../objects/Schedule'
 
 const autoFillInfo = <div>
-    <p>Auto-fill automatically selects the "Start Date within" and "Academic Level" options in the "Find Course Sections" popup.</p>
+    <p>Auto-fill automatically selects the &quot;Start Date within&quot; and &quot;Academic Level&quot; options in the &quot;Find Course Sections&quot; popup.</p>
     <br />
     <p>The extension will apply these selections to both terms in the currently selected session, and only for Undergraduate.</p>
 </div>

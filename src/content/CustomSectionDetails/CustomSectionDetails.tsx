@@ -58,7 +58,6 @@ const CustomSectionDetails = ({ section, term, schedule, session, onClose, onDel
         } else {
             // Default for new creation
             setIsExisting(false);
-            const uniqueId = Math.random().toString(36).substring(7);
             // We don't have a section object yet, but we will create one on save/change
         }
     }, [section, schedule]);

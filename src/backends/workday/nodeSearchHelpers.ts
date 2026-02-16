@@ -1,6 +1,7 @@
 type WorkdayNode = {
     label?: string;
     children?: WorkdayNode[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
 };
 
@@ -35,14 +36,14 @@ export function collectNodesWithLabel(root: WorkdayNode[] | WorkdayNode): Workda
 export function extractWorkdaySectionInfo(selectedNodes: WorkdayNode[]) {
     const courseNode = selectedNodes.find(node => node.label === "Course");
     const instructorNode = selectedNodes.find(node => node.label === "Instructor Teaching");
-    // const dateRangeNode = selectedNodes.find(node => node.label === "Start/End Date");
     const instructionalFormatsNode = selectedNodes.find(node => node.label === "Instructional Formats");
     const meetingPatternsNode = selectedNodes.find(node => node.label === "Meeting Patterns");
 
     const rawName = courseNode?.instances?.[0]?.text;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const instructors = instructorNode?.instances?.map((instance: any) => instance.text) || [];
-    // const dateRange = dateRangeNode?.value;
     const format = instructionalFormatsNode?.instances?.[0]?.text;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const meetingPatterns = meetingPatternsNode?.instances?.map((instance: any) => instance.text) || [];
 
     const [code, name] = rawName?.split(" - ") || ["", ""];

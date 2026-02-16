@@ -14,14 +14,12 @@ jest.mock("../../src/objects/ExtensionStorage", () => ({
 }));
 
 let sectionDetail0: SectionDetail;
-let sectionDetail1: SectionDetail;
 let sectionDetail2: SectionDetail;
 
 beforeEach(() => {
     jest.spyOn(console, "error").mockImplementation(() => { });
     (ExtensionStorage.getIsConflictAddingEnabled as jest.Mock).mockResolvedValue(true);
     sectionDetail0 = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0]);
-    sectionDetail1 = SectionDetail.getSectionDetailFromJSON(json1.data[1].sectionDetails[0]);
     sectionDetail2 = SectionDetail.getSectionDetailFromJSON(json1.data[2].sectionDetails[0]);
 });
 

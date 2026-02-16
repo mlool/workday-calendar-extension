@@ -58,6 +58,7 @@ export default class Section {
 
     // For data formats that cannot be easily casted to the latest version (e.g., 2.0.1),
     // collect course IDs from legacy JSON files and re-fetch the data.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static async getSectionFromOldJSON(data: any): Promise<Section | null> {
         const courseId = data.courseID;
         const section = await fetchSectionFromID(courseId);
@@ -65,8 +66,10 @@ export default class Section {
         return section;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static getSectionFromJSON(data: any): Section {
         const sectionDetails = data.sectionDetails.map(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (sectionDetail: any) => SectionDetail.getSectionDetailFromJSON(sectionDetail));
 
         return new Section(
@@ -200,6 +203,7 @@ export default class Section {
     /*
     Interactions with chrome storage
     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exportToJSON(): any {
         return {
             code: this.code,
