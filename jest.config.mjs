@@ -2,8 +2,9 @@
 const config = {
   testEnvironment: "node",
   transform: {
-    "^.+.tsx?$": ["ts-jest",{}],
+    "^.+.tsx?$": ["ts-jest", {}],
   },
+  setupFiles: ["<rootDir>/tests/setup.ts"],
 };
 
 export default config
