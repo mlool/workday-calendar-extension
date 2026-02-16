@@ -1,5 +1,5 @@
 {
-  "version": "2.0.1",
+  "version": "3.0.0",
   "data": [
     {
       "code": "CPSC_V 121",
@@ -9,15 +9,20 @@
       ],
       "sectionDetails": [
         {
-          "term": 1,
-          "days": ["Tue", "Thu"],
+          "terms": [
+            1
+          ],
+          "days": [
+            "Tue",
+            "Thu"
+          ],
           "startTime": "09:30",
           "endTime": "11:00",
           "dateRange": "2026-02-24 - 2026-04-09",
           "location": "Gordon B. Shrum Building (SHRM) - Floor: -1 - Room: B1001"
         }
       ],
-      "session": "2025-26 Winter Term 2 (UBC-V)",
+      "session": "2025W",
       "worklistNumber": 0,
       "color": "#EAFFD1",
       "courseID": "445390"
@@ -31,15 +36,20 @@
       ],
       "sectionDetails": [
         {
-          "term": 1,
-          "days": ["Tue", "Thu"],
+          "terms": [
+            1
+          ],
+          "days": [
+            "Tue",
+            "Thu"
+          ],
           "startTime": "09:30",
           "endTime": "11:00",
           "dateRange": "2026-02-24 - 2026-04-09",
           "location": "Brock Commons South (BRCS) - Room 2070"
         }
       ],
-      "session": "2025-26 Winter Term 2 (UBC-V)",
+      "session": "2025W",
       "worklistNumber": 0,
       "color": "red",
       "courseID": "458199",
@@ -55,15 +65,20 @@
       ],
       "sectionDetails": [
         {
-          "term": 1,
-          "days": ["Tue", "Thu"],
+          "terms": [
+            1
+          ],
+          "days": [
+            "Tue",
+            "Thu"
+          ],
           "startTime": "12:30",
           "endTime": "14:00",
           "dateRange": "2025-09-02 - 2025-12-04",
           "location": "Forest Sciences Centre (FSC) - Floor: 1 - Room: 1005"
         }
       ],
-      "session": "2025-26 Winter Term 1 (UBC-V)",
+      "session": "2025W",
       "worklistNumber": 0,
       "color": "#EAFFD1",
       "courseID": "14847",

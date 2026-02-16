@@ -3,7 +3,7 @@
     "accountTasks": [
         {
             "label": "Change Preferences",
-            "uri": "/ubc/task/2998$2725"
+            "uri": ""
         }
     ],
     "autoCompleteSearch": true,
@@ -115,13 +115,13 @@
                                 "instances": [
                                     {
                                         "widget": "moniker",
-                                        "instanceId": "13654$3",
-                                        "text": "Closed",
+                                        "instanceId": "13654$2",
+                                        "text": "Open",
                                         "rt": true
                                     }
                                 ],
-                                "selfUriTemplate": "/ubc/inst/15$356486/13654$3",
-                                "relatedTasksUriTemplate": "/ubc/inst/13654$3/rel-tasks",
+                                "selfUriTemplate": "/ubc/inst/15$356486/13654$2",
+                                "relatedTasksUriTemplate": "/ubc/inst/13654$2/rel-tasks",
                                 "propertyName": "wd:Activity_Offering_Status__Singular_--IS",
                                 "singular": true
                             },
@@ -140,7 +140,7 @@
                                 "iid": "4$98721",
                                 "enabled": false,
                                 "label": "Seats Available",
-                                "value": "0 of 55",
+                                "value": "3 of 55",
                                 "propertyName": "wd:Unreserved_Seats_Available"
                             }
                         ],
@@ -253,7 +253,7 @@
                                         "instances": [
                                             {
                                                 "widget": "moniker",
-                                                "instanceId": "13229$850582",
+                                                "instanceId": "13229$966836",
                                                 "text": "UBCV | Buchanan Building (BUCH) | Floor: 2 | Room: D222 | Tue Thu | 9:30 a.m. - 11:00 a.m. | 2026-01-06 - 2026-02-12",
                                                 "rt": true,
                                                 "pv": true,
@@ -261,7 +261,7 @@
                                             },
                                             {
                                                 "widget": "moniker",
-                                                "instanceId": "13229$850683",
+                                                "instanceId": "13229$966837",
                                                 "text": "UBCV | Buchanan Building (BUCH) | Floor: 2 | Room: D222 | Tue Thu | 9:30 a.m. - 11:00 a.m. | 2026-02-24 - 2026-04-09",
                                                 "rt": true,
                                                 "pv": true,
@@ -304,15 +304,15 @@
                                         "instances": [
                                             {
                                                 "widget": "moniker",
-                                                "instanceId": "5470!CN4qEk0KBAgEEAgSRWh0dHBzOi8vdGhlLmJvb2tzdG9yZS51YmMuY2EvYm9va3MvcGVyc29uYWxpemUtbXktYm9vay1saXN0LXVzaW5nLWN3bBIkCgUIBBDgdRIbVmlldyBtYXRlcmlhbHMgaW4gYm9va3N0b3Jl*je6iwhIaPyU~",
+                                                "instanceId": "5470!*~",
                                                 "text": "View materials in bookstore",
                                                 "action": "URL",
                                                 "target": "https://the.bookstore.ubc.ca/books/personalize-my-book-list-using-cwl",
                                                 "rt": true
                                             }
                                         ],
-                                        "selfUriTemplate": "/ubc/inst/15$81500/5470!CN4qEk0KBAgEEAgSRWh0dHBzOi8vdGhlLmJvb2tzdG9yZS51YmMuY2EvYm9va3MvcGVyc29uYWxpemUtbXktYm9vay1saXN0LXVzaW5nLWN3bBIkCgUIBBDgdRIbVmlldyBtYXRlcmlhbHMgaW4gYm9va3N0b3Jl*je6iwhIaPyU~",
-                                        "relatedTasksUriTemplate": "/ubc/inst/5470!CN4qEk0KBAgEEAgSRWh0dHBzOi8vdGhlLmJvb2tzdG9yZS51YmMuY2EvYm9va3MvcGVyc29uYWxpemUtbXktYm9vay1saXN0LXVzaW5nLWN3bBIkCgUIBBDgdRIbVmlldyBtYXRlcmlhbHMgaW4gYm9va3N0b3Jl*je6iwhIaPyU~/rel-tasks",
+                                        "selfUriTemplate": "/ubc/inst/15$81500/5470!*~",
+                                        "relatedTasksUriTemplate": "/ubc/inst/5470!*~/rel-tasks",
                                         "propertyName": "wd:One_Derived_URL--IS",
                                         "singular": true
                                     }
@@ -620,40 +620,6 @@
                     },
                     {
                         "widget": "structureLayoutSection",
-                        "children": [
-                            {
-                                "widget": "fieldSet",
-                                "children": [
-                                    {
-                                        "widget": "commandButton",
-                                        "ecid": "56$581960",
-                                        "iid": "15194$458290",
-                                        "label": "Troubleshoot",
-                                        "values": [
-                                            {
-                                                "label": "ACAM_V 100-001 - Introduction to Asian Canadian Studies",
-                                                "uri": "/ubc/inst/15194$458290/rel-task/2997$16031",
-                                                "iid": "15194$458290",
-                                                "taskId": "2997$16031",
-                                                "httpMethod": "GET"
-                                            }
-                                        ],
-                                        "uri": "/ubc/inst/15194$458290/rel-task/2997$16031",
-                                        "taskId": "2997$16031",
-                                        "httpMethod": "GET",
-                                        "actionId": "view",
-                                        "rule": 1,
-                                        "footerOrder": 0,
-                                        "layoutInstanceId": "3009$7088",
-                                        "propertyName": "wd:Troubleshoot_Label",
-                                        "layoutId": "3009$7088"
-                                    }
-                                ],
-                                "horizontal": true,
-                                "showBorder": true,
-                                "layoutInstanceId": "1599$24794"
-                            }
-                        ],
                         "order": "00002",
                         "sectionId": "ModulR_section_3",
                         "layoutInstanceId": "36067$541"
@@ -665,10 +631,10 @@
     },
     "brandingData": {
         "banner": {
-            "uri": "/ubc/attachment/17214$16/Tm9rMFdOcHcyY2MzYlI1cEN1UlFDTTZZZ01ENGNrRzFzY2N4MkxaTXM3REZMN05NSXpGS0doQW9DVXNTOE4vSWhZWWRSb0tGRmlHRUxNSXNSWlNURUdGOWJHL1FWZmxVQ1U4V2VIbGFWZ2tzQWhMNzhhcDZ0Y0RNZEpBQVY4NUFTZDhPWGZHNkJobEQ2dWYxMW51Mk1XU1Y5bmFyaHd5bGF0dzZoYUVnbDZ3NmZUbERKb0xuWUtNRnZWOWFpZkU1TUFnY1kvd1BwRmtWQ3dTT0hNVE1qKzgyY0JJTm52cDcrc1h5SEUzbFE2ZVlQUmU2YnpNZnVJTUhxenRkTzR3RDF5enhKZ3BFc1B3dzJwRUFZVXpOSCtlY2t5OVVCbzlwNm5SMmJTUExyM0xrVDgzWEF3NXlaQzg2WlRJTWcvcmMxU2ozV3VvMjhHVVNWeDBicHVzeUhRPT0_b21zLWF0dGFjaG1lbnRzLzE3NGY0MzJhLTU2NmQtNGMzMy0yYjQyLTI1MTMwNzBiNDkxND8xNzY3NDcyMjAwMDAwPz9VQkNfV29ya2RheV9Ib21lcGFnZV9WYW5jb3V2ZXItMTQ0MHgzNjYuanBn"
+            "uri": "/ubc/attachment/17214$16/xxx"
         },
         "logo": {
-            "uri": "/ubc/attachment/17213$17/bTVyWEhGQkR6WFNNdlgveVhvOWZiQzlrVFBUNllnMW1hTU5rSHozT1M5WlBYaXhManlxNUY2RkVSV0Uwb0R3MktnT3Uxd3N2YnF4S05TZmxQdUlGdEJ5Wm16SU9ZTzFkdTJjRk9hMVJFWlMreHYrMlBoeG4rOXg5RTN3bjkxQkhNZWZLOE9rZElwYUJjMm9idmhNYXdSeFRXekhpL2tVZGVwL1hhU0wzelpXbEZaWGt0emVSNUVQQkxndCtJTThVVW1KL0dhV3U4UmRlc0JqcE1nekNMWkwvTHFvR3NESk9obnFVVk05c0pIWmFCUVRLMmlEUkJiV3h4Y1c1LzJ5Q0h6TjdQQnFXWWF6VVlmMTF6cTZFQ3JFNDRqSks3MnN1dTNwNHZETzFkV1gxZVd5V2M2TE9VakVOeGYxNW1CNHBxRG9ESldOUUxRRGs4NFlmYVJPQWtnPT0_b21zLWF0dGFjaG1lbnRzLzMzN2I2NjU4LTY4NzgtNDg2ZS0xYjQ5LTQzMjI0MzQwNjQ1Mj8xNzY3NDcyMjAwMDAwPz9DcmVzdF9XRC5wbmc"
+            "uri": "/ubc/attachment/17213$17/xxx"
         },
         "canvasColor": {
             "widget": "color",
@@ -689,18 +655,18 @@
         ],
         "defaultBrandingColor": false
     },
-    "clearPageContextUri": "/ubc/clear-page-context/c372",
+    "clearPageContextUri": "/ubc/clear-page-context/c13",
     "commandLinkTemplate": "/ubc/task/[IID]",
     "currentMajorVersionNumber": "2026",
-    "currentTime": 1767484887676,
+    "currentTime": 1769886498701,
     "currentUser": {
         "widget": "currentUser",
-        "iid": "10089$100772",
-        "label": "Martin Lou (35042712)",
+        "iid": "",
+        "label": "Jane Doe (12345678)",
         "relatedTasksLink": {
             "widget": "link",
             "rel": "related-tasks",
-            "uri": "/ubc/inst/10089$100772/rel-tasks",
+            "uri": "/ubc/inst/1$37/rel-tasks",
             "pv": true,
             "rt": true
         },
@@ -710,7 +676,7 @@
             "uri": "/ubc/inst/1$37/10089$100772",
             "v": true
         },
-        "userImageUrl": "/ubc/attachment/1055$101777/V1o2ZStqeTkreDIwYkkvMGNFRGV3czRWSHVqcHNZSlRtb0ZYd1daM1dlOW5Lbm92NlRtYlpOazZGeFFUcHh3c0kvWStVTTJqa0laSFVsa1pOeHpHdjhSTU8waXRQM01EelNtSHVob2FUOGNISCt5bUhkWUdaL2JDUC9JcWUreU93NzJNNUxZcUZNVkZFbGVjdFdTMTE4NVo5UXdCWFgxTUpvclRqbUt1UHdkQTR3QTNoZ1dpdzRpUm8rMExDUGFFZUVNQ0hSZ2NVb3YwWW5xcUUxNEpYYjlzWkRYcTU5MlZ4ZFE1Y1F1SGJCcUdOa0tFUFdEeVlPOVNjOWRSYVJ1YVM5V1lsVkpURnpUWlVWK09IcU1vU3hESU1zVytscktsUEx3c3lham80ckpLMDJ3QU1CVmowRjhSQmpwd2xySU90RVBQSmR6SlJIN1ROSmFVdjkzTWtBPT0_b21zLWF0dGFjaG1lbnRzLzZjN2UwYTIxLTdlODItNDAyNi04NTViLTdiMGQ3MTA0NDVlYT8xNzY3NDcyMjAwMDAwPz8"
+        "userImageUrl": "/ubc/attachment/xxx/xxx"
     },
     "enableApnsNotifications": true,
     "enableBluePrimaryButtons": true,
@@ -726,7 +692,7 @@
             "label": "Excel",
             "httpMethod": "GET",
             "type": "EXPORT_EXCEL",
-            "uri": "/ubc/export/c372.xlsx",
+            "uri": "/ubc/export/c13.xlsx",
             "requestParameters": [
                 {
                     "widget": "requestParameter",
@@ -739,7 +705,7 @@
             "widget": "link",
             "httpMethod": "POST",
             "type": "PRINT_PDF",
-            "uri": "/ubc/print/c372",
+            "uri": "/ubc/print/c13",
             "requestParameters": [
                 {
                     "widget": "requestParameter",
@@ -795,38 +761,38 @@
     ],
     "omsEnvironmentType": "PROD",
     "pageAutomationIid": "15$365714",
-    "processingUser": "9d34d9897c8a40d1aabf18cf99f5d9e7",
+    "processingUser": "xxx",
     "promptUriTemplate": "/ubc/prompt/[CONTEXT_ID]/[PROMPT_IID]",
     "enabled": false,
-    "requestUri": "/ubc/inst/1$15194/15194$458290.htmld",
+    "requestUri": "",
     "searchScopesUri": "/ubc/search-scopes.xml",
     "searchUri": "/ubc/search.htmld",
-    "sessionSecureToken": "18302cfc-1b4d-4930-97c6-fca5170e348d",
+    "sessionSecureToken": "xxx",
     "sessionTimeoutMinutes": 60,
     "sessionUserClickable": true,
     "sizeAdvice": "large",
-    "systemStatusMessage": "Your system will be undergoing maintenance starting on Saturday, January 10, 2026 at 12:00 AM Eastern Time (Toronto) (GMT-5) until Saturday, January 10, 2026 at 7:00 AM Eastern Time (Toronto) (GMT-5). During that time, your users can continue to access the system.",
-    "taskId": "2998$25437",
+    "systemStatusMessage": "",
+    "taskId": "xxx",
     "teaserTasks": [
         {
             "label": "Unified Inbox Action Items count",
             "type": "action_items_count",
-            "uri": "/ubc/unifiedinbox/actioncount/2998$18348"
+            "uri": "/ubc/unifiedinbox/actioncount/xxx"
         },
         {
             "label": "My Tasks (All Items)",
             "type": "skeleton",
-            "uri": "/ubc/unifiedinbox/initialinbox/2998$44084"
+            "uri": "/ubc/unifiedinbox/initialinbox/xxx"
         },
         {
             "label": "Notifications",
             "type": "Notification_Inbox_Preview_Skeleton_Task--IS",
-            "uri": "/ubc/task/2998$34445"
+            "uri": "/ubc/task/xxx"
         },
         {
             "label": "Notifications",
             "type": "Notification_Inbox_Skeleton_Task--IS",
-            "uri": "/ubc/unifiedinbox/initialinbox/2998$23221"
+            "uri": "/ubc/unifiedinbox/initialinbox/xxx"
         }
     ],
     "tenant": "ubc",
@@ -852,8 +818,8 @@
                 "v": true
             }
         ],
-        "selfUriTemplate": "/ubc/inst/15$365714/15194$458290",
-        "relatedTasksUriTemplate": "/ubc/inst/15194$458290/rel-tasks",
+        "selfUriTemplate": "",
+        "relatedTasksUriTemplate": "",
         "text": "View Course Section",
         "propertyName": "wd:Course_Section__Singular_--IS",
         "singular": true
@@ -866,7 +832,7 @@
     "relatedTasksLinkTemplate": "/ubc/inst/[IID]/rel-tasks",
     "taskLinkTemplate": "/ubc/task/[Task_IID]",
     "stepUpSecondsRemaining": 0,
-    "pageContextId": "c372",
+    "pageContextId": "c13",
     "enableModalEnhancements": true,
     "localeCode": "en_CA",
     "viewPage": true,

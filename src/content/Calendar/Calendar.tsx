@@ -124,7 +124,7 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
                                         }}
                                         title={`${sec.section.getCode()} - ${sec.section.getName()} (New)`}
                                     >
-                                        <div className="event-code">{sec.section.getCode()}</div>
+                                        <div className="event-code">{sec.section.getFullSectionCode()}</div>
                                     </div>
                                 );
                             });
@@ -145,7 +145,7 @@ const Calendar: React.FC<IProps> = ({ schedule, newSection, worklist, term, sess
                                                 title={`${section.section.getCode()} - ${section.section.getName()}`}
                                                 onClick={() => setSelectedSection(section.section)}
                                             >
-                                                <div className="event-code">{section.section.getCode()}</div>
+                                                <div className="event-code">{section.section.getFullSectionCode()}</div>
                                             </div>
                                         );
                                     })}

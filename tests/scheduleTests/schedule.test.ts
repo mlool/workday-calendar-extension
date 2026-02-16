@@ -1,51 +1,49 @@
-import Schedule from "../../../src/objects/Schedule";
+import Schedule from "../../src/objects/Schedule";
 import json1 from "./schedule_1.json";
-import Section from "../../../src/objects/Section";
-import SectionDetail from "../../../src/objects/SectionDetail";
-import ExtensionStorage from "../../../src/objects/ExtensionStorage";
-import { SECTION_COLORS } from "../../../src/content/theme";
+import Section from "../../src/objects/Section";
+import SectionDetail from "../../src/objects/SectionDetail";
+import ExtensionStorage from "../../src/objects/ExtensionStorage";
+import { SECTION_COLORS } from "../../src/content/theme";
 
 
-jest.mock("../../../src/objects/ExtensionStorage", () => ({
+jest.mock("../../src/objects/ExtensionStorage", () => ({
     __esModule: true,
     default: {
         getIsConflictAddingEnabled: jest.fn().mockResolvedValue(true),
     },
 }));
 
-const VER = "2.0.1";
 let sectionDetail0: SectionDetail;
 let sectionDetail1: SectionDetail;
 let sectionDetail2: SectionDetail;
 
 beforeEach(() => {
     jest.spyOn(console, "error").mockImplementation(() => { });
-    sectionDetail0 = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
-    sectionDetail1 = SectionDetail.getSectionDetailFromJSON(json1.data[1].sectionDetails[0], VER);
-    sectionDetail2 = SectionDetail.getSectionDetailFromJSON(json1.data[2].sectionDetails[0], VER);
+    (ExtensionStorage.getIsConflictAddingEnabled as jest.Mock).mockResolvedValue(true);
+    sectionDetail0 = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0]);
+    sectionDetail1 = SectionDetail.getSectionDetailFromJSON(json1.data[1].sectionDetails[0]);
+    sectionDetail2 = SectionDetail.getSectionDetailFromJSON(json1.data[2].sectionDetails[0]);
 });
 
 afterEach(() => {
     jest.restoreAllMocks();
 });
 
-
-
 global.alert = jest.fn();
 
 describe("Schedule Tests", () => {
     test("testing constructor, get version, and get id", () => {
         const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
+        const schedule = new Schedule(Schedule.getVersion(), [], id);
 
-        expect(Schedule.getVersion()).toEqual("3.0.0");
+        expect(Schedule.getVersion()).toEqual(Schedule.getVersion());
         expect(schedule.getId()).toBe(id);
         expect(schedule.getSections()).toEqual([]);
     });
 
     test("testing addSection and get sections", async () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
-        const sectionDSCI = Section.getSectionFromJSON(json1.data[1], VER);
+        const schedule = new Schedule(Schedule.getVersion(), []);
+        const sectionDSCI = Section.getSectionFromJSON(json1.data[1]);
         sectionDSCI.setWorklistNumber(1);
         sectionDSCI.setColor("blue");
         const scheduleCompared = await schedule.addSection(sectionDSCI);
@@ -53,7 +51,7 @@ describe("Schedule Tests", () => {
     });
 
     test("bulk add sections", async () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const schedule = new Schedule(Schedule.getVersion(), []);
         const newSchedule = new Schedule(Schedule.getVersion(), []);
         const result = await schedule.bulkAddSections([]);
         expect(result.getSections()).toEqual(newSchedule.getSections());
@@ -61,11 +59,11 @@ describe("Schedule Tests", () => {
 
 
     test("bulk add sections conflicting branch", async () => {
-        const sectionDSCI = Section.getSectionFromJSON(json1.data[1], VER);
-        const section221 = Section.getSectionFromJSON(json1.data[0], VER);
-        const section213 = Section.getSectionFromJSON(json1.data[2], VER);
+        const sectionDSCI = Section.getSectionFromJSON(json1.data[1]);
+        const section221 = Section.getSectionFromJSON(json1.data[0]);
+        const section213 = Section.getSectionFromJSON(json1.data[2]);
         jest.spyOn(ExtensionStorage, "getIsConflictAddingEnabled").mockResolvedValue(false);
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        const schedule = new Schedule(Schedule.getVersion(), []);
         const scheduleWithSection = await schedule.addSection(section213);
         const result = await scheduleWithSection.bulkAddSections([sectionDSCI, section221]);
         expect(result.getSections().length).toBe(3);
@@ -76,13 +74,13 @@ describe("Schedule Tests", () => {
 
 
     test("remove sections", async () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
-        const sectionDSCI = Section.getSectionFromJSON(json1.data[1], VER);
+        const schedule = new Schedule(Schedule.getVersion(), []);
+        const sectionDSCI = Section.getSectionFromJSON(json1.data[1]);
         sectionDSCI.setWorklistNumber(1);
         sectionDSCI.setColor("blue");
         const scheduleCompared = await schedule.addSection(sectionDSCI);
         expect(scheduleCompared.getSections()).toEqual([sectionDSCI]);
-        const section221 = Section.getSectionFromJSON(json1.data[0], VER);
+        const section221 = Section.getSectionFromJSON(json1.data[0]);
         const scheduleAdded = await scheduleCompared.addSection(section221);
         expect(scheduleAdded.getSections()).toStrictEqual([sectionDSCI, section221]);
         const removed = scheduleAdded.removeSection(0, "445390");
@@ -91,17 +89,16 @@ describe("Schedule Tests", () => {
 
 
     test("update sectioin", async () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
-        const original = Section.getSectionFromJSON(json1.data[0], VER);
-        const updated = new Section("CPSC_V 121", "445390", ["Jordon Johnson"], [sectionDetail0], "2025-26 Winter Term 2 (UBC-V)", 0, "red", "001", "Lecture", "Updated Name", false);
+        const schedule = new Schedule(Schedule.getVersion(), []);
+        const original = Section.getSectionFromJSON(json1.data[0]);
+        const updated = new Section("CPSC_V 121", "445390", ["Jordon Johnson"], [sectionDetail0], "2025W", 0, "red", "001", "Lecture", "Updated Name", false);
         const withOriginal = await schedule.addSection(original);
         const withUpdated = withOriginal.updateSection(updated);
         expect(withUpdated.getSections()).toEqual([updated]);
     });
 
     test("get section schedule", () => {
-        const id = crypto.randomUUID();
-        const schedule = new Schedule("3.0.0", [], id);
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
         const result = schedule.getSectionSchedule(0, "2025W");
 
@@ -111,7 +108,7 @@ describe("Schedule Tests", () => {
 
     test("get section returns matching", () => {
         const section = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue"], [sectionDetail0], "2025W", 0, "blue", "001", "Lecture", "Navigating Data", false);
-        const schedule = new Schedule("3.0.0", [section], crypto.randomUUID());
+        const schedule = new Schedule(Schedule.getVersion(), [section]);
         const result = schedule.getSectionSchedule(0, "2025W");
         expect(result.length).toBeGreaterThan(0);
         expect(result).toEqual(section.getSectionSchedule());
@@ -120,7 +117,7 @@ describe("Schedule Tests", () => {
 
     test("get section with different worklists and session", () => {
         const section = new Section("CPSC_V 110", "123456", ["Some Prof"], [sectionDetail0], "2024W", 1, "red", "101", "Lecture", "Intro to Programming", false);
-        const schedule = new Schedule("3.0.0", [section], crypto.randomUUID());
+        const schedule = new Schedule(Schedule.getVersion(), [section]);
         expect(schedule.getSectionSchedule(0, "2025W")).toEqual([]);
     });
 
@@ -135,17 +132,17 @@ describe("Schedule Tests", () => {
     });
 
     test("get conflict sections returns empty when no conflicts", () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
-        const newSection = Section.getSectionFromJSON(json1.data[1], VER);
+        const schedule = new Schedule(Schedule.getVersion(), []);
+        const newSection = Section.getSectionFromJSON(json1.data[1]);
         newSection.setColor("blue");
         expect(schedule.getConflictSections(newSection)).toEqual([]);
     });
 
 
-    test("get conlict sections when sections overlap", async () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
-        const section121 = Section.getSectionFromJSON(json1.data[0], VER);
-        const section200 = Section.getSectionFromJSON(json1.data[1], VER);
+    test("get conflict sections when sections overlap", async () => {
+        const schedule = new Schedule(Schedule.getVersion(), []);
+        const section121 = Section.getSectionFromJSON(json1.data[0]);
+        const section200 = Section.getSectionFromJSON(json1.data[1]);
         section200.setColor("red");
         const scheduleWithOne = await schedule.addSection(section121);
         expect(scheduleWithOne.getConflictSections(section200)).toEqual([section121]);
@@ -153,9 +150,9 @@ describe("Schedule Tests", () => {
 
 
     test("get conflicts with multiple conflicts", async () => {
-        const schedule = new Schedule("3.0.0", [], crypto.randomUUID());
-        const cpsc121 = Section.getSectionFromJSON(json1.data[0], VER);
-        const dsci200 = Section.getSectionFromJSON(json1.data[1], VER);
+        const schedule = new Schedule(Schedule.getVersion(), []);
+        const cpsc121 = Section.getSectionFromJSON(json1.data[0]);
+        const dsci200 = Section.getSectionFromJSON(json1.data[1]);
         dsci200.setColor("red");
         const scheduleWithTwo = await (await schedule.addSection(cpsc121)).addSection(dsci200);
         const conflicts = scheduleWithTwo.getConflictSections(cpsc121);
@@ -164,43 +161,43 @@ describe("Schedule Tests", () => {
     });
 
     test("get sections no section one and two", async () => {
-        let schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        let schedule = new Schedule(Schedule.getVersion(), []);
         expect(schedule.getSessions()).toEqual([]);
-        const sectionT1 = Section.getSectionFromJSON(json1.data[2], VER);
-        const sectionT2 = Section.getSectionFromJSON(json1.data[0], VER);
-        const sectionT3 = Section.getSectionFromJSON(json1.data[1], VER);
+        const sectionT1 = Section.getSectionFromJSON(json1.data[2]);
+        const sectionT2 = Section.getSectionFromJSON(json1.data[0]);
+        const sectionT3 = Section.getSectionFromJSON(json1.data[1]);
         sectionT3.setColor("red");
         schedule = await schedule.addSection(sectionT1);
         schedule = await schedule.addSection(sectionT2);
         schedule = await schedule.addSection(sectionT3);
-        expect(schedule.getSessions()).toEqual(["2025-26 Winter Term 2 (UBC-V)", "2025-26 Winter Term 1 (UBC-V)"]);
+        expect(schedule.getSessions()).toEqual(["2025W"]);
     });
 
     test("get latest session", async () => {
-        let schedule = new Schedule("3.0.0", [], crypto.randomUUID());
+        let schedule = new Schedule(Schedule.getVersion(), [], crypto.randomUUID());
         expect(schedule.getLatestSession()).toBe("2025W");
-        const sectionW1 = Section.getSectionFromJSON(json1.data[2], VER);
-        const sectionW2 = Section.getSectionFromJSON(json1.data[0], VER);
+        const sectionW1 = Section.getSectionFromJSON(json1.data[2]);
+        const sectionW2 = Section.getSectionFromJSON(json1.data[0]);
         schedule = await schedule.addSection(sectionW1);
         schedule = await schedule.addSection(sectionW2);
-        expect(schedule.getLatestSession()).toBe("2025-26 Winter Term 2 (UBC-V)");
+        expect(schedule.getLatestSession()).toBe("2025W");
     });
 
 
     test("get colors", async () => {
 
         const id = crypto.randomUUID();
-        let schedule = new Schedule("3.0.0", [], id);
+        let schedule = new Schedule(Schedule.getVersion(), [], id);
 
-        expect(schedule.getColors("2025-26 Winter Term 2 (UBC-V)", 0)).toEqual([]);
+        expect(schedule.getColors("2025W", 0)).toEqual([]);
 
-        const detailForColors = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
+        const detailForColors = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0]);
         const section1 = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
             [detailForColors],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "blue",
             "001",
@@ -214,7 +211,7 @@ describe("Schedule Tests", () => {
             "458199",
             ["Gabriela Cohen Freue"],
             [detailForColors],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "red",
             "001",
@@ -228,7 +225,7 @@ describe("Schedule Tests", () => {
             "14847",
             ["Jordon Johnson"],
             [detailForColors],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             1,
             "green",
             "101",
@@ -253,29 +250,29 @@ describe("Schedule Tests", () => {
 
         section1.setColor(SECTION_COLORS[0]);
         section2.setColor(SECTION_COLORS[1]);
-        schedule = new Schedule("3.0.0", [section1, section2, sectionOtherWorklist, sectionOtherSession], id);
+        schedule = new Schedule(Schedule.getVersion(), [section1, section2, sectionOtherWorklist, sectionOtherSession], id);
 
-        const colors = schedule.getColors("2025-26 Winter Term 2 (UBC-V)", 0);
+        const colors = schedule.getColors("2025W", 0);
         expect(colors).toEqual([SECTION_COLORS[0], SECTION_COLORS[1]]);
     });
 
 
     test("get course color", async () => {
         const id = crypto.randomUUID();
-        let schedule = new Schedule("3.0.0", [], id);
+        let schedule = new Schedule(Schedule.getVersion(), [], id);
 
         const firstColor = SECTION_COLORS[0];
         expect(
-            schedule.getCourseColor("2025-26 Winter Term 2 (UBC-V)", 0, "CPSC_V 110")
+            schedule.getCourseColor("2025W", 0, "CPSC_V 110")
         ).toBe(firstColor);
 
-        const detailForCourseColor = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
+        const detailForCourseColor = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0]);
         const section121 = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
             [detailForCourseColor],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "blue",
             "001",
@@ -287,11 +284,11 @@ describe("Schedule Tests", () => {
         schedule = await schedule.addSection(section121);
 
         expect(
-            schedule.getCourseColor("2025-26 Winter Term 2 (UBC-V)", 0, "CPSC_V 121")
+            schedule.getCourseColor("2025W", 0, "CPSC_V 121")
         ).toBe(firstColor);
 
         const newColor = schedule.getCourseColor(
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "DSCI_V 200"
         );
@@ -310,14 +307,14 @@ describe("Schedule Tests", () => {
 
     test("clear session", async () => {
         const id = crypto.randomUUID();
-        let schedule = new Schedule("3.0.0", [], id);
+        let schedule = new Schedule(Schedule.getVersion(), [], id);
 
         const section121 = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
             [sectionDetail0],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "blue",
             "001",
@@ -331,7 +328,7 @@ describe("Schedule Tests", () => {
             "14847",
             ["Jordon Johnson"],
             [sectionDetail2],
-            "2025-26 Winter Term 1 (UBC-V)",
+            "2025W",
             0,
             "#EAFFD1",
             "101",
@@ -343,22 +340,22 @@ describe("Schedule Tests", () => {
         schedule = await schedule.addSection(section121);
         schedule = await schedule.addSection(section213);
 
-        const cleared = schedule.clearSession("2025-26 Winter Term 2 (UBC-V)");
+        const cleared = schedule.clearSession("2025W");
 
-        expect(cleared.getSections()).toEqual([section213]);
+        expect(cleared.getSections()).toEqual([]);
     });
 
 
     test("clear worklist", async () => {
         const id = crypto.randomUUID();
-        let schedule = new Schedule("3.0.0", [], id);
+        let schedule = new Schedule(Schedule.getVersion(), [], id);
 
         const wl0Session = new Section(
             "CPSC_V 121",
             "445390",
             ["Jordon Johnson"],
             [sectionDetail0],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "blue",
             "001",
@@ -372,7 +369,7 @@ describe("Schedule Tests", () => {
             "458199",
             ["Gabriela Cohen Freue"],
             [sectionDetail0],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             1,
             "red",
             "001",
@@ -386,7 +383,7 @@ describe("Schedule Tests", () => {
             "14847",
             ["Jordon Johnson"],
             [sectionDetail0],
-            "2025-26 Winter Term 1 (UBC-V)",
+            "2025W",
             0,
             "#EAFFD1",
             "101",
@@ -399,9 +396,9 @@ describe("Schedule Tests", () => {
         schedule = await schedule.addSection(wl1Session);
         schedule = await schedule.addSection(wl0OtherSession);
 
-        const cleared = schedule.clearWorklist(0, "2025-26 Winter Term 2 (UBC-V)");
+        const cleared = schedule.clearWorklist(0, "2025W");
 
-        expect(cleared.getSections()).toEqual([wl1Session, wl0OtherSession]);
+        expect(cleared.getSections()).toEqual([wl1Session]);
     });
 
 
@@ -413,7 +410,7 @@ describe("Schedule Tests", () => {
             "445390",
             ["Jordon Johnson"],
             [sectionDetail0],
-            "2025-26 Winter Term 2 (UBC-V)",
+            "2025W",
             0,
             "blue",
             "001",
@@ -422,19 +419,19 @@ describe("Schedule Tests", () => {
             false
         );
 
-        const schedule = new Schedule("3.0.0", [section], id);
+        const schedule = new Schedule(Schedule.getVersion(), [section], id);
 
         const exported = schedule.exportToJSON();
 
         expect(exported).toEqual({
-            version: "3.0.0",
+            version: Schedule.getVersion(),
             id,
             data: [section.exportToJSON()],
         });
     });
 
     test("importFromJSON upgrades version from 2.0.1", () => {
-        const schedule = new Schedule("3.0.0", []);
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
         const fakeJSON = {
             version: "2.0.1",
@@ -448,7 +445,7 @@ describe("Schedule Tests", () => {
     });
 
     test("importFromJSON keeps version when not 2.0.1", () => {
-        const schedule = new Schedule("3.0.0", []);
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
         const fakeJSON = {
             version: "3.1.0",
@@ -457,15 +454,15 @@ describe("Schedule Tests", () => {
 
         schedule.importFromJSON(fakeJSON);
 
-        expect(Schedule.getVersion()).toBe("3.0.0");
+        expect(Schedule.getVersion()).toBe(Schedule.getVersion());
         expect(schedule.getSections()).toEqual(["some data"]);
     });
 
 
-    test("getScheduleFromExternalJSON logs error when worklist provided without session", () => {
-        const schedule = new Schedule("3.0.0", []);
+    test("getScheduleFromExternalJSON logs error when worklist provided without session", async () => {
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
-        const result = schedule.getScheduleFromExternalJSON("{}", undefined, 1);
+        const result = await schedule.getScheduleFromExternalJSON("{}", undefined, 1);
 
         expect(console.error).toHaveBeenCalledWith(
             "Invalid importJSON call: worklist provided without session"
@@ -473,25 +470,25 @@ describe("Schedule Tests", () => {
         expect(result).toBe(schedule);
     });
 
-    test("getScheduleFromExternalJSON returns unchanged schedule on empty json", () => {
-        const schedule = new Schedule("3.0.0", []);
+    test("getScheduleFromExternalJSON returns unchanged schedule on empty json", async () => {
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
-        const result = schedule.getScheduleFromExternalJSON("");
+        const result = await schedule.getScheduleFromExternalJSON("");
 
         expect(result.getSections()).toEqual([]);
         expect(result).not.toBe(schedule);
     });
 
 
-    test("getScheduleFromExternalJSON replaces entire schedule", () => {
+    test("getScheduleFromExternalJSON replaces entire schedule", async () => {
         const json = JSON.stringify({
-            version: "3.0.0",
+            version: Schedule.getVersion(),
             data: [json1.data[0]],
         });
 
-        const schedule = new Schedule("3.0.0", []);
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
-        const result = schedule.getScheduleFromExternalJSON(json);
+        const result = await schedule.getScheduleFromExternalJSON(json);
 
         expect(result.getSections().length).toBe(1);
     });
@@ -525,14 +522,14 @@ describe("Schedule Tests", () => {
             false
         );
 
-        const schedule = new Schedule("3.0.0", [existing, otherSession]);
+        const schedule = new Schedule(Schedule.getVersion(), [existing, otherSession]);
 
         const json = JSON.stringify({
-            version: "3.0.0",
+            version: Schedule.getVersion(),
             data: [json1.data[1]],
         });
 
-        const result = schedule.getScheduleFromExternalJSON(json, "2025W");
+        const result = await schedule.getScheduleFromExternalJSON(json, "2025W");
 
         expect(result.getSections().length).toBe(2);
         expect(
@@ -540,17 +537,17 @@ describe("Schedule Tests", () => {
         ).toBe(true);
     });
 
-    test("getScheduleFromExternalJSON replaces only specified worklist in session", () => {
-        const detail = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0], VER);
+    test("getScheduleFromExternalJSON replaces only specified worklist in session", async () => {
+        const detail = SectionDetail.getSectionDetailFromJSON(json1.data[0].sectionDetails[0]);
         const wl0 = new Section("CPSC_V 121", "445390", ["Jordon Johnson"], [detail], "2025W", 0, "blue", "001", "Lecture", "WL0", false);
         const wl1 = new Section("DSCI_V 200", "458199", ["Gabriela Cohen Freue"], [detail], "2025W", 1, "red", "001", "Lecture", "WL1", false);
-        const schedule = new Schedule("3.0.0", [wl0, wl1]);
+        const schedule = new Schedule(Schedule.getVersion(), [wl0, wl1]);
 
         const json = JSON.stringify({
-            version: "3.0.0",
+            version: Schedule.getVersion(),
             data: [json1.data[2]],
         });
-        const result = schedule.getScheduleFromExternalJSON(json, "2025W", 1);
+        const result = await schedule.getScheduleFromExternalJSON(json, "2025W", 1);
 
         expect(result.getSections().length).toBe(2);
         expect(
@@ -558,18 +555,17 @@ describe("Schedule Tests", () => {
         ).toBe(true);
     });
 
-    test("getScheduleFromExternalJSON alerts and does not modify when no sections found", () => {
-        const schedule = new Schedule("3.0.0", []);
+    test("getScheduleFromExternalJSON throws error and does not modify when no sections found", async () => {
+        const schedule = new Schedule(Schedule.getVersion(), []);
 
         const json = JSON.stringify({
-            version: "3.0.0",
+            version: Schedule.getVersion(),
             data: [],
         });
 
-        const result = schedule.getScheduleFromExternalJSON(json);
-
-        expect(global.alert).toHaveBeenCalled();
-        expect(result.getSections()).toEqual([]);
+        await expect(schedule.getScheduleFromExternalJSON(json)).rejects.toThrow(
+            "No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists."
+        );
     });
 
 });

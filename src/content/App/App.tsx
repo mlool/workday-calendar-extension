@@ -16,6 +16,7 @@ import ProgressModal from "../ProgressModal/ProgressModal";
 import SettingsIcon from "../Icons/SettingsIcon";
 import CalendarIcon from "../Icons/CalendarIcon";
 import Setting from "../Setting/Setting";
+import DownloadICS from "../DownloadICS/DownloadICS";
 
 enum ExtensionViews {
   calendar,
@@ -148,6 +149,9 @@ function App() {
     <div>
       <div className="top-bar">
         <div className="top-bar-icon">
+          <DownloadICS schedule={schedule} currentSession={currentSession} currentTerm={currentTerm} currentWorklistNumber={currWorklist} disabled={currentView !== ExtensionViews.calendar} />
+        </div>
+        <div className="top-bar-icon">
           <CalendarIcon size={22} onClick={() => setCurrentView(ExtensionViews.calendar)} />
           <SettingsIcon size={22} onClick={() => setCurrentView(ExtensionViews.setting)} />
         </div>
@@ -184,6 +188,7 @@ function App() {
             section={creatingCustomSection ? null : selectedSection}
             term={currentTerm}
             schedule={schedule}
+            session={currentSession}
             onClose={() => {
               setSelectedSection(null)
               setCreatingCustomSection(false)

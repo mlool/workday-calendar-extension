@@ -1,4 +1,5 @@
 import { SECTION_COLORS } from "../content/theme";
+import ExtensionEventChannel from "./ExtensionEventChannel";
 import ExtensionStorage from "./ExtensionStorage";
 import Section, { SectionSchedule } from "./Section";
 
@@ -27,8 +28,7 @@ export default class Schedule {
     async addSection(section: Section): Promise<Schedule> {
         const isConflictAddingEnabled = await ExtensionStorage.getIsConflictAddingEnabled();
         if (!isConflictAddingEnabled && this.getConflictSections(section).length > 0) {
-            alert("This section conflicts with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
-            return new Schedule(this.version, this.data);
+            throw new Error("This section conflicts with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
         }
         section.setColor(this.getCourseColor(section.getSession(), section.getWorklistNumber(), section.getCode()));
         return new Schedule(this.version, [...this.data, section]);
@@ -43,8 +43,7 @@ export default class Schedule {
 
         sections.forEach((section: Section) => {
             if (!isConflictAddingEnabled && this.getConflictSections(section).length > 0) {
-                alert("One or more sections conflict with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
-                return new Schedule(this.version, this.data);
+                throw new Error("One or more sections conflict with your current schedule. Please resolve the conflict before adding it. To add it anyway, turn on Conflict Adding in Settings.")
             }
             section.setColor(availableColors.shift() || SECTION_COLORS[0]);
         })
@@ -250,7 +249,7 @@ export default class Schedule {
     // Used to importing schedule/worklist from external JSON file
     // Note it will replace existing sections in the specified session and worklist
     // If session and worklist are not specified, it will replace the entire schedule
-    getScheduleFromExternalJSON(json: string, session?: string, worklist?: number): Schedule {
+    async getScheduleFromExternalJSON(json: string, session?: string, worklist?: number): Promise<Schedule> {
         if (worklist && !session) {
             console.error("Invalid importJSON call: worklist provided without session");
             return this;
@@ -258,15 +257,49 @@ export default class Schedule {
         // if json is empty, return current schedule
         if (!json || json === "") return new Schedule(this.version, this.data);
 
-        const newSections = JSON.parse(json).data.map((section: any) => {
-            const newSection = Section.getSectionFromJSON(section, JSON.parse(json).version)
-            if (worklist) newSection.setWorklistNumber(worklist)
-            return newSection
-        }) ?? [];
+        const rawData = JSON.parse(json);
+        const version = rawData['version'];
+        const data = rawData['data'];
+        let newSections: Section[] = [];
+        let failedCodes: string[] = [];
+
+        // Specifically for handling old JSON files from exports from versions 2.x.x, to remove in 2027
+        if (version === "2.0.1") {
+            ExtensionEventChannel.setIsLoading(true, `Importing Schedule from version ${version}`);
+            ExtensionEventChannel.setLoadingProgress(0);
+            const totalSections = data.length;
+
+            for (let i = 0; i < totalSections; i++) {
+                const section = data[i];
+                const newSection = await Section.getSectionFromOldJSON(section);
+                ExtensionEventChannel.setLoadingProgress((i + 1) / totalSections * 100);
+
+                if (!newSection) {
+                    failedCodes.push(section['code']);
+                    continue;
+                }
+
+                newSection.setColor(section.color ?? SECTION_COLORS[0]);
+                newSections.push(newSection);
+            }
+
+            ExtensionEventChannel.setIsLoading(false);
+        } else {
+            newSections = data.map((section: any) => {
+                const newSection = Section.getSectionFromJSON(section)
+                if (worklist) newSection.setWorklistNumber(worklist)
+                return newSection
+            }) ?? [];
+        }
+
+
 
         if (newSections.length === 0) {
-            alert("No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists.")
-            return new Schedule(this.version, this.data);
+            throw new Error("No sections found in the imported JSON file. To avoid accidental deletions, the schedule was not modified, if this is intentional, please manually delete your worklists.")
+        }
+
+        if (failedCodes.length > 0) {
+            console.error("Failed to import sections:", failedCodes);
         }
 
         this.data.forEach((section: Section) => {

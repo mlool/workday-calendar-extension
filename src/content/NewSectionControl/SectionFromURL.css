@@ -15,7 +15,7 @@
     background-color: var(--bg-color);
     width: 90%;
     max-width: 600px;
-    height: 30%;
+    height: 20%;
     max-height: 80vh;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -25,4 +25,28 @@
     position: relative;
     padding: 10px;
     box-sizing: border-box;
+}
+
+.url-popup-input-group {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.7rem;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.url-popup-input-field {
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 0.75rem;
+}
+
+.url-popup-button-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }

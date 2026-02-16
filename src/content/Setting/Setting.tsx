@@ -105,17 +105,27 @@ const Setting = ({ schedule, setSchedule }: IProps) => {
                                 const file = e.target.files?.[0];
                                 if (!file) return;
                                 const text = await file.text();
-                                const newSchedule = schedule.getScheduleFromExternalJSON(text);
-                                setSchedule(newSchedule);
+                                try {
+                                    const newSchedule = await schedule.getScheduleFromExternalJSON(text);
+                                    setSchedule(newSchedule);
+                                } catch (error) {
+                                    if (error instanceof Error) {
+                                        alert(error.message)
+                                    }
+                                }
                                 e.target.value = "";
                             }}
                             style={{ display: "none" }}
                             id="batch-import-file"
                         />
-                        Import
+                        Import All
                     </label>
 
-                    <button className="setting-btn-export" onClick={() => { schedule.downloadScheduleAsJSON() }}>Export</button>
+                    <button
+                        className="setting-btn-export"
+                        onClick={() => { schedule.downloadScheduleAsJSON() }}>
+                        Export All
+                    </button>
                 </div>
             </div>
         </div>

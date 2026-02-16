@@ -66,19 +66,14 @@ export default class SectionDetail {
         }
     }
 
-    static getSectionDetailFromJSON(data: any, version?: string): SectionDetail {
+    static getSectionDetailFromJSON(data: any): SectionDetail {
         let startDate: string | undefined;
         let endDate: string | undefined;
         let terms: number[] = [];
 
-        if (version === "2.0.1") {
-            [startDate, endDate] = data.dateRange.split(" - ");
-            terms = [data.term];
-        } else {
-            startDate = data.startDate;
-            endDate = data.endDate;
-            terms = data.terms;
-        }
+        startDate = data.startDate;
+        endDate = data.endDate;
+        terms = data.terms;
 
         return new SectionDetail(
             terms,
