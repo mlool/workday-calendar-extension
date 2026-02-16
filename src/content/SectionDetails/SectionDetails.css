@@ -1,0 +1,111 @@
+.section-details-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.section-details-popup {
+    background-color: var(--bg-color);
+    width: 90%;
+    max-width: 600px;
+    height: 50%;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+    flex-shrink: 0;
+}
+
+.popup-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.popup-content {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Spacing between major sections */
+}
+
+.popup-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+    flex-shrink: 0;
+}
+
+/* New Layout Styles */
+
+.detail-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-header {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.detail-value {
+    color: var(--text-primary);
+}
+
+.detail-link {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.section-delete-button {
+    background-color: var(--button-warning);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.section-delete-button:hover {
+    background-color: var(--button-warning-hover);
+}

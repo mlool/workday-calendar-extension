@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "UBC Workday Side by Side Calendar",
-  "version": "2.0.8",
+  "version": "3.0.1",
   "description": "Calendar for the new UBC Workday course selection.",
   "icons": {
     "16": "logo16.png",
@@ -10,22 +10,37 @@
     "128": "logo128.png"
   },
   "background": {
-    "scripts": ["build/background/index.js"]
+    "scripts": [
+      "build/background/index.js"
+    ]
   },
   "content_scripts": [
     {
-      "matches": ["*://*.myworkday.com/*"],
-      "js": ["build/content/index.js"],
-      "css": ["build/content/index.css"]
+      "matches": [
+        "*://*.myworkday.com/*"
+      ],
+      "js": [
+        "build/content/index.js"
+      ],
+      "css": [
+        "build/content/index.css"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["static/css/content.css"],
-      "matches": ["*://*.myworkday.com/*"]
+      "resources": [
+        "static/css/content.css"
+      ],
+      "matches": [
+        "*://*.myworkday.com/*"
+      ]
     }
   ],
-  "host_permissions": ["*://*.myworkday.com/*", "*://*.ratemyprofessors.com/*"],
+  "host_permissions": [
+    "*://*.myworkday.com/*",
+    "*://*.ratemyprofessors.com/*"
+  ],
   "action": {},
   "permissions": [
     "storage",

@@ -1,0 +1,43 @@
+.worklist-control-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px;
+}
+
+.worklist-delete-button {
+    background-color: var(--button-warning);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    flex: 8;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.worklist-delete-button:hover {
+    background-color: var(--button-warning-hover);
+}
+
+.icon-button {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.icon-button:hover {
+    background-color: var(--control-button-hover);
+    border-color: var(--border-hover);
+}

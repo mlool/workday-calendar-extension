@@ -1,240 +1,222 @@
-import { useEffect, useState } from "react"
+import Schedule from "../../objects/Schedule"
+import Section from "../../objects/Section"
+import { useState, useEffect } from "react"
+
+import Calendar from "../Calendar/Calendar"
+import CalendarControls from "../CalendarControls/CalendarControls";
+import NewSectionControl from "../NewSectionControl/NewSectionControl";
+import SectionDetails from "../SectionDetails/SectionDetails";
+
+import CustomSectionDetails from "../CustomSectionDetails/CustomSectionDetails";
+
 import "./App.css"
-import CalendarContainer from "../CalendarContainer/CalendarContainer"
-import { ISectionData, Term, Views } from "./App.types"
-import Form from "../Form/Form"
-import TopBar from "../TopBar/TopBar"
-import Settings from "../Settings/Settings"
-import {
-  assignColors,
-  ColorTheme,
-  getNewSectionColor,
-} from "../Settings/Theme/courseColors"
-import { ModalAction, ModalLayer, ModalPreset } from "../ModalLayer"
-import { versionOneFiveZeroUpdateNotification } from "../utils"
-import {
-  loadSectionDataFromJSON,
-  replaceWithNewSections,
-} from "../../storage/sectionStorage"
-import {
-  defaultErrorProcessor,
-  postAlertIfHasErrors,
-} from "../../storage/errors"
-import {
-  sendProgressUpdateToAll,
-  readSectionData,
-  writeSectionData,
-} from "../../storage/sectionDataBrowserClient"
-import ProgressBar from "../ProgressBar/ProgressBar"
+import WorklistControl from "../WorklistControl/WorklistControl";
+import ExtensionStorage from "../../objects/ExtensionStorage";
+import ProgressModal from "../ProgressModal/ProgressModal";
+import SettingsIcon from "../Icons/SettingsIcon";
+import CalendarIcon from "../Icons/CalendarIcon";
+import Setting from "../Setting/Setting";
+import DownloadICS from "../DownloadICS/DownloadICS";
+
+enum ExtensionViews {
+  calendar,
+  setting,
+}
 
 function App() {
-  const [newSection, setNewSection] = useState<ISectionData | null>(null)
-  const [sections, setSections] = useState<ISectionData[]>([])
-  const [sectionConflict, setSectionConflict] = useState<boolean>(false)
-  const [currentWorklistNumber, setCurrentWorklistNumber] = useState<number>(0)
-  const [currentTerm, setCurrentTerm] = useState<Term>(Term.One)
-  const [currentView, setCurrentView] = useState<Views>(Views.calendar)
-  const [colorTheme, setColorTheme] = useState<ColorTheme>(ColorTheme.Green)
+  const [currWorklist, setCurrWorklist] = useState<number>(0);
+  const [currentTerm, setCurrentTerm] = useState<number>(1);
 
-  // const prevColorTheme = useRef(colorTheme);
-  // const prevSections = useRef(sections);
-  // Sync initial state with chrome storage on mount
+  const [currentSession, setCurrentSession] = useState<string>("2025W");
+  const [availableSessions, setAvailableSessions] = useState<string[]>([]);
+
+  const [schedule, setSchedule] = useState<Schedule>(new Schedule())
+  const [newSection, setNewSection] = useState<Section | null>(null)
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null)
+  const [creatingCustomSection, setCreatingCustomSection] = useState<boolean>(false)
+
+  const [currentView, setCurrentView] = useState<ExtensionViews>(ExtensionViews.calendar)
+  const [isLoaded, setIsLoaded] = useState<boolean>(false)
+
   useEffect(() => {
-    const syncInitialState = () => {
-      // we used to persist this, but no longer need to
-      chrome.storage.local.remove("currentTerm")
+    const syncInitialStorage = async () => {
+      const fetchedNewSection = await ExtensionStorage.getNewSection()
+      if (fetchedNewSection) {
+        setNewSection(fetchedNewSection)
+      }
 
-      readSectionData().then((x) => {
-        setSections(assignColors(x.data, colorTheme))
-        postAlertIfHasErrors(x)
-      })
+      const fetchedSchedule = await ExtensionStorage.getSchedule()
+      if (fetchedSchedule) {
+        setSchedule(fetchedSchedule)
+        setAvailableSessions(fetchedSchedule.getSessions());
+        setCurrentSession(fetchedSchedule.getLatestSession());
+      }
 
-      chrome.storage.local.get(
-        ["colorTheme", "currentWorklistNumber"],
-        (result) => {
-          if (result.colorTheme !== undefined) {
-            setColorTheme(result.colorTheme)
-          }
-          if (result.currentWorklistNumber !== undefined) {
-            setCurrentWorklistNumber(result.currentWorklistNumber)
-          }
-        }
-      )
+      const fetchedCurrentTerm = await ExtensionStorage.getCurrentTerm()
+      if (fetchedCurrentTerm) {
+        setCurrentTerm(fetchedCurrentTerm)
+      }
+
+      const fetchedCurrentSession = await ExtensionStorage.getCurrentSession()
+      if (fetchedCurrentSession) {
+        setCurrentSession(fetchedCurrentSession)
+      }
+
+      const fetchedCurrentWorklist = await ExtensionStorage.getCurrentWorklistNumber()
+      if (fetchedCurrentWorklist) {
+        setCurrWorklist(fetchedCurrentWorklist)
+      }
+      setIsLoaded(true)
     }
 
     const handleStorageChange = (changes: {
       [key: string]: chrome.storage.StorageChange
     }) => {
       if (changes.newSection) {
-        const newVal: string | null = changes.newSection.newValue
-        if (newVal === null) return
-        const newData = loadSectionDataFromJSON<ISectionData>(newVal)
-        setNewSection(newData)
-        if (newData.terms.size <= 1) {
-          //Don't set the term to WF, just keep the term to what is selected
-          setCurrentTerm(newData.terms.values().next().value ?? Term.One)
-        }
-      } else if (changes.sections) {
-        const newVal: string | null = changes.sections.newValue
-        if (newVal === null) return
-        readSectionData().then((sections) => {
-          setSections(assignColors(sections.data, colorTheme))
+        ExtensionStorage.getNewSection().then((updatedNewSection) => {
+          if (!updatedNewSection || updatedNewSection.getCourseID() === newSection?.getCourseID()) return;
+          setNewSection(updatedNewSection)
         })
+      } else if (changes.schedule) {
+        ExtensionStorage.getSchedule().then((newSchedule) => {
+          if (!newSchedule || newSchedule.getId() === schedule.getId()) return;
+          setSchedule(newSchedule);
+        });
+      } else if (changes.currentSession) {
+        const newVal: string | null = changes.currentSession.newValue
+        if (newVal === null) return
+        setCurrentSession(newVal)
+      } else if (changes.currentTerm) {
+        const newVal: number | null = changes.currentTerm.newValue
+        if (newVal === null) return
+        setCurrentTerm(newVal)
+      } else if (changes.currentWorklist) {
+        const newVal: number | null = changes.currentWorklist.newValue
+        if (newVal === null) return
+        setCurrWorklist(newVal)
       }
     }
 
-    syncInitialState()
-    chrome.storage.onChanged.addListener(handleStorageChange)
-    versionOneFiveZeroUpdateNotification()
+    syncInitialStorage()
+
+    chrome.storage.onChanged.addListener(handleStorageChange);
     return () => {
       chrome.storage.onChanged.removeListener(handleStorageChange)
     }
-  }, []) // Run only once on mount
+  }, [])
 
   useEffect(() => {
-    chrome.storage.local.set({ currentWorklistNumber })
-  }, [currentWorklistNumber])
+    if (!isLoaded) return
+    ExtensionStorage.setSchedule(schedule)
+    setAvailableSessions(schedule.getSessions());
+    if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
+  }, [schedule, isLoaded])
 
   useEffect(() => {
-    chrome.storage.local.set({ colorTheme })
-  }, [colorTheme])
-
-  useEffect(() => {
-    // Check if there is a real change to trigger the update
-    // if (prevColorTheme.current !== colorTheme || JSON.stringify(prevSections.current) !== JSON.stringify(sections)) {
-    const newSections = assignColors(sections, colorTheme)
-
-    // TODO: this could be faulty, remove/change to deep comparison?
-    if (JSON.stringify(newSections) !== JSON.stringify(sections)) {
-      setSections(newSections)
-      writeSectionData(newSections)
+    if (!isLoaded) return
+    if (newSection) {
+      if (newSection.getTerms().size <= 1) {
+        setCurrentTerm(newSection.getTerms().values().next().value ?? 1)
+      }
+      setAvailableSessions([newSection.getSession()])
+      setCurrentSession(newSection.getSession())
+    } else {
+      ExtensionStorage.setNewSection(null)
+      setAvailableSessions(schedule.getSessions())
+      if (!schedule.getSessions().includes(currentSession)) setCurrentSession(schedule.getLatestSession());
     }
+  }, [newSection, isLoaded])
 
-    // Update refs
-    // prevColorTheme.current = colorTheme;
-    // prevSections.current = sections;
-    // }
-  }, [colorTheme, sections]) // React only if these values change
-
-  const handleAddNewSection = async () => {
-    const updatedNewSection = newSection!
-    updatedNewSection.worklistNumber = currentWorklistNumber
-    updatedNewSection.color = getNewSectionColor(
-      sections,
-      updatedNewSection,
-      colorTheme
-    )
-
-    const updatedSections = [...sections, updatedNewSection]
-    setSections(updatedSections)
-    setNewSection(null)
-    await writeSectionData(updatedSections)
-    chrome.storage.local.set({ newSection: null })
-  }
-
-  const handleDeleteSection = async (sectionToDelete: ISectionData) => {
-    const updatedSections = sections.filter((s) => s !== sectionToDelete)
-    setSections(updatedSections)
-    await writeSectionData(updatedSections)
-  }
-
-  const handleCancelNewSection = () => {
-    setNewSection(null)
-    chrome.storage.local.set({ newSection: null })
-  }
-
-  const handleClearWorklist = async () => {
-    const updatedSections = sections.filter(
-      (x) => x.worklistNumber !== currentWorklistNumber
-    )
-    setSections(updatedSections)
-    await writeSectionData(updatedSections)
-  }
-
-  const handleImportSections = async (
-    newData: string | undefined,
-    modalDispatcher: React.Dispatch<ModalAction>,
-    worklistNumber?: number
-  ) => {
-    modalDispatcher({
-      preset: ModalPreset.ImportStatus,
-      additionalData: <ProgressBar message={"Loading Progress: "} />,
-    })
-
-    const allSections = await replaceWithNewSections(
-      sections,
-      newData,
-      sendProgressUpdateToAll,
-      worklistNumber
-    )
-
-    // check for fatal errors
-    if (!allSections.ok && allSections.data.length === 0) {
-      return modalDispatcher({
-        preset: ModalPreset.ImportStatus,
-        additionalData: (
-          <ul style={{ fontSize: "1.2em", padding: "10px" }}>
-            {allSections.errors.map((x, index) => (
-              <li key={index}>{defaultErrorProcessor(x)}</li>
-            ))}
-          </ul>
-        ),
-      })
+  useEffect(() => {
+    if (!isLoaded) return
+    ExtensionStorage.setCurrentSession(currentSession)
+    if (!availableSessions.includes(currentSession)) {
+      setAvailableSessions([...availableSessions, currentSession].sort().reverse());
     }
+  }, [currentSession, isLoaded])
 
-    const finalSections = assignColors(allSections.data, colorTheme)
+  useEffect(() => {
+    if (!isLoaded) return
+    ExtensionStorage.setCurrentTerm(currentTerm)
+  }, [currentTerm, isLoaded])
 
-    setSections(finalSections)
-    postAlertIfHasErrors(allSections)
-    await writeSectionData(finalSections)
-    modalDispatcher({
-      preset: ModalPreset.ImportStatus,
-      additionalData:
-        "Import Successful! Your courses should now be viewable in your worklist",
-    })
-  }
+  useEffect(() => {
+    if (!isLoaded) return
+    ExtensionStorage.setCurrentWorklistNumber(currWorklist)
+  }, [currWorklist, isLoaded])
 
   return (
-    <ModalLayer
-      currentWorklistNumber={currentWorklistNumber}
-      handleClearWorklist={handleClearWorklist}
-      handleDeleteSection={handleDeleteSection}
-    >
-      <div className="App">
-        <TopBar
-          currentView={currentView}
-          setCurrentView={setCurrentView}
-          sections={sections}
-        />
-        {currentView === Views.calendar ? (
-          <div className="CalendarViewContainer">
-            <CalendarContainer
-              sections={sections}
-              newSection={newSection}
-              setSectionConflict={setSectionConflict}
-              currentWorklistNumber={currentWorklistNumber}
-              setCurrentWorklistNumber={setCurrentWorklistNumber}
-              currentTerm={currentTerm}
-              setCurrentTerm={setCurrentTerm}
-            />
-
-            <Form
-              newSection={newSection}
-              sectionConflict={sectionConflict}
-              handleAddNewSection={handleAddNewSection}
-              handleCancel={handleCancelNewSection}
-            />
-          </div>
-        ) : (
-          <Settings
-            colorTheme={colorTheme}
-            sections={sections}
-            setColorTheme={setColorTheme}
-            handleImportSections={handleImportSections}
-          />
-        )}
+    <div>
+      <div className="top-bar">
+        <div className="top-bar-icon">
+          <DownloadICS schedule={schedule} currentSession={currentSession} currentTerm={currentTerm} currentWorklistNumber={currWorklist} disabled={currentView !== ExtensionViews.calendar} />
+        </div>
+        <div className="top-bar-icon">
+          <CalendarIcon size={22} onClick={() => setCurrentView(ExtensionViews.calendar)} />
+          <SettingsIcon size={22} onClick={() => setCurrentView(ExtensionViews.setting)} />
+        </div>
       </div>
-    </ModalLayer>
+      <ProgressModal />
+      {currentView === ExtensionViews.setting ? <Setting schedule={schedule} setSchedule={setSchedule} /> :
+        <>
+          <CalendarControls
+            worklist={currWorklist}
+            term={currentTerm}
+            currentSession={currentSession}
+            availableSessions={availableSessions}
+            setCurrentSession={setCurrentSession}
+            setWorklist={setCurrWorklist}
+            setTerm={setCurrentTerm}
+          />
+          <Calendar
+            schedule={schedule}
+            newSection={newSection}
+            worklist={currWorklist}
+            term={currentTerm}
+            session={currentSession}
+            setSelectedSection={setSelectedSection}
+          />
+          <NewSectionControl
+            newSection={newSection}
+            schedule={schedule}
+            setNewSection={setNewSection}
+            setSchedule={setSchedule}
+            worklist={currWorklist}
+            onStartCreateCustom={() => setCreatingCustomSection(true)}
+          />
+          {(selectedSection?.getIsCustom() || creatingCustomSection) && <CustomSectionDetails
+            section={creatingCustomSection ? null : selectedSection}
+            term={currentTerm}
+            schedule={schedule}
+            session={currentSession}
+            onClose={() => {
+              setSelectedSection(null)
+              setCreatingCustomSection(false)
+            }}
+            onDelete={(section: Section) => {
+              setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
+              setSelectedSection(null)
+            }}
+            setNewSection={setNewSection}
+            setSchedule={setSchedule}
+          />}
+          {selectedSection && !selectedSection.getIsCustom() && <SectionDetails
+            section={selectedSection}
+            term={currentTerm}
+            onClose={() => setSelectedSection(null)}
+            onDelete={(section: Section) => {
+              setSchedule(schedule.removeSection(section.getWorklistNumber(), section.getCourseID()))
+              setSelectedSection(null)
+            }}
+          />}
+          <WorklistControl
+            schedule={schedule}
+            worklist={currWorklist}
+            currentSession={currentSession}
+            setSchedule={setSchedule}
+          />
+        </>}
+    </div>
   )
 }
 

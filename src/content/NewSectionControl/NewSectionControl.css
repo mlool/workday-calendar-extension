@@ -1,0 +1,96 @@
+.new-section-control-container {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 4px;
+    margin: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.section-info {
+    padding: 6px;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border-light);
+}
+
+.section-code {
+    font-weight: 600;
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.section-name {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.section-control-button {
+    padding: 4px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+.section-control-button:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Primary Button (Add, Submit) */
+.btn-primary {
+    background-color: var(--button-primary);
+    color: var(--text-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--button-primary-hover);
+}
+
+.btn-primary:disabled {
+    background-color: var(--button-primary-disabled);
+}
+
+/* Secondary Button (Cancel) */
+.btn-secondary {
+    background-color: var(--button-secondary);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--button-secondary-hover);
+}
+
+.btn-secondary:disabled {
+    background-color: var(--button-secondary-disabled);
+    color: var(--text-tertiary);
+}
+
+/* Custom Action Button */
+.btn-custom {
+    background-color: var(--control-button-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 100%;
+}
+
+.btn-custom:hover {
+    background-color: var(--control-button-hover);
+    border-color: var(--border-hover);
+}
