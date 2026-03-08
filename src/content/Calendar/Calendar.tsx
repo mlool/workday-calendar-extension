@@ -82,7 +82,7 @@ const Calendar: React.FC<IProps> = ({
       const top = (((h - START_HOUR) * 60) / TOTAL_MINUTES) * 100;
       // Don't render label for 21:00 at the very bottom if it causes overflow logic or look bad, but usually fine
       labels.push(
-        <div key={h} className="time-label" style={{ top: `${top}%`}}>
+        <div key={h} className="time-label" style={{ top: `${top}%` }}>
           {h}:00
         </div>
       );
@@ -90,6 +90,7 @@ const Calendar: React.FC<IProps> = ({
     return labels;
   };
 
+  // Renders full grid lines if StartHour is a whole hour, otherwise renders half hour grid lines
   const renderGridLines = () => {
     const lines = [];
     for (let h = START_HOUR; h <= END_HOUR; h += 0.5) {
@@ -104,7 +105,8 @@ const Calendar: React.FC<IProps> = ({
         );
       }
     }
-    return lines;}
+    return lines;
+  }
 
   return (
     <div className="calendar">

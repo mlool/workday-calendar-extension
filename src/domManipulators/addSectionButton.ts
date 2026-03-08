@@ -29,7 +29,7 @@ function addButtonToElement(element: Element, reskinButton?: boolean, clickTarge
   if (
     element.previousElementSibling &&
     element.previousElementSibling.getAttribute("data-automation-id") ===
-      "checkbox"
+    "checkbox"
   ) {
     button.style.marginLeft = "24px";
   }
@@ -94,12 +94,8 @@ export function observeDOMAndAddButtons(): void {
             containers.forEach((container) => {
               // Check if the element already has a button as a previous sibling
               const firstContainer = container.firstElementChild;
-              if (!firstContainer) {
+              if (!firstContainer || firstContainer.id === "add-section-button") {
                 return;
-              }
-
-              if (firstContainer.id === "add-section-button") {
-                return; 
               }
 
               const previousContainer = firstContainer.previousElementSibling;
