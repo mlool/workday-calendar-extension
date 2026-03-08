@@ -4,12 +4,12 @@ import "./Calendar.css";
 import Schedule from "../../objects/Schedule";
 
 interface IProps {
-    schedule: Schedule;
-    newSection: Section | null;
-    worklist: number;
-    term: number;
-    session: string;
-    setSelectedSection: (section: Section | null) => void;
+  schedule: Schedule;
+  newSection: Section | null;
+  worklist: number;
+  term: number;
+  session: string;
+  setSelectedSection: (section: Section | null) => void;
 }
 
 const START_HOUR = 7;
@@ -22,185 +22,189 @@ const NEW_SECTION_COLOR = "var(--new-section-color)";
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 const Calendar: React.FC<IProps> = ({
-    schedule,
-    newSection,
-    worklist,
-    term,
-    session,
-    setSelectedSection,
+  schedule,
+  newSection,
+  worklist,
+  term,
+  session,
+  setSelectedSection,
 }) => {
-    const [scheduleSectionSchedules, setScheduleSectionSchedules] =
-        React.useState(schedule.getSectionSchedule(worklist, session, [term]));
-    const [newSectionSchedules, setNewSectionSchedules] = React.useState(
-        newSection ? newSection.getSectionSchedule([term]) : []
+  const [scheduleSectionSchedules, setScheduleSectionSchedules] =
+    React.useState(schedule.getSectionSchedule(worklist, session, [term]));
+  const [newSectionSchedules, setNewSectionSchedules] = React.useState(
+    newSection ? newSection.getSectionSchedule([term]) : []
+  );
+
+  useEffect(() => {
+    setScheduleSectionSchedules(
+      schedule.getSectionSchedule(worklist, session, [term])
     );
+    setNewSectionSchedules(
+      newSection ? newSection.getSectionSchedule([term]) : []
+    );
+  }, [schedule, newSection, worklist, term, session]);
 
-    useEffect(() => {
-        setScheduleSectionSchedules(
-            schedule.getSectionSchedule(worklist, session, [term])
-        );
-        setNewSectionSchedules(
-            newSection ? newSection.getSectionSchedule([term]) : []
-        );
-    }, [schedule, newSection, worklist, term, session]);
+  const timeToMinutes = (time: string): number => {
+    const [hours, minutes] = time.split(":").map(Number);
+    return (hours - START_HOUR) * 60 + minutes;
+  };
 
-    const timeToMinutes = (time: string): number => {
-        const [hours, minutes] = time.split(":").map(Number);
-        return (hours - START_HOUR) * 60 + minutes;
+  const getPositionStyle = (startTime: string, endTime: string) => {
+    const startMinutes = timeToMinutes(startTime);
+    const endMinutes = timeToMinutes(endTime);
+    const duration = endMinutes - startMinutes;
+
+    const top = (startMinutes / TOTAL_MINUTES) * 100;
+    const height = (duration / TOTAL_MINUTES) * 100;
+
+    return {
+      top: `${top}%`,
+      height: `${height}%`,
     };
+  };
 
-    const getPositionStyle = (startTime: string, endTime: string) => {
-        const startMinutes = timeToMinutes(startTime);
-        const endMinutes = timeToMinutes(endTime);
-        const duration = endMinutes - startMinutes;
+  const checkConflict = (
+    newSec: SectionSchedule,
+    existingSec: SectionSchedule
+  ): boolean => {
+    const newStart = timeToMinutes(newSec.startTime);
+    const newEnd = timeToMinutes(newSec.endTime);
+    const existStart = timeToMinutes(existingSec.startTime);
+    const existEnd = timeToMinutes(existingSec.endTime);
 
-        const top = (startMinutes / TOTAL_MINUTES) * 100;
-        const height = (duration / TOTAL_MINUTES) * 100;
+    return newStart < existEnd && existStart < newEnd;
+  };
 
-        return {
-            top: `${top}%`,
-            height: `${height}%`,
-        };
-    };
-
-    const checkConflict = (
-        newSec: SectionSchedule,
-        existingSec: SectionSchedule
-    ): boolean => {
-        const newStart = timeToMinutes(newSec.startTime);
-        const newEnd = timeToMinutes(newSec.endTime);
-        const existStart = timeToMinutes(existingSec.startTime);
-        const existEnd = timeToMinutes(existingSec.endTime);
-
-        return newStart < existEnd && existStart < newEnd;
-    };
-
-    // Generate times for the gutter
-    const renderTimeLabels = () => {
-        const labels = [];
-        for (let h = START_HOUR; h <= END_HOUR; h++) {
-            const top = (((h - START_HOUR) * 60) / TOTAL_MINUTES) * 100;
-            // Don't render label for 21:00 at the very bottom if it causes overflow logic or look bad, but usually fine
-            labels.push(
-                <div key={h} className="time-label" style={{ top: `${top}%` }}>
-                    {h}:00
-                </div>
-            );
-        }
-        return labels;
-    };
-
-    // Renders full grid lines if StartHour is a whole hour, otherwise renders half hour grid lines
-    const renderGridLines = () => {
-        const lines = [];
-        for (let h = START_HOUR; h <= END_HOUR; h += 0.5) {
-            const top = (((h - START_HOUR) * 60) / TOTAL_MINUTES) * 100;
-            if (h % 1 === 0) {
-                lines.push(
-                    <div key={h} className="grid-line grid-line--full-hour" style={{ top: `${top}%` }} />
-                );
-            } else {
-                lines.push(
-                    <div key={h} className="grid-line" style={{ top: `${top}%` }} />
-                );
-            }
-        }
-        return lines;
-    }
-
-    return (
-        <div className="calendar">
-            <div className="calendar-header">
-                <div className="time-gutter-header"></div>
-                {DAYS.map((day) => (
-                    <div key={day} className="day-header">
-                        {day}
-                    </div>
-                ))}
-            </div>
-            <div className="calendar-body">
-                <div className="time-gutter">{renderTimeLabels()}</div>
-                <div className="days-container">
-                    {/* Render background grid lines across all columns */}
-                    <div
-                        style={{
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            pointerEvents: "none",
-                        }}
-                    >
-                        {renderGridLines()}
-                    </div>
-
-                    {DAYS.map((day) => {
-                        const daySchedule = scheduleSectionSchedules.filter((s) =>
-                            s.day.includes(day)
-                        );
-
-                        // Check for newSection
-                        const newSectionElements = (newSectionSchedules || [])
-                            .filter((sec) => sec.day.includes(day))
-                            .map((sec, i) => {
-                                // Check collisions with ANY event on this day
-                                const hasConflict = daySchedule.some((existing) =>
-                                    checkConflict(sec, existing)
-                                );
-                                const style = getPositionStyle(sec.startTime, sec.endTime);
-
-                                return (
-                                    <div
-                                        key={`new-section-${i}`}
-                                        className="event-block"
-                                        style={{
-                                            ...style,
-                                            backgroundColor: hasConflict
-                                                ? CONFLICT_COLOR
-                                                : NEW_SECTION_COLOR,
-                                            zIndex: 20,
-                                        }}
-                                        title={`${sec.section.getCode()} - ${sec.section.getName()} (New)`}
-                                    >
-                                        <div className="event-code">
-                                            {sec.section.getFullSectionCode()}
-                                        </div>
-                                    </div>
-                                );
-                            });
-
-                        return (
-                            <div key={day} className="day-column">
-                                {daySchedule.map((section, idx) => {
-                                    const style = getPositionStyle(
-                                        section.startTime,
-                                        section.endTime
-                                    );
-                                    return (
-                                        <div
-                                            key={`${section.section.getCode()}-${day}-${idx}`}
-                                            className="event-block"
-                                            style={{
-                                                ...style,
-                                                backgroundColor:
-                                                    section.color || "var(--primary-color)",
-                                            }}
-                                            title={`${section.section.getCode()} - ${section.section.getName()}`}
-                                            onClick={() => setSelectedSection(section.section)}
-                                        >
-                                            <div className="event-code">
-                                                {section.section.getFullSectionCode()}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                                {newSectionElements}
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+  // Generate times for the gutter
+  const renderTimeLabels = () => {
+    const labels = [];
+    for (let h = START_HOUR; h <= END_HOUR; h++) {
+      const top = (((h - START_HOUR) * 60) / TOTAL_MINUTES) * 100;
+      // Don't render label for 21:00 at the very bottom if it causes overflow logic or look bad, but usually fine
+      labels.push(
+        <div key={h} className="time-label" style={{ top: `${top}%` }}>
+          {h}:00
         </div>
-    );
+      );
+    }
+    return labels;
+  };
+
+  // Renders full grid lines if StartHour is a whole hour, otherwise renders half hour grid lines
+  const renderGridLines = () => {
+    const lines = [];
+    for (let h = START_HOUR; h <= END_HOUR; h += 0.5) {
+      const top = (((h - START_HOUR) * 60) / TOTAL_MINUTES) * 100;
+      if (h % 1 === 0) {
+        lines.push(
+          <div
+            key={h}
+            className="grid-line grid-line--full-hour"
+            style={{ top: `${top}%` }}
+          />
+        );
+      } else {
+        lines.push(
+          <div key={h} className="grid-line" style={{ top: `${top}%` }} />
+        );
+      }
+    }
+    return lines;
+  };
+
+  return (
+    <div className="calendar">
+      <div className="calendar-header">
+        <div className="time-gutter-header"></div>
+        {DAYS.map((day) => (
+          <div key={day} className="day-header">
+            {day}
+          </div>
+        ))}
+      </div>
+      <div className="calendar-body">
+        <div className="time-gutter">{renderTimeLabels()}</div>
+        <div className="days-container">
+          {/* Render background grid lines across all columns */}
+          <div
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+            }}
+          >
+            {renderGridLines()}
+          </div>
+
+          {DAYS.map((day) => {
+            const daySchedule = scheduleSectionSchedules.filter((s) =>
+              s.day.includes(day)
+            );
+
+            // Check for newSection
+            const newSectionElements = (newSectionSchedules || [])
+              .filter((sec) => sec.day.includes(day))
+              .map((sec, i) => {
+                // Check collisions with ANY event on this day
+                const hasConflict = daySchedule.some((existing) =>
+                  checkConflict(sec, existing)
+                );
+                const style = getPositionStyle(sec.startTime, sec.endTime);
+
+                return (
+                  <div
+                    key={`new-section-${i}`}
+                    className="event-block"
+                    style={{
+                      ...style,
+                      backgroundColor: hasConflict
+                        ? CONFLICT_COLOR
+                        : NEW_SECTION_COLOR,
+                      zIndex: 20,
+                    }}
+                    title={`${sec.section.getCode()} - ${sec.section.getName()} (New)`}
+                  >
+                    <div className="event-code">
+                      {sec.section.getFullSectionCode()}
+                    </div>
+                  </div>
+                );
+              });
+
+            return (
+              <div key={day} className="day-column">
+                {daySchedule.map((section, idx) => {
+                  const style = getPositionStyle(
+                    section.startTime,
+                    section.endTime
+                  );
+                  return (
+                    <div
+                      key={`${section.section.getCode()}-${day}-${idx}`}
+                      className="event-block"
+                      style={{
+                        ...style,
+                        backgroundColor:
+                          section.color || "var(--primary-color)",
+                      }}
+                      title={`${section.section.getCode()} - ${section.section.getName()}`}
+                      onClick={() => setSelectedSection(section.section)}
+                    >
+                      <div className="event-code">
+                        {section.section.getFullSectionCode()}
+                      </div>
+                    </div>
+                  );
+                })}
+                {newSectionElements}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Calendar;
