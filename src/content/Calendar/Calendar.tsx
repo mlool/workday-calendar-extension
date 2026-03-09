@@ -90,13 +90,24 @@ const Calendar: React.FC<IProps> = ({
     return labels;
   };
 
+  // Renders full grid lines if StartHour is a whole hour, otherwise renders half hour grid lines
   const renderGridLines = () => {
     const lines = [];
     for (let h = START_HOUR; h <= END_HOUR; h += 0.5) {
       const top = (((h - START_HOUR) * 60) / TOTAL_MINUTES) * 100;
-      lines.push(
-        <div key={h} className="grid-line" style={{ top: `${top}%` }} />
-      );
+      if (h % 1 === 0) {
+        lines.push(
+          <div
+            key={h}
+            className="grid-line grid-line--full-hour"
+            style={{ top: `${top}%` }}
+          />
+        );
+      } else {
+        lines.push(
+          <div key={h} className="grid-line" style={{ top: `${top}%` }} />
+        );
+      }
     }
     return lines;
   };

@@ -88,6 +88,11 @@
   pointer-events: none;
 }
 
+.grid-line--full-hour {
+  border-top-width: 2px;
+  border-top-color: var(--border-secondary);
+}
+
 .event-block {
   position: absolute;
   z-index: 7;

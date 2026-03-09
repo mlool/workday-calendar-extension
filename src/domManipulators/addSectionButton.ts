@@ -2,7 +2,11 @@ import { extractSection } from "../backends/workday/idSearchApi";
 import { toggleContainer } from "../content";
 
 // Function to add a button to a given HTML element
-function addButtonToElement(element: Element, reskinButton?: boolean): void {
+function addButtonToElement(
+  element: Element,
+  reskinButton?: boolean,
+  clickTarget?: Element
+): void {
   // Creating a button element
   const button: HTMLButtonElement = document.createElement("button");
   // Setting the button text content to '+'
@@ -10,8 +14,13 @@ function addButtonToElement(element: Element, reskinButton?: boolean): void {
   // Add custom button id
   button.id = "add-section-button";
   // Adding an event listener for when the button is clicked
-  button.addEventListener("click", () => {
-    handleButtonClick(element);
+  const targetForClick = clickTarget ?? element;
+  button.addEventListener("click", (event) => {
+    const clickedButton = event.currentTarget as HTMLButtonElement;
+    const liveContainer = clickedButton.closest(
+      '[data-automation-id="compositeContainer"]'
+    );
+    handleButtonClick(liveContainer ?? targetForClick);
   });
 
   // Styling the button
@@ -84,30 +93,38 @@ export function observeDOMAndAddButtons(): void {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
             // Finding matching elements within the added node
-            const matchingElements = node.querySelectorAll(
-              '[data-automation-id="compositeContainer"] > div'
+            const containers = node.querySelectorAll(
+              '[data-automation-id="compositeContainer"]'
             ); // last time buttons gone, this selector broke
             // Adding buttons to matching elements
-            matchingElements.forEach((matchingElement) => {
+            containers.forEach((container) => {
               // Check if the element already has a button as a previous sibling
-              const previousSibling = matchingElement.previousElementSibling;
-              const isButtonAlreadyPresent =
-                previousSibling && previousSibling.id === "add-section-button";
+              const firstContainer = container.firstElementChild;
+              if (
+                !firstContainer ||
+                firstContainer.id === "add-section-button"
+              ) {
+                return;
+              }
 
+              const previousContainer = firstContainer.previousElementSibling;
+              const isButtonAlreadyPresent =
+                previousContainer &&
+                previousContainer.id === "add-section-button";
               if (!isButtonAlreadyPresent) {
-                addButtonToElement(matchingElement);
+                addButtonToElement(firstContainer, false, container);
               }
             });
             const matchingElementsForReskinExtension = document
               .getElementById("react-root")
               ?.querySelectorAll("div.AddButtonGoHere");
-            matchingElementsForReskinExtension?.forEach((matchingElement) => {
-              const matchingElementChild = matchingElement.firstElementChild;
+            matchingElementsForReskinExtension?.forEach((container) => {
+              const matchingElementChild = container.firstElementChild;
               const isButtonAlreadyPresent =
                 matchingElementChild &&
                 matchingElementChild.id === "add-section-button";
               if (!isButtonAlreadyPresent) {
-                addButtonToElement(matchingElement, true);
+                addButtonToElement(container, true);
               }
             });
           }
