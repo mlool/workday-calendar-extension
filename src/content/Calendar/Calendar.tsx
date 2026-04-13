@@ -9,6 +9,7 @@ interface IProps {
   worklist: number;
   term: number;
   session: string;
+  isWeekendDisplayEnabled: boolean;
   setSelectedSection: (section: Section | null) => void;
 }
 
@@ -19,7 +20,8 @@ const TOTAL_MINUTES = (END_HOUR - START_HOUR) * 60;
 const CONFLICT_COLOR = "var(--conflict-color)";
 const NEW_SECTION_COLOR = "var(--new-section-color)";
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const WEEKDAY_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const WEEKEND_DAYS = ["Sat", "Sun"];
 
 const Calendar: React.FC<IProps> = ({
   schedule,
@@ -27,6 +29,7 @@ const Calendar: React.FC<IProps> = ({
   worklist,
   term,
   session,
+  isWeekendDisplayEnabled,
   setSelectedSection,
 }) => {
   const [scheduleSectionSchedules, setScheduleSectionSchedules] =
@@ -112,11 +115,19 @@ const Calendar: React.FC<IProps> = ({
     return lines;
   };
 
+  const days = isWeekendDisplayEnabled
+    ? [...WEEKDAY_DAYS, ...WEEKEND_DAYS]
+    : WEEKDAY_DAYS;
+
   return (
-    <div className="calendar">
+    <div
+      className={`calendar ${
+        isWeekendDisplayEnabled ? "calendar--weekends-enabled" : ""
+      }`}
+    >
       <div className="calendar-header">
         <div className="time-gutter-header"></div>
-        {DAYS.map((day) => (
+        {days.map((day) => (
           <div key={day} className="day-header">
             {day}
           </div>
@@ -137,7 +148,7 @@ const Calendar: React.FC<IProps> = ({
             {renderGridLines()}
           </div>
 
-          {DAYS.map((day) => {
+          {days.map((day) => {
             const daySchedule = scheduleSectionSchedules.filter((s) =>
               s.day.includes(day)
             );

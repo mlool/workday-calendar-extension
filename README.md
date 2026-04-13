@@ -40,7 +40,7 @@ use Yarn Classic (latest 1.x) - please do not use Yarn Modern.
 
 1. Clone the repo
    ```bash
-   git clone git@github.com:mlool/workday-calendar-extension.git
+   git clone https://github.com/mlool/workday-calendar-extension.git
    ```
 2. Navigate to the root directory and install dependencies:
    ```bash

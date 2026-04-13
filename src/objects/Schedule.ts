@@ -32,6 +32,13 @@ export default class Schedule {
   async addSection(section: Section): Promise<Schedule> {
     const isConflictAddingEnabled =
       await ExtensionStorage.getIsConflictAddingEnabled();
+    const isWeekendDisplayEnabled =
+      await ExtensionStorage.getIsWeekendDisplayEnabled();
+    if (!isWeekendDisplayEnabled && section.hasWeekendSchedule()) {
+      throw new Error(
+        "This section includes Saturday or Sunday meetings. Enable Weekend Display in Settings before adding weekend sections."
+      );
+    }
     if (
       !isConflictAddingEnabled &&
       this.getConflictSections(section).length > 0
@@ -162,6 +169,19 @@ export default class Schedule {
       });
     });
     return conflicts;
+  }
+
+  getWeekendSections(worklistNumber?: number, session?: string): Section[] {
+    return this.data.filter((section: Section) => {
+      if (
+        worklistNumber !== undefined &&
+        section.getWorklistNumber() !== worklistNumber
+      )
+        return false;
+      if (session !== undefined && section.getSession() !== session)
+        return false;
+      return section.hasWeekendSchedule();
+    });
   }
 
   // Gets all available sessions (2025W, etc) in the schedule

@@ -163,4 +163,18 @@ export default class ExtensionStorage {
   ): Promise<void> {
     await chrome.storage.local.set({ isConflictAddingEnabled });
   }
+
+  static async getIsWeekendDisplayEnabled(): Promise<boolean> {
+    const isWeekendDisplayEnabled = (
+      await chrome.storage.local.get("isWeekendDisplayEnabled")
+    ).isWeekendDisplayEnabled;
+    if (isWeekendDisplayEnabled === undefined) return false;
+    return Boolean(isWeekendDisplayEnabled);
+  }
+
+  static async setIsWeekendDisplayEnabled(
+    isWeekendDisplayEnabled: boolean
+  ): Promise<void> {
+    await chrome.storage.local.set({ isWeekendDisplayEnabled });
+  }
 }

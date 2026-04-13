@@ -15,6 +15,8 @@ export interface IGradesAPIData {
   averageFiveYears: number | null;
 }
 
+const WEEKEND_DAYS = new Set(["Sat", "Sun"]);
+
 export default class Section {
   private code: string; // Course Code, eg. CPSC_V 100
   private courseID: string; // Workday Course ID, eg "458290", if custom a random guid string
@@ -209,6 +211,12 @@ export default class Section {
             return [key, item];
           })
       ).values()
+    );
+  }
+
+  hasWeekendSchedule(term?: number[]): boolean {
+    return this.getSectionSchedule(term).some((schedule) =>
+      schedule.day.some((day) => WEEKEND_DAYS.has(day))
     );
   }
 

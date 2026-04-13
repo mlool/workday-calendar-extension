@@ -53,9 +53,30 @@ const batchImportExportInfo = (
 interface IProps {
   schedule: Schedule;
   setSchedule: (schedule: Schedule) => void;
+  isWeekendDisplayEnabled: boolean;
+  setIsWeekendDisplayEnabled: (enabled: boolean) => void;
 }
 
-const Setting = ({ schedule, setSchedule }: IProps) => {
+const weekendDisplayInfo = (
+  <div>
+    <p>
+      Weekend Display adds Saturday and Sunday columns to the calendar and
+      allows weekend custom sections and exports.
+    </p>
+    <br />
+    <p>
+      You cannot turn it off while any existing section is scheduled on a
+      weekend.
+    </p>
+  </div>
+);
+
+const Setting = ({
+  schedule,
+  setSchedule,
+  isWeekendDisplayEnabled,
+  setIsWeekendDisplayEnabled,
+}: IProps) => {
   const [showInfoModal, setShowInfoModal] = useState<JSX.Element | null>(null);
   const [isAutoFill, setIsAutoFill] = useState(false);
   const [isConflictAdding, setIsConflictAdding] = useState(false);
@@ -73,6 +94,18 @@ const Setting = ({ schedule, setSchedule }: IProps) => {
   const toggleConflictAdding = (checked: boolean) => {
     setIsConflictAdding(checked);
     ExtensionStorage.setIsConflictAddingEnabled(checked);
+  };
+
+  const toggleWeekendDisplay = async (checked: boolean) => {
+    if (!checked && schedule.getWeekendSections().length > 0) {
+      alert(
+        "Remove all sections scheduled on Saturday or Sunday before turning Weekend Display off."
+      );
+      return;
+    }
+
+    setIsWeekendDisplayEnabled(checked);
+    await ExtensionStorage.setIsWeekendDisplayEnabled(checked);
   };
 
   return (
@@ -121,6 +154,26 @@ const Setting = ({ schedule, setSchedule }: IProps) => {
             type="checkbox"
             checked={isConflictAdding}
             onChange={(e) => toggleConflictAdding(e.target.checked)}
+          />
+          <span className="setting-slider"></span>
+        </label>
+      </div>
+
+      <div className="setting-row">
+        <div className="setting-label-group">
+          <label className="setting-label">Weekend Display</label>
+          <InfoSquareIcon
+            size={16}
+            onClick={() => {
+              setShowInfoModal(weekendDisplayInfo);
+            }}
+          />
+        </div>
+        <label className="setting-toggle">
+          <input
+            type="checkbox"
+            checked={isWeekendDisplayEnabled}
+            onChange={(e) => void toggleWeekendDisplay(e.target.checked)}
           />
           <span className="setting-slider"></span>
         </label>

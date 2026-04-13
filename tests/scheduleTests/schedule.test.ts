@@ -9,6 +9,7 @@ jest.mock("../../src/objects/ExtensionStorage", () => ({
   __esModule: true,
   default: {
     getIsConflictAddingEnabled: jest.fn().mockResolvedValue(true),
+    getIsWeekendDisplayEnabled: jest.fn().mockResolvedValue(true),
   },
 }));
 
@@ -18,6 +19,9 @@ let sectionDetail2: SectionDetail;
 beforeEach(() => {
   jest.spyOn(console, "error").mockImplementation(() => {});
   (ExtensionStorage.getIsConflictAddingEnabled as jest.Mock).mockResolvedValue(
+    true
+  );
+  (ExtensionStorage.getIsWeekendDisplayEnabled as jest.Mock).mockResolvedValue(
     true
   );
   sectionDetail0 = SectionDetail.getSectionDetailFromJSON(
@@ -225,6 +229,70 @@ describe("Schedule Tests", () => {
     schedule = await schedule.addSection(sectionW1);
     schedule = await schedule.addSection(sectionW2);
     expect(schedule.getLatestSession()).toBe("2025W");
+  });
+
+  test("addSection rejects weekend sections when weekend display is disabled", async () => {
+    const weekendDetail = new SectionDetail([1], ["Sat"], "10:00", "11:00");
+    const weekendSection = new Section(
+      "TEST_V 100",
+      "weekend-1",
+      [],
+      [weekendDetail],
+      "2025W",
+      0,
+      "blue",
+      "001",
+      "Lecture",
+      "Weekend Section",
+      false
+    );
+
+    (ExtensionStorage.getIsWeekendDisplayEnabled as jest.Mock).mockResolvedValue(
+      false
+    );
+
+    await expect(
+      new Schedule(Schedule.getVersion(), []).addSection(weekendSection)
+    ).rejects.toThrow(
+      "This section includes Saturday or Sunday meetings. Enable Weekend Display in Settings before adding weekend sections."
+    );
+  });
+
+  test("getWeekendSections returns only weekend sections", () => {
+    const weekdaySection = new Section(
+      "TEST_V 101",
+      "weekday-1",
+      [],
+      [new SectionDetail([1], ["Mon"], "10:00", "11:00")],
+      "2025W",
+      0,
+      "blue",
+      "001",
+      "Lecture",
+      "Weekday Section",
+      false
+    );
+    const weekendSection = new Section(
+      "TEST_V 102",
+      "weekend-2",
+      [],
+      [new SectionDetail([1], ["Sun"], "12:00", "13:00")],
+      "2025W",
+      1,
+      "red",
+      "001",
+      "Lecture",
+      "Weekend Section",
+      false
+    );
+
+    const schedule = new Schedule(Schedule.getVersion(), [
+      weekdaySection,
+      weekendSection,
+    ]);
+
+    expect(schedule.getWeekendSections()).toEqual([weekendSection]);
+    expect(schedule.getWeekendSections(1, "2025W")).toEqual([weekendSection]);
   });
 
   test("get colors", async () => {
