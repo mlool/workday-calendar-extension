@@ -204,6 +204,13 @@ export async function extractSection(element: Element) {
   if (!fetchedSection) {
     throw new Error("Section failed to be fetched");
   }
+  const isWeekendDisplayEnabled =
+    await ExtensionStorage.getIsWeekendDisplayEnabled();
+  if (!isWeekendDisplayEnabled && fetchedSection.hasWeekendSchedule()) {
+    throw new Error(
+      "This section includes Saturday or Sunday meetings. Enable Weekend Display in Settings before adding weekend sections."
+    );
+  }
   await ExtensionStorage.setNewSection(fetchedSection);
 }
 

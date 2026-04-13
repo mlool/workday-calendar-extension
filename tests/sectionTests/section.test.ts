@@ -153,6 +153,26 @@ describe("Section tests", () => {
     });
   });
 
+  test("hasWeekendSchedule detects weekend meetings", () => {
+    expect(section.hasWeekendSchedule()).toBe(false);
+
+    const weekendSection = new Section(
+      "TEST",
+      "weekend",
+      [],
+      [new SectionDetail([1], ["Sat", "Sun"], "09:00", "10:00")],
+      "2025W",
+      0,
+      "blue",
+      "001",
+      "Lecture",
+      "Weekend",
+      false
+    );
+
+    expect(weekendSection.hasWeekendSchedule()).toBe(true);
+  });
+
   test("testing get historical grades first with custom course then without", async () => {
     const sectionCustom = new Section(
       "DSCI_V 200",

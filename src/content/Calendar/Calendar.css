@@ -8,6 +8,10 @@
   overflow: hidden;
 }
 
+.calendar--weekends-enabled {
+  min-width: 620px;
+}
+
 .calendar-header {
   display: flex;
   border-bottom: 1px solid var(--border-color);
@@ -37,7 +41,8 @@
 .calendar-body {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 10px 0;
   position: relative;
 }

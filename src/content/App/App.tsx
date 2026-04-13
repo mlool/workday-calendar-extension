@@ -40,6 +40,8 @@ function App() {
     ExtensionViews.calendar
   );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isWeekendDisplayEnabled, setIsWeekendDisplayEnabled] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const syncInitialStorage = async () => {
@@ -70,6 +72,9 @@ function App() {
       if (fetchedCurrentWorklist) {
         setCurrWorklist(fetchedCurrentWorklist);
       }
+      const fetchedIsWeekendDisplayEnabled =
+        await ExtensionStorage.getIsWeekendDisplayEnabled();
+      setIsWeekendDisplayEnabled(fetchedIsWeekendDisplayEnabled);
       setIsLoaded(true);
     };
 
@@ -102,6 +107,10 @@ function App() {
         const newVal: number | null = changes.currentWorklist.newValue;
         if (newVal === null) return;
         setCurrWorklist(newVal);
+      } else if (changes.isWeekendDisplayEnabled) {
+        const newVal: boolean | null = changes.isWeekendDisplayEnabled.newValue;
+        if (newVal === null) return;
+        setIsWeekendDisplayEnabled(newVal);
       }
     };
 
@@ -182,7 +191,11 @@ function App() {
       </div>
       <ProgressModal />
       {currentView === ExtensionViews.setting ? (
-        <Setting schedule={schedule} setSchedule={setSchedule} />
+        <Setting
+          schedule={schedule}
+          setSchedule={setSchedule}
+          isWeekendDisplayEnabled={isWeekendDisplayEnabled}
+        />
       ) : (
         <>
           <CalendarControls
@@ -200,6 +213,7 @@ function App() {
             worklist={currWorklist}
             term={currentTerm}
             session={currentSession}
+            isWeekendDisplayEnabled={isWeekendDisplayEnabled}
             setSelectedSection={setSelectedSection}
           />
           <NewSectionControl
@@ -229,6 +243,7 @@ function App() {
                 );
                 setSelectedSection(null);
               }}
+              isWeekendDisplayEnabled={isWeekendDisplayEnabled}
               setNewSection={setNewSection}
               setSchedule={setSchedule}
             />

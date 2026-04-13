@@ -74,7 +74,13 @@ function addButtonToElement(
 // Function to handle button click event
 async function handleButtonClick(element: Element): Promise<void> {
   toggleContainer(true);
-  await extractSection(element);
+  try {
+    await extractSection(element);
+  } catch (error) {
+    if (error instanceof Error) {
+      alert(error.message);
+    }
+  }
 }
 
 // Function to observe DOM changes and add buttons to matching elements

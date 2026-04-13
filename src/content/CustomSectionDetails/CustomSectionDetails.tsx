@@ -13,11 +13,13 @@ interface IProps {
   session: string;
   onClose: () => void;
   onDelete: (section: Section) => void;
+  isWeekendDisplayEnabled: boolean;
   setNewSection: (section: Section | null) => void;
   setSchedule: (schedule: Schedule) => void;
 }
 
-const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const WEEKDAY_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const WEEKEND_DAYS = ["Sat", "Sun"];
 
 // Generate 30-min interval times
 const TIME_OPTIONS: string[] = [];
@@ -33,9 +35,13 @@ const CustomSectionDetails = ({
   session,
   onClose,
   onDelete,
+  isWeekendDisplayEnabled,
   setNewSection,
   setSchedule,
 }: IProps) => {
+  const daysOfWeek = isWeekendDisplayEnabled
+    ? [...WEEKDAY_DAYS, ...WEEKEND_DAYS]
+    : WEEKDAY_DAYS;
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
   const [selectedTerms, setSelectedTerms] = useState<Set<number>>(
@@ -271,7 +277,7 @@ const CustomSectionDetails = ({
           <div className="input-group">
             <label className="input-label">Days</label>
             <div className="day-selector">
-              {DAYS_OF_WEEK.map((day) => (
+              {daysOfWeek.map((day) => (
                 <button
                   key={day}
                   className={`custom-control-button ${

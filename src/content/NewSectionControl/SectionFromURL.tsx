@@ -3,6 +3,9 @@ import ExtensionStorage from "../../objects/ExtensionStorage";
 import "./SectionFromURL.css";
 import { useState } from "react";
 
+const WEEKEND_ALERT_MESSAGE =
+  "This section includes Saturday or Sunday meetings. Enable Weekend Display in Settings before adding weekend sections.";
+
 interface IProps {
   onClose: () => void;
 }
@@ -12,9 +15,15 @@ const SectionFromURL: React.FC<IProps> = ({ onClose }) => {
 
   const onClick = () => {
     fetchSectionFromUrl(url)
-      .then((section) => {
+      .then(async (section) => {
         if (section) {
-          ExtensionStorage.setNewSection(section);
+          const isWeekendDisplayEnabled =
+            await ExtensionStorage.getIsWeekendDisplayEnabled();
+          if (!isWeekendDisplayEnabled && section.hasWeekendSchedule()) {
+            alert(WEEKEND_ALERT_MESSAGE);
+            return;
+          }
+          await ExtensionStorage.setNewSection(section);
           onClose();
         }
       })
