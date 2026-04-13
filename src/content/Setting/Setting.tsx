@@ -54,7 +54,6 @@ interface IProps {
   schedule: Schedule;
   setSchedule: (schedule: Schedule) => void;
   isWeekendDisplayEnabled: boolean;
-  setIsWeekendDisplayEnabled: (enabled: boolean) => void;
 }
 
 const weekendDisplayInfo = (
@@ -75,7 +74,6 @@ const Setting = ({
   schedule,
   setSchedule,
   isWeekendDisplayEnabled,
-  setIsWeekendDisplayEnabled,
 }: IProps) => {
   const [showInfoModal, setShowInfoModal] = useState<JSX.Element | null>(null);
   const [isAutoFill, setIsAutoFill] = useState(false);
@@ -104,7 +102,6 @@ const Setting = ({
       return;
     }
 
-    setIsWeekendDisplayEnabled(checked);
     await ExtensionStorage.setIsWeekendDisplayEnabled(checked);
   };
 

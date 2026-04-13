@@ -195,7 +195,6 @@ function App() {
           schedule={schedule}
           setSchedule={setSchedule}
           isWeekendDisplayEnabled={isWeekendDisplayEnabled}
-          setIsWeekendDisplayEnabled={setIsWeekendDisplayEnabled}
         />
       ) : (
         <>
